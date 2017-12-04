@@ -1,21 +1,32 @@
 package codesquad.model;
 
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+
+@Entity
 public class Issue {
-	private String subject;
-	private String comment;
-	private static final AtomicInteger count = new AtomicInteger(0);
+	@Id
+	@GeneratedValue
 	private int id;
+	private String subject;
+	@Lob
+	private String comment;	
 	private Date regDate;
-
-	public Issue(String subject, String comment) {
-		this.subject = subject;
-		this.comment = comment;
-		id = count.incrementAndGet();
+	
+	public Issue() {
 		regDate = new Date();
-		
+	}
+	
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 	public String getSubject() {
@@ -34,6 +45,7 @@ public class Issue {
 		return id;
 	}
 
+	@Override
 	public String toString() {
 		return "subject : " + subject + " comment : " + comment +" date : " + regDate;
 	}

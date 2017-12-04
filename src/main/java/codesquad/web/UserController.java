@@ -1,20 +1,21 @@
 package codesquad.web;
 
-import java.util.ArrayList;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.model.User;
+import codesquad.model.UserRepository;
 
 @Controller
 @RequestMapping("user")
 public class UserController {
 	private static final Logger log = LoggerFactory.getLogger(UserController.class);
-	private ArrayList<User> users = new ArrayList<User>();
+	@Autowired
+	private UserRepository userRepository;
 
 	@RequestMapping("signup")
 	public String signUpForm() {
@@ -22,9 +23,9 @@ public class UserController {
 	}
 
 	@PostMapping("signup")
-	public String signUp(String id, String name, String password) {
-		users.add(new User(id, name, password));
-		log.debug(users.get(0).toString());
+	public String signUp(User user) {
+		userRepository.save(user);
+		log.debug(user.toString());
 		return "redirect:/";
 	}
 
