@@ -21,7 +21,7 @@ public class UserController {
 		return "user/join";
 	}
 
-	@PostMapping("join")
+	@PostMapping("signup")
 	public String signUp(String id, String name, String password) {
 		users.add(new User(id, name, password));
 		log.debug(users.get(0).toString());
