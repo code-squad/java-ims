@@ -24,6 +24,7 @@
 			<div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
 			{{#user}}
 				<form action="/user/edit" enctype="multipart/form-data" method="post">
+					<input type="hidden" name="_method" value="put" />
 					<div class="mdl-card__title mdl-color-text--grey-50" style="height: 100px;">
 						<h4>Join Member</h4>
 					</div>

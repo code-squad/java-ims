@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -21,7 +22,7 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 
-	@RequestMapping("signup")
+	@GetMapping("signup")
 	public String signUpForm() {
 		return "user/join";
 	}
@@ -37,7 +38,7 @@ public class UserController {
 		return "redirect:/";
 	}
 
-	@RequestMapping("login")
+	@GetMapping("login")
 	public String loginForm() {
 		return "user/login";
 	}
@@ -53,7 +54,7 @@ public class UserController {
 			log.debug(id + " 아이디가 잘 못 되었습니다.");
 			return "redirect:/user/login";
 		}
-		if (user.matchingPassword(password)) {
+		if (!user.matchingPassword(password)) {
 			log.debug(id + " 비밀번호가 잘 못 되었습니다.");
 			return "redirect:/user/login";
 		}
@@ -63,13 +64,13 @@ public class UserController {
 		return "redirect:/";
 	}
 
-	@RequestMapping("logout")
+	@GetMapping("logout")
 	public String logout(HttpSession session) {
 		session.removeAttribute(HttpSessionUtil.SESSION_USER_NAME);
 		return "redirect:/";
 	}
 
-	@RequestMapping("edit")
+	@GetMapping("edit")
 	public String editForm(HttpSession session, Model model) {
 		model.addAttribute("user", HttpSessionUtil.loginSessionUser(session));
 		return "/user/edit";

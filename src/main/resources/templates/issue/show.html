@@ -24,13 +24,16 @@
 		<div class="issues__posts mdl-grid">
 			<div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
 				{{#myIssue}}
+				<form id="deleteForm" method="post" action="/issue/{{id}}">
+					<input type="hidden" name="_method" value="delete" />
+				</form>
 				<div class="mdl-card__menu">
-					<a href="/issue/{{id}}/update" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+					<a href='/issue/{{id}}/edit' class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
 					<i class="material-icons">edit</i>
 					</a>
-					<a href="/issue/{{id}}/delete" id="issues-menu-lower-right"	class="mdl-button mdl-js-button mdl-button--icon">
+					<a href='#' onclick='document.forms["deleteForm"].submit(); return false;' id="issues-menu-lower-right"	class="mdl-button mdl-js-button mdl-button--icon">
 					<i class="material-icons">delete</i>
-					</a>
+					</a>					
 				</div>
 				{{/myIssue}}
 				<div class="mdl-card__title mdl-color-text--grey-50">
