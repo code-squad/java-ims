@@ -30,7 +30,7 @@ public class IssueController {
 
 	@RequestMapping("issue/write")
 	public String issueForm(HttpSession session) {
-		if(!HttpSessionUtil.isLoginSession(session)) {
+		if (!HttpSessionUtil.isLoginSession(session)) {
 			log.debug("로그인 후 작성해주세요.");
 			return "redirect:/";
 		}
@@ -45,8 +45,48 @@ public class IssueController {
 	}
 
 	@RequestMapping("issue/{id}/show")
-	public String showIssue(@PathVariable int id, Model model) {
-		model.addAttribute("issue", issueRepository.findOne(id));
+	public String showIssue(@PathVariable int id, Model model, HttpSession session) {
+		Issue issue = issueRepository.findOne(id);
+		if (isMyIssue(issue, session)) {
+			model.addAttribute("myIssue", issue);
+		}
+		model.addAttribute("issue", issue);
 		return "issue/show";
+	}
+
+	@RequestMapping("issue/{id}/update")
+	public String editForm(@PathVariable int id, Model model, HttpSession session) {
+		Issue issue = issueRepository.findOne(id);
+		if (!isMyIssue(issue, session)) {
+			log.debug("본인이 작성한 issue가 아닙니다.");
+			return "redirect:/issue/{id}/show";
+		}
+		model.addAttribute("issue", issue);
+		return "issue/edit";
+	}
+
+	@PostMapping("issue/{id}/update")
+	public String edit(@PathVariable int id, String subject, String comment) {
+		Issue issue = issueRepository.findOne(id);
+		issue.update(subject, comment);
+		issueRepository.save(issue);
+		return "redirect:/issue/{id}/show";
+	}
+
+	@RequestMapping("issue/{id}/delete")
+	public String delete(@PathVariable int id, HttpSession session) {
+		Issue issue = issueRepository.findOne(id);
+		if (!isMyIssue(issue, session)) {
+			log.debug("본인이 작성한 issue가 아닙니다.");
+			return "redirect:/issue/{id}/show";
+		}
+		issueRepository.delete(id);
+		return "redirect:/";
+	}
+
+	private boolean isMyIssue(Issue issue, HttpSession session) {
+		log.debug("issue writer: " + issue.getWriter());
+		log.debug("session id: " + HttpSessionUtil.loginSessionUserId(session));
+		return issue.isWriter(HttpSessionUtil.loginSessionUserId(session));
 	}
 }

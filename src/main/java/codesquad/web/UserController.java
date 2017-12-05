@@ -74,7 +74,7 @@ public class UserController {
 		model.addAttribute("user", HttpSessionUtil.loginSessionUser(session));
 		return "/user/edit";
 	}
-	
+
 	@PostMapping("edit")
 	public String edit(HttpSession session, User updateUser) {
 		User user = HttpSessionUtil.loginSessionUser(session);

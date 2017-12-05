@@ -25,11 +25,11 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -37,7 +37,7 @@ public class User {
 	public boolean matchingPassword(String enteredPassword) {
 		return !enteredPassword.equals(password);
 	}
-	
+
 	public void update(User updateUser) {
 		this.name = updateUser.name;
 		this.password = updateUser.password;
