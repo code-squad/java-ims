@@ -1,5 +1,7 @@
 package codesquad.web;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.model.Issue;
 import codesquad.model.IssueRepository;
+import codesquad.util.HttpSessionUtil;
 
 @Controller
 @RequestMapping("/")
@@ -26,7 +29,11 @@ public class IssueController {
 	}
 
 	@RequestMapping("issue/write")
-	public String issueForm() {
+	public String issueForm(HttpSession session) {
+		if(!HttpSessionUtil.isLoginSession(session)) {
+			log.debug("로그인 후 작성해주세요.");
+			return "redirect:/";
+		}
 		return "issue/form";
 	}
 

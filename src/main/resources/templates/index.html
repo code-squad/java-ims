@@ -6,7 +6,7 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 <title>Issue Tracking System</title>
-{{> ../static/include/header}}
+{{> include/header}}
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.3/dialog-polyfill.css"
 	rel="stylesheet">
@@ -14,7 +14,7 @@
 </head>
 <body>
 	<div class="issues issues--wrap mdl-layout mdl-js-layout is-upgraded">
-		{{> ../static/include/topNav}}
+		{{> include/topNav}}
 		<main class="mdl-layout__content">
 
 		<div class="issues__posts mdl-grid">
@@ -22,9 +22,11 @@
 				<div class="mdl-card__title" style="height: 80px;">
 					<h2 class="mdl-card__title-text mdl-color-text--grey-800">Issues</h2>
 				</div>
+				{{#sessionedUser}}
 				<a href="/issue/write" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored show-modal">
 					<i class="material-icons">add</i>
 				</a>
+				{{/sessionedUser}}
 				<div class="mdl-card__supporting-text">
 					<ul class="issue-list mdl-list">
 					
@@ -54,9 +56,9 @@
 				</div>
 			</div>
 		</div>
-		{{> ../static/include/bottomNav}} 
+		{{> include/bottomNav}} 
 		</main>
-		{{> ../static/include/footer}}
+		{{> include/footer}}
 		<script
 			src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.3/dialog-polyfill.min.js"></script>
 		<script src="https://cdn.tinymce.com/4/tinymce.min.js"></script>

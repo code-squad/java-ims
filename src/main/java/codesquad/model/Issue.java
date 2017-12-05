@@ -14,7 +14,8 @@ public class Issue {
 	private int id;
 	private String subject;
 	@Lob
-	private String comment;	
+	private String comment;
+	private String writer;
 	private Date regDate;
 	
 	public Issue() {
@@ -43,6 +44,10 @@ public class Issue {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public String getWriter() {
+		return writer;
 	}
 
 	@Override
