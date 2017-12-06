@@ -4,13 +4,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import codesquad.exception.InvalidUserException;
+
 @Entity
 public class User {
 	@Id
 	private String id;
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String name;
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String password;
 
 	public void setId(String id) {
@@ -38,6 +40,9 @@ public class User {
 	}
 
 	public void update(User updateUser) {
+		if (!updateUser.getId().equals(id)) {
+			throw new InvalidUserException("잘못된 유저입니다.");
+		}
 		this.name = updateUser.name;
 		this.password = updateUser.password;
 	}
@@ -45,7 +50,7 @@ public class User {
 	public String toString() {
 		return "id : " + id + " name : " + name + " password : " + password;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

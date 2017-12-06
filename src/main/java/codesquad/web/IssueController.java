@@ -34,7 +34,7 @@ public class IssueController {
 		return "issue/form";
 	}
 
-	@PostMapping
+	@PostMapping("write")
 	public String writeIssue(Issue issue, HttpSession session) {
 		issue.setWriter(HttpSessionUtil.loginSessionUserId(session));
 		issueRepository.save(issue);
@@ -66,7 +66,8 @@ public class IssueController {
 	@PutMapping("{id}")
 	public String edit(@PathVariable long id, String subject, String comment) {
 		Issue issue = issueRepository.findOne(id);
-		issue.update(subject, comment);
+		issue.updateSubject(subject);
+		issue.updateComment(comment);
 		issueRepository.save(issue);
 		return "redirect:/issue/{id}";
 	}

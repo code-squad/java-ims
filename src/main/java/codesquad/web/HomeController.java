@@ -16,7 +16,7 @@ public class HomeController {
 
 	@GetMapping("")
 	public String issueList(Model model) {
-		model.addAttribute("issues", issueRepository.findAll());
+		model.addAttribute("issues", issueRepository.findAllByOrderByIdDesc());
 		return "index";
 	}
 }

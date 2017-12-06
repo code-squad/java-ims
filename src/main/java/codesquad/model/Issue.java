@@ -1,10 +1,11 @@
 package codesquad.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 
@@ -13,23 +14,24 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 public class Issue {
+	private final static AtomicLong autoIncrementId = new AtomicLong(4);
 	@Id
-	@GeneratedValue
 	private long id;
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String subject;
 	@Lob
 	private String comment;
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String writer;
 	@CreatedDate
-	@Column(nullable=false)
-	private Date regDate;
+	@Column(nullable = false)
+	private LocalDateTime regDate;
 	@LastModifiedDate
-	private Date modifiedDate;
+	@Column
+	private LocalDateTime modifiedDate;
 
 	public Issue() {
-		regDate = new Date();
+		id = autoIncrementId.incrementAndGet();
 	}
 
 	public void setSubject(String subject) {
@@ -39,9 +41,17 @@ public class Issue {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 	public void setWriter(String writer) {
 		this.writer = writer;
+	}
+
+	public void setRegDate(LocalDateTime regDate) {
+		this.regDate = regDate;
+	}
+
+	public void setModifiedDate(LocalDateTime modifiedDate) {
+		this.modifiedDate = modifiedDate;
 	}
 
 	public String getSubject() {
@@ -52,8 +62,11 @@ public class Issue {
 		return comment;
 	}
 
-	public String getRegDate() {
-		return regDate.toString();
+	public String getDate() {
+		if (modifiedDate == null) {
+			return regDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		}
+		return regDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 	}
 
 	public long getId() {
@@ -68,10 +81,12 @@ public class Issue {
 		return writer.equals(id);
 	}
 
-	public void update(String subject, String comment) {
-		this.comment = comment;
+	public void updateSubject(String subject) {
 		this.subject = subject;
-		regDate = new Date();
+	}
+
+	public void updateComment(String comment) {
+		this.comment = comment;
 	}
 
 	@Override
