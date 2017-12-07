@@ -6,8 +6,11 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -21,8 +24,9 @@ public class Issue {
 	private String subject;
 	@Lob
 	private String comment;
-	@Column(nullable = false)
-	private String writer;
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
+	private User writer;
 	@CreatedDate
 	@Column(nullable = false)
 	private LocalDateTime regDate;
@@ -42,7 +46,7 @@ public class Issue {
 		this.comment = comment;
 	}
 
-	public void setWriter(String writer) {
+	public void setWriter(User writer) {
 		this.writer = writer;
 	}
 
@@ -73,12 +77,12 @@ public class Issue {
 		return id;
 	}
 
-	public String getWriter() {
+	public User getWriter() {
 		return writer;
 	}
 
-	public boolean isWriter(String id) {
-		return writer.equals(id);
+	public boolean isWriter(User user) {
+		return writer.equals(user);
 	}
 
 	public void updateSubject(String subject) {

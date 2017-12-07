@@ -9,8 +9,8 @@ import org.junit.Test;
 import codesquad.exception.InvalidUserException;
 
 public class UserTest {
-	User user;
-	User updateUser;
+	private User user;
+	private User updateUser;
 
 	@Before
 	public void before() {

@@ -36,7 +36,7 @@ public class IssueController {
 
 	@PostMapping("write")
 	public String writeIssue(Issue issue, HttpSession session) {
-		issue.setWriter(HttpSessionUtil.loginSessionUserId(session));
+		issue.setWriter(HttpSessionUtil.loginSessionUser(session));
 		issueRepository.save(issue);
 		log.debug(issue.toString());
 		return "redirect:/";
@@ -85,7 +85,7 @@ public class IssueController {
 
 	private boolean isMyIssue(Issue issue, HttpSession session) {
 		log.debug("issue writer: {}", issue.getWriter());
-		log.debug("session id: {}", HttpSessionUtil.loginSessionUserId(session));
-		return issue.isWriter(HttpSessionUtil.loginSessionUserId(session));
+		log.debug("session id: {}", HttpSessionUtil.loginSessionUser(session));
+		return issue.isWriter(HttpSessionUtil.loginSessionUser(session));
 	}
 }

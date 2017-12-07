@@ -1,26 +1,19 @@
 package codesquad.model;
 
+
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class IssueTest {
-	Issue issue;
-	User user;
+	private Issue issue;
 
 	@Before
 	public void before() {
 		issue = new Issue();
-		issue.setWriter("abcshc");
 		issue.setComment("comment");
 		issue.setSubject("subject");
-	}
-
-	@Test
-	public void testIsWriter() {
-		assertTrue(issue.isWriter("abcshc"));
 	}
 
 	@Test
