@@ -3,21 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 <title>Issue Tracking System</title>
 {{> include/header}}
 </head>
 <body>
-	<div
-		class="issues issues--wrap mdl-layout mdl-js-layout has-drawer is-upgraded">
+	<div class="issues issues--wrap mdl-layout mdl-js-layout has-drawer is-upgraded">
 		{{> include/topNav}}
 		<main class="mdl-layout__content">
 		<div class="issues-back">
-			<a href="/"
-				class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon back-btn"
-				title="go back" role="button"> <i class="material-icons"
-				role="presentation">arrow_back</i>
+			<a href="/" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon back-btn" title="go back" role="button">
+			<i class="material-icons" role="presentation">arrow_back</i>
 			</a>
 		</div>
 		 {{#issue}}
@@ -53,60 +49,63 @@
 						</div>
 						<span>{{date}}</span>
 					</div>
-					<a href="/issue/1/setOpen"
-						class="mdl-button mdl-button--colored mdl-js-button"> Close
-						issue </a>
-
+					<a href="/issue/1/setOpen" class="mdl-button mdl-button--colored mdl-js-button"> Close issue </a>
 					<div class="section-spacer"></div>
-
-					<button id="milestone-menu" class="mdl-button mdl-js-button">
-						Milestone</button>
+					<button id="milestone-menu" class="mdl-button mdl-js-button">Milestone</button>
 					<!-- milestone list -->
-					<ul
-						class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-						for="milestone-menu">
-						<li class="mdl-menu__item mdl-button--accent"><a
-							href="/issue/1/setMilestone/0">Milestone1</a></li>
-						<li class="mdl-menu__item"><a href="/issue/1/setMilestone/2">Milestone2</a>
-						</li>
-						<li class="mdl-menu__item"><a href="/issue/1/setMilestone/3">Milestone3</a>
-						</li>
+					<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="milestone-menu">
+					{{#milestone}}
+					<form id="milestone{{id}}" method="post" action="/issue/{{issue.id}}/milestone/{{id}}">
+						<input type="hidden" name="_method" value="put" />					
+					</form>
+					<a onclick="document.getElementById('milestone{{id}}').submit();">
+						<li class="mdl-menu__item">{{subject}}</li>
+					</a>
+					{{/milestone}}
+					<!-- example -->
+					<!-- 
+						<li class="mdl-menu__item mdl-button--accent"><a href="/issue/1/setMilestone/0">Milestone1</a></li>
+						<li class="mdl-menu__item"><a href="/issue/1/setMilestone/2">Milestone2</a></li>
+					-->
+					<!-- /example -->
 					</ul>
 
-					<button id="label-menu" class="mdl-button mdl-js-button">
-						Label</button>
+					<button id="label-menu" class="mdl-button mdl-js-button">Label</button>
+					<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="label-menu">
 					<!-- label list -->
-					<ul
-						class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-						for="label-menu">
-						<li class="mdl-menu__item"><a href="/issue/1/setLabel/1">label1</a>
-						</li>
-						<li class="mdl-menu__item"><a href="/issue/1/setLabel/2">label2</a>
-						</li>
-						<li class="mdl-menu__item"><a href="/issue/1/setLabel/3">label3</a>
-						</li>
-						<li class="mdl-menu__item"><a href="/issue/1/setLabel/4">label4</a>
-						</li>
-						<li class="mdl-menu__item"><a href="/issue/1/setLabel/5">label5</a>
-						</li>
+					{{#label}}
+					<form id="label{{id}}" method="post" action="/issue/{{issue.id}}/label/{{id}}">
+						<input type="hidden" name="_method" value="put" />					
+					</form>
+					<a onclick="document.getElementById('label{{id}}').submit();">
+						<li class="mdl-menu__item">{{name}}</li>
+					</a>
+					{{/label}}
+					<!-- example -->
+					<!-- 
+					<li class="mdl-menu__item"><a href="/issue/1/setLabel/1">label1</a></li>
+					</ul>
+					-->
+					<!-- /example -->
 					</ul>
 
-					<button id="assignee-menu" class="mdl-button mdl-js-button">
-						Assignee</button>
+					<button id="assignee-menu" class="mdl-button mdl-js-button">Assignee</button>
 					<!-- label list -->
-					<ul
-						class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-						for="assignee-menu">
-						<li class="mdl-menu__item"><a href="/issue/1/setAssignee/1">javajigi</a>
-						</li>
-						<li class="mdl-menu__item"><a href="/issue/1/setAssignee/2">cca-company</a>
-						</li>
-						<li class="mdl-menu__item"><a href="/issue/1/setAssignee/3">진저애비</a>
-						</li>
-						<li class="mdl-menu__item"><a href="/issue/1/setAssignee/4">신영</a>
-						</li>
-						<li class="mdl-menu__item"><a href="/issue/1/setAssignee/5">전용우</a>
-						</li>
+					<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="assignee-menu">
+					{{#assignee}}
+					<form id="assignee{{id}}" method="post" action="/issue/{{issue.id}}/assignee/{{id}}">
+						<input type="hidden" name="_method" value="put" />					
+					</form>
+					<a onclick="document.getElementById('assignee{{id}}').submit();">
+						<li class="mdl-menu__item">{{id}}</li>
+					</a>
+					{{/assignee}}
+					<!-- example -->
+					<!-- 
+					<li class="mdl-menu__item"><a href="/issue/1/setAssignee/1">javajigi</a></li>
+					</ul>
+					-->
+					<!-- /example -->
 					</ul>
 				</div>
 				<div class="mdl-color-text--grey-700 mdl-card__supporting-text">

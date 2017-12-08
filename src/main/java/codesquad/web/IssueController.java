@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.model.Issue;
 import codesquad.model.IssueRepository;
+import codesquad.model.Label;
+import codesquad.model.LabelRepository;
+import codesquad.model.Milestone;
+import codesquad.model.MilestoneRepository;
+import codesquad.model.User;
+import codesquad.model.UserRepository;
 import codesquad.util.HttpSessionUtil;
 
 @Controller
@@ -24,6 +30,12 @@ public class IssueController {
 	private static final Logger log = LoggerFactory.getLogger(IssueController.class);
 	@Autowired
 	private IssueRepository issueRepository;
+	@Autowired
+	private MilestoneRepository milestoneRepository;
+	@Autowired
+	private UserRepository userRepository;
+	@Autowired
+	private LabelRepository labelRepository;
 
 	@GetMapping("write")
 	public String issueForm(HttpSession session) {
@@ -45,6 +57,10 @@ public class IssueController {
 	@GetMapping("{id}")
 	public String showIssue(@PathVariable long id, Model model, HttpSession session) {
 		Issue issue = issueRepository.findOne(id);
+		model.addAttribute("assignee", userRepository.findAll());
+		model.addAttribute("label", labelRepository.findAll());
+		model.addAttribute("milestone", milestoneRepository.findAll());
+		model.addAttribute("isChecked", getSelectedMark(true));
 		if (isMyIssue(issue, session)) {
 			model.addAttribute("myIssue", issue);
 		}
@@ -83,9 +99,43 @@ public class IssueController {
 		return "redirect:/";
 	}
 
+	@PutMapping("{id}/milestone/{milestoneId}")
+	public String setMilestone(@PathVariable long id, @PathVariable long milestoneId) {
+		Issue issue = issueRepository.findOne(id);
+		Milestone milestone = milestoneRepository.findOne(milestoneId);
+		issue.setMilestone(milestone);
+		issueRepository.save(issue);
+		return "redirect:/issue/{id}";
+	}
+	
+	@PutMapping("{id}/label/{labelId}")
+	public String setLabel(@PathVariable long id, @PathVariable long labelId) {
+		Issue issue = issueRepository.findOne(id);
+		Label label = labelRepository.findOne(labelId);
+		issue.setLabel(label);
+		issueRepository.save(issue);
+		return "redirect:/issue/{id}";
+	}
+	
+	@PutMapping("{id}/assignee/{assigneeId}")
+	public String setAssignee(@PathVariable long id, @PathVariable String assigneeId) {
+		Issue issue = issueRepository.findOne(id);
+		User assignee = userRepository.findOne(assigneeId);
+		issue.setAssignee(assignee);
+		issueRepository.save(issue);
+		return "redirect:/issue/{id}";
+	}
+
 	private boolean isMyIssue(Issue issue, HttpSession session) {
 		log.debug("issue writer: {}", issue.getWriter());
 		log.debug("session id: {}", HttpSessionUtil.loginSessionUser(session));
 		return issue.isWriter(HttpSessionUtil.loginSessionUser(session));
+	}
+
+	private String getSelectedMark(boolean isSelected) {
+		if (isSelected) {
+			return "mdl-button--accent";
+		}
+		return "";
 	}
 }

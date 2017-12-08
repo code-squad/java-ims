@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -14,8 +15,10 @@ import javax.persistence.ManyToOne;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners({ AuditingEntityListener.class })
 public class Issue {
 	private final static AtomicLong autoIncrementId = new AtomicLong(4);
 	@Id
@@ -25,13 +28,21 @@ public class Issue {
 	@Lob
 	private String comment;
 	@ManyToOne
-	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"), nullable = false)
 	private User writer;
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+	private User assignee;
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+	private Milestone milestone;
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
+	private Label label;
 	@CreatedDate
 	@Column(nullable = false)
 	private LocalDateTime regDate;
 	@LastModifiedDate
-	@Column
 	private LocalDateTime modifiedDate;
 
 	public Issue() {
@@ -58,6 +69,18 @@ public class Issue {
 		this.modifiedDate = modifiedDate;
 	}
 
+	public void setMilestone(Milestone milestone) {
+		this.milestone = milestone;
+	}
+
+	public void setAssignee(User assignee) {
+		this.assignee = assignee;
+	}
+
+	public void setLabel(Label label) {
+		this.label = label;
+	}
+
 	public String getSubject() {
 		return subject;
 	}
@@ -70,7 +93,7 @@ public class Issue {
 		if (modifiedDate == null) {
 			return regDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 		}
-		return regDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		return modifiedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 	}
 
 	public long getId() {
