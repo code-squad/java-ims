@@ -3,7 +3,6 @@ package codesquad.web;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -98,24 +97,18 @@ public class IssueController {
 		model.addAttribute("label", labelRepository.findAll());
 		model.addAttribute("milestone", milestoneRepository.findAll());
 		model.addAttribute("isChecked", getSelectedMark(true));
-		if (isMyIssue(issue, session)) {
-			model.addAttribute("myIssue", issue);
-		}
+		
+		issue.setLoginUser(HttpSessionUtil.loginSessionUser(session));
 		model.addAttribute("issue", issue);
-		List<Reply> replys = replyRepository.findAllByIssue(issue);
-		model.addAttribute("reply", replys);
-		for (Reply reply : replys) {
-			if(reply.getIsFile()) {
-				model.addAttribute("file"+reply.getId(), replyFilePathRepository.findAllByReply(reply));
-			}
-		}
+		
 		return "issue/show";
 	}
 
 	@GetMapping("{id}/edit")
 	public String editForm(@PathVariable long id, Model model, HttpSession session) {
 		Issue issue = issueRepository.findOne(id);
-		if (!isMyIssue(issue, session)) {
+		issue.setLoginUser(HttpSessionUtil.loginSessionUser(session));
+		if (issue.getIsOwner()) {
 			log.debug("본인이 작성한 issue가 아닙니다.");
 			return "redirect:/issue/{id}";
 		}
@@ -135,7 +128,8 @@ public class IssueController {
 	@DeleteMapping("{id}")
 	public String delete(@PathVariable long id, HttpSession session) {
 		Issue issue = issueRepository.findOne(id);
-		if (!isMyIssue(issue, session)) {
+		issue.setLoginUser(HttpSessionUtil.loginSessionUser(session));
+		if (issue.getIsOwner()) {
 			log.debug("본인이 작성한 issue가 아닙니다.");
 			return "redirect:/issue/{id}";
 		}
@@ -162,7 +156,6 @@ public class IssueController {
 		reply.setIssue(issue);
 		reply.setReplyComment("upload file");
 		reply.setWriter(uploader);
-		reply.setIsFile(true);
 		replyRepository.save(reply);
 		ReplyFilePath replyFilePath = new ReplyFilePath();
 		replyFilePath.setFilePath(storage.getFilePath() + "\\" + storage.getFileName(file));
@@ -190,12 +183,6 @@ public class IssueController {
 		issue.setAssignee(assignee);
 		issueRepository.save(issue);
 		return "redirect:/issue/{id}";
-	}
-
-	private boolean isMyIssue(Issue issue, HttpSession session) {
-		log.debug("issue writer: {}", issue.getWriter());
-		log.debug("session id: {}", HttpSessionUtil.loginSessionUser(session));
-		return issue.isWriter(HttpSessionUtil.loginSessionUser(session));
 	}
 
 	private String getSelectedMark(boolean isSelected) {

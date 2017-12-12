@@ -2,16 +2,20 @@ package codesquad.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -45,9 +49,17 @@ public class Issue {
 	private LocalDateTime regDate;
 	@LastModifiedDate
 	private LocalDateTime modifiedDate;
+	@Transient
+	private User loginUser;
+	@OneToMany(mappedBy="issue", fetch=FetchType.LAZY)
+	private List<Reply> reply;
 
 	public Issue() {
 		id = autoIncrementId.incrementAndGet();
+	}
+	
+	public void setReply(List<Reply> reply) {
+		this.reply = reply;
 	}
 
 	public void setSubject(String subject) {
@@ -60,6 +72,18 @@ public class Issue {
 
 	public void setWriter(User writer) {
 		this.writer = writer;
+	}
+	
+	public void setLoginUser(User loginUser) {
+		this.loginUser = loginUser;
+	}
+	
+	public List<Reply> getReply() {
+		return reply;
+	}
+	
+	public boolean getIsOwner() {
+		return writer.equals(loginUser);
 	}
 
 	public void setRegDate(LocalDateTime regDate) {
@@ -103,10 +127,6 @@ public class Issue {
 
 	public User getWriter() {
 		return writer;
-	}
-
-	public boolean isWriter(User user) {
-		return writer.equals(user);
 	}
 
 	public void updateSubject(String subject) {
