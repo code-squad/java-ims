@@ -21,6 +21,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @EntityListeners({ AuditingEntityListener.class })
 public class Issue {
@@ -52,6 +54,7 @@ public class Issue {
 	@Transient
 	private User loginUser;
 	@OneToMany(mappedBy="issue", fetch=FetchType.LAZY)
+	@JsonProperty
 	private List<Reply> reply;
 
 	public Issue() {
