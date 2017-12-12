@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import codesquad.exception.InvalidUserException;
+import codesquad.exception.InvalidStoreFileException;
 import codesquad.model.Milestone;
 import codesquad.model.MilestoneRepository;
 import codesquad.model.User;
@@ -29,7 +29,7 @@ public class MilestoneController {
 	public String create(Milestone milestone, HttpSession session) {
 		User sessionUser = HttpSessionUtil.loginSessionUser(session);
 		if(sessionUser == null) {
-			throw new InvalidUserException("로그인 정보가 없습니다.");
+			throw new InvalidStoreFileException("로그인 정보가 없습니다.");
 		}
 		milestone.setWriter(sessionUser);
 		milestoneRepository.save(milestone);

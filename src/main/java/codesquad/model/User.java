@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import codesquad.exception.InvalidUserException;
+import codesquad.exception.InvalidStoreFileException;
 
 @Entity
 public class User {
@@ -41,7 +41,7 @@ public class User {
 
 	public void update(User updateUser) {
 		if (!updateUser.getId().equals(id)) {
-			throw new InvalidUserException("잘못된 유저입니다.");
+			throw new InvalidStoreFileException("잘못된 유저입니다.");
 		}
 		this.name = updateUser.name;
 		this.password = updateUser.password;

@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import codesquad.exception.InvalidUserException;
+import codesquad.exception.InvalidStoreFileException;
 
 public class UserTest {
 	private User user;
@@ -36,7 +36,7 @@ public class UserTest {
 		assertEquals(user.getName(), "홍길동");
 	}
 
-	@Test(expected = InvalidUserException.class)
+	@Test(expected = InvalidStoreFileException.class)
 	public void testUpdateException() {
 		updateUser.setId("defshc");
 		user.update(updateUser);

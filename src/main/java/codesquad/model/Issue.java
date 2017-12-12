@@ -26,6 +26,7 @@ public class Issue {
 	@Column(nullable = false)
 	private String subject;
 	@Lob
+	@Column(nullable = false)
 	private String comment;
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"), nullable = false)

@@ -1,5 +1,11 @@
 package codesquad.web;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -7,19 +13,28 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import codesquad.exception.InvalidStoreFileException;
+import codesquad.model.FileStorage;
 import codesquad.model.Issue;
 import codesquad.model.IssueRepository;
 import codesquad.model.Label;
 import codesquad.model.LabelRepository;
 import codesquad.model.Milestone;
 import codesquad.model.MilestoneRepository;
+import codesquad.model.Reply;
+import codesquad.model.ReplyFilePath;
+import codesquad.model.ReplyFilePathRepository;
+import codesquad.model.ReplyRepository;
 import codesquad.model.User;
 import codesquad.model.UserRepository;
 import codesquad.util.HttpSessionUtil;
@@ -36,6 +51,10 @@ public class IssueController {
 	private UserRepository userRepository;
 	@Autowired
 	private LabelRepository labelRepository;
+	@Autowired
+	private ReplyRepository replyRepository;
+	@Autowired
+	private ReplyFilePathRepository replyFilePathRepository;
 
 	@GetMapping("write")
 	public String issueForm(HttpSession session) {
@@ -54,6 +73,24 @@ public class IssueController {
 		return "redirect:/";
 	}
 
+	@PostMapping("{id}/reply")
+	public String writeReply(@PathVariable long id, Reply reply, HttpSession session) {
+		Issue issue = issueRepository.findOne(id);
+		reply.setWriter(HttpSessionUtil.loginSessionUser(session));
+		reply.setIssue(issue);
+		replyRepository.save(reply);
+		return "redirect:/issue/{id}";
+	}
+
+	@PutMapping("{id}/milestone/{milestoneId}")
+	public String setMilestone(@PathVariable long id, @PathVariable long milestoneId) {
+		Issue issue = issueRepository.findOne(id);
+		Milestone milestone = milestoneRepository.findOne(milestoneId);
+		issue.setMilestone(milestone);
+		issueRepository.save(issue);
+		return "redirect:/issue/{id}";
+	}
+
 	@GetMapping("{id}")
 	public String showIssue(@PathVariable long id, Model model, HttpSession session) {
 		Issue issue = issueRepository.findOne(id);
@@ -65,6 +102,13 @@ public class IssueController {
 			model.addAttribute("myIssue", issue);
 		}
 		model.addAttribute("issue", issue);
+		List<Reply> replys = replyRepository.findAllByIssue(issue);
+		model.addAttribute("reply", replys);
+		for (Reply reply : replys) {
+			if(reply.getIsFile()) {
+				model.addAttribute("file"+reply.getId(), replyFilePathRepository.findAllByReply(reply));
+			}
+		}
 		return "issue/show";
 	}
 
@@ -99,15 +143,6 @@ public class IssueController {
 		return "redirect:/";
 	}
 
-	@PutMapping("{id}/milestone/{milestoneId}")
-	public String setMilestone(@PathVariable long id, @PathVariable long milestoneId) {
-		Issue issue = issueRepository.findOne(id);
-		Milestone milestone = milestoneRepository.findOne(milestoneId);
-		issue.setMilestone(milestone);
-		issueRepository.save(issue);
-		return "redirect:/issue/{id}";
-	}
-	
 	@PutMapping("{id}/label/{labelId}")
 	public String setLabel(@PathVariable long id, @PathVariable long labelId) {
 		Issue issue = issueRepository.findOne(id);
@@ -116,7 +151,38 @@ public class IssueController {
 		issueRepository.save(issue);
 		return "redirect:/issue/{id}";
 	}
-	
+
+	@PostMapping("{id}/file")
+	public String uploadFile(@PathVariable long id, @RequestParam("file") MultipartFile file, HttpSession session)
+			throws InvalidStoreFileException, IOException {
+		FileStorage storage = new FileStorage();
+		Issue issue = issueRepository.findOne(id);
+		Reply reply = new Reply();
+		User uploader = HttpSessionUtil.loginSessionUser(session);
+		reply.setIssue(issue);
+		reply.setReplyComment("upload file");
+		reply.setWriter(uploader);
+		reply.setIsFile(true);
+		replyRepository.save(reply);
+		ReplyFilePath replyFilePath = new ReplyFilePath();
+		replyFilePath.setFilePath(storage.getFilePath() + "\\" + storage.getFileName(file));
+		replyFilePath.setReply(reply);
+		replyFilePathRepository.save(replyFilePath);
+		storage.store(file);
+		return "redirect:/issue/{id}";
+	}
+
+	@GetMapping("file/{fileId}")
+	public String downloadFile(@PathVariable long fileId, HttpServletResponse response) throws IOException {
+		ReplyFilePath replyFilePath = replyFilePathRepository.findOne(fileId);
+		String filePath = replyFilePath.getFilePath();
+		File file = new File(filePath);
+		FileInputStream inputStream = new FileInputStream(file);
+		
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+		return "redirect:/issue/{id}";
+	}
+
 	@PutMapping("{id}/assignee/{assigneeId}")
 	public String setAssignee(@PathVariable long id, @PathVariable String assigneeId) {
 		Issue issue = issueRepository.findOne(id);
