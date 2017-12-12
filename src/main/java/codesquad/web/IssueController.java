@@ -95,12 +95,9 @@ public class IssueController {
 		Issue issue = issueRepository.findOne(id);
 		model.addAttribute("assignee", userRepository.findAll());
 		model.addAttribute("label", labelRepository.findAll());
-		model.addAttribute("milestone", milestoneRepository.findAll());
-		model.addAttribute("isChecked", getSelectedMark(true));
-		
+		model.addAttribute("milestone", milestoneRepository.findAll());		
 		issue.setLoginUser(HttpSessionUtil.loginSessionUser(session));
-		model.addAttribute("issue", issue);
-		
+		model.addAttribute("issue", issue);		
 		return "issue/show";
 	}
 
@@ -149,7 +146,7 @@ public class IssueController {
 	@PostMapping("{id}/file")
 	public String uploadFile(@PathVariable long id, @RequestParam("file") MultipartFile file, HttpSession session)
 			throws InvalidStoreFileException, IOException {
-		FileStorage storage = new FileStorage();
+		FileStorage storage = new FileStorage();		
 		Issue issue = issueRepository.findOne(id);
 		Reply reply = new Reply();
 		User uploader = HttpSessionUtil.loginSessionUser(session);
@@ -183,12 +180,5 @@ public class IssueController {
 		issue.setAssignee(assignee);
 		issueRepository.save(issue);
 		return "redirect:/issue/{id}";
-	}
-
-	private String getSelectedMark(boolean isSelected) {
-		if (isSelected) {
-			return "mdl-button--accent";
-		}
-		return "";
 	}
 }
