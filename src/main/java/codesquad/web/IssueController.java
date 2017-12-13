@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import codesquad.exception.InvalidStoreFileException;
-import codesquad.model.FileStorage;
 import codesquad.model.Issue;
 import codesquad.model.IssueRepository;
 import codesquad.model.Label;
@@ -36,6 +35,7 @@ import codesquad.model.ReplyFilePathRepository;
 import codesquad.model.ReplyRepository;
 import codesquad.model.User;
 import codesquad.model.UserRepository;
+import codesquad.util.FileStorage;
 import codesquad.util.HttpSessionUtil;
 
 @Controller
