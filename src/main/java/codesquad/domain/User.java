@@ -2,23 +2,18 @@ package codesquad.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import codesquad.UnAuthorizedException;
 import codesquad.dto.UserDto;
+import support.domain.AbstractEntity;
 
 @Entity
-public class User {
+public class User extends AbstractEntity {
     public static final GuestUser GUEST_USER = new GuestUser();
     
-    @Id
-    @GeneratedValue
-    private long id;
-
     @Size(min = 3, max = 20)
     @Column(unique = true, nullable = false, length = 20)
     private String userId;
@@ -40,16 +35,12 @@ public class User {
     }
 
     public User(long id, String userId, String password, String name) {
-        this.id = id;
+        super(id);
         this.userId = userId;
         this.password = password;
         this.name = name;
     }
     
-    public long getId() {
-        return id;
-    }
-
     public String getUserId() {
         return userId;
     }
@@ -113,28 +104,6 @@ public class User {
         }
     }
     
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (id ^ (id >>> 32));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        User other = (User) obj;
-        if (id != other.id)
-            return false;
-        return true;
-    }
-
     @Override
     public String toString() {
         return "User [userId=" + userId + ", password=" + password + ", name=" + name + "]";
