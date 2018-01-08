@@ -42,6 +42,10 @@ public class User {
         this.password = password;
         this.name = name;
     }
+    
+    public long getId() {
+        return id;
+    }
 
     public String getUserId() {
         return userId;
