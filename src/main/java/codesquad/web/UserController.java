@@ -1,7 +1,5 @@
 package codesquad.web;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -36,14 +34,6 @@ public class UserController {
     public String create(UserDto userDto) {
         userService.add(userDto);
         return "redirect:/users";
-    }
-
-    @GetMapping("")
-    public String list(Model model) {
-        List<User> users = userService.findAll();
-        log.debug("user size : {}", users.size());
-        model.addAttribute("users", users);
-        return "/user/list";
     }
 
     @GetMapping("/{id}/form")

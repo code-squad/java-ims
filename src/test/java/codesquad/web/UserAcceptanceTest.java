@@ -1,7 +1,9 @@
 package codesquad.web;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -44,14 +46,6 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(userRepository.findByUserId(userId));
         assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
-    }
-
-    @Test
-    public void list() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/users", String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        log.debug("body : {}", response.getBody());
-        assertThat(response.getBody().contains(loginUser.getName()), is(true));
     }
 
     @Test
