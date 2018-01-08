@@ -8,6 +8,9 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import codesquad.UnAuthorizedException;
+import codesquad.dto.UserDto;
+
 @Entity
 public class User {
     public static final GuestUser GUEST_USER = new GuestUser();
@@ -73,6 +76,30 @@ public class User {
         this.name = name;
         return this;
     }
+    
+    private boolean matchUserId(String userId) {
+        return this.userId.equals(userId);
+    }
+    
+    public void update(User loginUser, User target) {
+        if (!matchUserId(loginUser.getUserId())) {
+            throw new UnAuthorizedException();
+        }
+
+        if (!matchPassword(target.getPassword())) {
+            return;
+        }
+
+        this.name = target.name;
+    }
+
+    public boolean matchPassword(String password) {
+        return this.password.equals(password);
+    }
+
+    public UserDto _toUserDto() {
+        return new UserDto(this.userId, this.password, this.name);
+    }
 
     @JsonIgnore
     public boolean isGuestUser() {
@@ -84,6 +111,28 @@ public class User {
         public boolean isGuestUser() {
             return true;
         }
+    }
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (id ^ (id >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        User other = (User) obj;
+        if (id != other.id)
+            return false;
+        return true;
     }
 
     @Override
