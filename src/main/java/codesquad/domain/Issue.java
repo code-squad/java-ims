@@ -27,11 +27,6 @@ public class Issue extends AbstractEntity {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
-	@Override
-	public String toString() {
-		return "Issue [title=" + title + ", contents=" + contents + "]";
-	}
 
 	public String getContents() {
 		return contents;
@@ -39,5 +34,10 @@ public class Issue extends AbstractEntity {
 	
 	public void setContents(String contents) {
 		this.contents = contents;
+	}
+	
+	@Override
+	public String toString() {
+		return "Issue [title=" + title + ", contents=" + contents + "]";
 	}
 }
