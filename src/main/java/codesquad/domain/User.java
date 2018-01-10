@@ -88,7 +88,7 @@ public class User extends AbstractEntity {
         return this.password.equals(password);
     }
 
-    public UserDto _toUserDto() {
+    public UserDto _toUserDto() {// user 객체를 userDto 객체로 바꿔주는 역할.
         return new UserDto(this.userId, this.password, this.name);
     }
 

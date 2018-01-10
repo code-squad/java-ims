@@ -12,9 +12,9 @@ import codesquad.dto.UserDto;
 import support.test.AcceptanceTest;
 
 public class ApiUserAcceptanceTest extends AcceptanceTest {
-
+	
     @Test
-    public void create() throws Exception {
+    public void create() throws Exception {// 회원 데이터가 db에 저장이 됐는지 아닌지 확인.
         UserDto newUser = createUserDto("testuser1");
         String location = createResource("/api/users", newUser);
         

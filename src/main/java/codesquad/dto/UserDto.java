@@ -18,7 +18,6 @@ public class UserDto {
     }
 
     public UserDto(String userId, String password, String name) {
-        super();
         this.userId = userId;
         this.password = password;
         this.name = name;
@@ -48,7 +47,7 @@ public class UserDto {
         this.name = name;
     }
 
-    public User _toUser() {
+    public User _toUser() {// user 객체로 변환해주는 역할.
         return new User(this.userId, this.password, this.name);
     }
 

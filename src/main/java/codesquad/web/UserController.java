@@ -29,11 +29,11 @@ public class UserController {
     public String form() {
         return "/user/form";
     }
-
+  
     @PostMapping("")
     public String create(UserDto userDto) {
         userService.add(userDto);
-        return "redirect:/users";
+        return "redirect:/";
     }
 
     @GetMapping("/{id}/form")
