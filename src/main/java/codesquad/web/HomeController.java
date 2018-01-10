@@ -24,7 +24,7 @@ public class HomeController {
 	@GetMapping("/")
 	public String goHome(Model model) {
 		List<Issue> issues= issueService.findAll();
-		log.debug("issues : {}", issues.get(0));
+		log.debug("issues : {}", issues);
 		model.addAttribute("issues", issueService.findAll());
 		return "index";
 	}
