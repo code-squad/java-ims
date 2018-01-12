@@ -1,9 +1,9 @@
 package codesquad.web;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+
+import javax.servlet.http.HttpSession;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
+import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
@@ -24,7 +25,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Autowired
     private UserRepository userRepository;
-
+    
     @Test
     public void createForm() throws Exception {// 회원 가입 페이지가 잘 로드 되는지 확인하는 테스트.
         ResponseEntity<String> response = template.getForEntity("/users/form", String.class);
@@ -50,12 +51,48 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         // 최종 url 이 "/users" 인지 아닌지 확인.
         assertThat(response.getHeaders().getLocation().getPath(), is("/"));
     }
+    
+    @Test
+	public void load_login_form() throws Exception {
+    		ResponseEntity<String> response = template.getForEntity("/users/loginForm", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        log.debug("body : {}", response.getBody());
+	}
+    
+    @Test
+	public void login_success() throws Exception {
+    		String userId = "javajigi";
+    	 	HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                 .addParameter("userId", userId)
+                 .addParameter("password", "test").build();
 
+    		ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/"));
+        // 세션 id 가져오기 코드 적기.
+        log.debug("body : {}", response.getBody());
+	}
+   
+    @Test
+	public void login_fail() throws Exception {
+    		String userId = "wrong";
+	 	HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+             .addParameter("userId", userId)
+             .addParameter("password", "test").build();
+
+		ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		log.debug("body : {}", response.getBody());
+		String body = response.getBody();
+        assertTrue(body.contains("아이디 또는 비밀번호가 다릅니다."));
+	}
+    
     @Test
     public void updateForm_no_login() throws Exception {// 로그인 안한 상태에서 회원 정보 수정페이지 로드할때 에러나는지 확인.
         ResponseEntity<String> response = template.getForEntity(String.format("/users/%d/form", loginUser.getId()),
                 String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		log.debug("body : {}", response.getBody());
     }
 
     @Test
@@ -78,7 +115,6 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("password", "pass2")
                 .addParameter("name", "재성2")
                 .addParameter("email", "javajigi@slipp.net").build();
-
         return template.postForEntity(String.format("/users/%d", loginUser.getId()), request, String.class);
     }
 
@@ -86,6 +122,6 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void update() throws Exception {
         ResponseEntity<String> response = update(basicAuthTemplate);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
+        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/"));
     }
 }

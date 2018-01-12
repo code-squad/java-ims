@@ -72,7 +72,7 @@ public class User extends AbstractEntity {
         return this.userId.equals(userId);
     }
     
-    public void update(User loginUser, User target) {
+    public void update(User loginUser, User target) {// user name 만 바꿀수 있도록 설정.
         if (!matchUserId(loginUser.getUserId())) {
             throw new UnAuthorizedException();
         }

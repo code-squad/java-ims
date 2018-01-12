@@ -7,8 +7,17 @@
 		<nav class="mdl-navigation">
 			<a class="mdl-navigation__link" href="/">Issues</a> <a
 				class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-			<a class="mdl-navigation__link" href="/user/login.html">login</a> <a
-				class="mdl-navigation__link" href="/user/form">join</a>
+				{{^loginedUser}}
+			<a class="mdl-navigation__link" href="/users/loginForm">login</a> <a
+				class="mdl-navigation__link" href="/users/form">join</a>
+				{{/loginedUser}}
+				{{#loginedUser}}
+				<form id="logout" method='post' action="/users/logout">
+  					<!-- form elements -->
+  					<button class="mdl-navigation__link" type="submit">logout</button>  
+				</form>
+				<a class="mdl-navigation__link" href="/users/{{id}}/form">my</a>
+				{{/loginedUser}}
 		</nav>
 	</div>
 </header>

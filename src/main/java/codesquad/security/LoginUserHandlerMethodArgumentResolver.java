@@ -25,7 +25,7 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
 
         LoginUser loginUser = parameter.getParameterAnnotation(LoginUser.class);
         if (loginUser.required()) {
-            throw new UnAuthorizedException("You're required Login!");
+            throw new UnAuthorizedException("You're required to Login!");
         }
         return user;
     }
