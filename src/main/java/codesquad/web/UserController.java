@@ -1,9 +1,13 @@
 package codesquad.web;
 
+import java.util.Optional;
+
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +17,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.domain.User;
+import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
+import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;
 
@@ -22,6 +28,9 @@ import codesquad.service.UserService;
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
+    @Autowired
+    private UserRepository userRepository;
+    
     @Resource(name = "userService")
     private UserService userService;
 
@@ -38,6 +47,7 @@ public class UserController {
 
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+    	// 요청 URL에서 값을 읽어와서 매개변수로 넣는다.
         log.debug("LoginUser : {}", loginUser);
         model.addAttribute("user", userService.findById(loginUser, id));
         return "/user/updateForm";
@@ -45,7 +55,35 @@ public class UserController {
 
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
+    	log.debug(target.toString());
         userService.update(loginUser, id, target);
-        return "redirect:/users";
+        return "redirect:/";
     }
+    
+    @GetMapping("/login")
+    public String loginView() {
+    	return "/user/login";
+    }
+    
+    @PostMapping("/login")
+    public String login(String userId, String password, HttpSession session) {
+    	Optional<User> user = userService.getUserRepositoryFindUserId(userId);
+    	if(!user.isPresent() || !user.get().matchPassword(password)) {
+    		return loginFail();
+    	}
+    	System.out.println("Login Success!");
+		session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user.get());
+		return "redirect:/";
+    }
+
+	private String loginFail() {
+		System.out.println("Login Failure!");
+		return "/user/login_failed";
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+		return "redirect:/";
+	}
 }
