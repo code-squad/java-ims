@@ -5,6 +5,7 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 
 import codesquad.domain.Issue;
+import codesquad.domain.MileStone;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 
@@ -17,6 +18,8 @@ public class IssueDto {
 	
 	@Size(min = 3)
 	private String comment;
+	
+	private MileStone mileStone;
 	
 	
 	public IssueDto() {
@@ -67,7 +70,7 @@ public class IssueDto {
 
 	@Override
 	public String toString() {
-		return "IssueDto [user=" + user + ", subject=" + subject + ", comment=" + comment + "]";
+		return "IssueDto [user=" + user + ", subject=" + subject + ", comment=" + comment + "mileStone=" + mileStone + "]";
 	}
 	
 	

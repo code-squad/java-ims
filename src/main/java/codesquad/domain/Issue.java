@@ -23,7 +23,11 @@ public class Issue extends AbstractEntity {
 	
 	@ManyToOne 
 	@JoinColumn(foreignKey=@ForeignKey(name = "fk_issue_parent_id"))
-	User user;
+	private User user;
+	
+	@ManyToOne
+	@JoinColumn(foreignKey=@ForeignKey(name = "fk_issue_mileStone_id"))
+	private MileStone mileStone;
 	
 	@Size(min = 3, max = 20)
     @Column(nullable = false, length = 20)
