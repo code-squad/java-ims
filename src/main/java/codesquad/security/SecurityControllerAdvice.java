@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
-
+//에러 발생시 다 여기서 catch함.
 @ControllerAdvice
 public class SecurityControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(SecurityControllerAdvice.class);
@@ -23,14 +23,15 @@ public class SecurityControllerAdvice {
     }
 
     @ExceptionHandler(UnAuthorizedException.class)
-    @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    public void unAuthorized() {
+    // controller 에서는 default 가 200
+    public String unAuthorized() {
         log.debug("UnAuthorizedException is happened!");
+        return "redirect:/users/loginForm";
     }
     
-    @ExceptionHandler(UnAuthenticationException.class)
+    @ExceptionHandler(UnAuthenticationException.class)  
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public void unAuthentication() {
+    public void unAuthentication() {    		
         log.debug("UnAuthenticationException is happened!");
     }
 }

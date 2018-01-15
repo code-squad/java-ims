@@ -15,7 +15,7 @@ import codesquad.dto.UserDto;
 
 @Service
 public class UserService {
-
+	// autowired 랑 비슷한 역할.
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 

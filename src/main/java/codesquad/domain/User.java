@@ -72,7 +72,7 @@ public class User extends AbstractEntity {
         return this.userId.equals(userId);
     }
     
-    public void update(User loginUser, User target) {
+    public void update(User loginUser, User target) {// user name 만 바꿀수 있도록 설정.
         if (!matchUserId(loginUser.getUserId())) {
             throw new UnAuthorizedException();
         }
@@ -88,7 +88,7 @@ public class User extends AbstractEntity {
         return this.password.equals(password);
     }
 
-    public UserDto _toUserDto() {
+    public UserDto _toUserDto() {// user 객체를 userDto 객체로 바꿔주는 역할.
         return new UserDto(this.userId, this.password, this.name);
     }
 
