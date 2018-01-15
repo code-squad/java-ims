@@ -48,15 +48,6 @@ public class Issue extends AbstractEntity {
 		return writer;
 	}
 
-	public void setWriter(User writer) {
-		this.writer = writer;
-	}
-
-	@Override
-	public String toString() {
-		return "Issue [writer=" + writer + ", title=" + title + ", contents=" + contents + "]";
-	}
-
 	public boolean isSameWriter(User loginUser) {
 		return this.writer.equals(loginUser);
 	}
@@ -64,5 +55,10 @@ public class Issue extends AbstractEntity {
 	public void update(String title, String contents) {
 		this.title = title;
 		this.contents = contents;
+	}
+	
+	@Override
+	public String toString() {
+		return "Issue [title=" + title + ", contents=" + contents + "]";
 	}
 }

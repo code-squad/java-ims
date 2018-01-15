@@ -3,3 +3,4 @@ INSERT INTO user (id, user_id, password, name) values (2, 'sanjigi', 'testtest',
 
 INSERT INTO issue (title, contents, writer_id ) values ('11111', '11111', 1);
 INSERT INTO issue (title, contents, writer_id) values ('22222', '22222', 2);
+INSERT INTO issue (title, contents, writer_id) values ('33333', '33333', 1);

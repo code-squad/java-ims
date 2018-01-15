@@ -26,61 +26,61 @@ import codesquad.service.UserService;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
-    @Autowired
-    private UserRepository userRepository;
-    
-    @Resource(name = "userService")
-    private UserService userService;
+	@Autowired
+	private UserRepository userRepository;
 
-    @GetMapping("/form")
-    public String form() {
-        return "/user/form";
-    }
+	@Resource(name = "userService")
+	private UserService userService;
 
-    @PostMapping("")
-    public String create(UserDto userDto) {
-        userService.add(userDto);
-        return "redirect:/users";
-    }
+	@GetMapping("/form")
+	public String form() {
+		return "/user/form";
+	}
 
-    @GetMapping("/{id}/form")
-    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
-    	// 요청 URL에서 값을 읽어와서 매개변수로 넣는다.
-        log.debug("LoginUser : {}", loginUser);
-        model.addAttribute("user", userService.findById(loginUser, id));
-        return "/user/updateForm";
-    }
+	@PostMapping("")
+	public String create(UserDto userDto) {
+		userService.add(userDto);
+		return "redirect:/users";
+	}
 
-    @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
-    	log.debug(target.toString());
-        userService.update(loginUser, id, target);
-        return "redirect:/";
-    }
-    
-    @GetMapping("/login")
-    public String loginView() {
-    	return "/user/login";
-    }
-    
-    @PostMapping("/login")
-    public String login(String userId, String password, HttpSession session) {
-    	Optional<User> user = userService.getUserRepositoryFindUserId(userId);
-    	if(!user.isPresent() || !user.get().matchPassword(password)) {
-    		return loginFail();
-    	}
-    	System.out.println("Login Success!");
+	@GetMapping("/{id}/form")
+	public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+		// 요청 URL에서 값을 읽어와서 매개변수로 넣는다.
+		log.debug("LoginUser : {}", loginUser);
+		model.addAttribute("user", userService.findById(loginUser, id));
+		return "/user/updateForm";
+	}
+
+	@PutMapping("/{id}")
+	public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
+		log.debug(target.toString());
+		userService.update(loginUser, id, target);
+		return "redirect:/";
+	}
+
+	@GetMapping("/login")
+	public String loginView() {
+		return "/user/login";
+	}
+
+	@PostMapping("/login")
+	public String login(String userId, String password, HttpSession session) {
+		Optional<User> user = userService.getUserRepositoryFindUserId(userId);
+		if (!user.isPresent() || !user.get().matchPassword(password)) {
+			return loginFail();
+		}
+		System.out.println("Login Success!");
 		session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user.get());
 		return "redirect:/";
-    }
+	}
 
 	private String loginFail() {
 		System.out.println("Login Failure!");
 		return "/user/login_failed";
 	}
-	
+
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);

@@ -19,6 +19,7 @@ import codesquad.domain.IssueRepository;
 import codesquad.domain.Result;
 import codesquad.domain.User;
 import codesquad.security.HttpSessionUtils;
+import codesquad.security.LoginUser;
 
 @Controller
 @RequestMapping("/issues")
@@ -28,22 +29,15 @@ public class IssueController {
 	private IssueRepository issueRepository;
 
 	@GetMapping("/form")
-	public String form(HttpSession session) {
-		if(!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/login";
-		}
+	public String form(@LoginUser User loginUser) {
 		return "/issue/form";
 	}
 
 	@PostMapping("")
-	public String create(HttpSession session, String title, String contents, Model model) {
-		if(!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/login";
-		}
+	public String create(@LoginUser User loginUser, String title, String contents, Model model) {
 		try {
 			validCheck(title, contents);
-			User sessionUser = HttpSessionUtils.getUserFromSession(session);
-			Issue newIssue = new Issue(title, contents, sessionUser);
+			Issue newIssue = new Issue(title, contents, loginUser);
 			log.debug(newIssue.toString());
 			issueRepository.save(newIssue);
 			return "redirect:/";
@@ -70,10 +64,10 @@ public class IssueController {
 		return "/issue/show";
 	}
 	
-	@GetMapping("/{id}/update")
-	public String updateIssueView (@PathVariable Long id, Model model, HttpSession session) {
+	@GetMapping("/{id}/updateForm")
+	public String updateIssueView (@LoginUser User loginUser, @PathVariable Long id, Model model) {
 		Issue issue = issueRepository.findOne(id);
-		Result result = valid(session, issue);
+		Result result = valid(loginUser, issue);
 		if(!result.isValid()) {
 			return issueValidCheck(id, model, result);
 		}
@@ -87,11 +81,7 @@ public class IssueController {
 		return "/issue/show";
 	}
 	
-	private Result valid(HttpSession session, Issue issue) {
-		if (!HttpSessionUtils.isLoginUser(session)) {
-			return Result.fail("로그인이 필요합니다.");
-		}
-		User loginUser = HttpSessionUtils.getUserFromSession(session);
+	private Result valid(User loginUser, Issue issue) {
 		if (!issue.isSameWriter(loginUser)) {
 			return Result.fail("자신이 쓴 글만 수정, 삭제가 가능합니다.");
 		}
@@ -99,9 +89,9 @@ public class IssueController {
 	}
 	
 	@PutMapping("/{id}")
-	public String updateIssue(@PathVariable Long id, String title, String contents, Model model, HttpSession session) {
+	public String updateIssue(@LoginUser User loginUser, @PathVariable Long id, String title, String contents, Model model) {
 		Issue issue = issueRepository.findOne(id);
-		Result result = valid(session, issue);
+		Result result = valid(loginUser, issue);
 		if(!result.isValid()) {
 			return issueValidCheck(id, model, result);
 		}
@@ -111,9 +101,9 @@ public class IssueController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public String deleteIssue(@PathVariable Long id, Model model, HttpSession session) {
+	public String deleteIssue(@LoginUser User loginUser, @PathVariable Long id, Model model) {
 		Issue issue = issueRepository.findOne(id);
-		Result result = valid(session, issue);
+		Result result = valid(loginUser, issue);
 		if(!result.isValid()) {
 			return issueValidCheck(id, model, result);
 		}

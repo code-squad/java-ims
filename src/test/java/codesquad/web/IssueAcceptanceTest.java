@@ -70,17 +70,10 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertThat(issueRepository.findOne((long) 1).getTitle(), is("11111"));
 	}
 	
-	@Test
-	public void showUpdateView() {
-		ResponseEntity<String> response = basicAuthTemplate.getForEntity("/issues/1/update", String.class);
-		String body = response.getBody();
-		Log.debug("body : {} " + body);
-		assertTrue(body.contains("11111"));
-	}
 	
 	@Test
 	public void showUpdateViewError() {
-		ResponseEntity<String> response = basicAuthTemplate.getForEntity("/issues/2/update", String.class);
+		ResponseEntity<String> response = basicAuthTemplate.getForEntity("/issues/2/updateForm", String.class);
 		String body = response.getBody();
 		Log.debug("body : {} " + body);
 		assertTrue(body.contains("자신이 쓴 글만 수정"));
@@ -93,20 +86,25 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		.addParameter("title", "33333")
 		.addParameter("contents", "33333").build();
 		ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issues/1", request, String.class);
+		showUpdateView();
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-//		assertThat(response.getHeaders().getLocation().getPath(), is("/"));
-//			Expected: is "/"
-//			but: was "/;jsessionid=27349F37E2CAFAE80322DD0471C095D3"
 		Issue issue = issueRepository.findOne((long) 1);
 		assertThat(issue.getTitle(), is("33333"));
+	}
+	
+	private void showUpdateView() {
+		ResponseEntity<String> response = basicAuthTemplate.getForEntity("/issues/1/updateForm", String.class);
+		String body = response.getBody();
+		Log.debug("body : {} " + body);
+		assertTrue(body.contains("33333"));
 	}
 	
 	@Test
 	public void issueDeleteTest() {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
 				.delete().build();
-		ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issues/1", request, String.class);
-		assertNull(issueRepository.findOne((long) 1));
+		ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issues/3", request, String.class);
+		assertNull(issueRepository.findOne((long) 3));
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 	}
 }
