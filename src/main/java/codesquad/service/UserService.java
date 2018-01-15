@@ -19,7 +19,7 @@ public class UserService {
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
-    public User add(UserDto userDto) {
+	public User add(UserDto userDto) {
         return userRepository.save(userDto._toUser());
     }
 
@@ -53,5 +53,13 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public UserRepository getUserRepository() {
+		return userRepository;
+	}
+    
+    public Optional<User> getUserRepositoryFindUserId(String userId) {
+    	return userRepository.findByUserId(userId);
     }
 }

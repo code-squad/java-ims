@@ -23,15 +23,22 @@
         
         <div class="issues__posts mdl-grid">
         
+        {{#errorMessage}}
+        	<div class="alert alert-danger" role="alert">{{this}}</div>
+        {{/errorMessage}}
+        
         {{#issue}}
           <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
             <div class="mdl-card__menu">
-              <a href="/updateIssue/1" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+              <a href="/issues/{{id}}/updateForm" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
                 <i class="material-icons">edit</i>
               </a>
-              <a href="/deleteIssue/1" id="issues-menu-lower-right" class="mdl-button mdl-js-button mdl-button--icon">
-                <i class="material-icons">delete</i>
-              </a>
+           	   
+           	 <form action="/issues/{{id}}" enctype="multipart/form-data" method="POST">
+           	 	<input type="hidden" name="_method" value="delete" />
+               <button> <i class="material-icons">delete</i> </button>
+             </form>   
+           
             </div>
             <div class="mdl-card__title mdl-color-text--grey-50">
               <i class="material-icons">check_circle</i>
@@ -43,7 +50,8 @@
               <div style="margin-right:20px;">
                 <div class="author-text">
                   <strong>
-                    <a href="https://github.com/javajigi" class="author">javajigi</a>
+                  {{writer.userId}}
+                   <!--  <a href="https://github.com/javajigi" class="author">javajigi</a> -->
                   </strong>
                 </div>
                 <span>2017-01-14</span>

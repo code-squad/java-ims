@@ -13,6 +13,7 @@ public abstract class BasicAuthAcceptanceTest extends AcceptanceTest {
     @Before
     public void setup() {
         loginUser = findDefaultUser();
+//      basicAuthTemplate 메소드는 부모인 AcceptanceTest에 있어서 바로 쓰고 있다.
         basicAuthTemplate = basicAuthTemplate(loginUser);
     }
 }

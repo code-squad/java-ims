@@ -23,9 +23,10 @@ public class SecurityControllerAdvice {
     }
 
     @ExceptionHandler(UnAuthorizedException.class)
-    @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    public void unAuthorized() {
+    //@ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public String unAuthorized() {
         log.debug("UnAuthorizedException is happened!");
+        return "/users/login";
     }
     
     @ExceptionHandler(UnAuthenticationException.class)
