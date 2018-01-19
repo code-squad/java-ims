@@ -10,9 +10,9 @@ public class MileStoneDto {
 	private String startDate;
 	private String endDate;
 	private List<Issue> issues;
-	
+
 	public MileStoneDto() {
-		
+
 	}
 
 	public MileStoneDto(String subject, String startDate, String endDate) {
@@ -20,7 +20,7 @@ public class MileStoneDto {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
-	
+
 	public MileStone _toMileStone() {
 		return new MileStone(this.subject, this.startDate, this.endDate);
 	}
@@ -105,7 +105,5 @@ public class MileStoneDto {
 		return "MileStoneDto [subject=" + subject + ", startDate=" + startDate + ", endDate=" + endDate + ", issues="
 				+ issues + "]";
 	}
-	
-	
 
 }

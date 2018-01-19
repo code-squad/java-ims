@@ -9,9 +9,10 @@ import codesquad.domain.MileStoneDto;
 
 public class MileStoneServiceTest {
 	MileStoneService mileStoneService;
+
 	@Before
 	public void setUp() {
-		mileStoneService  = new MileStoneService ();
+		mileStoneService = new MileStoneService();
 	}
-	
+
 }
