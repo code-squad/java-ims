@@ -23,57 +23,57 @@ import codesquad.service.UserService;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
-    @Resource(name = "userService")
-    private UserService userService;
+	@Resource(name = "userService")
+	private UserService userService;
 
-    @GetMapping("/form")
-    public String form() {
-        return "/user/form";
-    }
-  
-    @PostMapping("")
-    public String create(UserDto userDto) {
-        userService.add(userDto);
-        return "redirect:/";
-    }
-    
-    @GetMapping("/loginForm")
-    public String showLoginPage() {
-    		return "/user/login";
-    }
-    
-    @PostMapping("/login")
-    public String login(String userId, String password, HttpSession session, Model model) {
-    		User user;
-			try {
-				user = userService.login(userId, password);
-				session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
-			} catch (UnAuthenticationException e) {
-				model.addAttribute("errorMessage", "아이디 또는 비밀번호가 다릅니다.");
-				return "/user/login";
-			}
-			return "redirect:/";
-    }
-    
-    @PostMapping("/logout")
-    public String logout(HttpSession session) {
-    	session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
-    	return "redirect:/";
-    }
+	@GetMapping("/form")
+	public String form() {
+		return "/user/form";
+	}
 
-    @GetMapping("/{id}/form")
-    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
-        log.debug("LoginUser : {}", loginUser);
-        model.addAttribute("loginUser", userService.findById(loginUser, id));
-        return "/user/updateForm";
-    }
+	@PostMapping("")
+	public String create(UserDto userDto) {
+		userService.add(userDto);
+		return "redirect:/";
+	}
 
-    @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
-        userService.update(loginUser, id, target);
-        return "redirect:/";
-    }
+	@GetMapping("/loginForm")
+	public String showLoginPage() {
+		return "/user/login";
+	}
+
+	@PostMapping("/login")
+	public String login(String userId, String password, HttpSession session, Model model) {
+		User user;
+		try {
+			user = userService.login(userId, password);
+			session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
+		} catch (UnAuthenticationException e) {
+			model.addAttribute("errorMessage", "아이디 또는 비밀번호가 다릅니다.");
+			return "/user/login";
+		}
+		return "redirect:/";
+	}
+
+	@PostMapping("/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+		return "redirect:/";
+	}
+
+	@GetMapping("/{id}/form")
+	public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+		log.debug("LoginUser : {}", loginUser);
+		model.addAttribute("loginUser", userService.findById(loginUser, id));
+		return "/user/updateForm";
+	}
+
+	@PutMapping("/{id}")
+	public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
+		userService.update(loginUser, id, target);
+		return "redirect:/";
+	}
 
 }

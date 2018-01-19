@@ -15,7 +15,7 @@ import codesquad.security.LoginUser;
 public class LabelService {
 	@Resource(name = "labelRepository")
 	private LabelRepository labelRepository;
-	
+
 	public Label add(LabelDto labelDto) {
 		// issue 객체로 바꾸어 집어넣는다.
 		return labelRepository.save(labelDto._toLabel());
@@ -24,7 +24,7 @@ public class LabelService {
 	public Label findById(long id) {
 		return labelRepository.findOne(id);
 	}
-	
+
 	public List<Label> findAll() {
 		return labelRepository.findAll();
 	}
@@ -43,5 +43,5 @@ public class LabelService {
 	public String toString() {
 		return "LabelService [labelRepository=" + labelRepository + "]";
 	}
-	
+
 }

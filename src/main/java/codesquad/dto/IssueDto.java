@@ -16,26 +16,26 @@ import codesquad.domain.User;
 import codesquad.security.LoginUser;
 
 public class IssueDto {
-	
+
 	private User user;
-	
+
 	@Size(min = 3, max = 20)
 	private String subject;
-	
+
 	@Size(min = 3)
 	private String comment;
-	
+
 	private MileStone mileStone;
-	
+
 	private User assignedUser;
 
 	@ManyToMany
 	private Set<Label> labels = Sets.newHashSet();
-	
+
 	public IssueDto() {
-		
+
 	}
-	
+
 	public IssueDto(@LoginUser User loginUser, String subject, String comment) {
 		this.user = loginUser;
 		this.subject = subject;
@@ -61,7 +61,7 @@ public class IssueDto {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 	public boolean isSubjectBlank() {
 		return StringUtils.isBlank(this.subject);
 	}
@@ -69,15 +69,15 @@ public class IssueDto {
 	public boolean isCommentBlank() {
 		return StringUtils.isBlank(this.comment);
 	}
-	
+
 	public User getUser() {
 		return user;
 	}
-	
+
 	public void setUser(User user) {
 		this.user = user;
 	}
-		
+
 	public MileStone getMileStone() {
 		return mileStone;
 	}
@@ -92,8 +92,8 @@ public class IssueDto {
 
 	@Override
 	public String toString() {
-		return "IssueDto [user=" + user + ", subject=" + subject + ", comment=" + comment + "mileStone=" + mileStone + "]";
+		return "IssueDto [user=" + user + ", subject=" + subject + ", comment=" + comment + "mileStone=" + mileStone
+				+ "]";
 	}
-	
-	
+
 }

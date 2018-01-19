@@ -8,39 +8,40 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
 import support.domain.AbstractEntity;
+
 @Entity
 public class MileStone extends AbstractEntity {
-	
+
 	@Size(min = 3, max = 20)
-    @Column(unique = true, nullable = false, length = 20)
+	@Column(unique = true, nullable = false, length = 20)
 	private String subject;
-	
+
 	private String startDate;
-	
+
 	private String endDate;
-	
+
 	@OneToMany(mappedBy = "mileStone")
 	private List<Issue> issues;
-	
+
 	public MileStone() {
-		
+
 	}
-	
+
 	public MileStone(String subject, String startDate, String endDate) {
 		this(0L, subject, startDate, endDate);
 	}
-	
+
 	public MileStone(long id, String subject, String startDate, String endDate) {
 		super(id);
 		this.subject = subject;
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
-	
+
 	public MileStoneDto _toMileStoneDto() {
 		return new MileStoneDto(this.subject, this.startDate, this.endDate);
 	}
-	
+
 	public void addIssue(Issue issue) {
 		this.issues.add(issue);
 	}
@@ -76,7 +77,7 @@ public class MileStone extends AbstractEntity {
 	public void setIssues(List<Issue> issues) {
 		this.issues = issues;
 	}
-	
+
 	public int getIssueSize() {
 		return this.issues.size();
 	}
@@ -86,7 +87,5 @@ public class MileStone extends AbstractEntity {
 		return "MileStone [subject=" + subject + ", startDate=" + startDate + ", endDate=" + endDate + ", issues="
 				+ issues + ", toString()=" + super.toString() + "]";
 	}
-	
-	
-	
+
 }

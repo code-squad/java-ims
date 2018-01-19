@@ -24,98 +24,101 @@ import codesquad.service.LabelService;
 import codesquad.service.MileStoneService;
 import codesquad.service.UserService;
 import support.domain.AbstractEntity;
+
 @Controller
 @RequestMapping("/issues")
 public class IssueController extends AbstractEntity {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    
-    @Resource(name = "issueService")
-    private IssueService issueService;
-    
-    @Resource(name = "userService")
-    private UserService userService;
-    
-    @Resource(name = "mileStoneService")
-    private MileStoneService mileStoneService;
-    
-    @Resource(name = "labelService")
-    private LabelService labelService;
-    
-    @GetMapping("/form")
-    public String form(@LoginUser User loginUser) {
-    		return "/issue/form";
-    }
-    
-    // view로 부터 dto 형태로 데이터를 받아 처리.
-    @PostMapping("")
-    public String create(IssueDto issueDto, @LoginUser User loginUser) {
-    		if(issueDto.isSubjectBlank() || issueDto.isCommentBlank()) {
-    			return "redirect:/issues";
-    		}
-    		issueService.add(issueDto, loginUser);
-    		return "redirect:/";
-    }
-    
-    @GetMapping("/{id}/form")
-    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
-    		Issue issue = issueService.findById(id);
-    		if(!issue.isSameUser(loginUser)) {
-    			return "redirect:/users/loginForm";
-    		}
-    		log.debug("" + id);
-    		model.addAttribute("issue", issue);
-    		return "/issue/updateForm";
-    }
-    
-    @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, String subject, String comment, Model model) {
-    		Issue issue = issueService.update(loginUser, id, subject, comment);
-    		model.addAttribute("issue", issue);
-    		return "/issue/show";
-    }
-    
-    @DeleteMapping("/{id}")
-    public String delete(@LoginUser User loginUser, @PathVariable long id) {
-    		issueService.delete(loginUser, id);
-    		return "redirect:/";
-    }
-    
-    @GetMapping("/{id}")
-    public String show(@PathVariable long id, Model model) {
-    		// model 을 통해 출력할 이슈를 전달.
-    		Issue issue = issueService.findById(id);
-    		log.debug("issue : {}", issue);
-    		model.addAttribute("issue", issue);
-    		model.addAttribute("mileStones", mileStoneService.findAll());
-    		model.addAttribute("users", userService.findAll());
-    		model.addAttribute("labelList", labelService.findAll());
-    		log.debug("labelList : {}", labelService.findAll().toString());
-    		return "/issue/show";
-    }
-    
-    @PostMapping("/{id}/setMileStone/{mileStoneId}")
-    public String setMileStone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long mileStoneId, Model model) {
-    		MileStone mileStone = mileStoneService.findById(mileStoneId);
-    		Issue issue = issueService.findById(id);
-    		mileStoneService.register(loginUser, issue, mileStone);
-    		issueService.setMileStone(loginUser, issue, mileStone);
-    		return "redirect:/issues/{id}";
-    }
-    
-    @PostMapping("/{id}/setAssignedUser/{userId}")
-    public String setUser(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId, Model model) {
-    		User user = userService.findById(userId);
-    		Issue issue = issueService.findById(id);
-    		userService.register(loginUser, issue, user);
-    		issueService.setAssignedUser(loginUser, issue, user);    		
-    		return "redirect:/issues/{id}";
-    }
-    
-    @PostMapping("/{id}/setLabel/{labelId}")
-    public String setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId, Model model) {
-    		Label label = labelService.findById(labelId);
-    		Issue issue = issueService.findById(id);
-    		issueService.setLabel(loginUser, issue, label);
-    		return "redirect:/issues/{id}";
-    }
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
+	@Resource(name = "issueService")
+	private IssueService issueService;
+
+	@Resource(name = "userService")
+	private UserService userService;
+
+	@Resource(name = "mileStoneService")
+	private MileStoneService mileStoneService;
+
+	@Resource(name = "labelService")
+	private LabelService labelService;
+
+	@GetMapping("/form")
+	public String form(@LoginUser User loginUser) {
+		return "/issue/form";
+	}
+
+	// view로 부터 dto 형태로 데이터를 받아 처리.
+	@PostMapping("")
+	public String create(IssueDto issueDto, @LoginUser User loginUser) {
+		if (issueDto.isSubjectBlank() || issueDto.isCommentBlank()) {
+			return "redirect:/issues";
+		}
+		issueService.add(issueDto, loginUser);
+		return "redirect:/";
+	}
+
+	@GetMapping("/{id}/form")
+	public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+		Issue issue = issueService.findById(id);
+		if (!issue.isSameUser(loginUser)) {
+			return "redirect:/users/loginForm";
+		}
+		log.debug("" + id);
+		model.addAttribute("issue", issue);
+		return "/issue/updateForm";
+	}
+
+	@PutMapping("/{id}")
+	public String update(@LoginUser User loginUser, @PathVariable long id, String subject, String comment,
+			Model model) {
+		Issue issue = issueService.update(loginUser, id, subject, comment);
+		model.addAttribute("issue", issue);
+		return "/issue/show";
+	}
+
+	@DeleteMapping("/{id}")
+	public String delete(@LoginUser User loginUser, @PathVariable long id) {
+		issueService.delete(loginUser, id);
+		return "redirect:/";
+	}
+
+	@GetMapping("/{id}")
+	public String show(@PathVariable long id, Model model) {
+		// model 을 통해 출력할 이슈를 전달.
+		Issue issue = issueService.findById(id);
+		log.debug("issue : {}", issue);
+		model.addAttribute("issue", issue);
+		model.addAttribute("mileStones", mileStoneService.findAll());
+		model.addAttribute("users", userService.findAll());
+		model.addAttribute("labelList", labelService.findAll());
+		log.debug("labelList : {}", labelService.findAll().toString());
+		return "/issue/show";
+	}
+
+	@PostMapping("/{id}/setMileStone/{mileStoneId}")
+	public String setMileStone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long mileStoneId,
+			Model model) {
+		MileStone mileStone = mileStoneService.findById(mileStoneId);
+		Issue issue = issueService.findById(id);
+		mileStoneService.register(loginUser, issue, mileStone);
+		issueService.setMileStone(loginUser, issue, mileStone);
+		return "redirect:/issues/{id}";
+	}
+
+	@PostMapping("/{id}/setAssignedUser/{userId}")
+	public String setUser(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId, Model model) {
+		User user = userService.findById(userId);
+		Issue issue = issueService.findById(id);
+		userService.register(loginUser, issue, user);
+		issueService.setAssignedUser(loginUser, issue, user);
+		return "redirect:/issues/{id}";
+	}
+
+	@PostMapping("/{id}/setLabel/{labelId}")
+	public String setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId, Model model) {
+		Label label = labelService.findById(labelId);
+		Issue issue = issueService.findById(id);
+		issueService.setLabel(loginUser, issue, label);
+		return "redirect:/issues/{id}";
+	}
 }

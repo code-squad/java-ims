@@ -15,111 +15,111 @@ import support.domain.AbstractEntity;
 
 @Entity
 public class User extends AbstractEntity {
-    public static final GuestUser GUEST_USER = new GuestUser();
-    
-    @Size(min = 3, max = 20)
-    @Column(unique = true, nullable = false, length = 20)
-    private String userId;
+	public static final GuestUser GUEST_USER = new GuestUser();
 
-    @Size(min = 6, max = 20)
-    @Column(nullable = false, length = 20)
-    @JsonIgnore
-    private String password;
+	@Size(min = 3, max = 20)
+	@Column(unique = true, nullable = false, length = 20)
+	private String userId;
 
-    @Size(min = 3, max = 20)
-    @Column(nullable = false, length = 20)
-    private String name;
-    
-    @OneToMany(mappedBy ="assignedUser")
-    private List<Issue> assignedIssues;
+	@Size(min = 6, max = 20)
+	@Column(nullable = false, length = 20)
+	@JsonIgnore
+	private String password;
 
-    public User() {
-    }
+	@Size(min = 3, max = 20)
+	@Column(nullable = false, length = 20)
+	private String name;
 
-    public User(String userId, String password, String name) {
-        this(0L, userId, password, name);
-    }
+	@OneToMany(mappedBy = "assignedUser")
+	private List<Issue> assignedIssues;
 
-    public User(long id, String userId, String password, String name) {
-        super(id);
-        this.userId = userId;
-        this.password = password;
-        this.name = name;
-    }
-    
-    public void addIssue(Issue issue) {
-    		this.assignedIssues.add(issue);
-    }
-            
-    public List<Issue> getAssignedIssues() {
+	public User() {
+	}
+
+	public User(String userId, String password, String name) {
+		this(0L, userId, password, name);
+	}
+
+	public User(long id, String userId, String password, String name) {
+		super(id);
+		this.userId = userId;
+		this.password = password;
+		this.name = name;
+	}
+
+	public void addIssue(Issue issue) {
+		this.assignedIssues.add(issue);
+	}
+
+	public List<Issue> getAssignedIssues() {
 		return assignedIssues;
 	}
 
 	public String getUserId() {
-        return userId;
-    }
+		return userId;
+	}
 
-    public User setUserId(String userId) {
-        this.userId = userId;
-        return this;
-    }
+	public User setUserId(String userId) {
+		this.userId = userId;
+		return this;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public User setPassword(String password) {
-        this.password = password;
-        return this;
-    }
+	public User setPassword(String password) {
+		this.password = password;
+		return this;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public User setName(String name) {
-        this.name = name;
-        return this;
-    }
-    
-    private boolean matchUserId(String userId) {
-        return this.userId.equals(userId);
-    }
-    
-    public void update(User loginUser, User target) {// user name 만 바꿀수 있도록 설정.
-        if (!matchUserId(loginUser.getUserId())) {
-            throw new UnAuthorizedException();
-        }
+	public User setName(String name) {
+		this.name = name;
+		return this;
+	}
 
-        if (!matchPassword(target.getPassword())) {
-            return;
-        }
+	private boolean matchUserId(String userId) {
+		return this.userId.equals(userId);
+	}
 
-        this.name = target.name;
-    }
+	public void update(User loginUser, User target) {// user name 만 바꿀수 있도록 설정.
+		if (!matchUserId(loginUser.getUserId())) {
+			throw new UnAuthorizedException();
+		}
 
-    public boolean matchPassword(String password) {
-        return this.password.equals(password);
-    }
+		if (!matchPassword(target.getPassword())) {
+			return;
+		}
 
-    public UserDto _toUserDto() {// user 객체를 userDto 객체로 바꿔주는 역할.
-        return new UserDto(this.userId, this.password, this.name);
-    }
+		this.name = target.name;
+	}
 
-    @JsonIgnore
-    public boolean isGuestUser() {
-        return false;
-    }
-    
-    private static class GuestUser extends User {
-        @Override
-        public boolean isGuestUser() {
-            return true;
-        }
-    }
-    
-    @Override
-    public String toString() {
-        return "User [userId=" + userId + ", password=" + password + ", name=" + name + "]";
-    }
+	public boolean matchPassword(String password) {
+		return this.password.equals(password);
+	}
+
+	public UserDto _toUserDto() {// user 객체를 userDto 객체로 바꿔주는 역할.
+		return new UserDto(this.userId, this.password, this.name);
+	}
+
+	@JsonIgnore
+	public boolean isGuestUser() {
+		return false;
+	}
+
+	private static class GuestUser extends User {
+		@Override
+		public boolean isGuestUser() {
+			return true;
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", password=" + password + ", name=" + name + "]";
+	}
 }

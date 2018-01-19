@@ -4,25 +4,24 @@ import javax.persistence.Column;
 
 import codesquad.domain.Label;
 
-
 public class LabelDto {
 	private String subject;
-	
+
 	public LabelDto() {
-		
+
 	}
-	
+
 	public LabelDto(String subject) {
 		this.subject = subject;
 	}
-	
+
 	public Label _toLabel() {
 		return new Label(this.subject);
 	}
 
 	public String getSubject() {
 		return subject;
-	}	
+	}
 
 	public void setSubject(String subject) {
 		this.subject = subject;
@@ -56,5 +55,5 @@ public class LabelDto {
 		} else if (!subject.equals(other.subject))
 			return false;
 		return true;
-	}	
+	}
 }

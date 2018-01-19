@@ -6,13 +6,13 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import codesquad.domain.User;
 
 public abstract class BasicAuthAcceptanceTest extends AcceptanceTest {
-    protected TestRestTemplate basicAuthTemplate;
+	protected TestRestTemplate basicAuthTemplate;
 
-    protected User loginUser;
+	protected User loginUser;
 
-    @Before
-    public void setup() {
-        loginUser = findDefaultUser();
-        basicAuthTemplate = basicAuthTemplate(loginUser);
-    }
+	@Before
+	public void setup() {
+		loginUser = findDefaultUser();
+		basicAuthTemplate = basicAuthTemplate(loginUser);
+	}
 }

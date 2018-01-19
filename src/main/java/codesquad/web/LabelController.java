@@ -20,7 +20,6 @@ import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import codesquad.service.LabelService;
 
-
 @Controller
 @RequestMapping("/labels")
 public class LabelController {
@@ -28,17 +27,17 @@ public class LabelController {
 
 	@Resource(name = "labelService")
 	private LabelService labelService;
-	
+
 	@Resource(name = "issueService")
 	private IssueService issueService;
-	
+
 	@GetMapping("")
 	public String show_list(@LoginUser User loginUser, Model model) {
 		model.addAttribute("labelList", labelService.findAll());
-		log.debug("labelList : {}", labelService.findAll() );
+		log.debug("labelList : {}", labelService.findAll());
 		return "label/list";
 	}
-	
+
 	@GetMapping("/form")
 	public String form(@LoginUser User loginUser) {
 		return "/label/form";
@@ -51,31 +50,30 @@ public class LabelController {
 		labelService.add(labelDto);
 		return "redirect:/labels";
 	}
-	
+
 	@GetMapping("/{id}")
 	public String showDetail(@LoginUser User loginUser, @PathVariable long id, Model model) {
 		model.addAttribute("label", labelService.findById(id));
 		return "/label/show";
 	}
-	
+
 	@GetMapping("/{id}/form")
-    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
-    		model.addAttribute("label", labelService.findById(id));
-    		return "/label/updateForm";
-    }
-    
-    @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, String subject, Model model) {
+	public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+		model.addAttribute("label", labelService.findById(id));
+		return "/label/updateForm";
+	}
+
+	@PutMapping("/{id}")
+	public String update(@LoginUser User loginUser, @PathVariable long id, String subject, Model model) {
 		Label label = labelService.update(loginUser, id, subject);
-    		model.addAttribute("label", label);
-    		return "/label/show";
-    }
-    
-    @DeleteMapping("/{id}")
-    public String delete(@LoginUser User loginUser, @PathVariable long id) {
-    		labelService.delete(loginUser, id);
-    		return "redirect:/";
-    }
-    
+		model.addAttribute("label", label);
+		return "/label/show";
+	}
+
+	@DeleteMapping("/{id}")
+	public String delete(@LoginUser User loginUser, @PathVariable long id) {
+		labelService.delete(loginUser, id);
+		return "redirect:/";
+	}
 
 }

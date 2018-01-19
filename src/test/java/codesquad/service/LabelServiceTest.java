@@ -14,7 +14,7 @@ public class LabelServiceTest {
 
 	@Resource(name = "labelRepository")
 	private LabelRepository labelRepository;
-	
+
 	@Test
 	public void findAll_label() {
 		LabelDto labelDto = new LabelDto();

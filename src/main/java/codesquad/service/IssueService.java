@@ -29,11 +29,11 @@ public class IssueService {
 	public Issue findById(long id) {
 		return issueRepository.findOne(id);
 	}
-	
+
 	public List<Issue> findAll() {
 		return issueRepository.findAll();
 	}
-	
+
 	public Issue update(@LoginUser User loginUser, long id, String subject, String comment) {
 		Issue issue = issueRepository.findOne(id);
 		issue.update(loginUser, subject, comment);
@@ -42,14 +42,14 @@ public class IssueService {
 
 	public void delete(@LoginUser User loginUser, long id) {
 		Issue issue = issueRepository.findOne(id);
-		if(!issue.isSameUser(loginUser)) {
+		if (!issue.isSameUser(loginUser)) {
 			throw new UnAuthorizedException();
 		}
 		issueRepository.delete(issue);
 	}
-	
+
 	public Issue setMileStone(@LoginUser User loginUser, Issue issue, MileStone mileStone) {
-		if(!issue.isSameUser(loginUser)) {
+		if (!issue.isSameUser(loginUser)) {
 			throw new UnAuthorizedException();
 		}
 		issue.setMileStone(mileStone);
@@ -57,7 +57,7 @@ public class IssueService {
 	}
 
 	public Issue setAssignedUser(@LoginUser User loginUser, Issue issue, User user) {
-		if(!issue.isSameUser(loginUser)) {
+		if (!issue.isSameUser(loginUser)) {
 			throw new UnAuthorizedException();
 		}
 		issue.setAssignedUser(user);
@@ -65,7 +65,7 @@ public class IssueService {
 	}
 
 	public Issue setLabel(@LoginUser User loginUser, Issue issue, Label label) {
-		if(!issue.isSameUser(loginUser)) {
+		if (!issue.isSameUser(loginUser)) {
 			throw new UnAuthorizedException();
 		}
 		issue.setLabel(label);

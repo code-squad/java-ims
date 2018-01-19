@@ -18,17 +18,17 @@ import codesquad.security.LoginUser;
 public class MileStoneService {
 	@Resource(name = "mileStoneRepository")
 	private MileStoneRepository mileStoneRepository;
-	
+
 	public void add(MileStoneDto mileStoneDto) {
 		mileStoneRepository.save(mileStoneDto._toMileStone());
 	}
-	
-	public List<MileStone> findAll(){
+
+	public List<MileStone> findAll() {
 		return mileStoneRepository.findAll();
 	}
-	
+
 	public void register(@LoginUser User loginUser, Issue issue, MileStone mileStone) {
-		if(!issue.isSameUser(loginUser)) {
+		if (!issue.isSameUser(loginUser)) {
 			throw new UnAuthorizedException();
 		}
 		mileStone.addIssue(issue);
@@ -39,5 +39,4 @@ public class MileStoneService {
 		return mileStoneRepository.findOne(id);
 	}
 
-	
 }
