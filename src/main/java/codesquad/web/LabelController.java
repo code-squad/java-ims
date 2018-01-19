@@ -34,8 +34,8 @@ public class LabelController {
 	
 	@GetMapping("")
 	public String show_list(@LoginUser User loginUser, Model model) {
-		model.addAttribute("labels", labelService.findAll());
-		log.debug("labels : {}", labelService.findAll() );
+		model.addAttribute("labelList", labelService.findAll());
+		log.debug("labelList : {}", labelService.findAll() );
 		return "label/list";
 	}
 	
