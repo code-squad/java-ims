@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
+import codesquad.domain.Issue;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
@@ -36,6 +37,10 @@ public class UserService {
         }
         return user;
     }
+    
+    public User findById(long id) {
+    		return userRepository.findOne(id);
+    }
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -54,4 +59,12 @@ public class UserService {
 
         return user;
     }
+
+	public void register(User loginUser, Issue issue, User user) {
+		if(!issue.isSameUser(loginUser)) {
+			throw new UnAuthorizedException();
+		}
+		user.addIssue(issue);
+		userRepository.save(user);
+	}
 }

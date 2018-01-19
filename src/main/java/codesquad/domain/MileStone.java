@@ -41,6 +41,10 @@ public class MileStone extends AbstractEntity {
 		return new MileStoneDto(this.subject, this.startDate, this.endDate);
 	}
 	
+	public void addIssue(Issue issue) {
+		this.issues.add(issue);
+	}
+
 	public String getSubject() {
 		return subject;
 	}
@@ -71,6 +75,10 @@ public class MileStone extends AbstractEntity {
 
 	public void setIssues(List<Issue> issues) {
 		this.issues = issues;
+	}
+	
+	public int getIssueSize() {
+		return this.issues.size();
 	}
 
 	@Override

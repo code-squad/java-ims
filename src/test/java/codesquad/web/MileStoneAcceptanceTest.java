@@ -84,11 +84,6 @@ public class MileStoneAcceptanceTest extends BasicAuthAcceptanceTest {
         assertNotNull(mileStoneRepository.findBySubject(subject));
         // 생성 후 목록으로 redirect.
         assertTrue(response.getHeaders().getLocation().getPath().startsWith("/mileStones"));
+        mileStoneRepository.delete((long)1);
 	}
-	
-	@Test
-	public void testName() throws Exception {
-		
-	}
-	
 }

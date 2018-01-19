@@ -42,7 +42,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("password", "password")
                 .addParameter("name", "자바지기")
                 .addParameter("email", "javajigi@slipp.net").build();
-
+        
         ResponseEntity<String> response = template.postForEntity("/users", request, String.class);
         // 응답 코드가 302 redirect 인지 아닌지 확인.
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
@@ -50,6 +50,8 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         assertNotNull(userRepository.findByUserId(userId));
         // 최종 url 이 "/users" 인지 아닌지 확인.
         assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+        userRepository.delete((long) 3);
+        
     }
     
     @Test
@@ -64,7 +66,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     		String userId = "javajigi";
     	 	HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                  .addParameter("userId", userId)
-                 .addParameter("password", "test").build();
+                 .addParameter("password", "password1").build();
 
     		ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
@@ -106,13 +108,13 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void update_no_login() throws Exception {
         ResponseEntity<String> response = update(template);
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
 
     private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("_method", "put")
-                .addParameter("password", "pass2")
+                .addParameter("password", "password2")
                 .addParameter("name", "재성2")
                 .addParameter("email", "javajigi@slipp.net").build();
         return template.postForEntity(String.format("/users/%d", loginUser.getId()), request, String.class);

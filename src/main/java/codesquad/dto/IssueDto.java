@@ -1,10 +1,16 @@
 package codesquad.dto;
 
+import java.util.Set;
+
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.common.collect.Sets;
+
 import codesquad.domain.Issue;
+import codesquad.domain.Label;
 import codesquad.domain.MileStone;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
@@ -21,6 +27,10 @@ public class IssueDto {
 	
 	private MileStone mileStone;
 	
+	private User assignedUser;
+
+	@ManyToMany
+	private Set<Label> labels = Sets.newHashSet();
 	
 	public IssueDto() {
 		
@@ -66,6 +76,18 @@ public class IssueDto {
 	
 	public void setUser(User user) {
 		this.user = user;
+	}
+		
+	public MileStone getMileStone() {
+		return mileStone;
+	}
+
+	public User getAssignedUser() {
+		return assignedUser;
+	}
+
+	public Set<Label> getLabels() {
+		return labels;
 	}
 
 	@Override

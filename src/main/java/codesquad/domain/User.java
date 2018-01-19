@@ -1,7 +1,10 @@
 package codesquad.domain;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,6 +29,9 @@ public class User extends AbstractEntity {
     @Size(min = 3, max = 20)
     @Column(nullable = false, length = 20)
     private String name;
+    
+    @OneToMany(mappedBy ="assignedUser")
+    private List<Issue> assignedIssues;
 
     public User() {
     }
@@ -41,7 +47,15 @@ public class User extends AbstractEntity {
         this.name = name;
     }
     
-    public String getUserId() {
+    public void addIssue(Issue issue) {
+    		this.assignedIssues.add(issue);
+    }
+            
+    public List<Issue> getAssignedIssues() {
+		return assignedIssues;
+	}
+
+	public String getUserId() {
         return userId;
     }
 

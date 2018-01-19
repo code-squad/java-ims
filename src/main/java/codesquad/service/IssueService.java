@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.Label;
+import codesquad.domain.MileStone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
@@ -45,4 +47,33 @@ public class IssueService {
 		}
 		issueRepository.delete(issue);
 	}
+	
+	public Issue setMileStone(@LoginUser User loginUser, Issue issue, MileStone mileStone) {
+		if(!issue.isSameUser(loginUser)) {
+			throw new UnAuthorizedException();
+		}
+		issue.setMileStone(mileStone);
+		return issueRepository.save(issue);
+	}
+
+	public Issue setAssignedUser(@LoginUser User loginUser, Issue issue, User user) {
+		if(!issue.isSameUser(loginUser)) {
+			throw new UnAuthorizedException();
+		}
+		issue.setAssignedUser(user);
+		return issueRepository.save(issue);
+	}
+
+	public Issue setLabel(@LoginUser User loginUser, Issue issue, Label label) {
+		if(!issue.isSameUser(loginUser)) {
+			throw new UnAuthorizedException();
+		}
+		issue.setLabel(label);
+		return issueRepository.save(issue);
+	}
+
+	public void addLabel(Label label, Issue issue) {
+		issue.addLabel(label);
+	}
+
 }
