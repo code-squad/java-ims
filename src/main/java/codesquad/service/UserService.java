@@ -15,7 +15,6 @@ import codesquad.dto.UserDto;
 
 @Service
 public class UserService {
-
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
@@ -35,6 +34,10 @@ public class UserService {
             throw new UnAuthorizedException();
         }
         return user;
+    }
+    
+    public User findById(long id) {
+    	return userRepository.findOne(id);
     }
 
     public List<User> findAll() {

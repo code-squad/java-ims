@@ -5,6 +5,7 @@ import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -23,10 +24,11 @@ public class SecurityControllerAdvice {
     }
 
     @ExceptionHandler(UnAuthorizedException.class)
-    //@ResponseStatus(value = HttpStatus.FORBIDDEN)
-    public String unAuthorized() {
+//    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public String unAuthorized(UnAuthorizedException ex, Model model) {
         log.debug("UnAuthorizedException is happened!");
-        return "/users/login";
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "/user/login";
     }
     
     @ExceptionHandler(UnAuthenticationException.class)

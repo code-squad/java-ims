@@ -8,8 +8,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
-import javax.xml.ws.Response;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +20,6 @@ import org.springframework.util.MultiValueMap;
 
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
-import codesquad.dto.UserDto;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 

@@ -1,9 +1,11 @@
 package codesquad.web;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -32,6 +34,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		String body = response.getBody();
 		Log.debug("body : {}", body);
 		assertTrue(body.contains("Login Member"));
+//		Log.debug("header : {}", response.getHeaders());
+//		assertThat(response.getHeaders().getLocation().getPath(), is("issue/form"));
 	}
 	
 	@Test
@@ -55,11 +59,20 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	@Test
 	public void createIssueLoginStatus() {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-				.addParameter("title", "제목").addParameter("contents", "내용").build();
+				.addParameter("title", "타이틀").addParameter("contents", "내용").build();
 		ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issues", request, String.class);
 		int numberOfIssue = issueRepository.findAll().size();
-		assertThat(numberOfIssue, is(3)); // import.sql에 2개 더 있음.
+		assertThat(numberOfIssue, is(4)); // import.sql에 3개 더 있음.
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND)); // 리다이렉트 - 302
+	}
+	
+	@Test
+	public void createIssueLoginStatusWhenInputError() {
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+				.addParameter("title", "1").addParameter("contents", "내용").build();
+		ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issues", request, String.class);
+		int numberOfIssue = issueRepository.findAll().size();
+		assertThat(response.getStatusCode(), is(HttpStatus.OK)); // 리다이렉트 - 302
 	}
 
 	@Test
@@ -69,7 +82,6 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(issueRepository.findOne((long) 1).getTitle(), is("11111"));
 	}
-	
 	
 	@Test
 	public void showUpdateViewError() {
@@ -106,5 +118,26 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issues/3", request, String.class);
 		assertNull(issueRepository.findOne((long) 3));
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+	}
+	
+	@Test
+	public void test_addMilestone() {
+		ResponseEntity<String> response = template.getForEntity("/issues/1/milestone/1", String.class);
+		Log.debug("milestone : {}", issueRepository.findOne((long) 1).getMilestone());
+		assertNotNull(issueRepository.findOne((long) 1).getMilestone());
+	}
+	
+	@Test
+	public void test_addLabel() {
+		ResponseEntity<String> response = template.getForEntity("/issues/1/label/1", String.class);
+		Log.debug("label : {}", issueRepository.findOne((long) 1).getLabel());
+		assertNotNull(issueRepository.findOne((long) 1).getLabel());
+	}
+	
+	@Test
+	public void test_addUser() {
+		ResponseEntity<String> response = template.getForEntity("/issues/1/user/1", String.class);
+		Log.debug("user : {}", issueRepository.findOne((long) 1).getUser());
+		assertNotNull(issueRepository.findOne((long) 1).getUser());
 	}
 }

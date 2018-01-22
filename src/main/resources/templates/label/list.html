@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+{{> include/header}}
+  </head>
+  <body>
+    <div class="issues issues--wrap mdl-layout mdl-js-layout has-drawer is-upgraded">
+      
+  		{{> include/navigation}}
+      <main class="mdl-layout__content">
+
+        <div class="issues__posts mdl-grid">
+          <div class="issues-card-wide mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title mdl-shadow--2dp" style="height:80px;">
+              <h2 class="mdl-card__title-text mdl-color-text--grey-800">Labels</h2>
+            </div>
+            <a href="/labels/form" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored show-modal">
+              <i class="material-icons">add</i>
+            </a>
+            <div class="mdl-card__supporting-text">
+              <ul class="issue-list mdl-list">
+              
+              
+            {{#labels}}
+                <li class="mdl-list__item mdl-list__item--two-line">
+                  <span class="mdl-list__item-primary-content">
+                    <a href="/labels/{{id}}"><strong>{{title}}</strong></a>
+                  </span>
+                </li>
+            {{/labels}}
+              </ul>
+            </div>
+          </div>
+        </div>
+		
+
+        <footer class="mdl-mini-footer">
+          <div class="mdl-mini-footer--left-section">
+            <div class="mdl-logo mdl-color-text--grey-600">Proudly powered by <a href="https://github.com/Byeol">Byeol</a></div>
+          </div>
+        </footer>
+      </main>
+      <div class="mdl-layout__obfuscator"></div>
+    </div>
+{{> include/footer}}
+  </body>
+</html>
