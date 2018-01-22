@@ -36,7 +36,7 @@ public class IssueDto {
 
 	}
 
-	public IssueDto(@LoginUser User loginUser, String subject, String comment) {
+	public IssueDto(User loginUser, String subject, String comment) {
 		this.user = loginUser;
 		this.subject = subject;
 		this.comment = comment;

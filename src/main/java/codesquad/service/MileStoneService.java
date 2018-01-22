@@ -26,14 +26,14 @@ public class MileStoneService {
 	public List<MileStone> findAll() {
 		return mileStoneRepository.findAll();
 	}
-
-	public void register(@LoginUser User loginUser, Issue issue, MileStone mileStone) {
-		if (!issue.isSameUser(loginUser)) {
-			throw new UnAuthorizedException();
-		}
-		mileStone.addIssue(issue);
-		mileStoneRepository.save(mileStone);
-	}
+//
+//	public void register(@LoginUser User loginUser, Issue issue, MileStone mileStone) {
+//		if (!issue.isSameUser(loginUser)) {
+//			throw new UnAuthorizedException();
+//		}
+//		mileStone.addIssue(issue);
+//		mileStoneRepository.save(mileStone);
+//	}
 
 	public MileStone findById(long id) {
 		return mileStoneRepository.findOne(id);

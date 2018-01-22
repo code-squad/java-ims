@@ -14,10 +14,27 @@ import support.test.AcceptanceTest;
 public class ApiUserAcceptanceTest extends AcceptanceTest {
 
 	@Test
-	public void create() throws Exception {// 회원 데이터가 db에 저장이 됐는지 아닌지 확인.
+	public void create() throws Exception {// db에 저장된 유저와 방금 생성한 유저가 같은 유저인지 확인하는 테스트.
 		UserDto newUser = createUserDto("testuser1");
+		
+		ResponseEntity<String> response = template().postForEntity("/api/users", newUser, String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+		 
+		String location = response.getHeaders().getLocation().getPath();
+		User loginUser = findByUserId(newUser.getUserId());
+		UserDto dbUser = basicAuthTemplate(loginUser).getForObject(location, UserDto.class);
+		assertThat(dbUser, is(newUser));
+	}
+	
+	@Test
+	public void create1() throws Exception {// db에 저장된 유저와 방금 생성한 유저가 같은 유저인지 확인하는 테스트.
+		UserDto newUser = createUserDto("testuser1");
+		// uri 생성. 
+		// 리소스를 생성한다.
 		String location = createResource("/api/users", newUser);
-
+		// request = UserDto.class
+		// 리소스를 얻다.
+		// 리소스 = 새로 생긴 유저.
 		UserDto dbUser = getResource(location, UserDto.class, findByUserId(newUser.getUserId()));
 		assertThat(dbUser, is(newUser));
 	}
@@ -26,7 +43,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 	public void show_다른_사람() throws Exception {
 		UserDto newUser = createUserDto("testuser2");
 		String location = createResource("/api/users", newUser);
-
+		// 리소스 = 서버로부터 응답 = forbidden
 		ResponseEntity<String> response = getResource(location, findDefaultUser());
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
@@ -35,15 +52,32 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 		return new UserDto(userId, "password", "name");
 	}
 
+	
 	@Test
 	public void update() throws Exception {
+		UserDto newUser = createUserDto("testuser3");
+		// post 요청을 통해 테스트 데이터 추가.
+		ResponseEntity<String> response = template().postForEntity("/api/users", newUser, String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+		String location = response.getHeaders().getLocation().getPath();
+		// 데이터 비교.
+		User loginUser = findByUserId(newUser.getUserId());
+		UserDto updateUser = new UserDto(newUser.getUserId(), "password", "name2");
+		basicAuthTemplate(loginUser).put(location, updateUser);
+		// 리소스 = 서버로부터 응답 = 업데이트 한 유저. 
+		UserDto dbUser = basicAuthTemplate(loginUser).getForObject(location, UserDto.class);
+		assertThat(dbUser, is(updateUser));
+	}
+	
+	@Test
+	public void update1() throws Exception {
 		UserDto newUser = createUserDto("testuser3");
 		String location = createResource("/api/users", newUser);
 
 		User loginUser = findByUserId(newUser.getUserId());
 		UserDto updateUser = new UserDto(newUser.getUserId(), "password", "name2");
 		basicAuthTemplate(loginUser).put(location, updateUser);
-
+		// 리소스 = 서버로부터 응답 = 업데이트 한 유저.
 		UserDto dbUser = getResource(location, UserDto.class, findByUserId(newUser.getUserId()));
 		assertThat(dbUser, is(updateUser));
 	}

@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import support.domain.AbstractEntity;
 
 @Entity
@@ -21,6 +23,7 @@ public class MileStone extends AbstractEntity {
 	private String endDate;
 
 	@OneToMany(mappedBy = "mileStone")
+	@JsonIgnore
 	private List<Issue> issues;
 
 	public MileStone() {

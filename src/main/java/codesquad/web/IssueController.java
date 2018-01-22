@@ -96,17 +96,16 @@ public class IssueController extends AbstractEntity {
 	}
 
 	@PostMapping("/{id}/setMileStone/{mileStoneId}")
-	public String setMileStone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long mileStoneId,
-			Model model) {
+	public String setMileStone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long mileStoneId) {
 		MileStone mileStone = mileStoneService.findById(mileStoneId);
 		Issue issue = issueService.findById(id);
-		mileStoneService.register(loginUser, issue, mileStone);
+//		mileStoneService.register(loginUser, issue, mileStone);
 		issueService.setMileStone(loginUser, issue, mileStone);
 		return "redirect:/issues/{id}";
 	}
 
 	@PostMapping("/{id}/setAssignedUser/{userId}")
-	public String setUser(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId, Model model) {
+	public String setUser(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId) {
 		User user = userService.findById(userId);
 		Issue issue = issueService.findById(id);
 		userService.register(loginUser, issue, user);
@@ -115,10 +114,8 @@ public class IssueController extends AbstractEntity {
 	}
 
 	@PostMapping("/{id}/setLabel/{labelId}")
-	public String setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId, Model model) {
-		Label label = labelService.findById(labelId);
-		Issue issue = issueService.findById(id);
-		issueService.setLabel(loginUser, issue, label);
+	public String setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
+		issueService.setLabel(loginUser, id, labelId);
 		return "redirect:/issues/{id}";
 	}
 }
