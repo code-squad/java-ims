@@ -32,4 +32,5 @@ dependencies {
     runtime('net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.1.0')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.assertj:assertj-core:3.9.0')
+    testCompile('io.rest-assured:rest-assured:3.0.3')
 }

@@ -58,10 +58,11 @@
                 Milestone
               </button>
               <!-- milestone list -->
-              <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+              <ul id="form-wrap" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                   for="milestone-menu">
                {{# mileStones}}
-                  <form method='post' action="/issues/{{issue.id}}/setMileStone/{{id}}">
+                  <form method='post' class="milestone" action="/api/issues/{{issue.id}}/milestones/{{id}}">
+                  <input type="hidden" name="_method" value="put">
   					<!-- form elements -->
   					<button class="mdl-menu__item mdl-button--accent" type="submit">{{subject}}</button>  								
 				</form>
@@ -72,10 +73,11 @@
                 Label
               </button>
               <!-- label list -->
-              <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+              <ul id = "label_group" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                   for="label-menu">
                    {{# labelList}}
-                  <form method='post' action="/issues/{{issue.id}}/setLabel/{{id}}">
+                  <form method='post' class='label' action="/api/issues/{{issue.id}}/labels/{{id}}">
+                  <input type="hidden" name="_method" value="put">
   					<!-- form elements -->
   					<button class="mdl-menu__item" type="submit">{{subject}}</button>  								
 				</form>
@@ -86,10 +88,11 @@
                 Assignee
               </button>
               <!-- label list -->
-              <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+              <ul id = "assignUser_group" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                   for="assignee-menu">
                   {{# users}}
-                  <form method='post' action="/issues/{{issue.id}}/setMileStone/{{id}}">
+                  <form method='post' class='assignUser' action="/api/issues/{{issue.id}}/users/{{id}}">
+                  <input type="hidden" name="_method" value="put">
   					<!-- form elements -->
   					<button class="mdl-menu__item" type="submit">{{userId}}</button>  								
 				 </form>
@@ -193,5 +196,6 @@
     </div>
     <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
   </body>
 </html>

@@ -44,6 +44,8 @@ public class ApiUserController {
 
 	@PutMapping("{id}")
 	public void update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody UserDto updatedUser) {
+		// @Valid : user 에 대한 유효성 체크.
+		// @RequestBody : 요청 메세지에 포함되어야 할 dto
 		userService.update(loginUser, id, updatedUser);
 	}
 }

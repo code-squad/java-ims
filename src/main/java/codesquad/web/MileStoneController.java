@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import codesquad.domain.MileStoneDto;
 import codesquad.domain.User;
+import codesquad.dto.MileStoneDto;
 import codesquad.security.LoginUser;
 import codesquad.service.MileStoneService;
 

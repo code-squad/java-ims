@@ -31,6 +31,7 @@ public class User extends AbstractEntity {
 	private String name;
 
 	@OneToMany(mappedBy = "assignedUser")
+	@JsonIgnore
 	private List<Issue> assignedIssues;
 
 	public User() {
