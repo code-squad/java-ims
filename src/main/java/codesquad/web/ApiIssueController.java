@@ -26,18 +26,18 @@ public class ApiIssueController {
 	@Resource(name = "issueService")
 	private IssueService issueService;
 	
-	@PutMapping("/{id}/setMileStone/{mileStoneId}")
+	@PutMapping("/{id}/milestones/{mileStoneId}")
 	public void setMileStone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long mileStoneId) {
 		log.debug("loginUser : {}", loginUser);
 		issueService.setMileStone(loginUser, id, mileStoneId);
 	}
 	
-	@PutMapping("/{id}/setAssignedUser/{userId}")
+	@PutMapping("/{id}/users/{userId}")
 	public void setAssignedUser(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId) {
 		issueService.setAssignedUser(loginUser, id, userId);
 	}
 	
-	@PutMapping("/{id}/setLabel/{labelId}")
+	@PutMapping("/{id}/labels/{labelId}")
 	public void setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
 		issueService.setLabel(loginUser, id, labelId);
 	}

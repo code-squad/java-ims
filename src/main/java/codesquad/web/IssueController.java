@@ -95,19 +95,19 @@ public class IssueController extends AbstractEntity {
 		return "/issue/show";
 	}
 
-	@PostMapping("/{id}/setMileStone/{mileStoneId}")
+	@PostMapping("/{id}/milestones/{mileStoneId}")
 	public String setMileStone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long mileStoneId) {
 		issueService.setMileStone(loginUser, id, mileStoneId);
 		return "redirect:/issues/{id}";
 	}
 
-	@PostMapping("/{id}/setAssignedUser/{userId}")
+	@PostMapping("/{id}/users/{userId}")
 	public String setUser(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId) {
 		issueService.setAssignedUser(loginUser, id, userId);
 		return "redirect:/issues/{id}";
 	}
 
-	@PostMapping("/{id}/setLabel/{labelId}")
+	@PostMapping("/{id}/labels/{labelId}")
 	public String setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
 		issueService.setLabel(loginUser, id, labelId);
 		return "redirect:/issues/{id}";
