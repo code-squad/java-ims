@@ -29,17 +29,17 @@ public class ApiIssueController {
 	@PutMapping("/{id}/milestones/{mileStoneId}")
 	public void setMileStone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long mileStoneId) {
 		log.debug("loginUser : {}", loginUser);
-		issueService.setMileStone(loginUser, id, mileStoneId);
+		issueService.registerMilestone(loginUser, id, mileStoneId);
 	}
 	
 	@PutMapping("/{id}/users/{userId}")
 	public void setAssignedUser(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId) {
-		issueService.setAssignedUser(loginUser, id, userId);
+		issueService.registerUser(loginUser, id, userId);
 	}
 	
 	@PutMapping("/{id}/labels/{labelId}")
 	public void setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
-		issueService.setLabel(loginUser, id, labelId);
+		issueService.registerLabel(loginUser, id, labelId);
 	}
 	
 }

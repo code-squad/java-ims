@@ -25,19 +25,6 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 		UserDto dbUser = basicAuthTemplate(loginUser).getForObject(location, UserDto.class);
 		assertThat(dbUser, is(newUser));
 	}
-	
-	@Test
-	public void create1() throws Exception {// db에 저장된 유저와 방금 생성한 유저가 같은 유저인지 확인하는 테스트.
-		UserDto newUser = createUserDto("testuser1");
-		// uri 생성. 
-		// 리소스를 생성한다.
-		String location = createResource("/api/users", newUser);
-		// request = UserDto.class
-		// 리소스를 얻다.
-		// 리소스 = 새로 생긴 유저.
-		UserDto dbUser = getResource(location, UserDto.class, findByUserId(newUser.getUserId()));
-		assertThat(dbUser, is(newUser));
-	}
 
 	@Test
 	public void show_다른_사람() throws Exception {
@@ -45,13 +32,12 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 		String location = createResource("/api/users", newUser);
 		// 리소스 = 서버로부터 응답 = forbidden
 		ResponseEntity<String> response = getResource(location, findDefaultUser());
-		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 	}
 
 	private UserDto createUserDto(String userId) {
 		return new UserDto(userId, "password", "name");
 	}
-
 	
 	@Test
 	public void update() throws Exception {
@@ -66,19 +52,6 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 		basicAuthTemplate(loginUser).put(location, updateUser);
 		// 리소스 = 서버로부터 응답 = 업데이트 한 유저. 
 		UserDto dbUser = basicAuthTemplate(loginUser).getForObject(location, UserDto.class);
-		assertThat(dbUser, is(updateUser));
-	}
-	
-	@Test
-	public void update1() throws Exception {
-		UserDto newUser = createUserDto("testuser3");
-		String location = createResource("/api/users", newUser);
-
-		User loginUser = findByUserId(newUser.getUserId());
-		UserDto updateUser = new UserDto(newUser.getUserId(), "password", "name2");
-		basicAuthTemplate(loginUser).put(location, updateUser);
-		// 리소스 = 서버로부터 응답 = 업데이트 한 유저.
-		UserDto dbUser = getResource(location, UserDto.class, findByUserId(newUser.getUserId()));
 		assertThat(dbUser, is(updateUser));
 	}
 

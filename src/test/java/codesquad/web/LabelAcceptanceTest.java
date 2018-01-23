@@ -30,7 +30,7 @@ public class LabelAcceptanceTest extends BasicAuthAcceptanceTest {
 	@Test
 	public void createForm_no_login() throws Exception {// 이슈등록 페이지가 잘 로드 되는지 테스트.
 		ResponseEntity<String> response = template.getForEntity("/labels/form", String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 	}
 
 	@Test

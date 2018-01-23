@@ -40,14 +40,14 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 	public void set_Milestone() throws Exception {
 		// set milstone 을 통해 db에 저장된 issue 와 요청으로 보낸 issue가 일치하는가를 test.
 		User user = findDefaultUser();
-		Issue issue = new Issue((long)1, user, "subject", "comment");
+		Issue issue = new Issue(1L, user, "subject", "comment");
 		issue = issueRepository.save(issue);
 		// 응답코드 비교.
 		// 리소스를 생성해 response를 반환한다.
-		MileStone milestone = new MileStone((long)1, "subject", "startDate", "endDate");
+		MileStone milestone = new MileStone(1L, "subject", "startDate", "endDate");
 		milestone = mileStoneRepository.save(milestone);
 		
-		String location = String.format("/api/issues/%d/setMileStone/%d", issue.getId(), milestone.getId());
+		String location = String.format("/api/issues/%d/milestones/%d", issue.getId(), milestone.getId());
 		basicAuthTemplate().put(location, null);
 		Issue dbissue = issueRepository.findOne(issue.getId());
 		MileStone setMilestone = dbissue.getMileStone();
@@ -59,12 +59,12 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 	@Test
 	public void set_AssignUser() throws Exception {
 		User user = findDefaultUser();
-		Issue issue = new Issue((long)1, user, "subject", "comment");
+		Issue issue = new Issue(1L, user, "subject", "comment");
 		issue = issueRepository.save(issue);
 		
-		User assignedUser = new User((long)3, "chloe", "password", "chloe");
+		User assignedUser = new User((long)3L, "chloe", "password", "chloe");
 		assignedUser = userRepository.save(assignedUser);
-		String location = String.format("/api/issues/%d/setAssignedUser/%d", issue.getId(), assignedUser.getId());
+		String location = String.format("/api/issues/%d/users/%d", issue.getId(), assignedUser.getId());
 		basicAuthTemplate().put(location, null);
 		Issue dbissue = issueRepository.findOne(issue.getId());
 		User dbAssignedUser = dbissue.getAssignedUser();
@@ -79,13 +79,13 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 		// login한 상태의 유저.
 		User issueWriter = findDefaultUser();
 		
-		Issue issue = new Issue((long)1, issueWriter, "subject", "comment");
+		Issue issue = new Issue(1L, issueWriter, "subject", "comment");
 		issue = issueRepository.save(issue);
 		
-		Label label = new Label((long)1, "subject");
+		Label label = new Label(1L, "subject");
 		label = labelRepository.save(label);
 		
-		String location = String.format("/api/issues/%d/setLabel/%d", issue.getId(), label.getId());
+		String location = String.format("/api/issues/%d/labels/%d", issue.getId(), label.getId());
 		basicAuthTemplate().put(location, null);
 		Issue dbissue = issueRepository.findOne(issue.getId());
 		assertTrue(dbissue.getLabels().contains(label));		

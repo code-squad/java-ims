@@ -29,7 +29,7 @@ public class MileStoneAcceptanceTest extends BasicAuthAcceptanceTest {
 	public void show_list_no_login() throws Exception {
 		// 리스트 페이지에서 생성 버튼 눌러 생성.
 		ResponseEntity<String> response = template.getForEntity("/mileStones", String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 
 		log.debug("body : {}", response.getBody());
 	}
@@ -45,7 +45,7 @@ public class MileStoneAcceptanceTest extends BasicAuthAcceptanceTest {
 	@Test
 	public void createForm_no_login() throws Exception {
 		ResponseEntity<String> response = template.getForEntity("/mileStones/form", String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		log.debug("body : {}", response.getBody());
 	}
 

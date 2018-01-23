@@ -57,15 +57,7 @@ public class IssueService {
 		issueRepository.delete(issue);
 	}
 
-	public Issue setMileStone1(User loginUser, Issue issue, MileStone mileStone) {
-		if (!issue.isSameUser(loginUser)) {
-			throw new UnAuthorizedException();
-		}
-		issue.setMileStone(mileStone);
-		return issueRepository.save(issue);
-	}
-	
-	public Issue setMileStone(User loginUser, long issueId, long mileStoneId) {
+	public Issue registerMilestone(User loginUser, long issueId, long mileStoneId) {
 		Issue issue = findById(issueId);
 		if (!issue.isSameUser(loginUser)) {
 			throw new UnAuthorizedException();
@@ -74,8 +66,8 @@ public class IssueService {
 		issue.setMileStone(mileStone);
 		return issueRepository.save(issue);
 	}
-
-	public Issue setAssignedUser(User loginUser, long issueId, long userId) {
+	
+	public Issue registerUser(User loginUser, long issueId, long userId) {
 		Issue issue = findById(issueId);
 		if (!issue.isSameUser(loginUser)) {
 			throw new UnAuthorizedException();
@@ -84,8 +76,8 @@ public class IssueService {
 		issue.setAssignedUser(assignedUser);
 		return issueRepository.save(issue);
 	}
-
-	public Issue setLabel(User loginUser, long issueId, long labelId) {
+	
+	public Issue registerLabel(User loginUser, long issueId, long labelId) {
 		Issue issue = findById(issueId);
 		if (!issue.isSameUser(loginUser)) {
 			throw new UnAuthorizedException();

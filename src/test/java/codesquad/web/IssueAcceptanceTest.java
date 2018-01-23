@@ -50,7 +50,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	@Test
 	public void createForm_no_login() throws Exception {// 이슈등록 페이지가 잘 로드 되는지 테스트.
 		ResponseEntity<String> response = template.getForEntity("/issues/form", String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 	}
 
 	@Test
@@ -97,7 +97,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		nologinUserIssue = issueRepository.save(nologinUserIssue);
 		ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d/form", nologinUser.getId()),
 				String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		log.debug("" + nologinUserIssue.getId());
 		// 로그인 페이지.
 		log.debug("body : {}", response.getBody());
@@ -113,7 +113,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		otherUserIssue = issueRepository.save(otherUserIssue);
 		ResponseEntity<String> response = basicAuthTemplate
 				.getForEntity(String.format("/issues/%d/form", otherUserIssue.getId()), String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		// 로그인 페이지.
 		log.debug("body : {}", response.getBody());
 		issueRepository.delete(otherUserIssue);
@@ -283,7 +283,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().addParameter("", "")
 				.build();
 		ResponseEntity<String> response = basicAuthTemplate.postForEntity(
-				String.format("/issues/%d/setMileStone/%d", loginUserIssue.getId(), mileStone.getId()), request,
+				String.format("/issues/%d/milestones/%d", loginUserIssue.getId(), mileStone.getId()), request,
 				String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		// show list page
@@ -301,7 +301,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().addParameter("", "")
 				.build();
 		ResponseEntity<String> response = basicAuthTemplate.postForEntity(
-				String.format("/issues/%d/setAssignedUser/%d", loginUserIssue.getId(), assignedUser.getId()), request,
+				String.format("/issues/%d/users/%d", loginUserIssue.getId(), assignedUser.getId()), request,
 				String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		// show list page
@@ -320,7 +320,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().addParameter("", "")
 				.build();
 		ResponseEntity<String> response = basicAuthTemplate.postForEntity(
-				String.format("/issues/%d/setLabel/%d", loginUserIssue.getId(), label.getId()), request, String.class);
+				String.format("/issues/%d/labels/%d", loginUserIssue.getId(), label.getId()), request, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		// show list page
 		log.debug("body : {}", response.getBody());

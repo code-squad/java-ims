@@ -89,7 +89,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 	public void updateForm_no_login() throws Exception {// 로그인 안한 상태에서 회원 정보 수정페이지 로드할때 에러나는지 확인.
 		ResponseEntity<String> response = template.getForEntity(String.format("/users/%d/form", loginUser.getId()),
 				String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		log.debug("body : {}", response.getBody());
 	}
 
