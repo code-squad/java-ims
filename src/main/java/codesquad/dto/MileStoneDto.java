@@ -1,8 +1,11 @@
-package codesquad.domain;
+package codesquad.dto;
 
 import java.util.List;
 
 import javax.validation.constraints.Size;
+
+import codesquad.domain.Issue;
+import codesquad.domain.MileStone;
 
 public class MileStoneDto {
 	@Size(min = 3, max = 20)

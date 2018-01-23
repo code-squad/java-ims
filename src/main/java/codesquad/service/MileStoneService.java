@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.MileStone;
-import codesquad.domain.MileStoneDto;
 import codesquad.domain.MileStoneRepository;
 import codesquad.domain.User;
+import codesquad.dto.MileStoneDto;
 import codesquad.security.LoginUser;
 
 @Service

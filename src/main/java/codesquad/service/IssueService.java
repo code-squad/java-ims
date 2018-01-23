@@ -23,6 +23,12 @@ public class IssueService {
 	@Resource(name = "labelService")
 	private LabelService labelService;
 	
+	@Resource(name = "mileStoneService")
+	private MileStoneService mileStoneService;
+	
+	@Resource(name = "userService")
+	private UserService userService;
+	
 	public Issue add(IssueDto issueDto, User loginUser) {
 		// issue 객체로 바꾸어 집어넣는다.
 		issueDto.setUser(loginUser);
@@ -51,19 +57,31 @@ public class IssueService {
 		issueRepository.delete(issue);
 	}
 
-	public Issue setMileStone(User loginUser, Issue issue, MileStone mileStone) {
+	public Issue setMileStone1(User loginUser, Issue issue, MileStone mileStone) {
 		if (!issue.isSameUser(loginUser)) {
 			throw new UnAuthorizedException();
 		}
 		issue.setMileStone(mileStone);
 		return issueRepository.save(issue);
 	}
-
-	public Issue setAssignedUser(User loginUser, Issue issue, User user) {
+	
+	public Issue setMileStone(User loginUser, long issueId, long mileStoneId) {
+		Issue issue = findById(issueId);
 		if (!issue.isSameUser(loginUser)) {
 			throw new UnAuthorizedException();
 		}
-		issue.setAssignedUser(user);
+		MileStone mileStone = mileStoneService.findById(mileStoneId);
+		issue.setMileStone(mileStone);
+		return issueRepository.save(issue);
+	}
+
+	public Issue setAssignedUser(User loginUser, long issueId, long userId) {
+		Issue issue = findById(issueId);
+		if (!issue.isSameUser(loginUser)) {
+			throw new UnAuthorizedException();
+		}
+		User assignedUser = userService.findById(userId);
+		issue.setAssignedUser(assignedUser);
 		return issueRepository.save(issue);
 	}
 
