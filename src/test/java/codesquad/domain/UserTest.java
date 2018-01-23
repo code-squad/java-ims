@@ -31,8 +31,8 @@ public class UserTest {
         User origin = newUser("sanjigi");
         User loginUser = origin;
         User target = new User("sanjigi", "password", "name2");
-        origin.update(loginUser, target);
-        assertThat(origin.getName(), is(target.getName()));
+        origin.update(loginUser._toUserDto(), target._toUserDto());
+        assertThat(origin._toUserDto().getName(), is(target._toUserDto().getName()));
     }
 
     @Test(expected = UnAuthorizedException.class)
@@ -40,34 +40,34 @@ public class UserTest {
         User origin = newUser("sanjigi");
         User loginUser = newUser("javajigi");
         User target = new User("sanjigi", "password", "name2");
-        origin.update(loginUser, target);
+        origin.update(loginUser._toUserDto(), target._toUserDto());
     }
 
     @Test
     public void update_match_password() {
         User origin = newUser("sanjigi");
         User target = new User("sanjigi", "password", "name2");
-        origin.update(origin, target);
-        assertThat(origin.getName(), is(target.getName()));
+        origin.update(origin._toUserDto(), target._toUserDto());
+        assertThat(origin._toUserDto().getName(), is(target._toUserDto().getName()));
     }
 
     @Test
     public void update_mismatch_password() {
         User origin = newUser("sanjigi", "password");
         User target = new User("sanjigi", "password2", "name2");
-        origin.update(origin, target);
-        assertThat(origin.getName(), is(not(target.getName())));
+        origin.update(origin._toUserDto(), target._toUserDto());
+        assertThat(origin._toUserDto().getName(), is(not(target._toUserDto().getName())));
     }
     
     @Test
     public void match_password() throws Exception {
         User user = newUser("sanjigi");
-        assertTrue(user.matchPassword(user.getPassword()));
+        assertTrue(user.matchPassword(user._toUserDto().getPassword()));
     }
     
     @Test
     public void mismatch_password() throws Exception {
         User user = newUser("sanjigi");
-        assertFalse(user.matchPassword(user.getPassword() + "2"));
+        assertFalse(user.matchPassword(user._toUserDto().getPassword() + "2"));
     }
 }

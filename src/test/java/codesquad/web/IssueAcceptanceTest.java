@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -64,6 +63,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		int numberOfIssue = issueRepository.findAll().size();
 		assertThat(numberOfIssue, is(4)); // import.sql에 3개 더 있음.
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND)); // 리다이렉트 - 302
+		issueDeleteTest();
 	}
 	
 	@Test
@@ -80,7 +80,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		ResponseEntity<String> response = template.getForEntity("/issues/1", String.class);
 		Log.debug("body : {} " + response.getBody());
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-		assertThat(issueRepository.findOne((long) 1).getTitle(), is("11111"));
+		assertThat(issueRepository.findOne((long) 1)._toIssueDto().getTitle(), is("11111"));
 	}
 	
 	@Test
@@ -101,7 +101,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		showUpdateView();
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		Issue issue = issueRepository.findOne((long) 1);
-		assertThat(issue.getTitle(), is("33333"));
+		assertThat(issue._toIssueDto().getTitle(), is("33333"));
 	}
 	
 	private void showUpdateView() {
@@ -111,7 +111,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertTrue(body.contains("33333"));
 	}
 	
-	@Test
+	
 	public void issueDeleteTest() {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
 				.delete().build();
@@ -123,21 +123,22 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	@Test
 	public void test_addMilestone() {
 		ResponseEntity<String> response = template.getForEntity("/issues/1/milestone/1", String.class);
-		Log.debug("milestone : {}", issueRepository.findOne((long) 1).getMilestone());
-		assertNotNull(issueRepository.findOne((long) 1).getMilestone());
+		Log.debug("milestone : {}", issueRepository.findOne((long) 1)._toIssueDto().getMilestone());
+		assertNotNull(issueRepository.findOne((long) 1)._toIssueDto().getMilestone());
 	}
 	
 	@Test
 	public void test_addLabel() {
 		ResponseEntity<String> response = template.getForEntity("/issues/1/label/1", String.class);
-		Log.debug("label : {}", issueRepository.findOne((long) 1).getLabel());
-		assertNotNull(issueRepository.findOne((long) 1).getLabel());
+		Log.debug("label : {}", issueRepository.findOne((long) 1)._toIssueDto());
+		assertNotNull(issueRepository.findOne((long) 1)._toIssueDto().getLabel());
+//		assertNotNull(issueRepository.findOne((long) 1)._toIssueDto().getLabel().get(0));
 	}
 	
 	@Test
 	public void test_addUser() {
 		ResponseEntity<String> response = template.getForEntity("/issues/1/user/1", String.class);
-		Log.debug("user : {}", issueRepository.findOne((long) 1).getUser());
-		assertNotNull(issueRepository.findOne((long) 1).getUser());
+		Log.debug("user : {}", issueRepository.findOne((long) 1)._toIssueDto().getWriter());
+		assertNotNull(issueRepository.findOne((long) 1)._toIssueDto().getWriter());
 	}
 }

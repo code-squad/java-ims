@@ -41,38 +41,11 @@ public class User extends AbstractEntity {
         this.name = name;
     }
     
-    public String getUserId() {
-        return userId;
-    }
-
-    public User setUserId(String userId) {
-        this.userId = userId;
-        return this;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public User setPassword(String password) {
-        this.password = password;
-        return this;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public User setName(String name) {
-        this.name = name;
-        return this;
-    }
-    
     private boolean matchUserId(String userId) {
         return this.userId.equals(userId);
     }
     
-    public void update(User loginUser, User target) {
+    public void update(UserDto loginUser, UserDto target) {
         if (!matchUserId(loginUser.getUserId())) {
             throw new UnAuthorizedException();
         }
@@ -81,7 +54,7 @@ public class User extends AbstractEntity {
             return;
         }
 
-        this.name = target.name;
+        this.name = target.getName();
     }
 
     public boolean matchPassword(String password) {

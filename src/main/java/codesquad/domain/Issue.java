@@ -10,6 +10,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Size;
 
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
@@ -23,13 +24,16 @@ public class Issue extends AbstractEntity {
 
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
-	private User user;
+	private User writer;
 
 	@ManyToMany
+//	@ManyToMany(fetch = FetchType.EAGER)
+//	Issue가 호출 될 때 Label들의 정보도 같이 가지고 와서 뿌려준다.
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
 	@JoinTable(name = "ISSUE_LABEL", joinColumns = @JoinColumn(name = "ISSUE_ID"), inverseJoinColumns = @JoinColumn(name = "LABEL_ID"))
 	private List<Label> label;
 
+	@Size(max = 20)
 	@Column(nullable = false)
 	private String title;
 
@@ -43,48 +47,29 @@ public class Issue extends AbstractEntity {
 	public Issue(String title, String contents, User writer) {
 		this(0L, title, contents, writer);
 	}
+	
+	public Issue(String title, String contents, User writer, Milestone milestone, List<Label> label) {
+		this(0L, title, contents, writer, milestone, label);
+	}
 
 	public Issue(Long id, String title, String contents, User writer) {
 		super(id);
 		this.title = title;
 		this.contents = contents;
-		this.user = writer;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getContents() {
-		return contents;
-	}
-
-	public void setContents(String contents) {
-		this.contents = contents;
-	}
-
-	public User getWriter() {
-		return user;
-	}
-
-	public Milestone getMilestone() {
-		return milestone;
+		this.writer = writer;
 	}
 	
-	public User getUser() {
-		return user;
-	}
-
-	public List<Label> getLabel() {
-		return label;
+	public Issue(Long id, String title, String contents, User writer, Milestone milestone, List<Label> label) {
+		super(id);
+		this.title = title;
+		this.contents = contents;
+		this.writer = writer;
+		this.milestone = milestone;
+		this.label = label;
 	}
 
 	public boolean isSameWriter(User loginUser) {
-		return this.user.equals(loginUser);
+		return this.writer.equals(loginUser);
 	}
 
 	public void update(IssueDto issueDto) {
@@ -101,7 +86,11 @@ public class Issue extends AbstractEntity {
 	}
 	
 	public void addUser(User user) {
-		this.user = user;
+		this.writer = user;
+	}
+	
+	public IssueDto _toIssueDto() {
+		return new IssueDto(super.getId(), this.writer, this.title, this.contents, this.milestone, this.label);
 	}
 
 	@Override

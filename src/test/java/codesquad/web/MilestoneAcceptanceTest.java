@@ -1,7 +1,6 @@
 package codesquad.web;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -53,7 +52,7 @@ public class MilestoneAcceptanceTest extends BasicAuthAcceptanceTest {
 		.build();
 		log.debug("date :  {}", LocalDateTime.now().toString());
 		ResponseEntity<String> response = basicAuthTemplate.postForEntity("/milestones", request, String.class);
-		assertThat(milestoneRepository.findAll().size(), is(2));
+		assertThat(milestoneRepository.findAll().size(), is(3));
 //		assertNotNull(milestoneRepository.findOne((long) 1));
 	}
 }

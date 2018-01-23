@@ -35,7 +35,7 @@ public abstract class AcceptanceTest {
     }
     
     public TestRestTemplate basicAuthTemplate(User loginUser) {
-        return template.withBasicAuth(loginUser.getUserId(), loginUser.getPassword());
+        return template.withBasicAuth(loginUser._toUserDto().getUserId(), loginUser._toUserDto().getPassword());
     }
     
     protected User findDefaultUser() {

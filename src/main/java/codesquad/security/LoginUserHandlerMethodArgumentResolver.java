@@ -1,5 +1,8 @@
 package codesquad.security;
 
+import javax.annotation.Resource;
+
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -10,7 +13,12 @@ import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 
 public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
-    @Override
+   
+	@Resource(name="messageSourceAccessor")
+	private MessageSourceAccessor msa;
+	
+	
+	@Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(LoginUser.class);
     }
@@ -25,8 +33,10 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
 
         LoginUser loginUser = parameter.getParameterAnnotation(LoginUser.class);
         if (loginUser.required()) {
-            throw new UnAuthorizedException("You're required Login!");
+            throw new UnAuthorizedException(msa.getMessage("loginError"));
         }
         return user;
     }
+    
+    
 }

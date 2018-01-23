@@ -42,9 +42,8 @@ public class UserController {
 
 	@GetMapping("/{id}/form")
 	public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
-		// 요청 URL에서 값을 읽어와서 매개변수로 넣는다.
 		log.debug("LoginUser : {}", loginUser);
-		model.addAttribute("user", userService.findById(loginUser, id));
+		model.addAttribute("user", userService.findById(loginUser, id)._toUserDto());
 		return "/user/updateForm";
 	}
 

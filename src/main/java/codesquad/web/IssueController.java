@@ -60,7 +60,7 @@ public class IssueController {
 
 	@GetMapping("/{id}")
 	public String showIssue(@PathVariable Long id, Model model) {
-		model.addAttribute("issue", issueService.findById(id));
+		model.addAttribute("issue", issueService.findById(id)._toIssueDto());
 		model.addAttribute("milestones", milestoneService.findAll());
 		model.addAttribute("users", userService.findAll());
 		model.addAttribute("labels", labelService.findAll());
@@ -75,12 +75,12 @@ public class IssueController {
 		if(!result.isValid()) {
 			return issueValidCheck(id, model, result);
 		}
-		model.addAttribute("issue", issue);
+		model.addAttribute("issue", issue._toIssueDto());
 		return "/issue/updateForm";		
 	}
 
 	private String issueValidCheck(Long id, Model model, Result result) {
-		model.addAttribute("issue", issueService.findById(id));
+		model.addAttribute("issue", issueService.findById(id)._toIssueDto());
 		model.addAttribute("errorMessage", result.getErrorMessage());
 		return "/issue/show";
 	}
@@ -98,10 +98,12 @@ public class IssueController {
 			return "/issue/form";
 		}
 		Issue issue = issueService.findById(id);
+//		로그인 유저가 해당하는 id의 글을 수정할 수 있는 권한이 있는지
 		Result result = valid(loginUser, issue);
 		if(!result.isValid()) {
 			return issueValidCheck(id, model, result);
 		}
+//		위에서 수정 할 수 있음을 확인했으니 들어온 업데이트 정보를 서비스로 내려주면 된다.
 		issueService.update(issueDto, id);
 		return "redirect:/";
 	}
@@ -109,7 +111,6 @@ public class IssueController {
 	@DeleteMapping("/{id}")
 	public String deleteIssue(@LoginUser User loginUser, @PathVariable Long id, Model model) {
 		log.debug("deleted issue id {}", id);
-		
 		Issue issue = issueService.findById(id);
 		Result result = valid(loginUser, issue);
 		if(!result.isValid()) {
@@ -121,29 +122,19 @@ public class IssueController {
 	
 	@GetMapping("/{id}/milestone/{milestoneId}")
 	public String updateAddMilestone(@PathVariable Long id, @PathVariable Long milestoneId) {
-		Issue issue = issueService.findById(id);
-		System.out.println("이슈 들어오나~~~~~~~"+issue);
-		issue.addMilesstone(milestoneService.findById(milestoneId));
-		issueService.update(issue);
-//		화면에다가 마일스톤 추가 되었다고 띄워 줘야할까?
+		issueService.addMilestone(id, milestoneService.findById(milestoneId));
 		return "/issue/show";
 	}
 	
 	@GetMapping("/{id}/label/{labelId}")
 	public String updateAddLabel(@PathVariable Long id, @PathVariable Long labelId) {
-		Issue issue = issueService.findById(id);
-		issue.addLabel(labelService.findById(labelId));
-		issueService.update(issue);
-//		화면에다가 추가 되었다고 띄워 줘야할까?
+		issueService.addLabel(id, labelService.findById(labelId));
 		return "/issue/show";
 	}
 	
 	@GetMapping("/{id}/user/{userId}")
 	public String updateAddUser(@PathVariable Long id, @PathVariable Long userId) {
-		Issue issue = issueService.findById(id);
-		issue.addUser(userService.findById(userId));
-		issueService.update(issue);
-//		화면에다가 추가 되었다고 띄워 줘야할까?
+		issueService.addUser(id, userService.findById(userId));
 		return "/issue/show";
 	}
 }

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import codesquad.domain.Label;
 import codesquad.domain.User;
+import codesquad.dto.LabelDto;
 import codesquad.security.LoginUser;
 import codesquad.service.LabelService;
 
@@ -39,27 +39,27 @@ public class LabelController {
 	}
 	
 	@PostMapping("")
-	public String addLabel(@LoginUser User user, Label label, BindingResult errors, Model model) {
+	public String addLabel(@LoginUser User user, LabelDto labelDto, BindingResult errors, Model model) {
 		if(errors.hasErrors()) {
 			return "/label/form";
 		}
-		labelService.saveLabel(label);
+		labelService.saveLabel(labelDto);
 		model.addAttribute("labels", labelService.findAll());
 		return "/label/list";
 	}
 	
 	@GetMapping("/{id}")
 	public String updateLabelView(@PathVariable Long id, Model model) {
-		model.addAttribute("label", labelService.findById(id));
+		model.addAttribute("label", labelService.findById(id)._toLabelDto());
 		return "/label/updateForm";
 	}
 	
 	@PutMapping("/{id}")
-	public String updateLabel(@LoginUser User user, @PathVariable Long id, Label label, BindingResult errors, Model model) {
+	public String updateLabel(@LoginUser User user, @PathVariable Long id, LabelDto labelDto, BindingResult errors, Model model) {
 		if(errors.hasErrors()) {
 			return "/label/form";
 		}
-		labelService.updateLabel(label, id);
+		labelService.updateLabel(labelDto, id);
 		model.addAttribute("labels", labelService.findAll());
 		return "/label/list";
 	}

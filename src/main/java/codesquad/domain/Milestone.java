@@ -7,11 +7,15 @@ import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Size;
 
+import codesquad.dto.MilestoneDto;
 import support.domain.AbstractEntity;
 
 @Entity
 public class Milestone extends AbstractEntity {
+	@Size(min = 3, max = 20)
+	@Column(nullable = false)
 	private String title;
 	
 	@ManyToOne
@@ -19,7 +23,8 @@ public class Milestone extends AbstractEntity {
 	private User writer;
 
 	private LocalDateTime startDate;
-
+	
+	@Column(nullable = false)
 	private LocalDateTime endDate;	
 	
 	public Milestone() {
@@ -36,21 +41,9 @@ public class Milestone extends AbstractEntity {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public User getWriter() {
-		return writer;
-	}
-
-	public LocalDateTime getStartDate() {
-		return startDate;
-	}
-
-	public LocalDateTime getEndDate() {
-		return endDate;
+	
+	public MilestoneDto _toMilestoneDto() {
+		return new MilestoneDto(super.getId(), this.title, this.writer, this.startDate, this.endDate);
 	}
 
 	@Override
