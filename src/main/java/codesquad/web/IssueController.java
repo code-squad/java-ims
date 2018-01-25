@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import codesquad.InputDataNullException;
 import codesquad.domain.Issue;
 import codesquad.domain.Result;
 import codesquad.domain.User;
@@ -29,19 +30,19 @@ import codesquad.service.UserService;
 @RequestMapping("/issues")
 public class IssueController {
 	private static final Logger log = LoggerFactory.getLogger(UserController.class);
-	
+
 	@Resource(name = "issueService")
 	private IssueService issueService;
-	
+
 	@Resource(name = "milestoneService")
 	private MilestoneService milestoneService;
-	
+
 	@Resource(name = "userService")
 	private UserService userService;
-	
+
 	@Resource(name = "labelService")
 	private LabelService labelService;
-	
+
 	@GetMapping("/form")
 	public String form(@LoginUser User loginUser) {
 		return "/issue/form";
@@ -49,7 +50,7 @@ public class IssueController {
 
 	@PostMapping("")
 	public String create(@LoginUser User loginUser, @Valid IssueDto issueDto, BindingResult errors, Model model) {
-		if(errors.hasErrors()) {
+		if (errors.hasErrors()) {
 			return "/issue/form";
 		}
 		issueDto.addWriter(loginUser);
@@ -67,16 +68,17 @@ public class IssueController {
 		log.debug(issueService.findById(id).toString());
 		return "/issue/show";
 	}
-	
+
 	@GetMapping("/{id}/updateForm")
-	public String updateIssueView (@LoginUser User loginUser, @PathVariable Long id, Model model) {
+	public String updateIssueView(@LoginUser User loginUser, @PathVariable Long id, Model model) {
 		Issue issue = issueService.findById(id);
-		Result result = valid(loginUser, issue);
-		if(!result.isValid()) {
+
+		Result result = issue.valid(loginUser);
+		if (!result.isValid()) {
 			return issueValidCheck(id, model, result);
 		}
 		model.addAttribute("issue", issue._toIssueDto());
-		return "/issue/updateForm";		
+		return "/issue/updateForm";
 	}
 
 	private String issueValidCheck(Long id, Model model, Result result) {
@@ -84,54 +86,46 @@ public class IssueController {
 		model.addAttribute("errorMessage", result.getErrorMessage());
 		return "/issue/show";
 	}
-	
-	private Result valid(User loginUser, Issue issue) {
-		if (!issue.isSameWriter(loginUser)) {
-			return Result.fail("자신이 쓴 글만 수정, 삭제가 가능합니다.");
-		}
-		return Result.ok();
-	}
-	
+
 	@PutMapping("/{id}")
-	public String updateIssue(@LoginUser User loginUser, @PathVariable Long id, @Valid IssueDto issueDto, BindingResult errors, Model model) {
-		if(errors.hasErrors()) {
+	public String updateIssue(@LoginUser User loginUser, @PathVariable Long id, @Valid IssueDto issueDto,
+			BindingResult errors, Model model) {
+		if (errors.hasErrors()) {
 			return "/issue/form";
 		}
 		Issue issue = issueService.findById(id);
-//		로그인 유저가 해당하는 id의 글을 수정할 수 있는 권한이 있는지
-		Result result = valid(loginUser, issue);
-		if(!result.isValid()) {
-			return issueValidCheck(id, model, result);
+		try {
+			issueService.update(loginUser, issueDto, id);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-//		위에서 수정 할 수 있음을 확인했으니 들어온 업데이트 정보를 서비스로 내려주면 된다.
-		issueService.update(issueDto, id);
 		return "redirect:/";
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public String deleteIssue(@LoginUser User loginUser, @PathVariable Long id, Model model) {
 		log.debug("deleted issue id {}", id);
 		Issue issue = issueService.findById(id);
-		Result result = valid(loginUser, issue);
-		if(!result.isValid()) {
+		Result result = issue.valid(loginUser);
+		if (!result.isValid()) {
 			return issueValidCheck(id, model, result);
 		}
 		issueService.delete(id);
 		return "redirect:/";
 	}
-	
+
 	@GetMapping("/{id}/milestone/{milestoneId}")
 	public String updateAddMilestone(@PathVariable Long id, @PathVariable Long milestoneId) {
 		issueService.addMilestone(id, milestoneService.findById(milestoneId));
 		return "/issue/show";
 	}
-	
+
 	@GetMapping("/{id}/label/{labelId}")
 	public String updateAddLabel(@PathVariable Long id, @PathVariable Long labelId) {
 		issueService.addLabel(id, labelService.findById(labelId));
 		return "/issue/show";
 	}
-	
+
 	@GetMapping("/{id}/user/{userId}")
 	public String updateAddUser(@PathVariable Long id, @PathVariable Long userId) {
 		issueService.addUser(id, userService.findById(userId));

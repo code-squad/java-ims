@@ -5,8 +5,10 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import codesquad.InputDataNullException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.Label;
@@ -16,10 +18,16 @@ import codesquad.dto.IssueDto;
 
 @Service
 public class IssueService {
+	@Resource(name = "messageSourceAccessor")
+	private MessageSourceAccessor msa;
+	
 	@Resource(name = "issueRepository")
 	private IssueRepository issueRepository;
 	
 	public Issue add(IssueDto issueDto) {
+		if(issueDto == null) {
+			throw new InputDataNullException(msa.getMessage("nullError")); 
+		}
 		return issueRepository.save(issueDto._toIssue());
 	}
 	
@@ -35,9 +43,9 @@ public class IssueService {
 		return issueDtoList;
 	}
 	
-	public Issue update(IssueDto issueDto, long id) {
+	public Issue update(User loginUser, IssueDto issueDto, long id) throws Exception {
 		Issue original = issueRepository.findOne(id);
-		original.update(issueDto);
+		original.update(loginUser, issueDto);
 		return issueRepository.save(original);
 	}
 	
@@ -51,7 +59,7 @@ public class IssueService {
 	
 	public Issue addLabel(Long id, Label label) {
 		Issue issue = findById(id);
-		issue.addLabel(label);
+		issue.addLabelIntoLabels(label);
 		return updateIssue(issue);
 	}
 	

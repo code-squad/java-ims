@@ -131,7 +131,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	public void test_addLabel() {
 		ResponseEntity<String> response = template.getForEntity("/issues/1/label/1", String.class);
 		Log.debug("label : {}", issueRepository.findOne((long) 1)._toIssueDto());
-		assertNotNull(issueRepository.findOne((long) 1)._toIssueDto().getLabel());
+		assertNotNull(issueRepository.findOne((long) 1)._toIssueDto().getLabels());
 //		assertNotNull(issueRepository.findOne((long) 1)._toIssueDto().getLabel().get(0));
 	}
 	

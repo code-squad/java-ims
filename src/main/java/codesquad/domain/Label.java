@@ -9,19 +9,14 @@ import support.domain.AbstractEntity;
 
 @Entity
 public class Label extends AbstractEntity {
-	@Size(min = 3, max = 20)
-	@Column(nullable = false)
+	@Column(nullable = false, length = 20)
 	private String title;
 	
 	public Label() {
 	}
-	
+
 	public Label(String title) {
-		this(0L, title);
-	}
-	
-	public Label(Long id, String title) {
-		super(id);
+		super(0L);
 		this.title = title;
 	}
 	

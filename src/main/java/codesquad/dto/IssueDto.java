@@ -14,7 +14,7 @@ public class IssueDto {
 	private long id;
 	private User writer;
 	private Milestone milestone;
-	private List<Label> label;
+	private List<Label> labels;
 
 	@NotNull
 	@Size(min = 3, max = 20)
@@ -32,7 +32,7 @@ public class IssueDto {
 		this.title = title;
 		this.contents = contents;
 		this.milestone = milestone;
-		this.label = label;
+		this.labels = label;
 	}
 
 	public void addWriter(User loginUser) {
@@ -47,12 +47,12 @@ public class IssueDto {
 		this.writer = writer;
 	}
 
-	public List<Label> getLabel() {
-		return label;
+	public List<Label> getLabels() {
+		return labels;
 	}
 
-	public void setLabel(List<Label> label) {
-		this.label = label;
+	public void setLabels(List<Label> labels) {
+		this.labels = labels;
 	}
 
 	public Milestone getMilestone() {
@@ -88,7 +88,7 @@ public class IssueDto {
 	}
 
 	public Issue _toIssue() {
-		return new Issue(this.title, this.contents, this.writer, this.milestone, this.label);
+		return new Issue(this.title, this.contents, this.writer, this.milestone, this.labels);
 	}
 
 	@Override

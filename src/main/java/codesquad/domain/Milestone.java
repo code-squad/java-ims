@@ -14,8 +14,7 @@ import support.domain.AbstractEntity;
 
 @Entity
 public class Milestone extends AbstractEntity {
-	@Size(min = 3, max = 20)
-	@Column(nullable = false)
+	@Column(nullable = false, length = 20)
 	private String title;
 	
 	@ManyToOne
@@ -29,13 +28,9 @@ public class Milestone extends AbstractEntity {
 	
 	public Milestone() {
 	}
-	
+
 	public Milestone(String title, User writer, LocalDateTime startDate, LocalDateTime endDate) {
-		this(0L, title, writer, startDate, endDate);
-	}
-	
-	public Milestone(Long id, String title, User writer, LocalDateTime startDate, LocalDateTime endDate) {
-		super(id);
+		super(0L);
 		this.title = title;
 		this.writer = writer;
 		this.startDate = startDate;

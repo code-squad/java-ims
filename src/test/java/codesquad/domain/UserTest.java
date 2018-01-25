@@ -11,11 +11,11 @@ import org.junit.Test;
 import codesquad.UnAuthorizedException;
 
 public class UserTest {
-    public static final User JAVAJIGI = new User(1L, "javajigi", "password", "name");
-    public static final User SANJIGI = new User(2L, "sanjigi", "password", "name");
+    public static final User JAVAJIGI = new User("javajigi", "password", "name");
+    public static final User SANJIGI = new User("sanjigi", "password", "name");
 
     public static User newUser(Long id) {
-        return new User(id, "userId", "pass", "name");
+        return new User("userId", "pass", "name");
     }
 
     public static User newUser(String userId) {
@@ -23,7 +23,7 @@ public class UserTest {
     }
 
     public static User newUser(String userId, String password) {
-        return new User(1L, userId, password, "name");
+        return new User(userId, password, "name");
     }
 
     @Test
