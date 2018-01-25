@@ -48,7 +48,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertNotNull(userRepository.findByUserId(userId));
 		// 최종 url 이 "/users" 인지 아닌지 확인.
 		assertThat(response.getHeaders().getLocation().getPath(), is("/"));
-		userRepository.delete((long) 3);
+//		userRepository.delete((long) 3);
 
 	}
 

@@ -10,13 +10,13 @@ import support.domain.AbstractEntity;
 public class File extends AbstractEntity {
 	
 	// 컨트롤러를 거치기 때문에 굳이 path를 데이터베이스에 저장할 필요 없다.
-	@Column(name="file_name", length=100)
+	@Column(name="file_name", length=100, nullable=false)
 	private String fileName;
 
-	@Column(name="file_original_name")
+	@Column(name="file_original_name", nullable=false)
 	private String originalFileName;
 	
-	@Column(name="file_contentType")
+	@Column(name="file_contentType", nullable=false)
 	private String contentType;
 		
 	public File() {
