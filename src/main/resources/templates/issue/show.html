@@ -102,7 +102,6 @@
             <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
               <p>{{comment}}</p>
             </div>
-            {{/issue}}
             <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
 
               <!-- comments start -->
@@ -157,9 +156,9 @@
                       <a>진저애비</a>
 
                       
-                        
-                          upload file <a href="upload file" target="_blank">[view]</a>
-                        
+                        {{#files}}
+                          uploaded file <a href="/issues/{{issue.id}}/attachments/{{id}}" target="_blank">[view]</a>
+                        {{/files}}
                         
                       
                     </strong>
@@ -171,7 +170,7 @@
               
               <!-- comments end -->
             </div>
-            <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
+            <form action="/issues/{{id}}/attachments" enctype="multipart/form-data" method="POST">
               <div style="margin:10px;">
                 <input type="file" name="file" id="file" />
                 <button class="mdl-button" type="submit">upload file</button>
@@ -190,6 +189,7 @@
             </div>
           </div>
         </div>
+        {{/issue}}
         {{> include/footer}}
       </main>
       <div class="mdl-layout__obfuscator"></div>
