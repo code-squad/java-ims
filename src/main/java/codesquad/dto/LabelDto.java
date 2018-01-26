@@ -1,7 +1,5 @@
 package codesquad.dto;
 
-import javax.persistence.Column;
-
 import codesquad.domain.Label;
 
 public class LabelDto {

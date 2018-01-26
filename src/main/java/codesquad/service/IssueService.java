@@ -13,7 +13,6 @@ import codesquad.domain.Label;
 import codesquad.domain.MileStone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
-import codesquad.security.LoginUser;
 
 @Service
 public class IssueService {

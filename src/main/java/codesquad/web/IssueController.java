@@ -14,11 +14,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.domain.Issue;
-import codesquad.domain.Label;
-import codesquad.domain.MileStone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
+import codesquad.service.FileService;
 import codesquad.service.IssueService;
 import codesquad.service.LabelService;
 import codesquad.service.MileStoneService;
@@ -41,6 +40,9 @@ public class IssueController extends AbstractEntity {
 
 	@Resource(name = "labelService")
 	private LabelService labelService;
+	
+	@Resource(name = "fileService")
+	private FileService fileService;
 
 	@GetMapping("/form")
 	public String form(@LoginUser User loginUser) {
@@ -92,6 +94,7 @@ public class IssueController extends AbstractEntity {
 		model.addAttribute("users", userService.findAll());
 		model.addAttribute("labelList", labelService.findAll());
 		log.debug("labelList : {}", labelService.findAll().toString());
+		model.addAttribute("files", fileService.findAll());
 		return "/issue/show";
 	}
 
