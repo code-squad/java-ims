@@ -1,9 +1,6 @@
 package codesquad.web;
 
-import static org.assertj.core.api.Assertions.assertThatNullPointerException;
-import static org.junit.Assert.*;
 import org.junit.Test;
-import codesquad.web.IssueController;
 
 public class IssueControllerTest {
 	private IssueController issueController;

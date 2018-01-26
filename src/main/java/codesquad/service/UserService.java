@@ -1,5 +1,6 @@
 package codesquad.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +16,6 @@ import codesquad.dto.UserDto;
 
 @Service
 public class UserService {
-
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
@@ -25,7 +25,7 @@ public class UserService {
 
     public User update(User loginUser, long id, UserDto updatedUser) {
         User original = userRepository.findOne(id);
-        original.update(loginUser, updatedUser._toUser());
+        original.update(loginUser._toUserDto(), updatedUser);
         return userRepository.save(original);
     }
 
@@ -36,9 +36,17 @@ public class UserService {
         }
         return user;
     }
+    
+    public User findById(long id) {
+    	return userRepository.findOne(id);
+    }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserDto> findAll() {
+    	List<UserDto> userDtoList = new ArrayList<>();
+		for (User user : userRepository.findAll()) {
+			userDtoList.add(user._toUserDto());
+		}
+		return userDtoList;
     }
 
     public User login(String userId, String password) throws UnAuthenticationException {

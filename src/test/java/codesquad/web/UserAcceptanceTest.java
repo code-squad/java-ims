@@ -8,8 +8,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
-import javax.xml.ws.Response;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +20,6 @@ import org.springframework.util.MultiValueMap;
 
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
-import codesquad.dto.UserDto;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
@@ -47,7 +44,6 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 				.addParameter("email", "javajigi@slipp.net").build();
 
 		ResponseEntity<String> response = template.postForEntity("/users", request, String.class);
-
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertNotNull(userRepository.findByUserId(userId));
 		assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
@@ -57,21 +53,27 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 	public void updateForm_no_login() throws Exception {
 		ResponseEntity<String> response = template.getForEntity(String.format("/users/%d/form", loginUser.getId()),
 				String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+//		로그인 실패시 HttpStatus.FORBIDDEN이 아니라 /user/login으로 보내게 수정함. (SecurityControllerAdvice class)
+		assertTrue(response.getBody().contains("Login Member"));
 	}
 
 	@Test
 	public void updateForm_login() throws Exception {
 		ResponseEntity<String> response = basicAuthTemplate
 				.getForEntity(String.format("/users/%d/form", loginUser.getId()), String.class);
+		log.debug(loginUser._toUserDto().toString());
+		log.debug(response.getBody());
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-		assertThat(response.getBody().contains(loginUser.getName()), is(true));
+		assertThat(response.getBody().contains(loginUser._toUserDto().getName()), is(true));
 	}
 
 	@Test
 	public void update_no_login() throws Exception {
 		ResponseEntity<String> response = update(template);
-		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+//		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertTrue(response.getBody().contains("Login Member"));
 	}
 
 	private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
@@ -86,7 +88,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 	public void update() throws Exception {
 		ResponseEntity<String> response = update(basicAuthTemplate);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-		assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
+		assertTrue(response.getHeaders().getLocation().getPath().startsWith("/"));
 	}
 
 	@Test
@@ -98,7 +100,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 	@Test
 	public void loginSuccess() {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-				.addParameter("userId", "javajigi").addParameter("password", "test").build();
+				.addParameter("userId", "javajigi").addParameter("password", "testtest").build();
 		ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 	}
@@ -137,10 +139,11 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 				.getForEntity(String.format("/users/%d/form", loginUser.getId()), String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		String body = response.getBody();
+		log.debug("body : {}", body);
 		assertTrue(body.contains("javajigi") && body.contains("자바지기"));
+		updateUser();
 	}
 
-	@Test
 	public void updateUser() {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().put()
 				.addParameter("userId", "javajigi")
@@ -152,7 +155,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 				request, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		log.debug(loginUser.toString());
-		Optional<User> user = userRepository.findByUserId(loginUser.getUserId());
-		assertThat(user.get().getName(), is("상코지기"));
+		Optional<User> user = userRepository.findByUserId(loginUser._toUserDto().getUserId());
+		assertThat(user.get()._toUserDto().getName(), is("상코지기"));
 	}
 }
