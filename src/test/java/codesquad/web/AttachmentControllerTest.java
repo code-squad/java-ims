@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import javax.annotation.Resource;
 
@@ -13,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.PathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +57,7 @@ public class AttachmentControllerTest extends AcceptanceTest {
 				.postForEntity(String.format("/issues/%d/attachments", issue.getId()), request2, String.class);
 		assertEquals(HttpStatus.FOUND, result.getStatusCode());
 		assertEquals("logback.xml", fileRepository.findByOriginalFileName("logback.xml").get().getOriginalFileName());
-
+		
 		// download test
 		File file = fileRepository.findByOriginalFileName("logback.xml").get();
 		log.debug("file: {}", file.toString());
@@ -87,6 +85,6 @@ public class AttachmentControllerTest extends AcceptanceTest {
           .build();
         ResponseEntity<String> result = basicAuthTemplate().postForEntity(String.format("/issues/%d/attachments", issue.getId()), request2, String.class);
         assertEquals(HttpStatus.FOUND, result.getStatusCode());
-        assertTrue(fileRepository.findByOriginalFileName("logback.xml").get().getFileName().contains("logback.xml"));          
+        assertEquals("logback.xml", fileRepository.findByOriginalFileName("logback.xml").get().getOriginalFileName());          
     }
 }

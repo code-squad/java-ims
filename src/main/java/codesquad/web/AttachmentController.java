@@ -7,12 +7,14 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.PathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +34,6 @@ import codesquad.service.FileService;
 public class AttachmentController {
 	private static final Logger log = LoggerFactory.getLogger(AttachmentController.class);
 	private static String HOME = System.getProperty("user.home");
-//	private static final String UPLOADED_FOLDER = "../temp/";
 
 	@Resource(name ="fileService")
 	private FileService fileService;
@@ -47,21 +48,9 @@ public class AttachmentController {
 			return "redirect:/issues/{issueId}";
 		}
 		try {// 1. 파일을 서버 디렉토리에 저장.
-			// file을 byte 단위로 받는다.
-			byte[] bytes = file.getBytes();
-			// converts the given URI to Path object
-//			Path path = Paths.get(HOME, file.getOriginalFilename() + UUID.randomUUID().toString());
-			Path path = Paths.get(HOME, file.getOriginalFilename());
-			// 주어진 경로에 byte 형태로 저장.
-			log.debug("IamHere");
-			Files.write(path, bytes);
-			log.debug(Files.write(path, bytes).toString());
+			String uuid = saveFileIntoDirectory(file);
 			// 2. 파일의 정보를 데이터베이스에 저장.
-//			String fileName = file.getOriginalFilename() + UUID.randomUUID().toString();
-			String fileName = file.getOriginalFilename();
-			String originalFileName = file.getOriginalFilename();
-			String contentType = file.getContentType();
-			File dbFile = new File(fileName, originalFileName, contentType);
+			File dbFile = saveFileIntoDatabase(file, uuid);
 			fileService.add(dbFile);
 			log.debug(dbFile.toString());
 			redirectAttributes.addFlashAttribute("message", "You successfully uploaded" + file.getOriginalFilename() + "");
@@ -71,8 +60,27 @@ public class AttachmentController {
 		return "redirect:/issues/{issueId}";
 	}
 
+	private File saveFileIntoDatabase(MultipartFile file, String uuid) {
+		String fileName = uuid;
+		String originalFileName = file.getOriginalFilename();
+		String contentType = file.getContentType();
+		File dbFile = new File(fileName, originalFileName, contentType);
+		return dbFile;
+	}
+
+	private String saveFileIntoDirectory(MultipartFile file) throws IOException {
+		// file을 byte 단위로 받는다.
+		byte[] bytes = file.getBytes();
+		// converts the given URI to Path object
+		String uuid = UUID.randomUUID().toString();
+		Path path = Paths.get(HOME, uuid);
+		// 주어진 경로에 byte 형태로 저장.
+		Files.write(path, bytes);
+		return uuid;
+	}
+
 	@GetMapping("/{id}")
-	public ResponseEntity<PathResource> download(@LoginUser User loginUser, @PathVariable long id) throws Exception {
+	public ResponseEntity<PathResource> download(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id) throws Exception {
 		// 데이터베이스에서 해당 파일의 정보를 찾는다.
 		File file = fileService.findById(id);
 		// 파일의 경로를 찾는다.
@@ -81,10 +89,10 @@ public class AttachmentController {
 		// pathResource 생성.
 		PathResource resource = new PathResource(path);
 		log.debug("resource: {}", resource.toString());
-		HttpHeaders header = new HttpHeaders();
-//		header.setContentType(MediaType.TEXT_XML);
 		
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getFileName());
+		HttpHeaders header = new HttpHeaders();
+		header.setContentType(MediaType.valueOf(file.getContentType()));
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getOriginalFileName());
 		log.debug("hello");
         try {
 			header.setContentLength(resource.contentLength());
@@ -92,8 +100,6 @@ public class AttachmentController {
 			log.debug("hereitis");
 			e.printStackTrace();
 		}
-        log.debug("here");
-        log.debug(new ResponseEntity<PathResource>(resource, header, HttpStatus.OK).toString());
         return new ResponseEntity<PathResource>(resource, header, HttpStatus.OK);		
 	}
 }
