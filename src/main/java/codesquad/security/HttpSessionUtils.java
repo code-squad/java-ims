@@ -8,11 +8,11 @@ import org.springframework.web.context.request.WebRequest;
 import codesquad.domain.User;
 
 public class HttpSessionUtils {
-    public static final String USER_SESSION_KEY = "loginedUser";
+    public static final String USER_SESSION_KEY = "signedInUser";
 
     public static boolean isLoginUser(NativeWebRequest webRequest) {
-        Object loginedUser = webRequest.getAttribute(USER_SESSION_KEY, WebRequest.SCOPE_SESSION);
-        return loginedUser != null;
+        Object signedInUser = webRequest.getAttribute(USER_SESSION_KEY, WebRequest.SCOPE_SESSION);
+        return signedInUser != null;
     }
 
     public static User getUserFromSession(NativeWebRequest webRequest) {
@@ -23,8 +23,8 @@ public class HttpSessionUtils {
     }
 
     public static boolean isLoginUser(HttpSession session) {
-        Object sessionedUser = session.getAttribute(USER_SESSION_KEY);
-        if (sessionedUser == null) {
+        Object sessionUser = session.getAttribute(USER_SESSION_KEY);
+        if (sessionUser == null) {
             return false;
         }
         return true;
