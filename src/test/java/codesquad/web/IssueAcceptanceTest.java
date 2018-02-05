@@ -92,6 +92,28 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	}
 
 	@Test
-	public void delete_not_owner() {
+	public void delete_not_owner1() {
+		createIssue(basicAuthTemplate);
+
+		User anoterUser = new User("userId", "password", "name");
+
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().delete().build();
+		ResponseEntity<String> response = basicAuthTemplate(anoterUser).postForEntity("/issues/1", request, String.class);
+
+		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+		assertNotNull(issueRepository.findOne(1L));
 	}
+
+	@Test
+	public void delete_no_login() {
+		createIssue(basicAuthTemplate);
+
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().delete().build();
+		ResponseEntity<String> response = template.postForEntity("/issues/1", request, String.class);
+
+		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+		assertNotNull(issueRepository.findOne(1L));
+	}
+
+
 }
