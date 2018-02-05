@@ -48,6 +48,19 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 				.addParameter("subject", ISSUE_SUBJECT)
 				.addParameter("comment", ISSUE_COMMENT).build();
 
+		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues", request, String.class);
+
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+		assertNotNull(issueRepository.findOne(Long.valueOf(1)));
+		assertThat(response.getHeaders().getLocation().getPath(), is("/issues"));
+	}
+
+	@Test
+	public void create_not_login() throws Exception {
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+				.addParameter("subject", ISSUE_SUBJECT)
+				.addParameter("comment", ISSUE_COMMENT).build();
+
 		ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
@@ -60,7 +73,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
 				.addParameter("comment", "이슈코멘트").build();
 
-		ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+		ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issues", request, String.class);
 
 		assertThat(response.getStatusCode(), is(HttpStatus.PRECONDITION_REQUIRED));
 	}
@@ -70,7 +83,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
 				.addParameter("subject", "이슈주제").build();
 
-		ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+		ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issues", request, String.class);
 
 		assertThat(response.getStatusCode(), is(HttpStatus.PRECONDITION_REQUIRED));
 	}

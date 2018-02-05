@@ -29,7 +29,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void createForm() throws Exception {
         ResponseEntity<String> response = template.getForEntity("/users/form", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        log.debug("body : {}", response.getBody());
+        log.debug("body: {}", response.getBody());
     }
 
     @Test
@@ -84,5 +84,48 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = update(basicAuthTemplate);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
+    }
+
+    @Test
+    public void loginForm() throws Exception {
+        ResponseEntity<String> response = template.getForEntity("/users/login", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        log.debug("body: {}", response.getBody());
+    }
+
+    @Test
+    public void login() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", "javajigi")
+                .addParameter("password", "test").build();
+
+        ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/issues"));
+    }
+
+    @Test
+    public void login_no_user() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", "pythonjigi")
+                .addParameter("password", "test").build();
+
+        ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
+
+	    assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+	    assertThat(response.getHeaders().getLocation().getPath(), is("/users/login"));
+    }
+
+    @Test
+    public void login_not_match() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", "javajigi")
+                .addParameter("password", "product").build();
+
+        ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
+
+	    assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+	    assertThat(response.getHeaders().getLocation().getPath(), is("/users/login"));
     }
 }
