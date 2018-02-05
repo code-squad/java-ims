@@ -1,6 +1,8 @@
 package codesquad.dto;
 
 import codesquad.domain.Issue;
+import codesquad.domain.User;
+import codesquad.security.LoginUser;
 
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -22,8 +24,8 @@ public class IssueDto {
         this.comment = content;
     }
 
-    public Issue toIssue(){
-        return new Issue(this.subject, this.comment);
+    public Issue toIssue(User loginUser){
+        return new Issue(loginUser, this.subject, this.comment);
     }
 
     public String getSubject() {
