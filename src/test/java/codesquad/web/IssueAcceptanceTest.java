@@ -19,8 +19,6 @@ import static org.junit.Assert.assertTrue;
 
 public class IssueAcceptanceTest extends AcceptanceTest{
     private static final Logger logger = LoggerFactory.getLogger(IssueAcceptanceTest.class);
-    @Autowired
-    private IssueRepository issueRepository;
 
     @Test
     public void createForm() {
@@ -40,7 +38,6 @@ public class IssueAcceptanceTest extends AcceptanceTest{
         ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertNotNull(issueRepository.findBySubject(subject));
         assertThat(response.getHeaders().getLocation().getPath(), is("/issues"));
     }
 
