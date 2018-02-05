@@ -30,14 +30,15 @@ public class IssueService {
 
 	@Transactional
 	public Issue update(User loginUser, long id, IssueDto updatedIssue) {
-		Issue original = issueRepository.findOne(id);
-		original.update(loginUser, updatedIssue._toIssue(loginUser));
-		return original;
+		Issue issue = issueRepository.findOne(id);
+		issue.update(loginUser, updatedIssue._toIssue(loginUser));
+
+		return issue;
 	}
 
 	public boolean delete(User loginUser, long id) {
-		Issue target = issueRepository.findOne(id);
-		if (!target.isOwner(loginUser)) {
+		Issue issue = issueRepository.findOne(id);
+		if (!issue.isOwner(loginUser)) {
 			return false;
 		}
 

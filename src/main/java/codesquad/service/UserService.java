@@ -26,9 +26,10 @@ public class UserService {
 
     @Transactional
     public User update(User loginUser, long id, UserDto updatedUser) {
-        User original = userRepository.findOne(id);
-        original.update(loginUser, updatedUser._toUser());
-        return original;
+        User user = userRepository.findOne(id);
+        user.update(loginUser, updatedUser._toUser());
+
+        return user;
     }
 
     public User findById(User loginUser, long id) {
@@ -36,6 +37,7 @@ public class UserService {
         if (!user.equals(loginUser)) {
             throw new UnAuthorizedException();
         }
+
         return user;
     }
 

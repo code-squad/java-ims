@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import codesquad.dto.IssueDto;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -8,63 +9,33 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 
 public class IssueTest {
-    public static final User JAVAJIGI = new User(1L, "javajigi", "password", "name");
-    public static final User SANJIGI = new User(2L, "sanjigi", "password", "name");
+    public static final User JAVAJIGI = new User(1L, "javajigi", "testtest", "자바지기");
+    public static final User SARAM = new User(2L, "saram4030", "testtest", "이끼룩");
 
-    public static User newUser(Long id) {
-        return new User(id, "userId", "pass", "name");
+    public static Issue newIssue(long id, User writer) {
+        return new Issue(id, "issueSubject" + id, "issueComment" + id, writer);
     }
 
-    public static User newUser(String userId) {
-        return newUser(userId, "password");
-    }
-
-    public static User newUser(String userId, String password) {
-        return new User(1L, userId, password, "name");
+    public static IssueDto newIssueDto(long id) {
+        return new IssueDto("issueSubject" + id, "issueComment" + id);
     }
 
     @Test
     public void update_owner() throws Exception {
-        User origin = newUser("sanjigi");
-        User loginUser = origin;
-        User target = new User("sanjigi", "password", "name2");
-        origin.update(loginUser, target);
-        assertThat(origin.getName(), is(target.getName()));
+        Issue origin = newIssue(1L, SARAM);
+        IssueDto target = newIssueDto(2L);
+        origin.update(SARAM, target);
+
+        assertThat(origin.getSubject(), is(target.getSubject()));
     }
 
     @Test(expected = UnAuthorizedException.class)
     public void update_not_owner() throws Exception {
-        User origin = newUser("sanjigi");
-        User loginUser = newUser("javajigi");
-        User target = new User("sanjigi", "password", "name2");
-        origin.update(loginUser, target);
+        Issue origin = newIssue(1L, SARAM);
+        IssueDto target = newIssueDto(2L);
+        origin.update(JAVAJIGI, target);
+
+        assertThat(origin.getSubject(), is(target.getSubject()));
     }
 
-    @Test
-    public void update_match_password() {
-        User origin = newUser("sanjigi");
-        User target = new User("sanjigi", "password", "name2");
-        origin.update(origin, target);
-        assertThat(origin.getName(), is(target.getName()));
-    }
-
-    @Test
-    public void update_mismatch_password() {
-        User origin = newUser("sanjigi", "password");
-        User target = new User("sanjigi", "password2", "name2");
-        origin.update(origin, target);
-        assertThat(origin.getName(), is(not(target.getName())));
-    }
-
-    @Test
-    public void match_password() throws Exception {
-        User user = newUser("sanjigi");
-        assertTrue(user.matchPassword(user.getPassword()));
-    }
-
-    @Test
-    public void mismatch_password() throws Exception {
-        User user = newUser("sanjigi");
-        assertFalse(user.matchPassword(user.getPassword() + "2"));
-    }
 }

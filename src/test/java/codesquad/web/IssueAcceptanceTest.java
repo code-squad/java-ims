@@ -19,9 +19,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
@@ -35,13 +33,15 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	@Test
 	public void createForm() throws Exception {
 		ResponseEntity<String> response = basicAuthTemplate().getForEntity("/issues/form", String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		log.debug("body: {}", response.getBody());
+
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 	}
 
 	@Test
 	public void createForm_not_login() throws Exception {
 		ResponseEntity<String> response = template.getForEntity("/issues/form", String.class);
+
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
 
@@ -58,7 +58,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		ResponseEntity<String> response = create(basicAuthTemplate());
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-		assertNotNull(issueRepository.findOne(Long.valueOf(1)));
+		assertNotNull(issueRepository.findOne(Long.valueOf(2)));
 		assertThat(response.getHeaders().getLocation().getPath(), is("/issues"));
 	}
 
@@ -95,7 +95,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		log.debug("body: {}", response.getBody());
 
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-		assertTrue(response.getBody().contains(ISSUE_COMMENT));
+		assertTrue(response.getBody().contains(ISSUE_SUBJECT));
 		assertTrue(response.getBody().contains(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))));
 	}
 
@@ -105,6 +105,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		log.debug("body: {}", response.getBody());
 
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertTrue(response.getBody().contains(ISSUE_SUBJECT));
 		assertTrue(response.getBody().contains(ISSUE_COMMENT));
 		assertTrue(response.getBody().contains(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))));
 	}
@@ -125,25 +126,46 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertTrue(response.getBody().contains(ISSUE_COMMENT));
 	}
 
-	private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
+	private ResponseEntity<String> update(TestRestTemplate template, long id) throws Exception {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
 				.addParameter("_method", "put")
-				.addParameter("subject", ISSUE_SUBJECT)
-				.addParameter("comment", ISSUE_COMMENT).build();
+				.addParameter("subject", "새로운 주제")
+				.addParameter("comment", "새로운 코멘트").build();
 
-		return template.postForEntity(String.format("/issues/%d", 1), request, String.class);
+		return template.postForEntity(String.format("/issues/%d", id), request, String.class);
 	}
 
 	@Test
 	public void update_no_login() throws Exception {
-		ResponseEntity<String> response = update(template);
+		ResponseEntity<String> response = update(template, 1);
+
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
 
 	@Test
 	public void update() throws Exception {
-		ResponseEntity<String> response = update(basicAuthTemplate());
+		long id = 1;
+		ResponseEntity<String> response = update(basicAuthTemplate(), id);
+
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertTrue(response.getHeaders().getLocation().getPath().startsWith("/issues"));
+		assertThat(issueRepository.findOne(Long.valueOf(id)).getSubject(), is("새로운 주제"));
+	}
+
+	@Test
+	public void delete_no_login() throws Exception {
+		long id = 1;
+		ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d/delete", id), String.class);
+
+		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+	}
+
+	@Test
+	public void delete() throws Exception {
+		long id = 2;
+		ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/issues/%d/delete", id), String.class);
+
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertNull(issueRepository.findOne(Long.valueOf(id)));
 	}
 }

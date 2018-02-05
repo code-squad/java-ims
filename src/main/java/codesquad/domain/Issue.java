@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -23,19 +24,16 @@ public class Issue extends AbstractEntity {
 	}
 
 	public Issue(String subject, String comment, User writer) throws IllegalArgumentException {
-		super(0L);
+		this(0L, subject, comment, writer);
+	}
+
+	public Issue(long id, String subject, String comment, User writer) throws IllegalArgumentException {
+		super(id);
 
 		if (subject == null || comment == null || writer == null) {
 			throw new IllegalArgumentException();
 		}
 
-		this.subject = subject;
-		this.comment = comment;
-		this.writer = writer;
-	}
-
-	public Issue(long id, String subject, String comment, User writer) {
-		super(id);
 		this.subject = subject;
 		this.comment = comment;
 		this.writer = writer;
@@ -53,17 +51,25 @@ public class Issue extends AbstractEntity {
 		return writer;
 	}
 
+	public boolean isOwner(User loginUser) {
+		return writer.equals(loginUser);
+	}
+
 	public void update(User loginUser, Issue target) {
+		update(loginUser, target._toIssueDto());
+	}
+
+	public void update(User loginUser, IssueDto target) {
 		if (!isOwner(loginUser)) {
 			throw new UnAuthorizedException();
 		}
 
-		this.subject = target.subject;
-		this.comment = target.comment;
+		this.subject = target.getSubject();
+		this.comment = target.getComment();
 	}
 
-	public boolean isOwner(User loginUser) {
-		return writer.equals(loginUser);
+	public IssueDto _toIssueDto() {
+		return new IssueDto(this.subject, this.comment);
 	}
 
 	@Override

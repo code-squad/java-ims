@@ -24,7 +24,6 @@ public class IssueController {
 
 	@GetMapping("")
 	public String list(Model model) {
-		log.debug("size: {}", issueService.findAll().size());
 		model.addAttribute("issues", issueService.findAll());
 		return "/index";
 	}
