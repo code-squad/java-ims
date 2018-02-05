@@ -86,4 +86,16 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertTrue(response.getBody().contains(ISSUE_COMMENT));
 		assertTrue(response.getBody().contains(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))));
 	}
+
+	@Test
+	public void show() throws Exception {
+		create();
+
+		ResponseEntity<String> response = template.getForEntity("/issues/1", String.class);
+		log.debug("body: {}", response.getBody());
+
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertTrue(response.getBody().contains(ISSUE_COMMENT));
+		assertTrue(response.getBody().contains(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))));
+	}
 }

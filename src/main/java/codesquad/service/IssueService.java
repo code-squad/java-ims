@@ -19,4 +19,8 @@ public class IssueService {
 	public Object findAll() {
 		return issueRepository.findAll();
 	}
+
+	public Object findById(long issueId) {
+		return issueRepository.findOne(issueId);
+	}
 }

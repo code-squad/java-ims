@@ -1,15 +1,15 @@
 package codesquad.web;
 
-import codesquad.UnAuthenticationException;
-import codesquad.domain.Issue;
 import codesquad.dto.IssueDto;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 
@@ -25,6 +25,12 @@ public class IssueController {
 	public String list(Model model) {
 		model.addAttribute("issues", issueService.findAll());
 		return "/index";
+	}
+
+	@GetMapping("/{issueId}")
+	public String show(@PathVariable long issueId,  Model model) {
+		model.addAttribute("issue", issueService.findById(issueId));
+		return "/issue/show";
 	}
 
 	@GetMapping("/form")
