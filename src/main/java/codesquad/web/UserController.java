@@ -1,7 +1,10 @@
 package codesquad.web;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
+import codesquad.UnAuthenticationException;
+import codesquad.security.HttpSessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -52,6 +55,19 @@ public class UserController {
     @GetMapping("/login")
     public String loginForm() {
         return "user/login";
+    }
+
+    @PostMapping("/login")
+    public String login(UserDto userDto, HttpSession session) {
+        try {
+            User user = userService.login(userDto.getUserId(), userDto.getPassword());
+            session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
+            return "redirect:/";
+        } catch (UnAuthenticationException e) {
+            log.info("아이디 또는 비밀번호가 다릅니다.");
+            e.printStackTrace();
+            return "redirect:/users/login";
+        }
     }
 
 }
