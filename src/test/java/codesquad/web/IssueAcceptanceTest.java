@@ -15,10 +15,10 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import javax.xml.ws.Response;
+
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
@@ -68,7 +68,6 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		ResponseEntity<String> response = template.getForEntity("/issues/1", String.class);
 
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-		log.debug("bodybody: {}", response.getBody());
 		assertTrue(response.getBody().contains("testSubject"));
 	}
 
@@ -80,4 +79,19 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		return template.postForEntity("/issues", request, String.class);
 	}
 
+	@Test
+	public void delete_owner() {
+		createIssue(basicAuthTemplate);
+
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().delete().build();
+		ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issues/1", request, String.class);
+
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+		assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+		assertNull(issueRepository.findOne(1L));
+	}
+
+	@Test
+	public void delete_not_owner() {
+	}
 }

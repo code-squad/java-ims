@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -30,7 +27,7 @@ public class IssueController {
 
 	@PostMapping("")
 	public String create(@LoginUser User user, IssueDto issueDto) {
-		issueService.add(issueDto);
+		issueService.add(user, issueDto.toIssue());
 		return "redirect:/issues";
 	}
 
@@ -45,4 +42,11 @@ public class IssueController {
 		model.addAttribute("issue", issueService.findById(id));
 		return "issue/show";
 	}
+
+	@DeleteMapping("/{id}")
+	public String delete(@LoginUser User user, @PathVariable long id) {
+		issueService.delete(user, id);
+		return "redirect:/";
+	}
+
 }

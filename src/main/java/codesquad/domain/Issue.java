@@ -1,9 +1,10 @@
 package codesquad.domain;
 
+import codesquad.UnAuthenticationException;
+import codesquad.UnAuthorizedException;
 import support.domain.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Entity
 public class Issue extends AbstractEntity {
@@ -12,6 +13,10 @@ public class Issue extends AbstractEntity {
 
 	@Column(nullable = false)
 	private String comment;
+
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
+	private User writer;
 
 	public Issue() {
 	}
@@ -34,5 +39,13 @@ public class Issue extends AbstractEntity {
 		return comment;
 	}
 
+	public void writeBy(User loginUser) {
+		this.writer = loginUser;
+	}
 
+	public Issue delete(User loginUser) throws UnAuthenticationException {
+		if (!writer.equals(loginUser))
+			throw new UnAuthorizedException();
+		return this;
+	}
 }
