@@ -36,7 +36,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void createForm() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/users/form", String.class);
+        ResponseEntity<String> response = template.getForEntity("/users/join", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         log.debug("body : {}", response.getBody());
     }

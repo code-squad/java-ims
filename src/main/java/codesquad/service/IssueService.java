@@ -17,13 +17,11 @@ public class IssueService {
     @Autowired
     private IssueRepository issueRepository;
 
-    public Issue add(User loginUser, IssueDto issueDto) throws UnAuthenticationException {
-        if (loginUser == null) {
-            throw new UnAuthenticationException("로그인이 필요합니다.");
-        }
+    @Transactional
+    public Issue add(User loginUser, IssueDto issueDto) {
         Issue issue = issueDto.toIssue();
         issue.writeBy(loginUser);
-        return issueRepository.save(issueDto.toIssue());
+        return issueRepository.save(issue);
     }
 
     public List<Issue> findAll() {
@@ -43,5 +41,16 @@ public class IssueService {
         }
 
         issue.update(issueDto);
+    }
+
+    @Transactional
+    public void delete(User loginUser, Long id) {
+        Issue issue = issueRepository.findOne(id);
+
+        if (!issue.isWritedBy(loginUser)) {
+            throw new UnAuthorizedException("작성자만 수정 또는 삭제할 수 있습니다.");
+        }
+
+        issueRepository.delete(issue);
     }
 }

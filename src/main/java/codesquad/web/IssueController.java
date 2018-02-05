@@ -7,6 +7,8 @@ import codesquad.dto.IssueDto;
 import codesquad.dto.UserDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/issues")
 public class IssueController {
+    private static final Logger logger = LoggerFactory.getLogger(IssueController.class);
+
     @Autowired
     private IssueService issueService;
 
@@ -31,14 +35,10 @@ public class IssueController {
     }
 
     @PostMapping("")
-    public String create(@LoginUser User loginUser, IssueDto issueDto, Model model) {
-        try {
-            Issue issue = issueService.add(loginUser, issueDto);
-            return String.format("redirect:/issues/%d", issue.getId());
-        } catch (UnAuthenticationException e) {
-            model.addAttribute("error", e.getMessage());
-            return "/users/login";
-        }
+    public String create(@LoginUser User loginUser, IssueDto issueDto) {
+
+        Issue issue = issueService.add(loginUser, issueDto);
+        return String.format("redirect:/issues/%d", issue.getId());
     }
 
     @GetMapping("/{id}")
@@ -52,5 +52,12 @@ public class IssueController {
         issueService.update(loginUser, id, issueDto);
 
         return String.format("redirect:/issues/%d", id);
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User loginUser, @PathVariable Long id) {
+        issueService.delete(loginUser, id);
+
+        return "redirect:/";
     }
 }

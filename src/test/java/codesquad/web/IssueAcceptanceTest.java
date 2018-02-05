@@ -14,9 +14,7 @@ import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class IssueAcceptanceTest extends AcceptanceTest {
     private static final Logger logger = LoggerFactory.getLogger(IssueAcceptanceTest.class);
@@ -99,5 +97,28 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/2", request, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
         assertNotEquals(issueService.findById(2L).getSubject(), subject);
+    }
+
+    @Test
+    public void delete_login() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .delete()
+                .build();
+
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/5", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertNull(issueService.findById(5L));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+    }
+
+    @Test
+    public void delete_no_login() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .delete()
+                .build();
+
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/4", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+        assertNotNull(issueService.findById(4L));
     }
 }
