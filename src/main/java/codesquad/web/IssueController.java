@@ -1,6 +1,8 @@
 package codesquad.web;
 
+import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +24,12 @@ public class IssueController {
 	private IssueService issueService;
 
 	@GetMapping("/form")
-	public String form() {
+	public String form(@LoginUser User user) {
 		return "/issue/form";
 	}
 
 	@PostMapping("")
-	public String create(IssueDto issueDto) {
+	public String create(@LoginUser User user, IssueDto issueDto) {
 		issueService.add(issueDto);
 		return "redirect:/issues";
 	}
