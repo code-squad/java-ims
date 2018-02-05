@@ -43,9 +43,18 @@ public class Issue extends AbstractEntity {
 		this.writer = loginUser;
 	}
 
-	public Issue delete(User loginUser) throws UnAuthenticationException {
-		if (!writer.equals(loginUser))
+	public boolean isOwner(User loginUser) {
+		if (writer.equals(loginUser))
+			return true;
+
+		return false;
+	}
+
+	public void update(User loginUser, Issue target) {
+		if (!isOwner(loginUser))
 			throw new UnAuthorizedException();
-		return this;
+
+		this.subject = target.subject;
+		this.comment = target.comment;
 	}
 }

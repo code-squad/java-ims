@@ -79,6 +79,42 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		return template.postForEntity("/issues", request, String.class);
 	}
 
+	private ResponseEntity<String> updateIssue(TestRestTemplate template) {
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+				.addParameter("subject", "바꾼다Subject")
+				.addParameter("comment", "바꾼다Comment")
+				.put()
+				.build();
+		return template.postForEntity("/issues/1", request, String.class);
+	}
+
+	@Test
+	public void update_owner() {
+		createIssue(basicAuthTemplate);
+		ResponseEntity<String> response = updateIssue(basicAuthTemplate);
+
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+		assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+	}
+
+	@Test
+	public void update_not_owner() {
+		createIssue(basicAuthTemplate);
+
+		User anotherUser = new User("userId", "password", "name");
+		ResponseEntity<String> response = updateIssue(basicAuthTemplate(anotherUser));
+
+		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+	}
+
+	@Test
+	public void update_no_login() {
+		createIssue(basicAuthTemplate);
+		ResponseEntity<String> response = updateIssue(template);
+
+		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+	}
+
 	@Test
 	public void delete_owner() {
 		createIssue(basicAuthTemplate);
@@ -95,10 +131,10 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	public void delete_not_owner1() {
 		createIssue(basicAuthTemplate);
 
-		User anoterUser = new User("userId", "password", "name");
+		User anotherUser = new User("userId", "password", "name");
 
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().delete().build();
-		ResponseEntity<String> response = basicAuthTemplate(anoterUser).postForEntity("/issues/1", request, String.class);
+		ResponseEntity<String> response = basicAuthTemplate(anotherUser).postForEntity("/issues/1", request, String.class);
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 		assertNotNull(issueRepository.findOne(1L));

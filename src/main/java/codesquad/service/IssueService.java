@@ -1,11 +1,13 @@
 package codesquad.service;
 
 import codesquad.UnAuthenticationException;
+import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -32,12 +34,15 @@ public class IssueService {
 	public void delete(User loginUser, long id) {
 		Issue issue = issueRepository.findOne(id);
 
-		try {
-			issue.delete(loginUser);
-			issueRepository.delete(id);
-		} catch (UnAuthenticationException e) {
-			e.printStackTrace();
-		}
+		if (!issue.isOwner(loginUser))
+			throw new UnAuthorizedException();
 
+		issueRepository.delete(id);
+	}
+
+	@Transactional
+	public void update(User user, long id, IssueDto updateIssue) {
+		Issue issue = issueRepository.findOne(id);
+		issue.update(user, updateIssue.toIssue());
 	}
 }
