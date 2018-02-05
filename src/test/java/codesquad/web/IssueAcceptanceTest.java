@@ -1,7 +1,6 @@
 package codesquad.web;
 
 import codesquad.domain.IssueRepository;
-import codesquad.dto.IssueDto;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +9,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-import support.test.AcceptanceTest;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
@@ -33,32 +31,35 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
 	@Test
 	public void create() throws Exception {
-		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-				.addParameter("title", "issueTitle")
-				.addParameter("contents", "issueContents").build();
-
-		ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+		ResponseEntity<String> response = createIssue();
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertThat(response.getHeaders().getLocation().getPath(), is("/issues"));
-		assertThat(issueRepository.findOne(1L).getTitle(), is("issueTitle"));
+		assertThat(issueRepository.findOne(1L).getSubject(), is("testSubject"));
 	}
 
 	@Test
 	public void showAll() {
-		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-				.addParameter("title", "issueTitle")
-				.addParameter("contents", "issueContents").build();
-		template.postForEntity("/issues", request, String.class);
-
 		ResponseEntity<String> response = template.getForEntity("/issues", String.class);
 
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-		assertTrue(response.getBody().contains("issueTitle"));
+		assertTrue(response.getBody().contains("testSubject"));
 	}
 
 	@Test
 	public void show() {
+		ResponseEntity<String> response = template.getForEntity("/issues/1", String.class);
+
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertTrue(response.getBody().contains("testSubject"));
+	}
+
+	private ResponseEntity<String> createIssue() {
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+				.addParameter("subject", "testSubject")
+				.addParameter("comment", "testComment").build();
+
+		return template.postForEntity("/issues", request, String.class);
 	}
 
 }

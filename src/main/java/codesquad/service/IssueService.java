@@ -21,4 +21,8 @@ public class IssueService {
 	public List<Issue> findAll() {
 		return issueRepository.findAll();
 	}
+
+	public Issue findById(long id) {
+		return issueRepository.findOne(id);
+	}
 }

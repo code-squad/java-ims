@@ -3,34 +3,34 @@ package codesquad.dto;
 import codesquad.domain.Issue;
 
 public class IssueDto {
-	private String title;
-	private String contents;
+	private String subject;
+	private String comment;
 
 	public IssueDto() {
 	}
 
-	public IssueDto(String title, String contents) {
-		this.title = title;
-		this.contents = contents;
+	public IssueDto(String subject, String comment) {
+		this.subject = subject;
+		this.comment = comment;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getSubject() {
+		return subject;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
-	public String getContents() {
-		return contents;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setContents(String contents) {
-		this.contents = contents;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public Issue toIssue() {
-		return new Issue(this.title, this.contents);
+		return new Issue(this.subject, this.comment);
 	}
 }

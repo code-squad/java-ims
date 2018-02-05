@@ -8,39 +8,39 @@ import javax.persistence.Entity;
 @Entity
 public class Issue extends AbstractEntity {
 	@Column(nullable = false)
-	private String title;
+	private String subject;
 
 	@Column(nullable = false)
-	private String contents;
+	private String comment;
 
 	public Issue() {
 	}
 
-	public Issue(String title, String contents) {
-		this(0L, title, contents);
+	public Issue(String subject, String comment) {
+		this(0L, subject, comment);
 	}
 
-	public Issue(long id, String title, String contents) {
+	public Issue(long id, String subject, String comment) {
 		super(id);
-		this.title = title;
-		this.contents = contents;
+		this.subject = subject;
+		this.comment = comment;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getSubject() {
+		return subject;
 	}
 
-	public Issue setTitle(String title) {
-		this.title = title;
+	public Issue setSubject(String subject) {
+		this.subject = subject;
 		return this;
 	}
 
-	public String getContents() {
-		return contents;
+	public String getComment() {
+		return comment;
 	}
 
-	public Issue setContents(String contents) {
-		this.contents = contents;
+	public Issue setComment(String comment) {
+		this.comment = comment;
 		return this;
 	}
 
