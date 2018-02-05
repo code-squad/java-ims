@@ -1,15 +1,16 @@
 package codesquad.web;
 
+import codesquad.UnAuthorizedException;
+import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import codesquad.dto.UserDto;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -23,24 +24,65 @@ public class IssueController {
 
 	@GetMapping("")
 	public String list(Model model) {
+		log.debug("size: {}", issueService.findAll().size());
 		model.addAttribute("issues", issueService.findAll());
 		return "/index";
 	}
 
-	@GetMapping("/{issueId}")
-	public String show(@PathVariable long issueId,  Model model) {
-		model.addAttribute("issue", issueService.findById(issueId));
+	@GetMapping("/{id}")
+	public String show(@PathVariable long id,  Model model) {
+		model.addAttribute("issue", issueService.findById(id));
 		return "/issue/show";
 	}
 
 	@GetMapping("/form")
-	public String form() {
+	public String form(@LoginUser User loginUser) {
+		if (loginUser == null) {
+			throw new UnAuthorizedException();
+		}
 		return "/issue/form";
 	}
 
 	@PostMapping("")
-	public String create(IssueDto issueDto) throws IllegalArgumentException {
-		issueService.add(issueDto);
+	public String create(@LoginUser User loginUser, IssueDto issueDto) throws IllegalArgumentException {
+		if (loginUser == null) {
+			throw new UnAuthorizedException();
+		}
+
+		issueService.add(issueDto, loginUser);
 		return "redirect:/issues";
+	}
+
+	@GetMapping("/{id}/form")
+	public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+		if (loginUser == null) {
+			throw new UnAuthorizedException();
+		}
+
+		model.addAttribute("issue", issueService.findById(id));
+		return "/issue/updateForm";
+	}
+
+	@PutMapping("/{id}")
+	public String update(@LoginUser User loginUser, @PathVariable long id, IssueDto target) {
+		log.debug("target: {}", target);
+		if (loginUser == null) {
+			throw new UnAuthorizedException();
+		}
+
+		issueService.update(loginUser, id, target);
+		return String.format("redirect:/issues/%d", id);
+	}
+
+	@GetMapping("/{id}/delete")
+	public String delete(@LoginUser User loginUser, @PathVariable long id) {
+		if (loginUser == null) {
+			throw new UnAuthorizedException();
+		}
+
+		if (issueService.delete(loginUser, id)) {
+			return String.format("redirect:/issues", id);
+		}
+		return String.format("redirect:/issues", id);
 	}
 }

@@ -10,10 +10,12 @@ import codesquad.UnAuthorizedException;
 import codesquad.dto.UserDto;
 import support.domain.AbstractEntity;
 
+import java.util.Objects;
+
 @Entity
 public class User extends AbstractEntity {
     public static final GuestUser GUEST_USER = new GuestUser();
-    
+
     @Size(min = 3, max = 20)
     @Column(unique = true, nullable = false, length = 20)
     private String userId;
@@ -40,7 +42,7 @@ public class User extends AbstractEntity {
         this.password = password;
         this.name = name;
     }
-    
+
     public String getUserId() {
         return userId;
     }
@@ -67,11 +69,11 @@ public class User extends AbstractEntity {
         this.name = name;
         return this;
     }
-    
+
     private boolean matchUserId(String userId) {
         return this.userId.equals(userId);
     }
-    
+
     public void update(User loginUser, User target) {
         if (!matchUserId(loginUser.getUserId())) {
             throw new UnAuthorizedException();
@@ -96,14 +98,28 @@ public class User extends AbstractEntity {
     public boolean isGuestUser() {
         return false;
     }
-    
+
     private static class GuestUser extends User {
         @Override
         public boolean isGuestUser() {
             return true;
         }
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), userId);
+    }
+
     @Override
     public String toString() {
         return "User [userId=" + userId + ", password=" + password + ", name=" + name + "]";

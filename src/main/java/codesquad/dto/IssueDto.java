@@ -37,8 +37,8 @@ public class IssueDto {
 		return this;
 	}
 
-	public Issue _toIssue() throws IllegalArgumentException {
-		return new Issue(this.subject, this.comment);
+	public Issue _toIssue(User writer) throws IllegalArgumentException {
+		return new Issue(this.subject, this.comment, writer);
 	}
 
 	@Override

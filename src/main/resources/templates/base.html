@@ -25,11 +25,11 @@
 			<div class="mdl-layout-spacer"></div>
 			<!-- Tabs -->
 			<nav class="mdl-navigation">
-				<a class="mdl-navigation__link" href="/">Issues</a>
+				<a class="mdl-navigation__link" href="/issues">Issues</a>
 				<a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
 				{{#signedInUser}}
 				<a class="mdl-navigation__link" href="/users/logout">logout</a>
-				<a class="mdl-navigation__link" href="/users/{{id}}/form">my</a>
+				<a class="mdl-navigation__link" href="/users/{{id}}/form">my(개인 정보 수정)</a>
 				{{/signedInUser}}
 				{{^signedInUser}}
 				<a class="mdl-navigation__link" href="/users/login">login</a>
