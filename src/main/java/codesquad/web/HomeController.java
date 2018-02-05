@@ -14,11 +14,6 @@ public class HomeController {
     @Autowired
     private IssueService issueService;
 
-    @GetMapping("/index")
-    public String index() {
-        return "redirect:/";
-    }
-
     @GetMapping("/")
     public String home(Model model) {
         List<Issue> issues = issueService.findAll();
