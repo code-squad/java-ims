@@ -17,6 +17,7 @@ import support.test.HtmlFormDataBuilder;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
@@ -40,10 +41,20 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertThat(response.getHeaders().getLocation().getPath(), is("/issues"));
+		assertThat(issueRepository.findOne(1L).getTitle(), is("issueTitle"));
 	}
 
 	@Test
 	public void showAll() {
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+				.addParameter("title", "issueTitle")
+				.addParameter("contents", "issueContents").build();
+		template.postForEntity("/issues", request, String.class);
+
+		ResponseEntity<String> response = template.getForEntity("/issues", String.class);
+
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertTrue(response.getBody().contains("issueTitle"));
 	}
 
 	@Test

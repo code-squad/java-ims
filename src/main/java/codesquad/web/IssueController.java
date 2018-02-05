@@ -5,6 +5,7 @@ import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,5 +29,11 @@ public class IssueController {
 	public String create(IssueDto issueDto) {
 		issueService.add(issueDto);
 		return "redirect:/issues";
+	}
+
+	@GetMapping("")
+	public String showAll(Model model) {
+		model.addAttribute("issue", issueService.findAll());
+		return "index";
 	}
 }

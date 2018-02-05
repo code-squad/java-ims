@@ -6,6 +6,7 @@ import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class IssueService {
@@ -15,5 +16,9 @@ public class IssueService {
 
 	public Issue add(IssueDto issueDto) {
 		return issueRepository.save(issueDto.toIssue());
+	}
+
+	public List<Issue> findAll() {
+		return issueRepository.findAll();
 	}
 }
