@@ -16,7 +16,7 @@ public class IssueService {
     private IssueRepository issueRepository;
 
     public Optional<Issue> findIssueById (long id) {
-        return Optional.of(issueRepository.findOne(id));
+        return Optional.ofNullable(issueRepository.findOne(id));
     }
 
     public List<Issue> findAllIssues () {
@@ -24,6 +24,6 @@ public class IssueService {
     }
 
     public void createIssue(IssueDto issue) {
-        issueRepository.save((Issue) issue.toIssue());
+        issueRepository.save(issue.toIssue());
     }
 }

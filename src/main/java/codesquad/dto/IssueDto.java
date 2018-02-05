@@ -28,9 +28,7 @@ public class IssueDto {
         return this;
     }
 
-    public Object toIssue() {
-        return new Issue()
-                .setTitle(title)
-                .setComment(comment);
+    public Issue toIssue() {
+        return new Issue(title, comment);
     }
 }

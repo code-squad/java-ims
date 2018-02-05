@@ -24,7 +24,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
 
     @Autowired
-    IssueRepository issueRepository;
+    private IssueRepository issueRepository;
 
     public ResponseEntity<String> createIssue() {
         return createIssue("test title");
@@ -49,7 +49,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = createIssue();
 
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertNotNull(issueRepository.findByTitle("test title"));
+        assertNotNull(issueRepository.findAll());
         assertThat(response.getHeaders().getLocation().getPath(), is("/"));
     }
 
@@ -59,6 +59,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = template.getForEntity("/issues/1", String.class);
 
         log.debug(response.getBody());
+
         assertThat(response.getBody().contains("test title"), is(true));
         assertThat(response.getBody().contains("test comment"), is(true));
     }

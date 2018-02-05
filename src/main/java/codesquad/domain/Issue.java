@@ -14,21 +14,20 @@ public class Issue extends AbstractEntity {
     @Column(nullable = false)
     private String comment;
 
+    public Issue() {
+
+    }
+
+    public Issue(String title, String comment) {
+        this.title = title;
+        this.comment = comment;
+    }
+
     public String getTitle() {
         return title;
     }
 
-    public Issue setTitle(String title) {
-        this.title = title;
-        return this;
-    }
-
     public String getComment() {
         return comment;
-    }
-
-    public Issue setComment(String comment) {
-        this.comment = comment;
-        return this;
     }
 }
