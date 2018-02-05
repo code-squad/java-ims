@@ -30,6 +30,12 @@ public class UserController {
         return "/user/form";
     }
 
+    @GetMapping("")
+    public String show(@LoginUser User loginUser) {
+        long id = loginUser.getId();
+        return "redirect:/users/" + id + "/form";
+    }
+
     @PostMapping("")
     public String create(UserDto userDto) {
         userService.add(userDto);
