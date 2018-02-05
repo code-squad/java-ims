@@ -8,6 +8,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
+import org.w3c.dom.html.HTMLButtonElement;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
@@ -25,11 +26,9 @@ public class LoginAcceptanceTest extends BasicAuthAcceptanceTest {
 
 	@Test
 	public void login_success() {
-		HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
-		builder.addParameter("userId", "javajigi");
-		builder.addParameter("password", "test");
-
-		HttpEntity<MultiValueMap<String, Object>> request = builder.build();
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+				.addParameter("userId", "javajigi")
+				.addParameter("password", "test").build();
 
 		ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
 
@@ -39,6 +38,14 @@ public class LoginAcceptanceTest extends BasicAuthAcceptanceTest {
 
 	@Test
 	public void login_failed() {
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+				.addParameter("userId", "javajigi")
+				.addParameter("password", "틀린비밀번호~~").build();
+
+		ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
+
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+		assertThat(response.getHeaders().getLocation().getPath(), is("/users/login"));
 	}
 
 
