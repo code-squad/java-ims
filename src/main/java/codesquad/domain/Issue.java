@@ -30,18 +30,8 @@ public class Issue extends AbstractEntity {
 		return subject;
 	}
 
-	public Issue setSubject(String subject) {
-		this.subject = subject;
-		return this;
-	}
-
 	public String getComment() {
 		return comment;
-	}
-
-	public Issue setComment(String comment) {
-		this.comment = comment;
-		return this;
 	}
 
 
