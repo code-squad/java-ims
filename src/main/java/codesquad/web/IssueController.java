@@ -1,7 +1,9 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,7 +30,7 @@ public class IssueController {
     }
 
     @GetMapping("/{id}")
-    public String showDetail(@PathVariable long id, Model model) {
+    public String showDetail(@PathVariable long id, @LoginUser User loginUser, Model model) throws Exception {
         Optional<Issue> issueOptional = issueService.findIssueById(id);
         model.addAttribute("issue", issueOptional.orElse(null));
 

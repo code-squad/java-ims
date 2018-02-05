@@ -40,7 +40,7 @@ public class UserController {
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
         log.debug("LoginUser : {}", loginUser);
         model.addAttribute("user", userService.findById(loginUser, id));
-        return "/user/updateForm";
+        return "/user/update-form";
     }
 
     @PutMapping("/{id}")

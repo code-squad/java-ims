@@ -23,6 +23,11 @@ public class Issue extends AbstractEntity {
         this.comment = comment;
     }
 
+    public Issue(String title, String comment, User author) {
+        this.title = title;
+        this.comment = comment;
+    }
+
     public String getTitle() {
         return title;
     }
