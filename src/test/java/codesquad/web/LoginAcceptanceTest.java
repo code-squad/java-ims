@@ -14,6 +14,7 @@ import support.test.HtmlFormDataBuilder;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class LoginAcceptanceTest extends BasicAuthAcceptanceTest {
 	private static final Logger log = LoggerFactory.getLogger(LoginAcceptanceTest.class);
@@ -36,8 +37,6 @@ public class LoginAcceptanceTest extends BasicAuthAcceptanceTest {
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertThat(location, is("/"));
-
-		log.debug("bodybody: {}", response.getBody());
 	}
 
 	@Test
@@ -52,4 +51,25 @@ public class LoginAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertThat(response.getHeaders().getLocation().getPath(), is("/users/login"));
 	}
 
+	@Test
+	public void 로그인유저_네비게이션_화면() {
+		ResponseEntity<String> response = basicAuthTemplate.getForEntity("/", String.class);
+		log.debug("bodybody: {}", response.getBody());
+		assertTrue(response.getBody().contains("logout"));
+	}
+
+	@Test
+	public void 비로그인유저_네비게이션_화면() {
+		ResponseEntity<String> response = template.getForEntity("/", String.class);
+		assertTrue(!response.getBody().contains("logout"));
+	}
+
+	@Test
+	public void logout() {
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+				.addParameter("userId", "javajigi")
+				.addParameter("password", "test").build();
+
+		template.postForEntity("/users/login", request, String.class);
+	}
 }
