@@ -39,6 +39,10 @@ public class Issue extends AbstractEntity {
 		return comment;
 	}
 
+	public User getWriter() {
+		return writer;
+	}
+
 	public void writeBy(User loginUser) {
 		this.writer = loginUser;
 	}

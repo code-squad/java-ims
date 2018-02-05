@@ -60,6 +60,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertTrue(response.getBody().contains("testSubject"));
+		assertTrue(response.getBody().contains(findDefaultUser().getName()));
 	}
 
 	@Test
@@ -69,6 +70,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertTrue(response.getBody().contains("testSubject"));
+		assertTrue(response.getBody().contains(findDefaultUser().getName()));
 	}
 
 	private ResponseEntity<String> createIssue(TestRestTemplate template) {
