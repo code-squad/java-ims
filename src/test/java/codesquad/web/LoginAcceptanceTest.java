@@ -54,7 +54,6 @@ public class LoginAcceptanceTest extends BasicAuthAcceptanceTest {
 	@Test
 	public void 로그인유저_네비게이션_화면() {
 		ResponseEntity<String> response = basicAuthTemplate.getForEntity("/", String.class);
-		log.debug("bodybody: {}", response.getBody());
 		assertTrue(response.getBody().contains("logout"));
 	}
 
@@ -64,12 +63,4 @@ public class LoginAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertTrue(!response.getBody().contains("logout"));
 	}
 
-	@Test
-	public void logout() {
-		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-				.addParameter("userId", "javajigi")
-				.addParameter("password", "test").build();
-
-		template.postForEntity("/users/login", request, String.class);
-	}
 }
