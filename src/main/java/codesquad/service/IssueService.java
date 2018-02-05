@@ -6,6 +6,7 @@ import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class IssueService {
@@ -16,11 +17,11 @@ public class IssueService {
 		return issueRepository.save(issueDto._toIssue());
 	}
 
-	public Object findAll() {
+	public List<Issue> findAll() {
 		return issueRepository.findAll();
 	}
 
-	public Object findById(long issueId) {
+	public Issue findById(long issueId) {
 		return issueRepository.findOne(issueId);
 	}
 }
