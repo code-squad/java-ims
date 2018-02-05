@@ -42,7 +42,6 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("email", "javajigi@slipp.net").build();
 
         ResponseEntity<String> response = template.postForEntity("/users", request, String.class);
-
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(userRepository.findByUserId(userId));
         assertThat(response.getHeaders().getLocation().getPath(), is("/users"));

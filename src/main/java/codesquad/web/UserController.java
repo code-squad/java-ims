@@ -47,6 +47,7 @@ public class UserController {
 
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+        if (loginUser.getId() != id) return "redirect:/users/{id}/form";
         log.debug("LoginUser : {}", loginUser);
         model.addAttribute("user", userService.findById(loginUser, id));
         return "/user/updateForm";
@@ -74,9 +75,15 @@ public class UserController {
         try{
             user = userService.login(userId, password);
         } catch (UnAuthenticationException exception){
-            return "user/login_failed";
+            return "redirect:/users/login_failed";
         }
         session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
         return "redirect:/";
     }
 
