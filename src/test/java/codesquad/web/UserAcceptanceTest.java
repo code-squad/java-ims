@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import codesquad.domain.User;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,13 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    private User defaultUser;
+
+    @Before
+    public void setUp() throws Exception {
+        defaultUser = findDefaultUser();
+    }
 
     @Test
     public void createForm() throws Exception {
@@ -115,5 +124,14 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertTrue(response.getBody().contains("아이디 또는 비밀번호가 틀렸습니다."));
+    }
+
+    @Test
+    public void show() {
+        ResponseEntity<String> response = basicAuthTemplate()
+                .getForEntity(String.format("/users/%d", defaultUser.getId()), String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertTrue(response.getBody().contains(defaultUser.getName()));
     }
 }

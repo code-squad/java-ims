@@ -5,14 +5,16 @@
     <div class="mdl-layout-spacer"></div>
     <!-- Tabs -->
     <nav class="mdl-navigation">
-      {{#loginUser}}
+      {{#loginedUser}}
       <a class="mdl-navigation__link" href="/">Issues</a>
       <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-      {{/loginUser}}
-      {{^loginUser}}
-      <a class="mdl-navigation__link" href="/users/login">login</a>
-      <a class="mdl-navigation__link" href="/users/join">join</a>
-      {{/loginUser}}
+      <a class="mdl-navigation__link" href="/users/logout">Logout</a>
+      <a class="mdl-navigation__link" href="/users/{{id}}">My</a>
+      {{/loginedUser}}
+      {{^loginedUser}}
+      <a class="mdl-navigation__link" href="/users/login">Login</a>
+      <a class="mdl-navigation__link" href="/users/join">Join</a>
+      {{/loginedUser}}
     </nav>
   </div>
 </header>
