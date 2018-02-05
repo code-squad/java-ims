@@ -44,12 +44,12 @@ public class UserService {
     public User login(String userId, String password) throws UnAuthenticationException {
         Optional<User> maybeUser = userRepository.findByUserId(userId);
         if (!maybeUser.isPresent()) {
-            throw new UnAuthenticationException();
+            throw new UnAuthenticationException("아이디 또는 비밀번호가 틀렸습니다.");
         }
 
         User user = maybeUser.get();
         if (!user.matchPassword(password)) {
-            throw new UnAuthenticationException();
+            throw new UnAuthenticationException("아이디 또는 비밀번호가 틀렸습니다.");
         }
 
         return user;

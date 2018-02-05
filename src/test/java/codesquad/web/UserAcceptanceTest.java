@@ -85,4 +85,35 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
     }
+
+    @Test
+    public void loginForm() {
+        ResponseEntity<String> response = template().getForEntity("/users/login", String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void login() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", "javajigi")
+                .addParameter("password", "test")
+                .build();
+
+        ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+    }
+
+    @Test
+    public void login_fail() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", "test")
+                .addParameter("password", "test")
+                .build();
+
+        ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertTrue(response.getBody().contains("아이디 또는 비밀번호가 틀렸습니다."));
+    }
 }
