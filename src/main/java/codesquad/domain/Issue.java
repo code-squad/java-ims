@@ -12,36 +12,42 @@ public class Issue extends AbstractEntity{
 
     @Size(min = 3, max = 20)
     @Column(nullable = false, length = 20)
-    private String title;
+    private String subject;
 
     @Size(min = 3)
     @Column(nullable = false)
-    private String content;
+    private String comment;
+
+    private boolean deleted;
 
     public Issue() {
 
     }
 
-    public Issue(long id, String title, String content) {
-        super(id);
-        this.title = title;
-        this.content = content;
+    public Issue(String subject, String comment) {
+        this.subject = subject;
+        this.comment = comment;
+        this.deleted = false;
     }
 
-    public String getTitle() {
-        return title;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public String getContent() {
-        return content;
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public String getSubject() {
+        return subject;
+    }
+
+    public String getComment() {
+        return comment;
     }
 
     @Override
@@ -51,22 +57,22 @@ public class Issue extends AbstractEntity{
         if (!super.equals(o)) return false;
         Issue issue = (Issue) o;
         return Objects.equals(getId(), issue.getId()) &&
-                Objects.equals(title, issue.title) &&
-                Objects.equals(content, issue.content);
+                Objects.equals(subject, issue.subject) &&
+                Objects.equals(comment, issue.comment);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), title, content);
+        return Objects.hash(super.hashCode(), subject, comment);
     }
 
     @Override
     public String toString() {
         return "Issue{" +
                 "id=" + getId() + '\'' +
-                "title='" + title + '\'' +
-                ", content='" + content + '\'' +
+                "subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
                 '}';
     }
 }
