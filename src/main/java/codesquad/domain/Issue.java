@@ -30,14 +30,6 @@ public class Issue extends AbstractEntity{
         this.deleted = false;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
     public boolean isDeleted() {
         return deleted;
     }

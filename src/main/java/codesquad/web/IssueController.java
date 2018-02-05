@@ -33,7 +33,7 @@ public class IssueController {
     @GetMapping("/{id}")
     public String showIssue(Model model, @PathVariable long id) {
         Issue issue = issueService.findById(id).get();
-        log.debug("it's gotten issue: {}", issue.toString());
+        log.debug("it's gotten issue: {}", issue);
         model.addAttribute("issue", issue);
         return "issue/show";
     }
