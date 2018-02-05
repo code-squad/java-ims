@@ -32,8 +32,12 @@ public class LoginAcceptanceTest extends BasicAuthAcceptanceTest {
 
 		ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
 
+		String location = response.getHeaders().getLocation().getPath();
+
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-		assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+		assertThat(location, is("/"));
+
+		log.debug("bodybody: {}", response.getBody());
 	}
 
 	@Test
@@ -47,6 +51,5 @@ public class LoginAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertThat(response.getHeaders().getLocation().getPath(), is("/users/login"));
 	}
-
 
 }
