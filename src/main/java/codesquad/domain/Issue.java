@@ -36,6 +36,20 @@ public class Issue extends AbstractEntity{
         this.deleted = false;
     }
 
+    public Issue(String subject, String comment) {
+        this.subject = subject;
+        this.comment = comment;
+        this.deleted = false;
+    }
+
+    public IssueDto toDto(){
+        return new IssueDto(getSubject(), getComment());
+    }
+
+    public void writeBy(User user) {
+        this.writer = user;
+    }
+
     public void update(User loginUser, IssueDto issueDto) {
         if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
