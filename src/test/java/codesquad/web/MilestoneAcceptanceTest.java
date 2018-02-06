@@ -30,34 +30,36 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = template().getForEntity("/milestones/form", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
-//
-//    @Test
-//    public void create_login() {
-//        String subject = "제모오오오옥";
-//        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-//                .addParameter("subject", subject)
-//                .addParameter("comment", "코메에에에에에에엔트")
-//                .build();
-//
-//        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues", request, String.class);
-//
-//        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-//        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/issues/"));
-//    }
-//
-//    @Test
-//    public void create_no_login() {
-//        String subject = "들어가면 안되";
-//        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-//                .addParameter("subject", subject)
-//                .addParameter("comment", "제바아아아아아아알")
-//                .build();
-//
-//        ResponseEntity<String> response = template().postForEntity("/issues", request, String.class);
-//
-//        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
-//    }
-//
+
+    @Test
+    public void create_login() {
+        String subject = "milestone";
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", subject)
+                .addParameter("startDate", "2017-12-22")
+                .addParameter("endDate", "2018-03-02")
+                .build();
+
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/milestones", request, String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/milestones/"));
+    }
+
+    @Test
+    public void create_no_login() {
+        String subject = "들어가면 안되";
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", subject)
+                .addParameter("startDate", "2017-12-22")
+                .addParameter("endDate", "2018-03-02")
+                .build();
+
+        ResponseEntity<String> response = template().postForEntity("/milestones", request, String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
 //    @Test
 //    public void show() {
 //        ResponseEntity<String> response = template.getForEntity("/issues/1", String.class);

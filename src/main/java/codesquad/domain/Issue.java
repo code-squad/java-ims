@@ -17,6 +17,10 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_user"))
     private User writer;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
+    private Milestone milestone;
+
     public Issue() {
     }
 

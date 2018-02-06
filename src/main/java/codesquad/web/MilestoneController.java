@@ -1,10 +1,13 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import codesquad.dto.MilestoneDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 public class MilestoneController {
     private static final Logger logger = LoggerFactory.getLogger(MilestoneController.class);
 
+    @Autowired
+    private MilestoneService milestoneService;
+
     @GetMapping("/form")
     public String createForm(@LoginUser User user) {
         return "/milestone/form";
@@ -27,11 +33,11 @@ public class MilestoneController {
 //        return "redirect:/";
 //    }
 //
-//    @PostMapping("")
-//    public String create(@LoginUser User loginUser, IssueDto issueDto) {
-//        Issue issue = issueService.add(loginUser, issueDto);
-//        return String.format("redirect:/issues/%d", issue.getId());
-//    }
+    @PostMapping("")
+    public String create(@LoginUser User loginUser, MilestoneDto milestoneDto) {
+        Milestone milestone = milestoneService.add(loginUser, milestoneDto);
+        return String.format("redirect:/milestones/%d", milestone.getId());
+    }
 //
 //    @GetMapping("/{id}")
 //    public String show(@PathVariable Long id, Model model) {
