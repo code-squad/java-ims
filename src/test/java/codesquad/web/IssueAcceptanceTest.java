@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import codesquad.domain.IssueRepository;
+import codesquad.domain.MilestoneRepository;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,9 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
 	@Autowired
 	private IssueRepository issueRepository;
+
+	@Autowired
+	private MilestoneRepository milestoneRepository;
 
 	private static final String ISSUE_SUBJECT = "이슈주제";
 	private static final String ISSUE_COMMENT = "이슈코멘트";
@@ -164,5 +168,14 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		basicAuthTemplate().delete(String.format("/issues/%d/delete", id), String.class);
 
 		assertNull(issueRepository.findOne(Long.valueOf(id)));
+	}
+
+	@Test
+	public void register_milestone() {
+		long id = 1;
+		long milestoneId = 1;
+		basicAuthTemplate().put(String.format("/issues/%d/milestone/%d", id, milestoneId), null, String.class);
+
+		assertTrue(issueRepository.findOne(Long.valueOf(id)).matchMilestone(milestoneRepository.findOne(Long.valueOf(milestoneId))));
 	}
 }

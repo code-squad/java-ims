@@ -26,7 +26,7 @@ public class MilestoneAcceptanceTest extends BasicAuthAcceptanceTest {
 	private MilestoneRepository milestoneRepository;
 
 	private static final String MILESTONE_SUBJECT = "마일스톤주제";
-	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 	private static final String MILESTONE_START_DATE = LocalDateTime.now().format(formatter);
 	private static final String MILESTONE_END_DATE = LocalDateTime.now().plusDays(7).format(formatter);
 

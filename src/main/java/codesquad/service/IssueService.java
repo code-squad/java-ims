@@ -1,8 +1,6 @@
 package codesquad.service;
 
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import codesquad.dto.UserDto;
 import org.springframework.stereotype.Service;
@@ -15,6 +13,9 @@ import java.util.List;
 public class IssueService {
 	@Resource(name = "issueRepository")
 	private IssueRepository issueRepository;
+
+	@Resource(name = "milestoneRepository")
+	private MilestoneRepository milestoneRepository;
 
 	public Issue add(IssueDto issueDto, User loginUser) {
 		return issueRepository.save(issueDto._toIssue(loginUser));
@@ -44,5 +45,17 @@ public class IssueService {
 
 		issueRepository.delete(id);
 		return true;
+	}
+
+	@Transactional
+	public void register(long id, long milestoneId) throws IllegalArgumentException {
+		Issue issue = issueRepository.findOne(id);
+		Milestone milestone = milestoneRepository.findOne(milestoneId);
+
+		if (issue == null || milestone == null) {
+			throw new IllegalArgumentException();
+		}
+
+		issue.registerMilestone(milestone);
 	}
 }

@@ -84,4 +84,11 @@ public class IssueController {
 		}
 		return String.format("redirect:/issues", id);
 	}
+
+	@PutMapping("/{id}/milestone/{milestoneId}")
+	public String register(@PathVariable long id, @PathVariable long milestoneId) {
+		issueService.register(id, milestoneId);
+
+		return String.format("redirect:/issues", id);
+	}
 }
