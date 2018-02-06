@@ -1,6 +1,8 @@
 package codesquad.web;
 
+import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.dto.UserDto;
 import org.junit.Before;
@@ -36,7 +38,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
                 .addParameter("comment", "test comment")
                 .build();
 
-        return template.postForEntity("/issues", request, String.class);
+        return basicAuthTemplate(findDefaultUser()).postForEntity("/issues", request, String.class);
     }
 
     @Before
@@ -56,9 +58,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     @Test
     public void showTest() throws Exception {
         createIssue();
-        ResponseEntity<String> response = template.getForEntity("/issues/1", String.class);
-
-        log.debug(response.getBody());
+        ResponseEntity<String> response = template.getForEntity("/issues/2", String.class);
 
         assertThat(response.getBody().contains("test title"), is(true));
         assertThat(response.getBody().contains("test comment"), is(true));
@@ -72,5 +72,61 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.getBody().contains("test title"), is(true) );
         assertThat(response.getBody().contains("title2"), is(true) );
+    }
+
+    @Test
+    public void updateTest_success() {
+        createIssue();
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put")
+                .addParameter("title", "new title")
+                .addParameter("comment", "new comment")
+                .build();
+
+        ResponseEntity<String> response = basicAuthTemplate(findDefaultUser())
+                .postForEntity("/issues/2", request, String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+    }
+
+    @Test
+    public void updateTest_fail() {
+        createIssue();
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put")
+                .addParameter("title", "new title")
+                .addParameter("comment", "new comment")
+                .build();
+
+        User sehwan = new User("sehwan", "test", "test");
+        ResponseEntity<String> response = basicAuthTemplate(sehwan)
+                .postForEntity("/issues/2", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void deleteTest_success() {
+        createIssue();
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "delete")
+                .build();
+
+        ResponseEntity<String> response = basicAuthTemplate(findDefaultUser())
+                .postForEntity("/issues/3", request, String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+    }
+
+    @Test
+    public void deleteTest_fail() {
+        createIssue();
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "delete")
+                .build();
+
+        User sehwan = new User("sehwan", "test", "test");
+        ResponseEntity<String> response = basicAuthTemplate(sehwan)
+                .postForEntity("/issues/1", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 }
