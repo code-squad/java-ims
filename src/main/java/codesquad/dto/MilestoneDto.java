@@ -1,13 +1,16 @@
 package codesquad.dto;
 
 import codesquad.domain.Milestone;
-import codesquad.domain.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class MilestoneDto {
+	private static final Logger log = LoggerFactory.getLogger(MilestoneDto.class);
+
 	@Size(min = 3, max = 100)
 	private String subject;
 
@@ -15,7 +18,7 @@ public class MilestoneDto {
 	private LocalDateTime endDate;
 
 	public static LocalDateTime convertStringToDateTime(String str) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		return LocalDateTime.parse(str, formatter);
 	}
 
