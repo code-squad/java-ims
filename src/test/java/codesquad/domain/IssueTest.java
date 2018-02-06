@@ -2,7 +2,10 @@ package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
+import org.hamcrest.Matchers;
 import org.junit.Test;
+
+import java.time.LocalDateTime;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -52,4 +55,12 @@ public class IssueTest {
 		assertFalse(issue.isOwner(JAVAJIGI));
 	}
 
+	@Test
+	public void register_milestone() {
+		Issue issue = new Issue("이슈주제", "이슈코멘트", SARAM);
+		Milestone milestone = new Milestone("마일스톤주제", LocalDateTime.now(), LocalDateTime.now().plusDays(7));
+		issue.registerMilestone(milestone);
+
+		assertTrue(issue.matchMilestone(milestone));
+	}
 }
