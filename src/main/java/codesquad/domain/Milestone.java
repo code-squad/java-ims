@@ -59,7 +59,6 @@ public class Milestone extends AbstractEntity {
         return endDate;
     }
 
-    @Transactional
     public void addToIssue(Issue issue){
         this.issues.add(issue);
     }
