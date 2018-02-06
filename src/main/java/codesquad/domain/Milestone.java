@@ -4,15 +4,20 @@ import support.domain.AbstractEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
+@Entity
 public class Milestone extends AbstractEntity {
 
     @Column(nullable = false)
-    private LocalDateTime start;
+    private String subject;
 
     @Column(nullable = false)
-    private LocalDateTime end;
+    private LocalDateTime startDate;
+
+    @Column(nullable = false)
+    private LocalDateTime endDate;
 
     @Embedded
     private Issues issues;
@@ -21,25 +26,34 @@ public class Milestone extends AbstractEntity {
 
     }
 
-    public Milestone(LocalDateTime start, LocalDateTime end) {
-        this.start = start;
-        this.end = end;
+    public Milestone(String subject, LocalDateTime startDate, LocalDateTime endDate) {
+        this.subject = subject;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public LocalDateTime getStart() {
-        return start;
+        return startDate;
     }
 
     public LocalDateTime getEnd() {
-        return end;
+        return endDate;
     }
 
     @Override
     public String toString() {
         return "Milestone{" +
                 "id=" + getId() +
-                ", start=" + start +
-                ", end=" + end +
+                ", start=" + startDate +
+                ", end=" + endDate +
                 '}';
+    }
+
+    public String generateUrl() {
+        return "/api/milestones/" + getId();
+    }
+
+    public void registerIssue(Issue issue) {
+        issues.add(issue);
     }
 }
