@@ -1,6 +1,5 @@
 package codesquad.service;
 
-import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
@@ -36,18 +35,14 @@ public class IssueService {
     public void update(User loginUser, Long id, IssueDto issueDto) {
         Issue issue = issueRepository.findOne(id);
 
-        if (!issue.isWritedBy(loginUser)) {
-            throw new UnAuthorizedException("작성자만 수정 또는 삭제할 수 있습니다.");
-        }
-
-        issue.update(issueDto);
+        issue.update(loginUser, issueDto);
     }
 
     @Transactional
     public void delete(User loginUser, Long id) {
         Issue issue = issueRepository.findOne(id);
 
-        if (!issue.isWritedBy(loginUser)) {
+        if (!issue.isWriteBy(loginUser)) {
             throw new UnAuthorizedException("작성자만 수정 또는 삭제할 수 있습니다.");
         }
 

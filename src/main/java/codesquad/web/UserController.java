@@ -77,7 +77,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/logout")
+    @PutMapping("/logout")
     public String logout(HttpSession session) {
         session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
 
