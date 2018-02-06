@@ -42,7 +42,7 @@ public class MilestoneController {
 //
 //    @GetMapping("/{id}")
 //    public String show(@PathVariable Long id, Model model) {
-//        model.addAttribute("issue", issueService.findById(id));
+//        model.addAttribute("issue", issueService.findByIdForEdit(id));
 //        return "/issue/show";
 //    }
 //

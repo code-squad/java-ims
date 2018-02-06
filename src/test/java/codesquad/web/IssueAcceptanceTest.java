@@ -71,6 +71,25 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    public void update_form_login() {
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity("/issues/1/form", String.class);
+
+        logger.debug("body : {}", response.getBody());
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertTrue(response.getBody().contains("test issue1"));
+        assertTrue(response.getBody().contains("테스트 1번 이슈입니다."));
+    }
+
+    @Test
+    public void update_form_other() {
+        ResponseEntity<String> response = basicAuthTemplate(findByUserId("boobby")).getForEntity("/issues/1/form", String.class);
+
+        logger.debug("body : {}", response.getBody());
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertTrue(response.getBody().contains("작성자만 수정할 수 있습니다."));
+    }
+
+    @Test
     public void update_login() {
         String subject = "수정이 되야합니다.";
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()

@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
@@ -54,5 +55,16 @@ public class IssueController {
         issueService.delete(loginUser, id);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/{id}/form")
+    public String updateForm(@LoginUser User loginUser, @PathVariable Long id, Model model) {
+        try {
+            model.addAttribute("issue", issueService.findByIdForEdit(loginUser, id));
+            return "/issue/updateForm";
+        } catch (UnAuthorizedException e) {
+            model.addAttribute("error", e.getMessage());
+            return "/user/login";
+        }
     }
 }

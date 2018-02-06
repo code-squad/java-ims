@@ -31,6 +31,16 @@ public class IssueService {
         return issueRepository.findOne(id);
     }
 
+    public Issue findByIdForEdit(User loginUser, Long id) {
+        Issue issue = issueRepository.findOne(id);
+
+        if (!issue.isWriteBy(loginUser)){
+            throw new UnAuthorizedException("작성자만 수정할 수 있습니다.");
+        }
+
+        return issue;
+    }
+
     @Transactional
     public void update(User loginUser, Long id, IssueDto issueDto) {
         Issue issue = issueRepository.findOne(id);
