@@ -52,8 +52,10 @@
           <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
               for="milestone-menu">
             {{#milestones}}
-            <li class="mdl-menu__item mdl-button--accent">
-              <a href="/issue/{{issue.id}}/setMilestone/{{id}}">{{subject}}</a>
+            <li class="mdl-menu__item">
+              <form action="/issues/{{issue.id}}/setMilestone/{{id}}" method="post">
+                <button type="submit">{{subject}}</button>
+              </form>
             </li>
             {{/milestones}}
           </ul>
@@ -89,7 +91,9 @@
               for="assignee-menu">
             {{#users}}
             <li class="mdl-menu__item">
-              <a href="/issue/{{issue.id}}/setAssignee/{{id}}">{{userId}}</a>
+              <form action="/issue/{{issue.id}}/setAssignee/{{id}}" method="post">
+                <button type="submit">{{userId}}</button>
+              </form>
             </li>
             {{/users}}
           </ul>

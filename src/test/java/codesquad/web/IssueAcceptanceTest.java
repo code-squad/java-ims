@@ -1,6 +1,9 @@
 package codesquad.web;
 
+import codesquad.domain.Issue;
+import codesquad.domain.Milestone;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
 import org.assertj.core.condition.Not;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -20,6 +23,9 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     private static final Logger logger = LoggerFactory.getLogger(IssueAcceptanceTest.class);
     @Autowired
     private IssueService issueService;
+
+    @Autowired
+    private MilestoneService milestoneService;
 
     @Test
     public void createForm_login() {
@@ -139,5 +145,34 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/4", request, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
         assertNotNull(issueService.findById(4L));
+    }
+
+    @Test
+    public void set_milestone_writer() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .put()
+                .build();
+
+        ResponseEntity<String> response = basicAuthTemplate()
+                .postForEntity("/issues/1/setMilestone/1", request, String.class);
+
+        Issue issue = issueService.findById(1L);
+        Milestone milestone = milestoneService.findOne(1L);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertThat(issue.getMilestone(), is(milestone));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/issues/1"));
+    }
+
+    @Test
+    public void set_milestone_other() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .put()
+                .build();
+
+        ResponseEntity<String> response = basicAuthTemplate(findByUserId("boobby"))
+                .postForEntity("/issues/1/setMilestone/2", request, String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 }

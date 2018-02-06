@@ -13,6 +13,7 @@ public class Milestone extends AbstractEntity {
     private String subject;
     private LocalDate startDate;
     private LocalDate endDate;
+
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_milestone_to_user"))
     private User writer;
@@ -45,5 +46,9 @@ public class Milestone extends AbstractEntity {
 
     public LocalDate getEndDate() {
         return endDate;
+    }
+
+    public User getWriter() {
+        return writer;
     }
 }

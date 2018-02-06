@@ -24,4 +24,8 @@ public class MilestoneService {
     public List<Milestone> findAll() {
         return (List<Milestone>) milestoneRepository.findAll();
     }
+
+    public Milestone findOne(Long milestoneId) {
+        return milestoneRepository.findOne(milestoneId);
+    }
 }

@@ -50,6 +50,10 @@ public class Issue extends AbstractEntity {
         return writer;
     }
 
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
     public boolean isWriteBy(User loginUser) {
         return writer.equals(loginUser);
     }
@@ -60,5 +64,12 @@ public class Issue extends AbstractEntity {
         }
         this.subject = issueDto.getSubject();
         this.comment = issueDto.getComment();
+    }
+
+    public void setMilestone(User loginUser, Milestone milestone) {
+        if (!isWriteBy(loginUser)) {
+            throw new UnAuthorizedException("작성자만 수정할 수 있습니다.");
+        }
+        this.milestone = milestone;
     }
 }

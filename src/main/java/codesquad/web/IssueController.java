@@ -6,6 +6,8 @@ import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,12 @@ public class IssueController {
 
     @Autowired
     private IssueService issueService;
+
+    @Autowired
+    private MilestoneService milestoneService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/form")
     public String createForm(@LoginUser User user) {
@@ -40,6 +48,8 @@ public class IssueController {
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("milestones", milestoneService.findAll());
+        model.addAttribute("users", userService.findAll());
         return "/issue/show";
     }
 
@@ -66,5 +76,12 @@ public class IssueController {
             model.addAttribute("error", e.getMessage());
             return "/user/login";
         }
+    }
+
+    @PutMapping("/{issueId}/setMilestone/{milestoneId}")
+    public String setMilestone(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long milestoneId) {
+        issueService.setMilestone(loginUser, issueId, milestoneId);
+
+        return String.format("redirect:/issues/%d", issueId);
     }
 }
