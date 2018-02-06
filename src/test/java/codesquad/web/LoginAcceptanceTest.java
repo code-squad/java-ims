@@ -15,7 +15,6 @@ import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class LoginAcceptanceTest extends AcceptanceTest {
@@ -36,7 +35,7 @@ public class LoginAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = template.postForEntity("/users", request, String.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertNotNull(userRepository.findByUserId(userId));
+        assertThat(userRepository.findByUserId(userId).isPresent(), is(true));
         assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
     }
 
@@ -49,12 +48,11 @@ public class LoginAcceptanceTest extends AcceptanceTest {
     public void login_success() throws Exception {
         createUser();
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("userId", "john")
-                .addParameter("password", "test")
-                .addParameter("name", "sehwan")
+                .addParameter("userId", "testuser")
+                .addParameter("password", "password")
                 .build();
 
-        User loginedUser = new User("john", "test", "sehwan");
+        User loginedUser = new User("testuser", "password", "자바지기");
 
         ResponseEntity<String> response = basicAuthTemplate(loginedUser).postForEntity("/login", request, String.class);
         assertThat(response.getHeaders().getLocation().getPath(), is("/"));
@@ -73,5 +71,14 @@ public class LoginAcceptanceTest extends AcceptanceTest {
 
         log.debug(response.getBody());
         assertThat(response.getBody().contains("아이디 또는 패스워드"), is(true));
+    }
+
+    @Test
+    public void logout_test() throws Exception {
+        User loginedUser = new User("john", "test", "sehwan");
+        ResponseEntity<String> response = basicAuthTemplate(loginedUser).getForEntity("/logout", String.class);
+
+        log.debug(response.getBody());
+        assertThat(response.getBody().contains("login"), is(true));
     }
 }
