@@ -5,10 +5,41 @@
     <div class="mdl-layout-spacer"></div>
     <!-- Tabs -->
     <nav class="mdl-navigation">
-      <a class="mdl-navigation__link" href="/">Issues</a>
-      <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-      <a class="mdl-navigation__link" href="/user/login.html">login</a>
-      <a class="mdl-navigation__link" href="/user/join.html">join</a>
+      {{#loginedUser}}
+      <form action="/" method="get">
+        <button type="submit" class="mdl-navigation__link" style="background-color: rgb(96,125,139)">
+          Issues
+        </button>
+      </form>
+      <form action="/milestone/list.html" method="get">
+        <button type="submit" class="mdl-navigation__link" style="background-color: rgb(96,125,139)">
+          Milestones
+        </button>
+      </form>
+      <form action="/users/logout" method="post">
+        <input type="hidden" name="_method" value="put">
+        <button type="submit" class="mdl-navigation__link" style="background-color: rgb(96,125,139)">
+          Logout
+        </button>
+      </form>
+      <form action="/users/{{id}}" method="get">
+        <button type="submit" class="mdl-navigation__link" style="background-color: rgb(96,125,139)">
+          My
+        </button>
+      </form>
+      {{/loginedUser}}
+      {{^loginedUser}}
+      <form action="/users/login" method="get">
+        <button type="submit" class="mdl-navigation__link" style="background-color: rgb(96,125,139)">
+          Login
+        </button>
+      </form>
+      <form action="/users/join" method="get">
+        <button type="submit" class="mdl-navigation__link" style="background-color: rgb(96,125,139)">
+          Join
+        </button>
+      </form>
+      {{/loginedUser}}
     </nav>
   </div>
 </header>

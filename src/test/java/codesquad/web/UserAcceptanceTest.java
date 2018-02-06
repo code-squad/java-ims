@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import codesquad.domain.User;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +27,16 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     @Autowired
     private UserRepository userRepository;
 
+    private User defaultUser;
+
+    @Before
+    public void setUp() throws Exception {
+        defaultUser = findDefaultUser();
+    }
+
     @Test
     public void createForm() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/users/form", String.class);
+        ResponseEntity<String> response = template.getForEntity("/users/join", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         log.debug("body : {}", response.getBody());
     }
@@ -45,7 +54,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(userRepository.findByUserId(userId));
-        assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
     }
 
     @Test
@@ -84,5 +93,45 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = update(basicAuthTemplate);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
+    }
+
+    @Test
+    public void loginForm() {
+        ResponseEntity<String> response = template().getForEntity("/users/login", String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void login() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", "javajigi")
+                .addParameter("password", "test")
+                .build();
+
+        ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+    }
+
+    @Test
+    public void login_fail() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", "test")
+                .addParameter("password", "test")
+                .build();
+
+        ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertTrue(response.getBody().contains("아이디 또는 비밀번호가 틀렸습니다."));
+    }
+
+    @Test
+    public void show() {
+        ResponseEntity<String> response = basicAuthTemplate()
+                .getForEntity(String.format("/users/%d", defaultUser.getId()), String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertTrue(response.getBody().contains(defaultUser.getName()));
     }
 }

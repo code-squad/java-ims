@@ -43,15 +43,8 @@ public class UserService {
 
     public User login(String userId, String password) throws UnAuthenticationException {
         Optional<User> maybeUser = userRepository.findByUserId(userId);
-        if (!maybeUser.isPresent()) {
-            throw new UnAuthenticationException();
-        }
 
-        User user = maybeUser.get();
-        if (!user.matchPassword(password)) {
-            throw new UnAuthenticationException();
-        }
-
-        return user;
+        return maybeUser.filter(user -> user.matchPassword(password))
+                .orElseThrow(() -> new UnAuthenticationException("아이디 또는 비밀번호가 틀렸습니다."));
     }
 }
