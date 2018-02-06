@@ -45,7 +45,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(userRepository.findByUserId(userId));
-        assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
     }
 
     @Test
@@ -83,6 +83,6 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void update() throws Exception {
         ResponseEntity<String> response = update(basicAuthTemplate);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
+        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/"));
     }
 }

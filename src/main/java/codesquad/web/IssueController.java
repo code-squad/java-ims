@@ -1,15 +1,14 @@
 package codesquad.web;
 
+import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -22,13 +21,13 @@ public class IssueController {
 	private IssueService issueService;
 
 	@GetMapping("/form")
-	public String form() {
+	public String form(@LoginUser User user) {
 		return "/issue/form";
 	}
 
 	@PostMapping("")
-	public String create(IssueDto issueDto) {
-		issueService.add(issueDto);
+	public String create(@LoginUser User user, IssueDto issueDto) {
+		issueService.add(user, issueDto.toIssue());
 		return "redirect:/issues";
 	}
 
@@ -43,4 +42,17 @@ public class IssueController {
 		model.addAttribute("issue", issueService.findById(id));
 		return "issue/show";
 	}
+
+	@PutMapping("/{id}")
+	public String update(@LoginUser User user, @PathVariable long id, IssueDto updateIssueDto) {
+		issueService.update(user, id, updateIssueDto);
+		return "redirect:/";
+	}
+
+	@DeleteMapping("/{id}")
+	public String delete(@LoginUser User user, @PathVariable long id) {
+		issueService.delete(user, id);
+		return "redirect:/";
+	}
+
 }
