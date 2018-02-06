@@ -1,7 +1,10 @@
 package codesquad.web;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
+import codesquad.UnAuthenticationException;
+import codesquad.security.HttpSessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -25,15 +28,29 @@ public class UserController {
     @Resource(name = "userService")
     private UserService userService;
 
-    @GetMapping("/form")
-    public String form() {
-        return "/user/form";
-    }
-
     @PostMapping("")
     public String create(UserDto userDto) {
         userService.add(userDto);
-        return "redirect:/users";
+        return "redirect:/";
+    }
+
+    @GetMapping("/join")
+    public String form() {
+        return "/user/join";
+    }
+
+    @GetMapping("/{id}")
+    public String show(@LoginUser User loginUser,@PathVariable Long id, Model model) {
+        User user = userService.findById(loginUser, id);
+        model.addAttribute("user", user);
+
+        return "/user/show";
+    }
+
+    @PutMapping("/{id}")
+    public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
+        userService.update(loginUser, id, target);
+        return String.format("redirect:/users/%d", id);
     }
 
     @GetMapping("/{id}/form")
@@ -43,10 +60,27 @@ public class UserController {
         return "/user/updateForm";
     }
 
-    @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
-        userService.update(loginUser, id, target);
-        return "redirect:/users";
+    @GetMapping("/login")
+    public String loginForm() {
+        return "/user/login";
     }
 
+    @PostMapping("/login")
+    public String login(String userId, String password, Model model, HttpSession session){
+        try {
+            User user = userService.login(userId, password);
+            session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
+            return "redirect:/";
+        } catch (UnAuthenticationException e) {
+            model.addAttribute("error", e.getMessage());
+            return "/user/login";
+        }
+    }
+
+    @PutMapping("/logout")
+    public String logout(HttpSession session) {
+        session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+
+        return "redirect:/";
+    }
 }
