@@ -2,17 +2,18 @@ package codesquad.dto;
 
 import codesquad.domain.Milestone;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class MilestoneDto {
     private String subject;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalDate startTime;
+    private LocalDate endTime;
 
     public MilestoneDto() {
     }
 
-    public MilestoneDto(String subject, LocalDateTime startTime, LocalDateTime endTime) {
+    public MilestoneDto(String subject, LocalDate startTime, LocalDate endTime) {
         this.subject = subject;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -26,19 +27,19 @@ public class MilestoneDto {
         this.subject = subject;
     }
 
-    public LocalDateTime getStartTime() {
+    public LocalDate getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(LocalDate startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public LocalDate getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(LocalDate endTime) {
         this.endTime = endTime;
     }
 

@@ -6,13 +6,13 @@ import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 public class Milestone extends AbstractEntity {
     private String subject;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_milestone_to_user"))
     private User writer;
@@ -20,11 +20,11 @@ public class Milestone extends AbstractEntity {
     public Milestone() {
     }
 
-    public Milestone(String subject, LocalDateTime startDate, LocalDateTime endDate) {
+    public Milestone(String subject, LocalDate startDate, LocalDate endDate) {
         this(0L, subject, startDate, endDate);
     }
 
-    public Milestone(Long id, String subject, LocalDateTime startTime, LocalDateTime endTime) {
+    public Milestone(Long id, String subject, LocalDate startTime, LocalDate endTime) {
         super(id);
         this.subject = subject;
         this.startDate = startTime;
@@ -39,11 +39,11 @@ public class Milestone extends AbstractEntity {
         return subject;
     }
 
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 }

@@ -7,6 +7,8 @@ import codesquad.dto.MilestoneDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MilestoneService {
     @Autowired
@@ -17,5 +19,9 @@ public class MilestoneService {
         milestone.writeBy(loginUser);
 
         return milestoneRepository.save(milestone);
+    }
+
+    public List<Milestone> findAll() {
+        return (List<Milestone>) milestoneRepository.findAll();
     }
 }

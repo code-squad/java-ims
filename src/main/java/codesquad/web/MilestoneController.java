@@ -27,12 +27,13 @@ public class MilestoneController {
     public String createForm(@LoginUser User user) {
         return "/milestone/form";
     }
-//
-//    @GetMapping("")
-//    public String showList() {
-//        return "redirect:/";
-//    }
-//
+
+    @GetMapping("")
+    public String showList(Model model) {
+        model.addAttribute("milestones", milestoneService.findAll());
+        return "/milestone/list";
+    }
+
     @PostMapping("")
     public String create(@LoginUser User loginUser, MilestoneDto milestoneDto) {
         Milestone milestone = milestoneService.add(loginUser, milestoneDto);
