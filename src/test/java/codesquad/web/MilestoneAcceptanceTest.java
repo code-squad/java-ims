@@ -28,8 +28,8 @@ public class MilestoneAcceptanceTest extends BasicAuthAcceptanceTest {
 	public void list() {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
 				.addParameter("subject", "마일스톤Subject~")
-				.addParameter("startDate", LocalDateTime.now())
-				.addParameter("endDate", LocalDateTime.now().plusDays(Long.valueOf(10))).build();
+				.addParameter("startDate", "2018-02-06 오후 03:06")
+				.addParameter("endDate", "2018-02-10 오후 03:06").build();
 		basicAuthTemplate.postForEntity("/milestones", request, String.class);
 
 		ResponseEntity<String> response = basicAuthTemplate.getForEntity("/milestones", String.class);
@@ -47,8 +47,8 @@ public class MilestoneAcceptanceTest extends BasicAuthAcceptanceTest {
 	public void create() throws Exception {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
 				.addParameter("subject", "마일스톤Subject~")
-				.addParameter("startDate", LocalDateTime.now())
-				.addParameter("endDate", LocalDateTime.now().plusDays(Long.valueOf(10))).build();
+				.addParameter("startDate", "2018-02-06 오전 03:06")
+				.addParameter("endDate", "2018-02-10 오후 03:06").build();
 
 		ResponseEntity<String> response = basicAuthTemplate.postForEntity("/milestones", request, String.class);
 
