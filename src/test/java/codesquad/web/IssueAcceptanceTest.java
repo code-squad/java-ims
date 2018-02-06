@@ -1,9 +1,6 @@
 package codesquad.web;
 
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
-import codesquad.domain.UserRepository;
+import codesquad.domain.*;
 import org.hamcrest.core.Is;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -18,6 +15,8 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import java.util.Date;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -26,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
     public static final User SANJIGI = new User(2L, "sanjigi", "test", "name");
+    public static final Milestone MILESTONE = new Milestone(2L, "subject", new Date(), new Date());
 
 
     @Autowired
@@ -134,5 +134,13 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
         assertTrue(!target.isDeleted());
 
+    }
+
+    @Test
+    public void addMilestoneTest() throws Exception{
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/3/milestones/2", request, String.class);
+        log.debug("it's !!: {}", issueRepository.findOne(3L).getMilestone());
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
 }

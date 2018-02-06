@@ -3,10 +3,12 @@ package codesquad.web;
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
 import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,9 @@ public class IssueController {
     @Resource(name = "issueService")
     private IssueService issueService;
 
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
+
     @GetMapping("")
     public String showList(Model model) {
         model.addAttribute("issues", issueService.findAll());
@@ -38,6 +43,9 @@ public class IssueController {
         if (issue.isDeleted()) throw new UnAuthorizedException();
         log.debug("it's gotten issue: {}", issue);
         model.addAttribute("issue", issue);
+        model.addAttribute("milestonesList", milestoneService.findAll());
+
+        log.debug("it's milestones: {}", milestoneService.findAll());
         return "issue/show";
     }
 
@@ -71,5 +79,11 @@ public class IssueController {
     public String create(IssueDto issueDto, @LoginUser User loginUser) {
         issueService.add(issueDto, loginUser);
         return "redirect:/issues";
+    }
+
+    @PostMapping("/{id}/milestones/{milestoneId}")
+    public String addMilestone(@PathVariable long id, @PathVariable long milestoneId) {
+        milestoneService.addMilestoneToIssue(issueService.findById(id).get(), milestoneId);
+        return "redirect:/issues/{id}";
     }
 }

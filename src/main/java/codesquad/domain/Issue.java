@@ -2,10 +2,13 @@ package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
+import org.springframework.transaction.annotation.Transactional;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -24,6 +27,9 @@ public class Issue extends AbstractEntity{
     private User writer;
 
     private boolean deleted;
+
+    @ManyToOne
+    private Milestone milestone;
 
     public Issue() {
 
@@ -84,6 +90,15 @@ public class Issue extends AbstractEntity{
 
     public boolean isOwner(User loginUser) {
         return writer.equals(loginUser);
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    @Transactional
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
     }
 
     @Override

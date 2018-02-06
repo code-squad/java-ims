@@ -16,7 +16,12 @@ public class IssueService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
-    public Issue add(IssueDto issueDto, User LoginUser) {return issueRepository.save(issueDto.toIssue(LoginUser));}
+    @Resource(name="milestoneService")
+    private MilestoneService milestoneService;
+
+    public Issue add(IssueDto issueDto, User LoginUser) {
+        return issueRepository.save(issueDto.toIssue(LoginUser));
+    }
 
     @Transactional
     public void update(IssueDto issueDto, User loginUser, long issueId) {
@@ -30,8 +35,13 @@ public class IssueService {
         originalIssue.delete(loginUser);
     }
 
-    public Iterable<Issue> findAll() {return issueRepository.findAllByDeleted(false);}
 
-    public Optional<Issue> findById(long id) {return issueRepository.findById(id);}
+    public Iterable<Issue> findAll() {
+        return issueRepository.findAllByDeleted(false);
+    }
+
+    public Optional<Issue> findById(long id) {
+        return issueRepository.findById(id);
+    }
 
 }
