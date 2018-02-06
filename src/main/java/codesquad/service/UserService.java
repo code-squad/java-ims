@@ -12,6 +12,7 @@ import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -23,10 +24,12 @@ public class UserService {
         return userRepository.save(userDto._toUser());
     }
 
+    @Transactional
     public User update(User loginUser, long id, UserDto updatedUser) {
-        User original = userRepository.findOne(id);
-        original.update(loginUser, updatedUser._toUser());
-        return userRepository.save(original);
+        User user = userRepository.findOne(id);
+        user.update(loginUser, updatedUser._toUser());
+
+        return user;
     }
 
     public User findById(User loginUser, long id) {
@@ -34,11 +37,8 @@ public class UserService {
         if (!user.equals(loginUser)) {
             throw new UnAuthorizedException();
         }
-        return user;
-    }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+        return user;
     }
 
     public User login(String userId, String password) throws UnAuthenticationException {
