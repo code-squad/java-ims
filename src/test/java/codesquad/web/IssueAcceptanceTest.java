@@ -183,7 +183,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    public void set_milestone_writer() {
+    public void set_assignee_writer() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .put()
                 .build();
@@ -200,7 +200,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    public void set_milestone_other() {
+    public void set_assignee_other() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .put()
                 .build();

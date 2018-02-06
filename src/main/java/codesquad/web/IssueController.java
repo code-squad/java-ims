@@ -84,4 +84,11 @@ public class IssueController {
 
         return String.format("redirect:/issues/%d", issueId);
     }
+
+    @PutMapping("/{issueId}/setAssignee/{assigneeId}")
+    public String setAssignee(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long assigneeId) {
+        issueService.setAssignee(loginUser, issueId, assigneeId);
+
+        return String.format("redirect:/issues/%d", issueId);
+    }
 }

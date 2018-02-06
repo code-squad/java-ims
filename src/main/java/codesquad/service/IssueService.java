@@ -1,10 +1,7 @@
 package codesquad.service;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.Milestone;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +16,9 @@ public class IssueService {
 
     @Autowired
     private MilestoneService milestoneService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Transactional
     public Issue add(User loginUser, IssueDto issueDto) {
@@ -69,5 +69,13 @@ public class IssueService {
         Milestone milestone = milestoneService.findOne(milestoneId);
 
         issue.setMilestone(loginUser, milestone);
+    }
+
+    @Transactional
+    public void setAssignee(User loginUser, Long issueId, Long assigneeId) {
+        Issue issue = issueRepository.findOne(issueId);
+        User assignee = userRepository.findOne(assigneeId);
+
+        issue.setAssignee(loginUser, assignee);
     }
 }

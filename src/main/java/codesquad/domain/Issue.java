@@ -80,4 +80,11 @@ public class Issue extends AbstractEntity {
     public User getAssignee() {
         return assignee;
     }
+
+    public void setAssignee(User loginUser, User assignee) {
+        if (!isWriteBy(loginUser)) {
+            throw new UnAuthorizedException("작성자만 수정할 수 있습니다.");
+        }
+        this.assignee = assignee;
+    }
 }
