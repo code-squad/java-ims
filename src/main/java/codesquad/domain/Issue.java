@@ -1,9 +1,10 @@
 package codesquad.domain;
 
+import codesquad.UnAuthorizedException;
+import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -18,10 +19,21 @@ public class Issue extends AbstractEntity{
     @Column(nullable = false)
     private String comment;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+    private User writer;
+
     private boolean deleted;
 
     public Issue() {
 
+    }
+
+    public Issue(User writer, String subject, String comment) {
+        this.writer = writer;
+        this.subject = subject;
+        this.comment = comment;
+        this.deleted = false;
     }
 
     public Issue(String subject, String comment) {
@@ -30,8 +42,36 @@ public class Issue extends AbstractEntity{
         this.deleted = false;
     }
 
+    public IssueDto toDto(){
+        return new IssueDto(getSubject(), getComment());
+    }
+
+    public void writeBy(User user) {
+        this.writer = user;
+    }
+
+    public void update(User loginUser, IssueDto issueDto) {
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.subject = issueDto.getSubject();
+        this.comment = issueDto.getComment();
+    }
+
+    public void delete(User loginUser) {
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        this.deleted = true;
+    }
+
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public User getWriter() {
+        return writer;
     }
 
     public String getSubject() {
@@ -40,6 +80,10 @@ public class Issue extends AbstractEntity{
 
     public String getComment() {
         return comment;
+    }
+
+    public boolean isOwner(User loginUser) {
+        return writer.equals(loginUser);
     }
 
     @Override
