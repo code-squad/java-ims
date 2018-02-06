@@ -2,6 +2,8 @@ package codesquad.domain;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -9,6 +11,8 @@ import java.util.Objects;
 
 @Entity
 public class Issue extends AbstractEntity {
+	private static final Logger log = LoggerFactory.getLogger(Issue.class);
+
 	@Column(nullable = false)
 	private String subject;
 
@@ -18,6 +22,10 @@ public class Issue extends AbstractEntity {
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
 	private User writer;
+
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
+	private Milestone milestone;
 
 	public Issue() {
 	}
@@ -30,6 +38,16 @@ public class Issue extends AbstractEntity {
 		super(id);
 		this.subject = subject;
 		this.comment = comment;
+	}
+
+	public Issue(long id, User writer, Milestone milestone) {
+		super(id);
+		this.writer = writer;
+		this.milestone = milestone;
+	}
+
+	public Milestone getMilestone() {
+		return milestone;
 	}
 
 	public String getSubject() {
@@ -63,6 +81,10 @@ public class Issue extends AbstractEntity {
 		this.comment = target.comment;
 	}
 
+	public void toMilestone(Milestone milestone) {
+		this.milestone = milestone;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -78,5 +100,15 @@ public class Issue extends AbstractEntity {
 	public int hashCode() {
 
 		return Objects.hash(super.hashCode(), subject, comment, writer);
+	}
+
+	@Override
+	public String toString() {
+		return "Issue{" +
+				"subject='" + subject + '\'' +
+				", comment='" + comment + '\'' +
+				", writer=" + writer +
+				", milestone=" + milestone +
+				'}';
 	}
 }

@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.domain.Issue;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
@@ -53,6 +54,12 @@ public class IssueController {
 	public String delete(@LoginUser User user, @PathVariable long id) {
 		issueService.delete(user, id);
 		return "redirect:/";
+	}
+
+	@PostMapping("/{id}/milestones/{milestoneId}")
+	public String insertMilestone(@PathVariable long id, @PathVariable long milestoneId) {
+		issueService.addMilestone(milestoneId, id);
+		return "redirect:/issues/{id}";
 	}
 
 }

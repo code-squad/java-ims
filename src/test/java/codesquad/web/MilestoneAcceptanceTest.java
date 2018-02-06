@@ -56,5 +56,4 @@ public class MilestoneAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertThat(response.getHeaders().getLocation().getPath(), is("/milestones"));
 		assertThat(milestoneRepository.findOne(1L).getSubject(), is("마일스톤Subject~"));
 	}
-
 }

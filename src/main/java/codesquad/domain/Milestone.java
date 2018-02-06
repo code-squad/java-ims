@@ -9,9 +9,12 @@ import support.domain.AbstractEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 @Entity
 public class Milestone extends AbstractEntity {
@@ -25,6 +28,9 @@ public class Milestone extends AbstractEntity {
 
 	@Column(nullable = false)
 	private LocalDateTime endDate;
+
+	@OneToMany(mappedBy = "milestone")
+	private List<Issue> issues;
 
 	public Milestone() {
 	}
@@ -52,6 +58,11 @@ public class Milestone extends AbstractEntity {
 		return endDate;
 	}
 
+	public void addIssue(Issue issue) {
+		issue.toMilestone(this);
+		issues.add(issue);
+	}
+
 	static public LocalDateTime convertDate(String date) {
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd a hh:mm", Locale.KOREA);
 		return LocalDateTime.parse(date, format);
@@ -64,5 +75,22 @@ public class Milestone extends AbstractEntity {
 				", startDate=" + startDate +
 				", endDate=" + endDate +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		Milestone milestone = (Milestone) o;
+		return Objects.equals(subject, milestone.subject) &&
+				Objects.equals(startDate, milestone.startDate) &&
+				Objects.equals(endDate, milestone.endDate);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(super.hashCode(), subject, startDate, endDate);
 	}
 }
