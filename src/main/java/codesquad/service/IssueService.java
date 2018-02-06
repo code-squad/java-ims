@@ -31,7 +31,7 @@ public class IssueService {
 	@Transactional
 	public Issue update(User loginUser, long id, IssueDto updatedIssue) {
 		Issue issue = issueRepository.findOne(id);
-		issue.update(loginUser, updatedIssue._toIssue(loginUser));
+		issue.update(loginUser, updatedIssue);
 
 		return issue;
 	}

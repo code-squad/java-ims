@@ -129,8 +129,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	private ResponseEntity<String> update(TestRestTemplate template, long id) throws Exception {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
 				.addParameter("_method", "put")
-				.addParameter("subject", "새로운 주제")
-				.addParameter("comment", "새로운 코멘트").build();
+				.addParameter("subject", "새로운 이슈주제")
+				.addParameter("comment", "새로운 이슈코멘트").build();
 
 		return template.postForEntity(String.format("/issues/%d", id), request, String.class);
 	}
@@ -149,23 +149,22 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertTrue(response.getHeaders().getLocation().getPath().startsWith("/issues"));
-		assertThat(issueRepository.findOne(Long.valueOf(id)).getSubject(), is("새로운 주제"));
+		assertThat(issueRepository.findOne(Long.valueOf(id)).getSubject(), is("새로운 이슈주제"));
 	}
 
 	@Test
 	public void delete_no_login() throws Exception {
 		long id = 1;
-		ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d/delete", id), String.class);
+		template.delete(String.format("/issues/%d/delete", id), String.class);
 
-		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+		assertNotNull(issueRepository.findOne(Long.valueOf(id)));
 	}
 
 	@Test
 	public void delete() throws Exception {
 		long id = 2;
-		ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/issues/%d/delete", id), String.class);
+		basicAuthTemplate().delete(String.format("/issues/%d/delete", id), String.class);
 
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertNull(issueRepository.findOne(Long.valueOf(id)));
 	}
 }

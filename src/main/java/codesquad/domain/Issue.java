@@ -55,10 +55,6 @@ public class Issue extends AbstractEntity {
 		return writer.equals(loginUser);
 	}
 
-	public void update(User loginUser, Issue target) {
-		update(loginUser, target._toIssueDto());
-	}
-
 	public void update(User loginUser, IssueDto target) {
 		if (!isOwner(loginUser)) {
 			throw new UnAuthorizedException();
