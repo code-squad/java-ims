@@ -2,8 +2,11 @@ package codesquad.web;
 
 import codesquad.domain.Issue;
 import codesquad.domain.Milestone;
+import codesquad.domain.User;
+import codesquad.domain.UserRepository;
 import codesquad.service.IssueService;
 import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.assertj.core.condition.Not;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -26,6 +29,9 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     private MilestoneService milestoneService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     public void createForm_login() {
@@ -172,6 +178,35 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
         ResponseEntity<String> response = basicAuthTemplate(findByUserId("boobby"))
                 .postForEntity("/issues/1/setMilestone/2", request, String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void set_milestone_writer() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .put()
+                .build();
+
+        ResponseEntity<String> response = basicAuthTemplate()
+                .postForEntity("/issues/1/setAssignee/3", request, String.class);
+
+        Issue issue = issueService.findById(1L);
+        User assignee = userRepository.findOne(3L);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertThat(issue.getAssignee(), is(assignee));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/issues/1"));
+    }
+
+    @Test
+    public void set_milestone_other() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .put()
+                .build();
+
+        ResponseEntity<String> response = basicAuthTemplate(findByUserId("boobby"))
+                .postForEntity("/issues/1/setAssignee/2", request, String.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }

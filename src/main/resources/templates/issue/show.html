@@ -54,6 +54,7 @@
             {{#milestones}}
             <li class="mdl-menu__item">
               <form action="/issues/{{issue.id}}/setMilestone/{{id}}" method="post">
+                <input type="hidden" name="_method" value="put">
                 <button type="submit">{{subject}}</button>
               </form>
             </li>
@@ -92,6 +93,7 @@
             {{#users}}
             <li class="mdl-menu__item">
               <form action="/issue/{{issue.id}}/setAssignee/{{id}}" method="post">
+                <input type="hidden" name="_method" value="put">
                 <button type="submit">{{userId}}</button>
               </form>
             </li>

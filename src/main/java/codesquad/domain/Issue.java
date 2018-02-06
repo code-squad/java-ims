@@ -14,12 +14,16 @@ public class Issue extends AbstractEntity {
     private String subject;
     private String comment;
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_user"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_user_writer"))
     private User writer;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
     private Milestone milestone;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_user_assignee"))
+    private User assignee;
 
     public Issue() {
     }
@@ -71,5 +75,9 @@ public class Issue extends AbstractEntity {
             throw new UnAuthorizedException("작성자만 수정할 수 있습니다.");
         }
         this.milestone = milestone;
+    }
+
+    public User getAssignee() {
+        return assignee;
     }
 }
