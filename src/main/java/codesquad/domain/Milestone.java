@@ -64,7 +64,7 @@ public class Milestone extends AbstractEntity {
 	}
 
 	static public LocalDateTime convertDate(String date) {
-		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd a hh:mm", Locale.KOREA);
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm", Locale.KOREA);
 		return LocalDateTime.parse(date, format);
 	}
 

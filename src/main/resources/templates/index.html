@@ -30,7 +30,7 @@
             <nav class="mdl-navigation">
 
                 <a class="mdl-navigation__link" href="/">Issues</a>
-                <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
+                <a class="mdl-navigation__link" href="/milestones">Milestones</a>
                 {{^loginedUser}}
                 <a class="mdl-navigation__link" href="/users/login">login</a>
                 <a class="mdl-navigation__link" href="/users/form">join</a>
@@ -56,7 +56,7 @@
                 </a>
                 <div class="mdl-card__supporting-text">
                     <ul class="issue-list mdl-list">
-                        {{#issue}}
+                        {{#issues}}
                         <li class="mdl-list__item mdl-list__item--two-line">
 							<span class="mdl-list__item-primary-content">
 								<a>
@@ -78,7 +78,7 @@
 								<span class="material-icons mdl-badge mdl-badge--overlap" data-badge="1">comment</span>
 							</span>
                         </li>
-                        {{/issue}}
+                        {{/issues}}
                     </ul>
                 </div>
             </div>
