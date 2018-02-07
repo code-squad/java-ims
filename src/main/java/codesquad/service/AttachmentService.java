@@ -24,8 +24,8 @@ public class AttachmentService {
 	private IssueRepository issueRepository;
 
 	@Transactional
-	public void save(long issueId, String path, String fileName) {
-		Attachment attachment = new Attachment(path, fileName);
+	public void save(long issueId, String path, String publicName, String privateName) {
+		Attachment attachment = new Attachment(path, publicName, privateName);
 
 		issueRepository.findOne(issueId).toAttachment(attachment);
 		attachmentRepository.save(attachment);

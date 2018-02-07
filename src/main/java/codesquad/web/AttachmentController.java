@@ -24,6 +24,7 @@ import javax.servlet.ServletRequest;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/attachments")
@@ -38,13 +39,14 @@ public class AttachmentController {
 		log.debug("original file name: {}", file.getOriginalFilename());
 		log.debug("contenttype: {}", file.getContentType());
 
-		String fileName = file.getOriginalFilename();
+		String publicName = file.getOriginalFilename();
+		String privateName = UUID.randomUUID().toString();
 		String path = "./src/main/resources/attachments/";
 
-		File target = new File(path, fileName);
+		File target = new File(path, privateName);
 		FileCopyUtils.copy(file.getBytes(), target);
 
-		attachmentService.save(issueId, target.getPath(), target.getName());
+		attachmentService.save(issueId, target.getPath(), publicName, target.getName());
 
 		return "redirect:/issues/{issueId}";
 	}
@@ -58,7 +60,7 @@ public class AttachmentController {
 
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(MediaType.TEXT_XML);
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + attachment.getFileName());
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + java.net.URLEncoder.encode(attachment.getPublicName(), "UTF-8"));
 		header.setContentLength(resource.contentLength());
 
 		return new ResponseEntity<PathResource>(resource, header, HttpStatus.OK);

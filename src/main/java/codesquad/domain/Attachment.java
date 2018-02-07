@@ -11,21 +11,28 @@ public class Attachment extends AbstractEntity {
 	private static final Logger log = LoggerFactory.getLogger(Attachment.class);
 
 	private String path;
-	private String fileName;
+	private String publicName;
+	private String privateName;
 
 	public Attachment() {
 	}
 
-	public Attachment(String path, String fileName) {
+	public Attachment(String path, String publicName, String privateName) {
 		this.path = path;
-		this.fileName = fileName;
+		this.publicName = publicName;
+		this.privateName = privateName;
 	}
 
 	public String getPath() {
 		return path;
 	}
 
-	public String getFileName() {
-		return fileName;
+	public String getPublicName() {
+		return publicName;
 	}
+
+	public String getPrivateName() {
+		return privateName;
+	}
+
 }
