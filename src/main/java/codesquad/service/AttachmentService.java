@@ -15,11 +15,11 @@ public class AttachmentService {
     @Resource(name = "attachmentRepository")
     private AttachmentRepository attachmentRepository;
 
-    public Attachment add(User loginUser, String fileName, String path){
+    public Attachment addAttachment(User loginUser, String fileName, String path){
         return attachmentRepository.save(new Attachment(loginUser, fileName, path));
     }
 
-    public List<Attachment> findAll(){
+    public List<Attachment> findAllAttachments(){
         return attachmentRepository.findAll();
     }
 

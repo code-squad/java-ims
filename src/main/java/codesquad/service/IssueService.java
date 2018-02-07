@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,6 +20,9 @@ public class IssueService {
 
     @Resource(name="answerRepository")
     private AnswerRepository answerRepository;
+
+    @Resource(name = "attachmentRepository")
+    private AttachmentRepository attachmentRepository;
 
     public Issue add(IssueDto issueDto, User LoginUser) {
         return issueRepository.save(issueDto.toIssue(LoginUser));
@@ -43,6 +47,19 @@ public class IssueService {
 
         return answerRepository.save(answer);
     }
+
+    public Attachment addAttachment(long issueId, User loginUser, String fileName, String path){
+        Attachment attachment = new Attachment(loginUser, fileName, path);
+        Issue issue = findById(issueId).get();
+        issue.addAttachment(attachment);
+        return attachmentRepository.save(new Attachment(loginUser, fileName, path));
+    }
+
+    public List<Attachment> findAllAttachments(){
+        return attachmentRepository.findAll();
+    }
+
+    public Optional<Attachment> findByAttachmentId(long id) {return attachmentRepository.findById(id);}
 
     public Answer findAnswerById(long id){
         return answerRepository.findAnswerById(id);

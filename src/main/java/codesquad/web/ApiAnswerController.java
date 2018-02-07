@@ -4,7 +4,6 @@ import codesquad.domain.Answer;
 import codesquad.domain.User;
 import codesquad.dto.AnswerDto;
 import codesquad.security.LoginUser;
-import codesquad.service.AnswerService;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +21,11 @@ import java.net.URI;
 public class ApiAnswerController {
     private static final Logger log = LoggerFactory.getLogger(ApiAnswerController.class);
 
-    @Resource(name = "answerService")
-    private AnswerService answerService;
-
     @Resource(name = "issueService")
     private IssueService issueService;
 
     @PostMapping("")
-    public ResponseEntity<Void> create(@Valid @RequestBody AnswerDto answerDto, @PathVariable long issueId, @LoginUser User user) throws Exception {
+    public ResponseEntity<Void> create(@Valid AnswerDto answerDto, @PathVariable long issueId, @LoginUser User user) throws Exception {
         log.debug("issue id : {}", issueId);
         Answer saveAnswer = issueService.addAnswer(user, issueId, answerDto.toAnswer());
         log.debug("saveAnswer : {}", saveAnswer);

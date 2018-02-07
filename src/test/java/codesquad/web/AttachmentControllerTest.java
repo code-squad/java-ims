@@ -37,7 +37,7 @@ public class AttachmentControllerTest extends AcceptanceTest {
                 .addParameter("file", new ClassPathResource("import.sql"))
                 .build();
         ResponseEntity<String> result = basicAuthTemplate().postForEntity("/attachments", request, String.class);
-        log.debug("it's list!: {}", attachmentService.findAll());
+        log.debug("it's list!: {}", attachmentService.findAllAttachments());
 
         assertEquals(HttpStatus.FOUND, result.getStatusCode());
 

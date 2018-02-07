@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,16 +27,21 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Controller
-@RequestMapping("/attachments")
-public class AttachmentController {
-    private static final Logger log = LoggerFactory.getLogger(AttachmentController.class);
+@RequestMapping("api/issues/{issueId}/attachments")
+public class ApiAttachmentController {
+    private static final Logger log = LoggerFactory.getLogger(ApiAttachmentController.class);
     private static final String DIRECTORY = "src/main/resources/attachment/";
 
     @Resource(name = "attachmentService")
     private AttachmentService attachmentService;
 
+    @Resource(name = "issueService")
+    private IssueService issueService;
+
+
+
     @PostMapping("")
-    public String upload(MultipartFile file, @LoginUser User loginUser) throws Exception {
+    public String upload(MultipartFile file, @LoginUser User loginUser, @PathVariable long issueId) throws Exception {
         if (loginUser == null) throw new UnAuthorizedException();
 
         String fileName = file.getOriginalFilename();
@@ -45,7 +49,7 @@ public class AttachmentController {
         log.debug("original file name: {}", file.getOriginalFilename());
         log.debug("contenttype: {}", file.getContentType());
 
-        attachmentService.add(loginUser, fileName, DIRECTORY+fileName);
+        issueService.addAttachment(issueId, loginUser, fileName, DIRECTORY+fileName);
         file.transferTo(new File(Paths.get(DIRECTORY).toRealPath() + "/"+ fileName));
 
         return "redirect:/";
@@ -53,9 +57,8 @@ public class AttachmentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PathResource> download(@PathVariable long id) throws Exception {
-        // TODO DB에서 id에 해당하는 파일 경로 정보를 얻는다.
         // 파일 경로 정보에 해당하는 파일을 읽어 클라이언트로 응답한다.
-        Attachment attachment = attachmentService.findById(id).get();
+        Attachment attachment = issueService.findByAttachmentId(id).get();
         String filePath = attachment.getPath();
         String fileName = attachment.getFileName();
         // pom.xml text 파일을 읽어 응답하는 경우 예시

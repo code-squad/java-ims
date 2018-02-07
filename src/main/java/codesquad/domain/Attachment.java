@@ -38,6 +38,10 @@ public class Attachment extends AbstractEntity{
         this.path = path;
     }
 
+    public void toIssue(Issue issue) {
+        this.issue = issue;
+    }
+
     public Issue getIssue() {
         return issue;
     }
@@ -56,10 +60,6 @@ public class Attachment extends AbstractEntity{
 
     public String getPath() {
         return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     public User getUploader() {

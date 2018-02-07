@@ -61,6 +61,14 @@ public class Issue extends AbstractEntity{
         this.deleted = false;
     }
 
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
+
     public IssueDto toDto(){
         return new IssueDto(getSubject(), getComment());
     }
@@ -121,6 +129,12 @@ public class Issue extends AbstractEntity{
     public void addAnswer(Answer answer) {
         answer.toIssue(this);
         answers.add(answer);
+    }
+
+    @Transactional
+    public void addAttachment(Attachment attachment) {
+        attachment.toIssue(this);
+        attachments.add(attachment);
     }
 
     public String generateUrl() {
