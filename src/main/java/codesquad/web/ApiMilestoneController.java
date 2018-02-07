@@ -29,7 +29,7 @@ public class ApiMilestoneController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> create(MilestoneDto milestoneDto) {
+    public ResponseEntity<Void> create(@RequestBody MilestoneDto milestoneDto) {
         Milestone milestone = milestoneService.create(milestoneDto);
 
         HttpHeaders headers = new HttpHeaders();
