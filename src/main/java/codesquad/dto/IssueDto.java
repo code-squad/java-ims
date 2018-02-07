@@ -1,5 +1,6 @@
 package codesquad.dto;
 
+import codesquad.domain.Attachment;
 import codesquad.domain.Issue;
 import codesquad.domain.User;
 
@@ -11,10 +12,12 @@ public class IssueDto {
 
 	private String comment;
 
+	private Attachment attachment;
+
 	public IssueDto() {
 	}
 
-	public IssueDto(String subject, String comment) {
+	public IssueDto(String subject, String comment, Attachment attachment) {
 		this.subject = subject;
 		this.comment = comment;
 	}
@@ -34,6 +37,15 @@ public class IssueDto {
 
 	public IssueDto setComment(String comment) {
 		this.comment = comment;
+		return this;
+	}
+
+	public Attachment getAttachment() {
+		return attachment;
+	}
+
+	public IssueDto setAttachment(Attachment attachment) {
+		this.attachment = attachment;
 		return this;
 	}
 

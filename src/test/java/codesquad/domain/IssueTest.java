@@ -20,7 +20,7 @@ public class IssueTest {
 	}
 
 	public static IssueDto newIssueDto(long id) {
-		return new IssueDto("issueSubject" + id, "issueComment" + id);
+		return new IssueDto("issueSubject" + id, "issueComment" + id, null);
 	}
 
 	@Test

@@ -35,6 +35,8 @@ public class IssueController {
 	public String show(@PathVariable long id,  Model model) {
 		model.addAttribute("issue", issueService.findById(id));
 		model.addAttribute("milestones", milestoneService.findAll());
+		model.addAttribute("labels", null);
+		model.addAttribute("assignees", null);
 		log.debug("milestone list: {}", milestoneService.findAll());
 		return "/issue/show";
 	}

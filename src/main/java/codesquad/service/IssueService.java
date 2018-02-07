@@ -58,4 +58,10 @@ public class IssueService {
 
 		issue.registerMilestone(milestone);
 	}
+
+	@Transactional
+	public void attachFile(long id, Attachment attachment) throws IllegalArgumentException {
+		Issue issue = issueRepository.findOne(id);
+		issue.setAttachment(attachment);
+	}
 }

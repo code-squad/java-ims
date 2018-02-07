@@ -25,6 +25,10 @@ public class Issue extends AbstractEntity {
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
 	private Milestone milestone;
 
+	@OneToOne(cascade = {CascadeType.ALL})
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_attachment"))
+	private Attachment attachment;
+
 	public Issue() {
 	}
 
@@ -56,6 +60,15 @@ public class Issue extends AbstractEntity {
 		return writer;
 	}
 
+	public Attachment getAttachment() {
+		return attachment;
+	}
+
+	public Issue setAttachment(Attachment attachment) {
+		this.attachment = attachment;
+		return this;
+	}
+
 	public boolean isOwner(User loginUser) {
 		return writer.equals(loginUser);
 	}
@@ -69,10 +82,6 @@ public class Issue extends AbstractEntity {
 		this.comment = target.getComment();
 	}
 
-	public IssueDto _toIssueDto() {
-		return new IssueDto(this.subject, this.comment);
-	}
-
 	public Issue registerMilestone(Milestone milestone) {
 		this.milestone = milestone;
 		return this;
@@ -80,6 +89,10 @@ public class Issue extends AbstractEntity {
 
 	public boolean matchMilestone(Milestone milestone) {
 		return this.milestone.equals(milestone);
+	}
+
+	public IssueDto _toIssueDto() {
+		return new IssueDto(this.subject, this.comment, this.attachment);
 	}
 
 	@Override

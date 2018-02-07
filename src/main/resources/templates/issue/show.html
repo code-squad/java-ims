@@ -76,7 +76,7 @@
 					<li class="mdl-menu__item">
 						<a href="/issue/1/setAssignee/1">{{name}}</a>
 					</li>
-					{{/each assignees}}
+					{{/each}}
 				</ul>
 			</div>
 			<div class="mdl-color-text--grey-700 mdl-card__supporting-text">
@@ -130,7 +130,8 @@
 
 				<!-- comments end -->
 			</div>
-			<form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
+			<a href="/attachments/{{attachment.id}}"><strong>{{attachment.name}}</strong></a>
+			<form action="/attachments/{{id}}" enctype="multipart/form-data" method="POST" accept-charset="UTF-8">
 				<div style="margin:10px;">
 					<input type="file" name="file" id="file"/>
 					<button class="mdl-button" type="submit">upload file</button>
