@@ -1,9 +1,7 @@
 package codesquad.service;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +13,12 @@ import java.util.List;
 public class IssueService {
     @Autowired
     private IssueRepository issueRepository;
+
+    @Autowired
+    private MilestoneService milestoneService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Transactional
     public Issue add(User loginUser, IssueDto issueDto) {
@@ -29,6 +33,16 @@ public class IssueService {
 
     public Issue findById(Long id) {
         return issueRepository.findOne(id);
+    }
+
+    public Issue findByIdForEdit(User loginUser, Long id) {
+        Issue issue = issueRepository.findOne(id);
+
+        if (!issue.isWriteBy(loginUser)){
+            throw new UnAuthorizedException("작성자만 수정할 수 있습니다.");
+        }
+
+        return issue;
     }
 
     @Transactional
@@ -47,5 +61,21 @@ public class IssueService {
         }
 
         issueRepository.delete(issue);
+    }
+
+    @Transactional
+    public void setMilestone(User loginUser, Long issueId, Long milestoneId) {
+        Issue issue = issueRepository.findOne(issueId);
+        Milestone milestone = milestoneService.findOne(milestoneId);
+
+        issue.setMilestone(loginUser, milestone);
+    }
+
+    @Transactional
+    public void setAssignee(User loginUser, Long issueId, Long assigneeId) {
+        Issue issue = issueRepository.findOne(issueId);
+        User assignee = userRepository.findOne(assigneeId);
+
+        issue.setAssignee(loginUser, assignee);
     }
 }

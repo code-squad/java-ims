@@ -5,17 +5,22 @@
     <div class="mdl-layout-spacer"></div>
     <!-- Tabs -->
     <nav class="mdl-navigation">
-      {{#loginedUser}}
       <form action="/" method="get">
         <button type="submit" class="mdl-navigation__link" style="background-color: rgb(96,125,139)">
           Issues
         </button>
       </form>
-      <form action="/milestone/list.html" method="get">
+      <form action="/milestones" method="get">
         <button type="submit" class="mdl-navigation__link" style="background-color: rgb(96,125,139)">
           Milestones
         </button>
       </form>
+      <form action="/labels" method="get">
+        <button type="submit" class="mdl-navigation__link" style="background-color: rgb(96,125,139)">
+          Labels
+        </button>
+      </form>
+      {{#loginedUser}}
       <form action="/users/logout" method="post">
         <input type="hidden" name="_method" value="put">
         <button type="submit" class="mdl-navigation__link" style="background-color: rgb(96,125,139)">
