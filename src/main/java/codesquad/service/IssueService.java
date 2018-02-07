@@ -61,4 +61,12 @@ public class IssueService {
 
         milestone.registerIssue(issue);
     }
+
+    public void registerAssignee(long id, User loginUser, User assignee) throws IllegalStateException {
+        Issue issue = findIssueById(id)
+                .filter(i -> i.getAuthor().equals(loginUser))
+                .orElseThrow(IllegalStateException::new);
+
+        issue.registerAssignee(assignee);
+    }
 }

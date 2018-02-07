@@ -1,11 +1,10 @@
 package codesquad.web;
 
+import codesquad.domain.User;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/issues")
@@ -17,6 +16,11 @@ public class ApiIssueController {
     @GetMapping("/{issueId}/setMilestone/{milstoneId}")
     public void registerMilestone(@PathVariable long issueId, @PathVariable long milestoneId) {
         issueService.registerMilestone(issueId, milestoneId);
+    }
+
+    @PostMapping("/{id}/assignee")
+    public void registerAssigee(@PathVariable long id, @LoginUser User loginUser, User assignee) {
+        issueService.registerAssignee(id, loginUser, assignee);
     }
 }
 

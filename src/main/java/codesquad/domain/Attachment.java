@@ -9,7 +9,10 @@ import javax.persistence.Entity;
 public class Attachment extends AbstractEntity {
 
     @Column(nullable = false)
-    private String filename;
+    private String originalFilename;
+
+    @Column(nullable = false)
+    private String storeFilename;
 
     @Column(nullable = false)
     private String filepath;
@@ -18,17 +21,27 @@ public class Attachment extends AbstractEntity {
 
     }
 
-    public Attachment(String filename, String filepath) {
-        this.filename = filename;
-        this.filepath = filepath;
+    public Attachment(String originalFilename, String storeFilename, String filepath) {
+       this.originalFilename = originalFilename;
+       this.storeFilename = storeFilename;
+       this.filepath = filepath;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getOriginalFilename() {
+        return originalFilename;
     }
 
-    public Attachment setFilename(String filename) {
-        this.filename = filename;
+    public Attachment setOriginalFilename(String originalFilename) {
+        this.originalFilename = originalFilename;
+        return this;
+    }
+
+    public String getStoreFilename() {
+        return storeFilename;
+    }
+
+    public Attachment setStoreFilename(String storeFilename) {
+        this.storeFilename = storeFilename;
         return this;
     }
 

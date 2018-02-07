@@ -2,6 +2,7 @@ package codesquad.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,6 +29,9 @@ public class User extends AbstractEntity {
     @Size(min = 3, max = 20)
     @Column(nullable = false, length = 20)
     private String name;
+
+//    @OneToOne
+//    private Attachment profilePicture;
 
     public User() {
     }
