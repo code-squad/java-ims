@@ -28,7 +28,7 @@
 				<a class="mdl-navigation__link" href="/issues">Issues</a>
 				<a class="mdl-navigation__link" href="/milestones">Milestones</a>
 				{{#signedInUser}}
-				<a class="mdl-navigation__link" href="/users/logout">logout</a>
+				<a id="logout" class="mdl-navigation__link" href="/api/users/logout">logout</a>
 				<a class="mdl-navigation__link" href="/users/{{id}}/form">my(개인 정보 수정)</a>
 				{{/signedInUser}}
 				{{^signedInUser}}
@@ -51,7 +51,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="/js/main.js"></script>
 <script>
-	console.log('here...');
 	$('.back-btn').on('click', function () {
 		history.back();
 	})

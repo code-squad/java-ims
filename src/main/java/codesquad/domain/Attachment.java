@@ -1,12 +1,9 @@
 package codesquad.domain;
 
-import codesquad.UnAuthorizedException;
-import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
-import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
 @Entity
 public class Attachment extends AbstractEntity {

@@ -80,18 +80,6 @@ public class IssueController {
 		return String.format("redirect:/issues/%d", id);
 	}
 
-	@DeleteMapping("/{id}")
-	public String delete(@LoginUser User loginUser, @PathVariable long id) {
-		if (loginUser == null) {
-			throw new UnAuthorizedException();
-		}
-
-		if (issueService.delete(loginUser, id)) {
-			return String.format("redirect:/issues", id);
-		}
-		return String.format("redirect:/issues", id);
-	}
-
 	@PutMapping("/{id}/milestone/{milestoneId}")
 	public String register(@PathVariable long id, @PathVariable long milestoneId) {
 		issueService.register(id, milestoneId);

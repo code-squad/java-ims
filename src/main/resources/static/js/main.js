@@ -1,5 +1,21 @@
-console.log('here');
+$('#logout').click(logout);
 
+function logout(e) {
+	e.preventDefault();
+
+	var url = $(this).attr("href");
+
+	$.ajax({
+		type: 'put',
+		url: url,
+		error: function (error) {
+			console.log(error);
+		},
+		success: function (data) {
+			window.location.href = data;
+		}
+	});
+}
 
 $('#issues-menu-lower-right').click(removeIssue);
 
@@ -10,15 +26,13 @@ function removeIssue(e) {
 	console.log(url);
 
 	$.ajax({
-		type : 'delete',
-		url : url,
-		dataType : 'json',
-		error : function (error) {
+		type: 'delete',
+		url: url,
+		error: function (error) {
 			console.log(error);
 		},
-		success : function (data) {
-			console.log(data);
-			window.location.redirect("/issues");
+		success: function (data) {
+			window.location.href = data;
 		}
 	});
 }
