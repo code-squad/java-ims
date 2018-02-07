@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.dto.MilestoneDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Column;
@@ -55,5 +56,11 @@ public class Milestone extends AbstractEntity {
 
     public void registerIssue(Issue issue) {
         issues.add(issue);
+    }
+
+    public MilestoneDto toDto() {
+        return new MilestoneDto().setSubject(subject)
+                .setStartDate(startDate)
+                .setEndDate(endDate);
     }
 }
