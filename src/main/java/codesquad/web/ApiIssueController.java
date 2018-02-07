@@ -23,11 +23,9 @@ public class ApiIssueController {
 
     @DeleteMapping("/{id}")
     public String delete(@LoginUser User loginUser, @PathVariable long id) {
-        if (loginUser == null) {
+        if (loginUser == null || !issueService.delete(loginUser, id)) {
             throw new UnAuthorizedException();
         }
-
-        issueService.delete(loginUser, id);
 
         return "/issues";
     }
