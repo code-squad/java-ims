@@ -36,4 +36,22 @@ public class LabelService {
 
         return label;
     }
+
+    @Transactional
+    public void update(User loginUser, Long id, LabelDto labelDto) {
+        Label label = labelRepository.findOne(id);
+
+        label.update(loginUser, labelDto);
+    }
+
+    @Transactional
+    public void delete(User loginUser, Long id) {
+        Label label = labelRepository.findOne(id);
+
+        if (!label.isWritedBy(loginUser)) {
+            throw new UnAuthorizedException("작성자만 삭제할 수 있습니다.");
+        }
+
+        labelRepository.delete(label);
+    }
 }

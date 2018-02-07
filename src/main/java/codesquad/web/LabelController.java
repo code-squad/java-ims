@@ -42,19 +42,19 @@ public class LabelController {
         return String.format("redirect:/labels/%d", label.getId());
     }
 
-//    @PutMapping("/{id}")
-//    public String update(@LoginUser User loginUser, @PathVariable Long id, IssueDto issueDto) {
-//        labelService.update(loginUser, id, issueDto);
-//
-//        return String.format("redirect:/issues/%d", id);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public String delete(@LoginUser User loginUser, @PathVariable Long id) {
-//        labelService.delete(loginUser, id);
-//
-//        return "redirect:/";
-//    }
+    @PutMapping("/{id}")
+    public String update(@LoginUser User loginUser, @PathVariable Long id, LabelDto labelDto) {
+        labelService.update(loginUser, id, labelDto);
+
+        return String.format("redirect:/labels/%d", id);
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User loginUser, @PathVariable Long id) {
+        labelService.delete(loginUser, id);
+
+        return "redirect:/labels";
+    }
 
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable Long id, Model model) {

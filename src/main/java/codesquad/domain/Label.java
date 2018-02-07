@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import codesquad.UnAuthorizedException;
+import codesquad.dto.LabelDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Entity;
@@ -37,5 +39,13 @@ public class Label extends AbstractEntity {
 
     public void writedBy(User loginUser) {
         this.writer = loginUser;
+    }
+
+    public void update(User loginUser, LabelDto labelDto) {
+        if (!isWritedBy(loginUser)) {
+            throw new UnAuthorizedException("작성자만 수정할 수 있습니다.");
+        }
+
+        this.subject = labelDto.getSubject();
     }
 }
