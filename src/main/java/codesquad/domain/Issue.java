@@ -4,10 +4,9 @@ import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Issue extends AbstractEntity {
@@ -24,6 +23,10 @@ public class Issue extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_user_assignee"))
     private User assignee;
+
+    @OneToMany
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_attachment"))
+    private List<Attachment> attachments;
 
     public Issue() {
     }
@@ -86,5 +89,17 @@ public class Issue extends AbstractEntity {
             throw new UnAuthorizedException("작성자만 수정할 수 있습니다.");
         }
         this.assignee = assignee;
+    }
+
+    public void addAttachment(User loginUser, Attachment attachment) {
+        if (!isWriteBy(loginUser)) {
+            throw new UnAuthorizedException("작성자만 파일을 첨부할 수 있습니다.");
+        }
+
+        if (this.attachments == null) {
+            this.attachments = new ArrayList<>();
+        }
+
+        this.attachments.add(attachment);
     }
 }

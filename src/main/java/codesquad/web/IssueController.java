@@ -5,6 +5,7 @@ import codesquad.domain.Issue;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
+import codesquad.service.AttachmentService;
 import codesquad.service.IssueService;
 import codesquad.service.MilestoneService;
 import codesquad.service.UserService;
@@ -13,7 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 @Controller
 @RequestMapping("/issues")
@@ -28,6 +33,9 @@ public class IssueController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AttachmentService attachmentService;
 
     @GetMapping("/form")
     public String createForm(@LoginUser User user) {
@@ -76,6 +84,17 @@ public class IssueController {
             model.addAttribute("error", e.getMessage());
             return "/user/login";
         }
+    }
+
+    @PostMapping("/{id}/attachments")
+    public String upload(@LoginUser User loginUser, @PathVariable Long id, MultipartFile file) throws Exception {
+        logger.debug("original file name: {}", file.getOriginalFilename());
+        logger.debug("contenttype: {}", file.getContentType());
+
+        // TODO MultipartFile로 전달된 데이터를 서버의 특정 디렉토리에 저장하고, DB에 관련 정보를 저장한다.
+        attachmentService.save(loginUser, id, file);
+
+        return "redirect:/";
     }
 
     @PutMapping("/{issueId}/setMilestone/{milestoneId}")
