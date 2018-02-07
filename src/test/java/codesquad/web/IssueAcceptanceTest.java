@@ -1,8 +1,12 @@
 package codesquad.web;
 
 import codesquad.UnAuthorizedException;
+import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
+import codesquad.dto.IssueDto;
+import codesquad.dto.MilestoneDto;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +29,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
 	@Autowired
 	private IssueRepository issueRepository;
+
+	private final MilestoneDto milestoneDto = new MilestoneDto("마일스톤Subject~", "2018-02-06 오전 03:06", "2018-02-10 오후 03:06");
 
 	@Test
 	public void createForm_loginUser() throws Exception {
@@ -90,6 +96,15 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		return template.postForEntity("/issues/1", request, String.class);
 	}
 
+	private ResponseEntity<String> insertMilestone(TestRestTemplate template) {
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+				.addParameter("subject", "마일스톤Subject~")
+				.addParameter("startDate", "2018-02-06 오전 03:06")
+				.addParameter("endDate", "2018-02-10 오후 03:06").build();
+
+		return basicAuthTemplate.postForEntity("/milestones", request, String.class);
+	}
+
 	@Test
 	public void update_owner() {
 		createIssue(basicAuthTemplate);
@@ -153,5 +168,15 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertNotNull(issueRepository.findOne(1L));
 	}
 
+	@Test
+	public void create_milestone() {
+		createIssue(basicAuthTemplate);
+		insertMilestone(basicAuthTemplate);
 
+		ResponseEntity<String> response = template().postForEntity("/issues/1/milestones/1", milestoneDto, String.class);
+		String location = response.getHeaders().getLocation().getPath();
+
+		assertNotNull(issueRepository.findOne(1L).getMilestone());
+		assertThat(issueRepository.findOne(1L).getMilestone().getSubject(), is(milestoneDto.getSubject()));
+	}
 }

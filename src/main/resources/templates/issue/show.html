@@ -46,17 +46,15 @@
                 <!-- milestone list -->
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                     for="milestone-menu">
+                    {{#milestones}}
                     <li class="mdl-menu__item mdl-button--accent">
-                        <a href="/issue/1/setMilestone/0">Milestone1</a>
+                        <form action="/issues/{{issue.id}}/milestones/{{id}}" method="POST">
+                            <input type="submit"/>
+                            {{subject}}
+                        </form>
                     </li>
-                    <li class="mdl-menu__item">
-                        <a href="/issue/1/setMilestone/2">Milestone2</a>
-                    </li>
-                    <li class="mdl-menu__item">
-                        <a href="/issue/1/setMilestone/3">Milestone3</a>
-                    </li>
+                    {{/milestones}}
                 </ul>
-
                 <button id="label-menu" class="mdl-button mdl-js-button">
                     Label
                 </button>
@@ -106,7 +104,6 @@
             <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
                 <p>{{comment}}</p>
             </div>
-            {{/issue}}
 
             <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
 
@@ -172,12 +169,16 @@
 
                 <!-- comments end -->
             </div>
-            <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
+            <a href="/attachments/{{attachment.id}}" download>
+                {{attachment.publicName}}
+            </a>
+            <form action="/attachments/issues/{{id}}" enctype="multipart/form-data" method="POST">
                 <div style="margin:10px;">
                     <input type="file" name="file" id="file"/>
                     <button class="mdl-button" type="submit">upload file</button>
                 </div>
             </form>
+            {{/issue}}
             <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
                 <form action="/issue/1/addComment" method="POST">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
