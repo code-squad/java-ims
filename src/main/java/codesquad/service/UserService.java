@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import codesquad.domain.Attachment;
+import codesquad.domain.Issue;
 import org.springframework.stereotype.Service;
 
 import codesquad.UnAuthenticationException;
@@ -53,5 +55,11 @@ public class UserService {
         }
 
         return user;
+    }
+
+    @Transactional
+    public void attachFile(long id, Attachment attachment) throws IllegalArgumentException {
+        User user = userRepository.findOne(id);
+        user.setAttachment(attachment);
     }
 }

@@ -1,7 +1,6 @@
 package codesquad.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,6 +27,10 @@ public class User extends AbstractEntity {
     @Size(min = 3, max = 20)
     @Column(nullable = false, length = 20)
     private String name;
+
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_attachment"))
+    private Attachment attachment;
 
     public User() {
     }
@@ -70,6 +73,15 @@ public class User extends AbstractEntity {
         return this;
     }
 
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public User setAttachment(Attachment attachment) {
+        this.attachment = attachment;
+        return this;
+    }
+
     private boolean matchUserId(String userId) {
         return this.userId.equals(userId);
     }
@@ -98,12 +110,12 @@ public class User extends AbstractEntity {
     public boolean isGuestUser() {
         return false;
     }
-
     private static class GuestUser extends User {
         @Override
         public boolean isGuestUser() {
             return true;
         }
+
     }
 
     @Override

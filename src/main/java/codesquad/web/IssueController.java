@@ -80,7 +80,7 @@ public class IssueController {
 		return String.format("redirect:/issues/%d", id);
 	}
 
-	@DeleteMapping("/{id}/delete")
+	@DeleteMapping("/{id}")
 	public String delete(@LoginUser User loginUser, @PathVariable long id) {
 		if (loginUser == null) {
 			throw new UnAuthorizedException();

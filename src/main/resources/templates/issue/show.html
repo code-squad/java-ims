@@ -13,7 +13,7 @@
 				<a href="/issues/{{id}}/form" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
 					<i class="material-icons">edit</i>
 				</a>
-				<a href="/issues/{{id}}/delete" id="issues-menu-lower-right"
+				<a href="/issues/{{id}}" id="issues-menu-lower-right"
 				   class="mdl-button mdl-js-button mdl-button--icon">
 					<i class="material-icons">delete</i>
 				</a>
@@ -130,8 +130,8 @@
 
 				<!-- comments end -->
 			</div>
-			<a href="/attachments/{{attachment.id}}"><strong>{{attachment.name}}</strong></a>
-			<form action="/attachments/{{id}}" enctype="multipart/form-data" method="POST" accept-charset="UTF-8">
+			<a href="/attachments/{{attachment.id}}"><strong>{{attachment.publicName}}</strong></a>
+			<form action="/attachments/issues/{{id}}" enctype="multipart/form-data" method="POST" accept-charset="UTF-8">
 				<div style="margin:10px;">
 					<input type="file" name="file" id="file"/>
 					<button class="mdl-button" type="submit">upload file</button>

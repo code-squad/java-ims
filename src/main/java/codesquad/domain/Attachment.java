@@ -11,33 +11,41 @@ import java.util.Objects;
 @Entity
 public class Attachment extends AbstractEntity {
 	@Column(nullable = false)
-	private String name;
+	private String publicName;
+
+	private String privateName;
 
 	public Attachment() {
 	}
 
-	public Attachment(String name) throws IllegalArgumentException {
-		this(0L, name);
+	public Attachment(String publicName, String privateName) throws IllegalArgumentException {
+		this(0L, publicName, privateName);
 	}
 
-	public Attachment(long id, String name) throws IllegalArgumentException {
+	public Attachment(long id, String publicName, String privateName) throws IllegalArgumentException {
 		super(id);
 
-		if (name == null) {
+		if (publicName == null || privateName == null) {
 			throw new IllegalArgumentException();
 		}
 
-		this.name = name;
+		this.publicName = publicName;
+		this.privateName = privateName;
 	}
 
-	public String getName() {
-		return name;
+	public String getPublicName() {
+		return publicName;
+	}
+
+	public String getPrivateName() {
+		return privateName;
 	}
 
 	@Override
 	public String toString() {
 		return "Attachment{" +
-				"name='" + name + '\'' +
+				"publicName='" + publicName + '\'' +
+				", privateName='" + privateName + '\'' +
 				'}';
 	}
 }
