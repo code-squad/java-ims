@@ -30,4 +30,8 @@ public class AttachmentService {
 		issueRepository.findOne(issueId).toAttachment(attachment);
 		attachmentRepository.save(attachment);
 	}
+
+	public Attachment findOne(long id) {
+		return attachmentRepository.findOne(id);
+	}
 }

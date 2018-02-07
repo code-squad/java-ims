@@ -26,6 +26,12 @@ public class AttachmentAcceptanceTest extends BasicAuthAcceptanceTest {
 
 	@Test
 	public void download() throws Exception {
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
+				.multipartFormData()
+				.addParameter("file", new ClassPathResource("logback.xml"))
+				.build();
+		template.postForEntity("/attachments/issues/1", request, String.class);
+
 		ResponseEntity<String> result = template.getForEntity("/attachments/1", String.class);
 		assertEquals(HttpStatus.OK, result.getStatusCode());
 		log.debug("body : {}", result.getBody());
@@ -37,7 +43,7 @@ public class AttachmentAcceptanceTest extends BasicAuthAcceptanceTest {
 				.multipartFormData()
 				.addParameter("file", new ClassPathResource("logback.xml"))
 				.build();
-		ResponseEntity<String> result = template.postForEntity("/attachments", request, String.class);
+		ResponseEntity<String> result = template.postForEntity("/attachments/issues/1", request, String.class);
 		assertEquals(HttpStatus.FOUND, result.getStatusCode());
 		assertNotNull(attachmentRepository.findOne(1L));
 		assertThat(attachmentRepository.findOne(1L).getFileName(), is("logback.xml"));
