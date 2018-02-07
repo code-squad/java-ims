@@ -6,6 +6,7 @@ import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 public class Issue extends AbstractEntity {
@@ -19,6 +20,14 @@ public class Issue extends AbstractEntity {
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
 	private User writer;
+
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
+	private Milestone milestone;
+
+	@OneToOne(cascade = {CascadeType.ALL})
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_attachment"))
+	private Attachment attachment;
 
 	public Issue() {
 	}
@@ -51,6 +60,15 @@ public class Issue extends AbstractEntity {
 		return writer;
 	}
 
+	public Attachment getAttachment() {
+		return attachment;
+	}
+
+	public Issue setAttachment(Attachment attachment) {
+		this.attachment = attachment;
+		return this;
+	}
+
 	public boolean isOwner(User loginUser) {
 		return writer.equals(loginUser);
 	}
@@ -64,8 +82,32 @@ public class Issue extends AbstractEntity {
 		this.comment = target.getComment();
 	}
 
+	public Issue registerMilestone(Milestone milestone) {
+		this.milestone = milestone;
+		return this;
+	}
+
+	public boolean matchMilestone(Milestone milestone) {
+		return this.milestone.equals(milestone);
+	}
+
 	public IssueDto _toIssueDto() {
-		return new IssueDto(this.subject, this.comment);
+		return new IssueDto(this.subject, this.comment, this.attachment);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		Issue issue = (Issue) o;
+		return Objects.equals(subject, issue.subject) &&
+				Objects.equals(comment, issue.comment);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), subject, comment);
 	}
 
 	@Override

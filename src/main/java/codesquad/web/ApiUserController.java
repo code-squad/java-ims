@@ -3,8 +3,10 @@ package codesquad.web;
 import java.net.URI;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import codesquad.security.HttpSessionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,15 +37,22 @@ public class ApiUserController {
         headers.setLocation(URI.create("/api/users/" + savedUser.getId()));
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
-    
+
     @GetMapping("{id}")
     public UserDto show(@LoginUser User loginUser, @PathVariable long id) {
         User user = userService.findById(loginUser, id);
         return user._toUserDto();
     }
-    
+
     @PutMapping("{id}")
     public void update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody UserDto updatedUser) {
         userService.update(loginUser, id, updatedUser);
     }
+
+    @PutMapping("/logout")
+    public String logout(HttpSession session) {
+        session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+        return "/issues";
+    }
+
 }

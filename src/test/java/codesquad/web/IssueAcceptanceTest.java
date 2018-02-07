@@ -1,8 +1,7 @@
 package codesquad.web;
 
 import codesquad.domain.IssueRepository;
-import org.junit.After;
-import org.junit.Before;
+import codesquad.domain.MilestoneRepository;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +25,9 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
 	@Autowired
 	private IssueRepository issueRepository;
+
+	@Autowired
+	private MilestoneRepository milestoneRepository;
 
 	private static final String ISSUE_SUBJECT = "이슈주제";
 	private static final String ISSUE_COMMENT = "이슈코멘트";
@@ -72,7 +74,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	@Test
 	public void create_subject_null() throws Exception {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-				.addParameter("comment", "이슈코멘트").build();
+				.addParameter("comment", ISSUE_COMMENT).build();
 
 		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues", request, String.class);
 
@@ -82,7 +84,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	@Test
 	public void create_comment_null() throws Exception {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-				.addParameter("subject", "이슈주제").build();
+				.addParameter("subject", ISSUE_SUBJECT).build();
 
 		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues", request, String.class);
 
@@ -161,10 +163,11 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	}
 
 	@Test
-	public void delete() throws Exception {
-		long id = 2;
-		basicAuthTemplate().delete(String.format("/issues/%d/delete", id), String.class);
+	public void register_milestone() {
+		long id = 1;
+		long milestoneId = 1;
+		basicAuthTemplate().put(String.format("/issues/%d/milestone/%d", id, milestoneId), null, String.class);
 
-		assertNull(issueRepository.findOne(Long.valueOf(id)));
+		assertTrue(issueRepository.findOne(Long.valueOf(id)).matchMilestone(milestoneRepository.findOne(Long.valueOf(milestoneId))));
 	}
 }
