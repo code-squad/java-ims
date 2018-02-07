@@ -163,14 +163,6 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	}
 
 	@Test
-	public void delete() throws Exception {
-		long id = 2;
-		basicAuthTemplate().delete(String.format("/issues/%d/delete", id), String.class);
-
-		assertNull(issueRepository.findOne(Long.valueOf(id)));
-	}
-
-	@Test
 	public void register_milestone() {
 		long id = 1;
 		long milestoneId = 1;
