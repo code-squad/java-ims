@@ -27,6 +27,10 @@ public class Issue extends AbstractEntity {
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
 	private Milestone milestone;
 
+	@OneToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_attachment"))
+	private Attachment attachment;
+
 	public Issue() {
 	}
 
@@ -62,6 +66,10 @@ public class Issue extends AbstractEntity {
 		return writer;
 	}
 
+	public Attachment getAttachment() {
+		return attachment;
+	}
+
 	public void writeBy(User loginUser) {
 		this.writer = loginUser;
 	}
@@ -83,6 +91,10 @@ public class Issue extends AbstractEntity {
 
 	public void toMilestone(Milestone milestone) {
 		this.milestone = milestone;
+	}
+
+	public void toAttachment(Attachment attachment) {
+		this.attachment = attachment;
 	}
 
 	@Override
