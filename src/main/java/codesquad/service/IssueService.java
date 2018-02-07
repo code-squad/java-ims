@@ -1,9 +1,7 @@
 package codesquad.service;
 
 import codesquad.UnAuthenticationException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +18,9 @@ public class IssueService {
 
     @Autowired
     private IssueRepository issueRepository;
+
+    @Autowired
+    private MilestoneRepository milestoneRepository;
 
     public Optional<Issue> findIssueById (long id) {
         return Optional.ofNullable(issueRepository.findOne(id));
@@ -49,5 +50,23 @@ public class IssueService {
         }
 
         throw new UnAuthenticationException();
+    }
+
+    public void registerMilestone(final long issueId, final long milestoneId) throws IllegalStateException {
+        Milestone milestone = Optional.of(milestoneRepository.findOne(milestoneId))
+                .orElseThrow(IllegalStateException::new);
+
+        Issue issue = Optional.of(issueRepository.findOne(issueId))
+                .orElseThrow(IllegalStateException::new);
+
+        milestone.registerIssue(issue);
+    }
+
+    public void registerAssignee(long id, User loginUser, User assignee) throws IllegalStateException {
+        Issue issue = findIssueById(id)
+                .filter(i -> i.getAuthor().equals(loginUser))
+                .orElseThrow(IllegalStateException::new);
+
+        issue.registerAssignee(assignee);
     }
 }

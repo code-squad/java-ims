@@ -19,9 +19,12 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_author"))
     private User author;
 
-    public Issue() {
-
-    }
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
+//
+//    @Embedded
+//    private Attachments attachments;
 
     public Issue(String title, String comment) {
         this.title = title;
@@ -32,6 +35,17 @@ public class Issue extends AbstractEntity {
         this.title = title;
         this.comment = comment;
         this.author = author;
+    }
+
+    public Issue(String title, String comment, User author, User assignee) {
+        this.title = title;
+        this.comment = comment;
+        this.author = author;
+        this.assignee = assignee;
+    }
+
+    public void registerAssignee(User user) {
+        this.assignee = assignee;
     }
 
     public String getTitle() {
