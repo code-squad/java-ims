@@ -137,7 +137,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
-    public void addMilestoneTest() throws Exception{
+    public void addMilestoneTest() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().build();
         ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/3/milestones/2", request, String.class);
         log.debug("it's !!: {}", issueRepository.findOne(3L).getMilestone());

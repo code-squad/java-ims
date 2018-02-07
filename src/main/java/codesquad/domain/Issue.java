@@ -2,6 +2,9 @@ package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Where;
 import org.springframework.transaction.annotation.Transactional;
 import support.domain.AbstractEntity;
 
@@ -23,13 +26,23 @@ public class Issue extends AbstractEntity{
     private String comment;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
     private boolean deleted;
 
     @ManyToOne
     private Milestone milestone;
+
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL)
+    @OrderBy("id ASC")
+    @Fetch(FetchMode.JOIN)
+    private List<Attachment> attachments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL)
+    @Where(clause = "deleted = false")
+    @OrderBy("id ASC")
+    private List<Answer> answers = new ArrayList<>();
 
     public Issue() {
 
@@ -54,6 +67,14 @@ public class Issue extends AbstractEntity{
 
     public void writeBy(User user) {
         this.writer = user;
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
     }
 
     public void update(User loginUser, IssueDto issueDto) {
@@ -94,6 +115,16 @@ public class Issue extends AbstractEntity{
 
     public Milestone getMilestone() {
         return milestone;
+    }
+
+    @Transactional
+    public void addAnswer(Answer answer) {
+        answer.toIssue(this);
+        answers.add(answer);
+    }
+
+    public String generateUrl() {
+        return String.format("/api/issues/%d", getId());
     }
 
     @Transactional

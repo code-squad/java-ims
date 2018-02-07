@@ -1,6 +1,8 @@
 package codesquad.domain;
 
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
 import org.springframework.transaction.annotation.Transactional;
 import support.domain.AbstractEntity;
@@ -28,6 +30,7 @@ public class Milestone extends AbstractEntity {
     @OneToMany(mappedBy = "milestone", cascade = CascadeType.ALL)
     @Where(clause = "deleted = false")
     @OrderBy("id ASC")
+    @Fetch(FetchMode.JOIN)
     private List<Issue> issues = new ArrayList<>();
 
     public Milestone () {

@@ -1,8 +1,6 @@
 package codesquad.service;
 
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import org.springframework.stereotype.Service;
@@ -19,6 +17,9 @@ public class IssueService {
     @Resource(name="milestoneService")
     private MilestoneService milestoneService;
 
+    @Resource(name="answerRepository")
+    private AnswerRepository answerRepository;
+
     public Issue add(IssueDto issueDto, User LoginUser) {
         return issueRepository.save(issueDto.toIssue(LoginUser));
     }
@@ -33,6 +34,18 @@ public class IssueService {
     public void delete(User loginUser, long issueId) {
         Issue originalIssue = findById(issueId).get();
         originalIssue.delete(loginUser);
+    }
+
+    public Answer addAnswer(User loginUser, long id, Answer answer){
+        answer.writeBy(loginUser);
+        Issue issue = findById(id).get();
+        issue.addAnswer(answer);
+
+        return answerRepository.save(answer);
+    }
+
+    public Answer findAnswerById(long id){
+        return answerRepository.findAnswerById(id);
     }
 
 
