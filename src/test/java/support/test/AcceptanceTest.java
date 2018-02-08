@@ -55,6 +55,10 @@ public abstract class AcceptanceTest {
     protected <T> T getResource(String location, Class<T> responseType, User loginUser) {
         return basicAuthTemplate(loginUser).getForObject(location, responseType);
     }
+
+    protected <T> T getResource(String location, Class<T> responseType) {
+        return basicAuthTemplate().getForObject(location, responseType);
+    }
     
     protected ResponseEntity<String> getResource(String location, User loginUser) {
         return basicAuthTemplate(loginUser).getForEntity(location, String.class);

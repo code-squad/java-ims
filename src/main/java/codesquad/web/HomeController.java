@@ -15,6 +15,7 @@ public class HomeController {
     @GetMapping("")
     public String init(Model model){
         model.addAttribute("issues", issueService.findAll());
+
         return "issue/list";
     }
 }

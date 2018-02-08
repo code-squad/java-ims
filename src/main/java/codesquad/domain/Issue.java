@@ -2,10 +2,16 @@ package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Where;
+import org.springframework.transaction.annotation.Transactional;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -20,10 +26,23 @@ public class Issue extends AbstractEntity{
     private String comment;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
     private boolean deleted;
+
+    @ManyToOne
+    private Milestone milestone;
+
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL)
+    @OrderBy("id ASC")
+    @Fetch(FetchMode.JOIN)
+    private List<Attachment> attachments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL)
+    @Where(clause = "deleted = false")
+    @OrderBy("id ASC")
+    private List<Answer> answers = new ArrayList<>();
 
     public Issue() {
 
@@ -42,12 +61,28 @@ public class Issue extends AbstractEntity{
         this.deleted = false;
     }
 
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
+
     public IssueDto toDto(){
         return new IssueDto(getSubject(), getComment());
     }
 
     public void writeBy(User user) {
         this.writer = user;
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
     }
 
     public void update(User loginUser, IssueDto issueDto) {
@@ -84,6 +119,31 @@ public class Issue extends AbstractEntity{
 
     public boolean isOwner(User loginUser) {
         return writer.equals(loginUser);
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    @Transactional
+    public void addAnswer(Answer answer) {
+        answer.toIssue(this);
+        answers.add(answer);
+    }
+
+    @Transactional
+    public void addAttachment(Attachment attachment) {
+        attachment.toIssue(this);
+        attachments.add(attachment);
+    }
+
+    public String generateUrl() {
+        return String.format("/api/issues/%d", getId());
+    }
+
+    @Transactional
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
     }
 
     @Override
