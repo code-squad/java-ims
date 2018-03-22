@@ -2,7 +2,9 @@ package codesquad.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,8 +24,11 @@ public class Issue extends AbstractEntity {
     @Column(nullable = false, length = 20)
     private String contents;
     
+    @ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+	private User writer;
     
-    private boolean deleted = false;
+	private boolean deleted = false;
 
 	public Issue() {
 	}
@@ -55,6 +60,38 @@ public class Issue extends AbstractEntity {
 		this.contents = contents;
 	}
 	
+	public User getWriter() {
+		return writer;
+	}
+	
+	public void writeBy(User loginUser) {
+		writer = loginUser;
+	}
+	
+	public boolean isWriter(User loginUser) {
+		return writer.equals(loginUser);
+	}
+	
+	public void update(User loginUser, IssueDto issueDto) {
+		if(!isWriter(loginUser))
+			throw new IllegalStateException("자신의 질문만 수정할 수 있습니다");
+		this.title = issueDto.getTitle();
+		this.contents = issueDto.getContents();
+	}
+	
+	public Issue delete(User loginUser) {
+		if(isDeleted())
+			throw new IllegalStateException("이미 삭제되어 있습니다!");
+		if(!isWriter(loginUser))
+			throw new IllegalStateException("자신의 질문만 삭제할 수 있습니다");
+		this.deleted = true;
+		return this;
+	}
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
 	public IssueDto toIssueDto() {
 		return new IssueDto(getId(), title, contents);
 	}
@@ -63,5 +100,8 @@ public class Issue extends AbstractEntity {
 	public String toString() {
 		return "Issue [issueId=" + getId() + ", title=" + title + ", contents=" + contents + "]";
 	}
+
+
+
     
 }

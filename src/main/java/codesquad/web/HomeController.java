@@ -1,5 +1,7 @@
 package codesquad.web;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.domain.Issue;
+import codesquad.security.HttpSessionUtils;
 import codesquad.service.IssueService;
 
 @Controller
@@ -21,11 +24,8 @@ public class HomeController {
 	IssueService issueService;
 	
 	@GetMapping("")
-	public String index(Model model) {
+	public String index(HttpSession session, Model model) {
 		Iterable<Issue> issues = issueService.findAll();
-		for (Issue issue : issues) {
-			log.debug("issue : {}", issue);
-		}
 		model.addAttribute("Issue", issues);
 		return "/index";
 	}
