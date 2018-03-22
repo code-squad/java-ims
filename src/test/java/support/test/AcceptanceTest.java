@@ -18,7 +18,7 @@ import codesquad.domain.UserRepository;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class AcceptanceTest {
-    private static final String DEFAULT_LOGIN_USER = "javajigi";
+    private static final String DEFAULT_LOGIN_USER = "ksm0814";
 
     @Autowired
     protected TestRestTemplate template;
