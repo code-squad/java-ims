@@ -17,15 +17,17 @@ import codesquad.service.IssueService;
 @Controller
 @RequestMapping("")
 public class HomeController {
-    private static final Logger log = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
-	
 	@Autowired
 	IssueService issueService;
-	
+
 	@GetMapping("")
-	public String index(HttpSession session, Model model) {
+	public String index(Model model) {
 		Iterable<Issue> issues = issueService.findAll();
+		for (Issue issue : issues) {
+			log.info("issue deleted!!!!!!!!!!!!! : {}", issue.isDeleted());
+		}
 		model.addAttribute("Issue", issues);
 		return "/index";
 	}

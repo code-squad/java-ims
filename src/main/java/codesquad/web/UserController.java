@@ -23,30 +23,30 @@ import codesquad.service.UserService;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
-    @Resource(name = "userService")
-    private UserService userService;
+	@Resource(name = "userService")
+	private UserService userService;
 
-    @GetMapping("/form")
-    public String form() {
-        return "/user/form";
-    }
+	@GetMapping("/form")
+	public String form() {
+		return "/user/form";
+	}
 
-    @PostMapping("")
-    public String create(UserDto userDto) {
-        userService.add(userDto);
-        return "redirect:/users";
-    }
-    
-    @GetMapping("/loginForm")
-    public String loginForm() {
-    	return "/user/login";
-    }
-    
-    @PostMapping("/login")
-    public String login(UserDto userDto, HttpSession session) {
-    	User sessionUser;
+	@PostMapping("")
+	public String create(UserDto userDto) {
+		userService.add(userDto);
+		return "redirect:/users";
+	}
+
+	@GetMapping("/loginForm")
+	public String loginForm() {
+		return "/user/login";
+	}
+
+	@PostMapping("/login")
+	public String login(UserDto userDto, HttpSession session) {
+		User sessionUser;
 		try {
 			sessionUser = userService.login(userDto.getUserId(), userDto.getPassword());
 		} catch (UnAuthenticationException e) {
@@ -54,31 +54,27 @@ public class UserController {
 			e.printStackTrace();
 			return "redirect:/users/loginForm";
 		}
-    	session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, sessionUser);
-    	return "redirect:/";
-    }
-    
-    @GetMapping("/logout")
-    public String logout(@LoginUser User loginUser, HttpSession session) {
-    	session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
-    	return "redirect:/";
-    }
+		session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, sessionUser);
+		return "redirect:/";
+	}
 
-    @GetMapping("/{id}/form")
-    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model, HttpSession session) {
-        log.debug("LoginUser : {}", loginUser);
-    	if(!HttpSessionUtils.isLoginUser(session))
-			throw new IllegalStateException("로그인 안된 사용자입니다 삐빅");
-        model.addAttribute("user", userService.findById(loginUser, id));
-        return "/user/updateForm";
-    }
+	@GetMapping("/logout")
+	public String logout(@LoginUser User loginUser, HttpSession session) {
+		session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+		return "redirect:/";
+	}
 
-    @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target, HttpSession session) {
-    	if(!HttpSessionUtils.isLoginUser(session))
-			throw new IllegalStateException("로그인 안된 사용자입니다 삐빅");
-        userService.update(loginUser, id, target);
-        return "redirect:/users";
-    }
+	@GetMapping("/{id}/form")
+	public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model, HttpSession session) {
+		log.debug("LoginUser : {}", loginUser);
+		model.addAttribute("user", userService.findById(loginUser, id));
+		return "/user/updateForm";
+	}
+
+	@PutMapping("/{id}")
+	public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target, HttpSession session) {
+		userService.update(loginUser, id, target);
+		return "redirect:/users";
+	}
 
 }

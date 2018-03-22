@@ -14,25 +14,25 @@ import support.domain.AbstractEntity;
 
 @Entity
 public class Issue extends AbstractEntity {
-	
-    @Size(min = 6, max = 20)
-    @Column(nullable = false, length = 20)
-    @JsonIgnore
-    private String title;
 
-    @Size(min = 3, max = 20)
-    @Column(nullable = false, length = 20)
-    private String contents;
-    
-    @ManyToOne
+	@Size(min = 6, max = 20)
+	@Column(nullable = false, length = 20)
+	@JsonIgnore
+	private String title;
+
+	@Size(min = 3, max = 20)
+	@Column(nullable = false, length = 20)
+	private String contents;
+
+	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
 	private User writer;
-    
+
 	private boolean deleted = false;
 
 	public Issue() {
 	}
-	
+
 	public Issue(String title, String contents) {
 		this.title = title;
 		this.contents = contents;
@@ -59,35 +59,32 @@ public class Issue extends AbstractEntity {
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	
+
 	public User getWriter() {
 		return writer;
 	}
-	
+
 	public void writeBy(User loginUser) {
 		writer = loginUser;
 	}
-	
+
 	public boolean isWriter(User loginUser) {
 		return writer.equals(loginUser);
 	}
-	
+
 	public void update(User loginUser, IssueDto issueDto) {
-		if(!isWriter(loginUser))
+		if (!isWriter(loginUser))
 			throw new IllegalStateException("자신의 질문만 수정할 수 있습니다");
 		this.title = issueDto.getTitle();
 		this.contents = issueDto.getContents();
 	}
-	
-	public Issue delete(User loginUser) {
-		if(isDeleted())
-			throw new IllegalStateException("이미 삭제되어 있습니다!");
-		if(!isWriter(loginUser))
+
+	public void delete(User loginUser) {
+		if (!isWriter(loginUser))
 			throw new IllegalStateException("자신의 질문만 삭제할 수 있습니다");
 		this.deleted = true;
-		return this;
 	}
-	
+
 	public boolean isDeleted() {
 		return deleted;
 	}
@@ -101,7 +98,4 @@ public class Issue extends AbstractEntity {
 		return "Issue [issueId=" + getId() + ", title=" + title + ", contents=" + contents + "]";
 	}
 
-
-
-    
 }
