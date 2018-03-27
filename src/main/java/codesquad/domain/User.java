@@ -1,7 +1,13 @@
 package codesquad.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,6 +32,7 @@ public class User extends AbstractEntity {
     @Size(min = 3, max = 20)
     @Column(nullable = false, length = 20)
     private String name;
+
 
     public User() {
     }
@@ -88,6 +95,7 @@ public class User extends AbstractEntity {
         return this.password.equals(password);
     }
 
+    
     public UserDto _toUserDto() {
         return new UserDto(this.userId, this.password, this.name);
     }
@@ -108,4 +116,5 @@ public class User extends AbstractEntity {
     public String toString() {
         return "User [userId=" + userId + ", password=" + password + ", name=" + name + "]";
     }
+
 }

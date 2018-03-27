@@ -3,17 +3,27 @@ package support.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.MultiValueMap;
 
+import codesquad.domain.Issue;
+import codesquad.domain.Label;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
+import codesquad.service.IssueService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -25,6 +35,9 @@ public abstract class AcceptanceTest {
     
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private IssueService issueService;
     
     public TestRestTemplate template() {
         return template;
@@ -45,6 +58,47 @@ public abstract class AcceptanceTest {
     protected User findByUserId(String userId) {
         return userRepository.findByUserId(userId).get();
     }
+    
+    public Milestone createTestMilestone(String title) throws ParseException {
+		SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date endDate = transFormat.parse("2018-03-23 11:51");
+		Date startDate = transFormat.parse("2018-03-23 11:49");
+
+		return new Milestone(title, startDate, endDate);
+	}
+    
+    public ResponseEntity<String> createTestLabel(TestRestTemplate myTemplate, String title, String color){
+		HtmlFormDataBuilder dataBuilder = HtmlFormDataBuilder.urlEncodedForm().addParameter("title",title)
+				.addParameter("color", color);
+		HttpEntity<MultiValueMap<String, Object>> request = dataBuilder.build();
+		return myTemplate.postForEntity("/labels", request, String.class);
+	}
+    
+    
+    public Long findMilestoneId(String title) {
+		for (Milestone milestone : issueService.findStoneAll()) {
+			if (milestone.getTitle().equals(title))
+				return milestone.getId();
+		}
+		return null;
+	}
+	
+	public Long findIssueId(String title) {
+		for (Issue issue : issueService.findAll()) {
+			if(issue.getTitle().equals(title))
+				return issue.getId();
+		}
+		return null;
+	}
+	
+	public Long findLabelId(String title) {
+		for(Label label : issueService.findLabelAll()) {
+			if(label.getTitle().equals(title))
+				return label.getId();
+		}
+		return null;
+	}
+
     
     protected String createResource(String path, Object bodyPayload) {
         ResponseEntity<String> response = template().postForEntity(path, bodyPayload, String.class);
