@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import codesquad.UnAuthenticationException;
@@ -12,9 +14,11 @@ import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
+import codesquad.web.UserController;
 
 @Service
 public class UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Resource(name = "userRepository")
     private UserRepository userRepository;
@@ -31,6 +35,7 @@ public class UserService {
 
     public User findById(User loginUser, long id) {
         User user = userRepository.findOne(id);
+        log.debug("systemIn");
         if (!user.equals(loginUser)) {
             throw new UnAuthorizedException();
         }
