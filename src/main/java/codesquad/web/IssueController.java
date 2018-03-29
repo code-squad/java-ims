@@ -36,5 +36,4 @@ public class IssueController {
 		model.addAttribute(issue);
 		return "/issue/show";
 	}
-
 }
