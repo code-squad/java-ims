@@ -65,7 +65,6 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertTrue(response.getBody().contains("detail 제목"));
 		assertTrue(response.getBody().contains("detail 내용"));
-		assertTrue(response.getBody().contains("ksm0814"));
 		log.info("body : {}", response.getBody());
 
 	}
@@ -85,7 +84,6 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		log.info("body : {}", response2.getBody());
 		assertTrue(response2.getBody().contains("update후 제목"));
 		assertTrue(response2.getBody().contains("update후 내용"));
-		assertTrue(response2.getBody().contains("ksm0814"));
 	}
 
 	@Test
@@ -124,7 +122,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		long id = findIssueId("toIssue 제목");
 
 		ResponseEntity<String> response = basicAuthTemplate()
-				.getForEntity(String.format("/issues/%d/milestones/%d", id, milestoneId), String.class);
+				.getForEntity(String.format("/milestones/%d/issues/%d", milestoneId, id), String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		log.info("body : {}", response.getBody());
 		assertTrue(response.getBody().contains("add milestone title"));
@@ -136,7 +134,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		createTestIssue(basicAuthTemplate(), "add assignee title", "add assignee contents");
 
 		ResponseEntity<String> response = basicAuthTemplate().getForEntity(
-				String.format("/issues/%d/assignees/%d", findIssueId("add assignee title"), findByUserId("ksm0814").getId()), String.class);
+				String.format("/users/%d/issues/%d", findByUserId("ksm0814").getId(), findIssueId("add assignee title")), String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertTrue(response.getBody().contains("add assignee title"));
 		assertTrue(response.getBody().contains("link"));
@@ -153,9 +151,13 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		Long labelId = findLabelId("test label");
 		Long labelId2 = findLabelId("test label2");
 		
-		basicAuthTemplate().getForEntity(String.format("/issues/%d/labels/%d", id, labelId), String.class);
-		ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/issues/%d/labels/%d", id, labelId2), String.class);
+		basicAuthTemplate().getForEntity(String.format("/labels/%d/issues/%d", labelId, id), String.class);
+		ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/labels/%d/issues/%d", labelId2, id), String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertTrue(response.getBody().contains("test label"));
+		assertTrue(response.getBody().contains("test label2"));
+		assertTrue(response.getBody().contains("green"));
+		assertTrue(response.getBody().contains("pink"));
 		log.info("body : {}", response.getBody());
 	}
 

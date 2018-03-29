@@ -32,11 +32,11 @@ public class Issue extends AbstractEntity {
 	@Column(nullable = false, length = 20)
 	private String contents;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
 	private User writer;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
 	private User assignee;
 
@@ -115,7 +115,6 @@ public class Issue extends AbstractEntity {
 
 	public void setMilestone(Milestone milestone) {
 		this.milestone = milestone;
-		milestone.setIssues(this);
 	}
 	
 	public User getAssignee() {
@@ -128,7 +127,6 @@ public class Issue extends AbstractEntity {
 	
 	public void setLabel(Label label) {
 		labels.add(label);
-		label.setIssue(this);
 	}
 	
 	public List<Label> getLabels() {

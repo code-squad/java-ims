@@ -38,4 +38,9 @@ public class LabelService {
 		labelRepository.delete(oldLabel);
 	}
 
+	@Transactional
+	public void addLabel(Issue issue,long labelId) {
+		issue.setLabel(findByLabelId(labelId));
+	}
+
 }

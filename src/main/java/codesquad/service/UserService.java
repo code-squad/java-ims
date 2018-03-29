@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
+import codesquad.domain.Issue;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
@@ -54,4 +56,9 @@ public class UserService {
 
         return user;
     }
+
+    @Transactional
+	public void addAssignee(User loginUser, Issue issue, long userId) {
+		issue.setAssignee(findById(loginUser, userId));
+	}
 }

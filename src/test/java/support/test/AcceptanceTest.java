@@ -24,6 +24,8 @@ import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.service.IssueService;
+import codesquad.service.LabelService;
+import codesquad.service.MilestoneService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -38,6 +40,12 @@ public abstract class AcceptanceTest {
     
     @Autowired
     private IssueService issueService;
+    
+    @Autowired
+    private MilestoneService milestoneService;
+    
+    @Autowired
+    private LabelService labelService;;
     
     public TestRestTemplate template() {
         return template;
@@ -76,7 +84,7 @@ public abstract class AcceptanceTest {
     
     
     public Long findMilestoneId(String title) {
-		for (Milestone milestone : issueService.findStoneAll()) {
+		for (Milestone milestone : milestoneService.findStoneAll()) {
 			if (milestone.getTitle().equals(title))
 				return milestone.getId();
 		}
@@ -92,7 +100,7 @@ public abstract class AcceptanceTest {
 	}
 	
 	public Long findLabelId(String title) {
-		for(Label label : issueService.findLabelAll()) {
+		for(Label label : labelService.findLabelAll()) {
 			if(label.getTitle().equals(title))
 				return label.getId();
 		}

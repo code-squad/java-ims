@@ -18,6 +18,8 @@ import codesquad.dto.IssueDto;
 import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.LabelService;
+import codesquad.service.MilestoneService;
 import codesquad.service.UserService;
 
 @Controller
@@ -27,9 +29,6 @@ public class IssueController {
 	@Autowired
 	IssueService issueService;
 	
-	@Autowired
-	UserService userService;
-
 	@GetMapping("")
 	public String form() {
 		return "/issue/form";
@@ -44,8 +43,6 @@ public class IssueController {
 	@GetMapping("/{id}")
 	public String detail(@PathVariable long id, Model model) {
 		model.addAttribute("Issue", issueService.findById(id));
-		model.addAttribute("Users", userService.findAll());
-		model.addAttribute("Labels", issueService.findLabelAll());
 		return "/issue/show";
 	}
 
@@ -61,22 +58,6 @@ public class IssueController {
 		return "redirect:/";
 	}
 	
-	@GetMapping("/{id}/milestones/{milestoneId}")
-	public String addMilestone(@LoginUser User loginUser,  @PathVariable long id, @PathVariable long milestoneId) {
-		issueService.addMilestone(id, milestoneId);
-		return String.format("redirect:/issues/%d", id);
-	}
 	
-	@GetMapping("/{id}/assignees/{userId}")
-	public String addAssignee(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId) {
-		issueService.addAssignee(id, userId);
-		return String.format("redirect:/issues/%d", id);
-	}
 	
-	@GetMapping("/{id}/labels/{labelId}")
-	public String addLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
-		issueService.addLabel(id, labelId);
-		return String.format("redirect:/issues/%d", id);
-	}
-
 }

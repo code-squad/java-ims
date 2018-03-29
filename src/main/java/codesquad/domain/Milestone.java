@@ -37,19 +37,12 @@ public class Milestone extends AbstractEntity {
 	@Column
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 	private Date endDate;
-
-	@OneToMany(mappedBy="milestone", cascade = CascadeType.ALL)
-	@OrderBy("id ASC")
-	@JsonIgnore
-	private List<Issue> issues = new ArrayList<Issue>();;
 	
 	public Milestone() {
 	}
 
 	public Milestone(String title, Date startDate, Date endDate) {
-		this.title = title;
-		this.startDate = startDate;
-		this.endDate = endDate;
+		this(0L, title, startDate, endDate);
 	}
 
 	public Milestone(long id, String title, Date startDate, Date endDate) {
@@ -83,14 +76,6 @@ public class Milestone extends AbstractEntity {
 		this.endDate = endDate;
 	}
 	
-
-	public List<Issue> getIssues() {
-		return issues;
-	}
-
-	public void setIssues(Issue issue) {
-		issues.add(issue);
-	}
 
 	public URI createUri() {
 		return URI.create("/api/milestones/" + getId());

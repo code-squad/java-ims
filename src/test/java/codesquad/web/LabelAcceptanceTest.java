@@ -70,5 +70,7 @@ public class LabelAcceptanceTest extends AcceptanceTest {
 
 		assertTrue(!response.getBody().contains("delete 전 label"));
 	}
+	
+	
 
 }

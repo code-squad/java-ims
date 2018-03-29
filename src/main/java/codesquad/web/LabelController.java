@@ -23,6 +23,9 @@ public class LabelController {
 	@Autowired
 	LabelService labelService;
 	
+	@Autowired
+	IssueService issueService;
+	
 	@PostMapping("")
 	public String create(@LoginUser User loginUser, Label label) {
 		labelService.createLabel(label);
@@ -46,6 +49,13 @@ public class LabelController {
 		labelService.delete(id);
 		return "redirect:/labels";
 	}
+
+	@GetMapping("/{labelId}/issues/{id}")
+	public String addLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
+		labelService.addLabel(issueService.findById(id), labelId);
+		return String.format("redirect:/issues/%d", id);
+	}
+
 	
 	
 	
