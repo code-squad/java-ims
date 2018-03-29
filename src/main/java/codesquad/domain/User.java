@@ -12,100 +12,100 @@ import support.domain.AbstractEntity;
 
 @Entity
 public class User extends AbstractEntity {
-    public static final GuestUser GUEST_USER = new GuestUser();
-    
-    @Size(min = 3, max = 20)
-    @Column(unique = true, nullable = false, length = 20)
-    private String userId;
+	public static final GuestUser GUEST_USER = new GuestUser();
 
-    @Size(min = 6, max = 20)
-    @Column(nullable = false, length = 20)
-    @JsonIgnore
-    private String password;
+	@Size(min = 3, max = 20)
+	@Column(unique = true, nullable = false, length = 20)
+	private String userId;
 
-    @Size(min = 3, max = 20)
-    @Column(nullable = false, length = 20)
-    private String name;
+	@Size(min = 6, max = 20)
+	@Column(nullable = false, length = 20)
+	@JsonIgnore
+	private String password;
 
-    public User() {
-    }
+	@Size(min = 3, max = 20)
+	@Column(nullable = false, length = 20)
+	private String name;
 
-    public User(String userId, String password, String name) {
-        this(0L, userId, password, name);
-    }
+	public User() {
+	}
 
-    public User(long id, String userId, String password, String name) {
-        super(id);
-        this.userId = userId;
-        this.password = password;
-        this.name = name;
-    }
-    
-    public String getUserId() {
-        return userId;
-    }
+	public User(String userId, String password, String name) {
+		this(0L, userId, password, name);
+	}
 
-    public User setUserId(String userId) {
-        this.userId = userId;
-        return this;
-    }
+	public User(long id, String userId, String password, String name) {
+		super(id);
+		this.userId = userId;
+		this.password = password;
+		this.name = name;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getUserId() {
+		return userId;
+	}
 
-    public User setPassword(String password) {
-        this.password = password;
-        return this;
-    }
+	public User setUserId(String userId) {
+		this.userId = userId;
+		return this;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public User setName(String name) {
-        this.name = name;
-        return this;
-    }
-    
-    private boolean matchUserId(String userId) {
-        return this.userId.equals(userId);
-    }
-    
-    public void update(User loginUser, User target) {
-        if (!matchUserId(loginUser.getUserId())) {
-            throw new UnAuthorizedException();
-        }
+	public User setPassword(String password) {
+		this.password = password;
+		return this;
+	}
 
-        if (!matchPassword(target.getPassword())) {
-            return;
-        }
+	public String getName() {
+		return name;
+	}
 
-        this.name = target.name;
-    }
+	public User setName(String name) {
+		this.name = name;
+		return this;
+	}
 
-    public boolean matchPassword(String password) {
-        return this.password.equals(password);
-    }
+	private boolean matchUserId(String userId) {
+		return this.userId.equals(userId);
+	}
 
-    public UserDto _toUserDto() {
-        return new UserDto(this.userId, this.password, this.name);
-    }
+	public void update(User loginUser, User target) {
+		if (!matchUserId(loginUser.getUserId())) {
+			throw new UnAuthorizedException();
+		}
 
-    @JsonIgnore
-    public boolean isGuestUser() {
-        return false;
-    }
-    
-    private static class GuestUser extends User {
-        @Override
-        public boolean isGuestUser() {
-            return true;
-        }
-    }
-    
-    @Override
-    public String toString() {
-        return "User [userId=" + userId + ", password=" + password + ", name=" + name + "]";
-    }
+		if (!matchPassword(target.getPassword())) {
+			return;
+		}
+
+		this.name = target.name;
+	}
+
+	public boolean matchPassword(String password) {
+		return this.password.equals(password);
+	}
+
+	public UserDto _toUserDto() {
+		return new UserDto(this.userId, this.password, this.name);
+	}
+
+	@JsonIgnore
+	public boolean isGuestUser() {
+		return false;
+	}
+
+	private static class GuestUser extends User {
+		@Override
+		public boolean isGuestUser() {
+			return true;
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", password=" + password + ", name=" + name + "]";
+	}
 }

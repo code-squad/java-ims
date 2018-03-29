@@ -17,19 +17,19 @@ import codesquad.domain.IssueRepository;
 public class IssueController {
 	@Resource
 	private IssueRepository issueRepository;
-	
+
 	@GetMapping("/form")
 	public String form() {
 		return "/issue/form";
 	}
-	
+
 	@PostMapping("/newIssue")
 	public String create(String subject, String comment) {
 		Issue newIssue = new Issue(subject, comment);
 		issueRepository.save(newIssue);
 		return "redirect:/";
 	}
-	
+
 	@GetMapping("/{id}")
 	public String create(@PathVariable Long id, Model model) {
 		Issue issue = issueRepository.findOne(id);
