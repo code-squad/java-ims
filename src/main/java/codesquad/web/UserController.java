@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import codesquad.domain.User;
 import codesquad.dto.UserDto;
 import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
+import codesquad.service.IssueService;
 import codesquad.service.UserService;
 
 @Controller
@@ -27,6 +29,10 @@ public class UserController {
 
 	@Resource(name = "userService")
 	private UserService userService;
+	
+
+	@Autowired
+	IssueService issueService;
 
 	@GetMapping("/form")
 	public String form() {
@@ -76,5 +82,13 @@ public class UserController {
 		userService.update(loginUser, id, target);
 		return "redirect:/users";
 	}
+	
+	@GetMapping("/{userId}/issues/{id}")
+	public String addAssignee(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId) {
+		userService.addAssignee(loginUser, issueService.findById(id), userId);
+		return String.format("redirect:/issues/%d", id);
+	}
+	
+	
 
 }

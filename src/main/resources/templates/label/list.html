@@ -42,13 +42,10 @@
             <div class="mdl-card__supporting-text">
               <ul class="issue-list mdl-list">
               
-              {{#Milestone}}"
+              {{#Labels}}"
                 <li class="mdl-list__item mdl-list__item--two-line">
                   <span class="mdl-list__item-primary-content">
-                    <a href="/milestone/1"><strong>{{title}}</strong></a>
-                    <span class="mdl-list__item-sub-title">
-                      Due by {{endDate}}
-                    </span>
+                    {{title}}  {{color}}
                   </span>
                   <span class="mdl-list__item-secondary-content">
                     <span class="progress-bar">
@@ -58,9 +55,12 @@
                     2 Open 1 Closed
                     </span>
                   </span>
+                  <form action="/issues" method="post">
+                  <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit" style="margin:10px auto; width:200px;">Delete</button>
+                </form>
                 </li>
                
-			  {{/Milestone}}"
+			  {{/Labels}}"
              
 
                   <span class="mdl-list__item-secondary-content">
@@ -72,7 +72,7 @@
                     </span>
                   </span>
                 </li>
-               
+                
                
               </ul>
             </div>

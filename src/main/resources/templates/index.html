@@ -28,15 +28,15 @@
 				<div class="mdl-layout-spacer"></div>
 				<!-- Tabs -->
 				<nav class="mdl-navigation">
-					<a class="mdl-navigation__link" href="/">Issues</a>
+					<a class="mdl-navigation__link" href="/issues">Issues</a>
 					<a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
 					{{^loginedUser}}
-					<a class="mdl-navigation__link" href="/user/login.html">login</a>
-					<a class="mdl-navigation__link" href="/user/join.html">join</a>
+					<a class="mdl-navigation__link" href="/users/loginForm.html">login</a>
+					<a class="mdl-navigation__link" href="/users/form.html">join</a>
 					{{/loginedUser}}
 					{{#loginedUser}}
-					<a class="mdl-navigation__link" href="/user/login.html">logout</a>
-					<a class="mdl-navigation__link" href="/user/join.html">myInfo</a>
+					<a class="mdl-navigation__link" href="/users/loginForm.html">logout</a>
+					<a class="mdl-navigation__link" href="/user/updateForm.html">myInfo</a>
 					{{/loginedUser}}
 				</nav>
 			</div>
@@ -49,7 +49,7 @@
 				<div class="mdl-card__title" style="height:80px;">
               		<h2 class="mdl-card__title-text mdl-color-text--grey-800">Issues</h2>
 				</div>
-				<a href="/issue/form.html"
+				<a href="/issues"
 					class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored show-modal">
 					<i class="material-icons">add</i>
 				</a>

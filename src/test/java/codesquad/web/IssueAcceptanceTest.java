@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import codesquad.domain.Issue;
+import codesquad.domain.Label;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.service.IssueService;
 import support.test.AcceptanceTest;
@@ -32,7 +34,6 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 				.addParameter("contents", contents);
 		HttpEntity<MultiValueMap<String, Object>> request = dataBuilder.build();
 		return myTemplate.postForEntity("/issues", request, String.class);
-
 	}
 
 	@Test
@@ -64,17 +65,8 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertTrue(response.getBody().contains("detail 제목"));
 		assertTrue(response.getBody().contains("detail 내용"));
-		assertTrue(response.getBody().contains("ksm0814"));
 		log.info("body : {}", response.getBody());
 
-	}
-
-	private Long findIssueId(String title) {
-		for (Issue issue : issueService.findAll()) {
-			if (issue.getTitle().equals(title))
-				return issue.getId();
-		}
-		return null;
 	}
 
 	@Test
@@ -92,7 +84,6 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		log.info("body : {}", response2.getBody());
 		assertTrue(response2.getBody().contains("update후 제목"));
 		assertTrue(response2.getBody().contains("update후 내용"));
-		assertTrue(response2.getBody().contains("ksm0814"));
 	}
 
 	@Test
@@ -119,6 +110,55 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 		log.info("body : {}", response.getBody());
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertTrue(!response.getBody().contains("delete 제목"));
+	}
+
+	@Test
+	public void add_milestone_to_issue() throws Exception {
+		Milestone milestone = createTestMilestone("add milestone title");
+		createResource("/api/milestones", milestone);
+		Long milestoneId = findMilestoneId("add milestone title");
+
+		createTestIssue(basicAuthTemplate(), "toIssue 제목", "이슈 내용");
+		long id = findIssueId("toIssue 제목");
+
+		ResponseEntity<String> response = basicAuthTemplate()
+				.getForEntity(String.format("/milestones/%d/issues/%d", milestoneId, id), String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		log.info("body : {}", response.getBody());
+		assertTrue(response.getBody().contains("add milestone title"));
+		assertTrue(response.getBody().contains("toIssue 제목"));
+	}
+
+	@Test
+	public void add_assignee_to_issue() throws Exception {
+		createTestIssue(basicAuthTemplate(), "add assignee title", "add assignee contents");
+
+		ResponseEntity<String> response = basicAuthTemplate().getForEntity(
+				String.format("/users/%d/issues/%d", findByUserId("ksm0814").getId(), findIssueId("add assignee title")), String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertTrue(response.getBody().contains("add assignee title"));
+		assertTrue(response.getBody().contains("link"));
+		log.info("body : {}", response.getBody());
+	}
+	
+	@Test
+	public void add_label_to_issue() throws Exception {
+		createTestIssue(basicAuthTemplate(), "add label title", "add label contents");
+		Long id = findIssueId("add label title");
+		
+		createTestLabel(basicAuthTemplate(), "test label", "green");
+		createTestLabel(basicAuthTemplate(), "test label2", "pink");
+		Long labelId = findLabelId("test label");
+		Long labelId2 = findLabelId("test label2");
+		
+		basicAuthTemplate().getForEntity(String.format("/labels/%d/issues/%d", labelId, id), String.class);
+		ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/labels/%d/issues/%d", labelId2, id), String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertTrue(response.getBody().contains("test label"));
+		assertTrue(response.getBody().contains("test label2"));
+		assertTrue(response.getBody().contains("green"));
+		assertTrue(response.getBody().contains("pink"));
+		log.info("body : {}", response.getBody());
 	}
 
 }
