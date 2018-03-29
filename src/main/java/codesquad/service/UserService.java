@@ -18,45 +18,45 @@ import codesquad.web.UserController;
 
 @Service
 public class UserService {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
-    @Resource(name = "userRepository")
-    private UserRepository userRepository;
+	@Resource(name = "userRepository")
+	private UserRepository userRepository;
 
-    public User add(UserDto userDto) {
-        return userRepository.save(userDto._toUser());
-    }
+	public User add(UserDto userDto) {
+		return userRepository.save(userDto._toUser());
+	}
 
-    public User update(User loginUser, long id, UserDto updatedUser) {
-        User original = userRepository.findOne(id);
-        original.update(loginUser, updatedUser._toUser());
-        return userRepository.save(original);
-    }
+	public User update(User loginUser, long id, UserDto updatedUser) {
+		User original = userRepository.findOne(id);
+		original.update(loginUser, updatedUser._toUser());
+		return userRepository.save(original);
+	}
 
-    public User findById(User loginUser, long id) {
-        User user = userRepository.findOne(id);
-        log.debug("systemIn");
-        if (!user.equals(loginUser)) {
-            throw new UnAuthorizedException();
-        }
-        return user;
-    }
+	public User findById(User loginUser, long id) {
+		User user = userRepository.findOne(id);
+		log.debug("systemIn");
+		if (!user.equals(loginUser)) {
+			throw new UnAuthorizedException();
+		}
+		return user;
+	}
 
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
+	public List<User> findAll() {
+		return userRepository.findAll();
+	}
 
-    public User login(String userId, String password) throws UnAuthenticationException {
-        Optional<User> maybeUser = userRepository.findByUserId(userId);
-        if (!maybeUser.isPresent()) {
-            throw new UnAuthenticationException();
-        }
+	public User login(String userId, String password) throws UnAuthenticationException {
+		Optional<User> maybeUser = userRepository.findByUserId(userId);
+		if (!maybeUser.isPresent()) {
+			throw new UnAuthenticationException();
+		}
 
-        User user = maybeUser.get();
-        if (!user.matchPassword(password)) {
-            throw new UnAuthenticationException();
-        }
+		User user = maybeUser.get();
+		if (!user.matchPassword(password)) {
+			throw new UnAuthenticationException();
+		}
 
-        return user;
-    }
+		return user;
+	}
 }

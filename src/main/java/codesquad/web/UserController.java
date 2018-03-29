@@ -27,15 +27,21 @@ public class UserController {
 
 	@GetMapping("/form")
 	public String form() {
-		return "/user/forum";
+		return "/user/form";
+	}
+	
+	@GetMapping("/join")
+	public String join() {
+		return "/user/join";
 	}
 
 	@PostMapping("")
-	public String create(UserDto userDto) {
+	public String create(String userId, String password, String name) {
+		UserDto userDto = new UserDto(userId, password, name);
 		userService.add(userDto);
 		return "redirect:/users";
 	}
-
+	
 	@GetMapping("/{id}/form")
 	public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
 		log.debug("LoginUser : {}", loginUser);

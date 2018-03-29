@@ -26,6 +26,10 @@ public class User extends AbstractEntity {
 	@Size(min = 3, max = 20)
 	@Column(nullable = false, length = 20)
 	private String name;
+	
+	@Size(min = 1, max = 20)
+	@Column(nullable = false, length = 20)
+	private String email;
 
 	public User() {
 	}
