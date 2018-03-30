@@ -44,15 +44,14 @@ public class IssueController {
 	}
 
 	@GetMapping("/{id}")
-	public String show(@PathVariable Long id, @LoginUser User loginUser, Model model) {
+	public String show(@PathVariable Long id, Model model) {
 		Issue issue = issueService.findById(id);
 		model.addAttribute(issue);
 		return "/issue/show";
 	}
 	
 	@GetMapping("/{id}/updateIssue")
-	public String updateForm(@PathVariable Long id, @LoginUser User loginUser, Model model) {
-		log.debug("LoginUser : {}", loginUser);
+	public String updateForm(@PathVariable Long id, Model model) {
 		Issue originIssue = issueService.findById(id);
 		model.addAttribute("issue", originIssue);
 		return "/issue/issueUpdateForm";
@@ -67,7 +66,7 @@ public class IssueController {
 			e.printStackTrace();
 			log.debug("본인의 이슈만 수정할 수 있습니다.");
 			model.addAttribute("errorMessage", e.getMessage());		//errormessage 구현부 수정 필요.
-			return "redirect:/issue/{id}";
+			return "redirect:/issue";
 		}
 		return "/issue/show";
 	}
