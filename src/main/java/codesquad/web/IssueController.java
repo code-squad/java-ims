@@ -66,7 +66,7 @@ public class IssueController {
 			e.printStackTrace();
 			log.debug("본인의 이슈만 수정할 수 있습니다.");
 			model.addAttribute("errorMessage", e.getMessage());		//errormessage 구현부 수정 필요.
-			return "redirect:/issue";
+			return "redirect:/";
 		}
 		return "/issue/show";
 	}
