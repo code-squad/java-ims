@@ -51,9 +51,24 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public String login(String userId, String password, HttpSession session) throws UnAuthenticationException {
-		User loginUser = userService.login(userId, password);
-		session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, loginUser);
+	public String login(String userId, String password, HttpSession session, Model model) {
+		try {
+			User loginUser = userService.login(userId, password);
+			session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, loginUser);
+		} catch (UnAuthenticationException e) {
+			log.debug("ERROR!! : 아이디 또는 비밀번호가 다릅니다.");
+			e.printStackTrace();
+			model.addAttribute("errorMessage", "아이디와 비밀번호를 확인해주세요.");
+			return "redirect:/users/loginForm";
+		}
+		return "redirect:/";
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+		log.debug("======== Success to LOGOUT!! ========");
+		
 		return "redirect:/";
 	}
 	
