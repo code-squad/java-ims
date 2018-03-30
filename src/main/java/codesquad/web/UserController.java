@@ -58,7 +58,6 @@ public class UserController {
 		} catch (UnAuthenticationException e) {
 			log.debug("ERROR!! : 아이디 또는 비밀번호가 다릅니다.");
 			e.printStackTrace();
-//			model.addAttribute("errorMessage", "아이디와 비밀번호를 확인해주세요.");		//errormessage 구현부 수정 필요.
 			return "redirect:/users/loginFail";
 		}
 		return "redirect:/";
