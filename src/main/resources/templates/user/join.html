@@ -1,21 +1,8 @@
-{{>header}}
+{{>htmlStyle}}
   <body>
     <div class="issues issues--wrap mdl-layout mdl-js-layout has-drawer is-upgraded">
 
-    <header class="mdl-layout__header mdl-layout__header--waterfall">
-      <div class="mdl-layout__header-row">
-        <!-- Title -->
-        <span class="mdl-layout-title">Issue Tracking System</span>
-        <div class="mdl-layout-spacer"></div>
-        <!-- Tabs -->
-		<nav class="mdl-navigation">
-			<a class="mdl-navigation__link" href="/">Issues</a>
-			<a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-			<a class="mdl-navigation__link" href="/user/login.html">login</a>
-			<a class="mdl-navigation__link" href="/users/form">join</a>
-		</nav>
-      </div>
-    </header>
+    {{>header}}
 
       <main class="mdl-layout__content">
         <div class="issues-back">
@@ -25,7 +12,7 @@
         </div>
         <div class="issues__posts mdl-grid">
           <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
-        <form action="/users" enctype="multipart/form-data" method="post">
+        <form action="/users/create" enctype="multipart/form-data" method="post">
             <div class="mdl-card__title mdl-color-text--grey-50" style="height:100px;">
               <h4>Join Member</h4>
             </div>

@@ -18,7 +18,7 @@ public class User extends AbstractEntity {
 	@Column(unique = true, nullable = false, length = 20)
 	private String userId;
 
-	@Size(min = 6, max = 20)
+	@Size(min = 4, max = 12)
 	@Column(nullable = false, length = 20)
 	@JsonIgnore
 	private String password;
@@ -27,10 +27,6 @@ public class User extends AbstractEntity {
 	@Column(nullable = false, length = 20)
 	private String name;
 	
-	@Size(min = 1, max = 20)
-	@Column(nullable = false, length = 20)
-	private String email;
-
 	public User() {
 	}
 
