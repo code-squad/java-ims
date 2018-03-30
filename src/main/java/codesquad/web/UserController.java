@@ -26,13 +26,13 @@ import codesquad.service.UserService;
 @RequestMapping("/users")
 public class UserController {
 	private static final Logger log = LoggerFactory.getLogger(UserController.class);
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
 	@Resource(name = "userService")
 	private UserService userService;
-	
+
 	@GetMapping("/join")
 	public String join() {
 		return "/user/join";
@@ -44,12 +44,12 @@ public class UserController {
 		userService.add(userDto);
 		return "redirect:/";
 	}
-	
+
 	@GetMapping("/loginForm")
 	public String loginForm() {
 		return "/user/login";
 	}
-	
+
 	@PostMapping("/login")
 	public String login(String userId, String password, HttpSession session, Model model) {
 		try {
@@ -63,16 +63,16 @@ public class UserController {
 		}
 		return "redirect:/";
 	}
-	
+
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
 		log.debug("======== Success to LOGOUT!! ========");
-		
+
 		return "redirect:/";
 	}
-	
-	@GetMapping("/{id}/form")
+
+	@GetMapping("/{id}/update")
 	public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
 		log.debug("LoginUser : {}", loginUser);
 		model.addAttribute("user", userService.findById(loginUser, id));
