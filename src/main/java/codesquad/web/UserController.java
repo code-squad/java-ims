@@ -58,8 +58,8 @@ public class UserController {
 		} catch (UnAuthenticationException e) {
 			log.debug("ERROR!! : 아이디 또는 비밀번호가 다릅니다.");
 			e.printStackTrace();
-			model.addAttribute("errorMessage", "아이디와 비밀번호를 확인해주세요.");		//errormessage 구현부 수정 필요.
-			return "redirect:/users/loginForm";
+//			model.addAttribute("errorMessage", "아이디와 비밀번호를 확인해주세요.");		//errormessage 구현부 수정 필요.
+			return "redirect:/users/loginFail";
 		}
 		return "redirect:/";
 	}
@@ -77,6 +77,12 @@ public class UserController {
 		log.debug("LoginUser : {}", loginUser);
 		model.addAttribute("user", userService.findById(loginUser, id));
 		return "/user/updateForm";
+	}
+	
+	@GetMapping("/loginFail")
+	public String fail(Model model) {
+		model.addAttribute("errorMessage", "로그인 실패. 아이디와 비밀번호를 확인해주세요.");
+		return "/user/login";
 	}
 
 	@PutMapping("/{id}")

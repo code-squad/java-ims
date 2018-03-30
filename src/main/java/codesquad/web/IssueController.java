@@ -5,7 +5,6 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.UnAuthenticationException;
 import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
@@ -65,9 +63,17 @@ public class IssueController {
 		} catch (UnAuthenticationException e) {
 			e.printStackTrace();
 			log.debug("본인의 이슈만 수정할 수 있습니다.");
-			model.addAttribute("errorMessage", e.getMessage());		//errormessage 구현부 수정 필요.
-			return "redirect:/";
+			model.addAttribute("errorMessage", "권한이 없습니다. 자신의 이슈만 수정 및 삭제가 가능합니다.");
+			model.addAttribute("issue", issueService.findById(id));
+			return "redirect:/issue/{id}/updateFail";
 		}
+		return "/issue/show";
+	}
+	
+	@GetMapping("/{id}/updateFail")
+	public String updateFail(@PathVariable Long id, Model model) {
+		model.addAttribute("errorMessage", "수정 권한이 없습니다.");
+		model.addAttribute("issue", issueService.findById(id));
 		return "/issue/show";
 	}
 	
@@ -78,7 +84,7 @@ public class IssueController {
 		} catch (UnAuthenticationException e) {
 			e.printStackTrace();
 			log.debug("본인의 이슈만 삭제할 수 있습니다.");
-			return "redirect:/issue/{id}";
+			return "redirect:/issue/{id}/updateFail";
 		}
 		return "redirect:/";
 	}
