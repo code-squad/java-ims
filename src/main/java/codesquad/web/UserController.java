@@ -58,7 +58,7 @@ public class UserController {
 		} catch (UnAuthenticationException e) {
 			log.debug("ERROR!! : 아이디 또는 비밀번호가 다릅니다.");
 			e.printStackTrace();
-			model.addAttribute("errorMessage", "아이디와 비밀번호를 확인해주세요.");
+			model.addAttribute("errorMessage", "아이디와 비밀번호를 확인해주세요.");		//errormessage 구현부 수정 필요.
 			return "redirect:/users/loginForm";
 		}
 		return "redirect:/";
@@ -72,7 +72,7 @@ public class UserController {
 		return "redirect:/";
 	}
 
-	@GetMapping("/{id}/update")
+	@GetMapping("/{id}/updateForm")
 	public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
 		log.debug("LoginUser : {}", loginUser);
 		model.addAttribute("user", userService.findById(loginUser, id));
@@ -80,9 +80,10 @@ public class UserController {
 	}
 
 	@PutMapping("/{id}")
-	public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
-		userService.update(loginUser, id, target);
-		return "redirect:/users";
+	public String update(@LoginUser User loginUser, @PathVariable long id, String name, UserDto target) {
+		UserDto loginUserDto = new UserDto(loginUser.getUserId(), loginUser.getPassword(), name);
+		userService.update(loginUser, id, loginUserDto);
+		return "redirect:/";
 	}
 
 }
