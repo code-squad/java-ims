@@ -4,25 +4,30 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.Size;
 
+import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
 @Entity
 public class Issue extends AbstractEntity {
 	@Size(min = 3, max = 20)
 	@Column(unique = true, nullable = false, length = 20)
-	private String title;
+	private String subject;
 
 	@Size(min = 6, max = 20)
 	@Column(nullable = false)
-	private String contents;
+	private String comment;
 
 	public Issue() {
 	}
 
-	public Issue(String title, String contents) {
+	public Issue(String subject, String comment) {
 		super(0L);
-		this.title = title;
-		this.contents = contents;
+		this.subject = subject;
+		this.comment = comment;
+	}
+
+	public IssueDto _toIssueDto() {
+		return new IssueDto(subject, comment);
 	}
 
 }

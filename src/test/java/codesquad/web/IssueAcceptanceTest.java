@@ -32,13 +32,13 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
 	@Test
 	public void createIssue() {
-		String title = "testtitle";
+		String subject = "testtitle";
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-				.addParameter("title", title)
-				.addParameter("contents", "contetnts").build();
+				.addParameter("subject", subject)
+				.addParameter("comment", "contetnts").build();
 		ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-		assertNotNull(issueRepository.findByTitle(title));
+		assertNotNull(issueRepository.findBySubject(subject));
 		assertThat(response.getHeaders().getLocation().getPath(), is("/"));
 	}
 }
