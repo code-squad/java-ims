@@ -3,6 +3,7 @@ package codesquad.dto;
 import javax.validation.constraints.Size;
 
 import codesquad.domain.Issue;
+import codesquad.domain.User;
 
 public class IssueDto {
 	@Size(min = 3, max = 20)
@@ -10,13 +11,16 @@ public class IssueDto {
 
 	@Size(min = 6, max = 20)
 	private String comment;
+	
+	private User writer;
 
 	public IssueDto() {
 	}
 
-	public IssueDto(String subject, String comment) {
+	public IssueDto(String subject, String comment, User writer) {
 		this.subject = subject;
 		this.comment = comment;
+		this.writer = writer;
 	}
 
 	public String getSubject() {
@@ -35,8 +39,16 @@ public class IssueDto {
 		this.comment = comment;
 	}
 
+	public User getWriter() {
+		return writer;
+	}
+
+	public void setWriter(User writer) {
+		this.writer = writer;
+	}
+
 	public Issue _toIssue() {
-		return new Issue(subject, comment);
+		return new Issue(subject, comment, writer);
 	}
 
 	@Override

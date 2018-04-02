@@ -1,6 +1,5 @@
 package codesquad.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 
 @Service
@@ -20,12 +20,27 @@ public class IssueService {
 		issueRepository.save(issueDto._toIssue());
 	}
 
-	public List<IssueDto> list() {
-		List<IssueDto> issues = new ArrayList<>();
-		for(Issue issue : issueRepository.findAll()) {
-			issues.add(issue._toIssueDto());
+	public List<Issue> list() {
+		return issueRepository.findAll();
+	}
+
+	public Object findIssue(long id) {
+		return issueRepository.findOne(id);
+	}
+
+	public void delete(long id, User loginUser) {
+		Issue issue = issueRepository.findOne(id);
+		if(issue.matchWriter(loginUser)) {
+			issueRepository.delete(id);
 		}
-		return issues;
+	}
+
+	public void update(long id, IssueDto issueDto,User loginUser) {
+		Issue originIssue = issueRepository.findOne(id);
+		if(originIssue.matchWriter(loginUser)) {
+			originIssue.update(issueDto._toIssue());
+			issueRepository.save(originIssue);
+		}
 	}
 
 }
