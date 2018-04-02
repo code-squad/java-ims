@@ -18,7 +18,6 @@ public class UserDto {
     }
 
     public UserDto(String userId, String password, String name) {
-        super();
         this.userId = userId;
         this.password = password;
         this.name = name;
