@@ -9,10 +9,7 @@ import javax.validation.constraints.Size;
 
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
-//이슈 추가, 수정, 삭제
-//로그인한 사용자에 한해 이슈를 추가할 수 있도록 한다.
-//자신이 생성한 이슈에 한해서 수정과 삭제를 할 수 있도록 한다.
-//이슈 목록, 상세 페이지에서 이슈를 생성한 사람을 보여주어야 한다.
+
 @Entity
 public class Issue extends AbstractEntity {
 	@Size(min = 3, max = 20)
@@ -27,6 +24,10 @@ public class Issue extends AbstractEntity {
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
 	private User writer;
 
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+	private Milestone milestone;
+	
 	public Issue() {
 	}
 
@@ -63,6 +64,14 @@ public class Issue extends AbstractEntity {
 
 	public void setWriter(User writer) {
 		this.writer = writer;
+	}
+	
+	public Milestone getMilestone() {
+		return milestone;
+	}
+
+	public void setMilestone(Milestone milestone) {
+		this.milestone = milestone;
 	}
 
 	public IssueDto _toIssueDto() {

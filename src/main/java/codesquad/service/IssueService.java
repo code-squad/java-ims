@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 
@@ -30,16 +31,24 @@ public class IssueService {
 
 	public void delete(long id, User loginUser) {
 		Issue issue = issueRepository.findOne(id);
-		if(issue.matchWriter(loginUser)) {
+		if (issue.matchWriter(loginUser)) {
 			issueRepository.delete(id);
 		}
 	}
 
-	public void update(long id, IssueDto issueDto,User loginUser) {
+	public void update(long id, IssueDto issueDto, User loginUser) {
 		Issue originIssue = issueRepository.findOne(id);
-		if(originIssue.matchWriter(loginUser)) {
+		if (originIssue.matchWriter(loginUser)) {
 			originIssue.update(issueDto._toIssue());
 			issueRepository.save(originIssue);
+		}
+	}
+
+	public void setMilestone(long iId, Milestone milestone, User loginUser) {
+		Issue issue = issueRepository.findOne(iId);
+		if (issue.matchWriter(loginUser)) {
+			issue.setMilestone(milestone);
+			issueRepository.save(issue);
 		}
 	}
 

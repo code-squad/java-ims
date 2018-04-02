@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import codesquad.domain.Milestone;
 import codesquad.domain.MilestoneRepository;
 import codesquad.dto.MilestoneDto;
 
@@ -18,5 +19,9 @@ public class MilestoneService {
 
 	public Object list() {
 		return milestoneRepository.findAll();
+	}
+
+	public Milestone find(long mId) {
+		return milestoneRepository.findOne(mId);
 	}
 }
