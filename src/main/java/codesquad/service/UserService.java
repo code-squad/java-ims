@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
@@ -27,19 +28,17 @@ public class UserService {
 		return userRepository.save(userDto._toUser());
 	}
 
+	@Transactional
 	public User update(User loginUser, long id, UserDto updatedUser) {
 		User original = userRepository.findOne(id);
-		original.update(loginUser, updatedUser._toUser());
-		return userRepository.save(original);
+		return original.update(loginUser, updatedUser._toUser());
 	}
 
 	public User findById(User loginUser, long id) {
 		User user = userRepository.findOne(id);
 		log.debug("systemIn");
-		if (!user.equals(loginUser)) {
-			throw new UnAuthorizedException();
-		}
-		return user;
+		
+		return Optional.of(userRepository.findOne(id)).orElseThrow(UnAuthorizedException::new);
 	}
 
 	public List<User> findAll() {
@@ -47,12 +46,8 @@ public class UserService {
 	}
 
 	public User login(String userId, String password) throws UnAuthenticationException {
-		Optional<User> maybeUser = userRepository.findByUserId(userId);
-		if (!maybeUser.isPresent()) {
-			throw new UnAuthenticationException();
-		}
-
-		User user = maybeUser.get();
+		User user = userRepository.findByUserId(userId).orElseThrow(UnAuthorizedException::new);
+		log.debug("comming user is " + user.toString());
 		if (!user.matchPassword(password)) {
 			throw new UnAuthenticationException();
 		}

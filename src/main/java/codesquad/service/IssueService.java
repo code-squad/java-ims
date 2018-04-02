@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
@@ -21,6 +22,7 @@ public class IssueService {
 	@Resource
 	private IssueRepository issueRepository;
 
+	@Transactional
 	public Issue add(User loginUser, IssueDto issue) {
 		Issue newIssue = issue._toIssue();
 		newIssue.writeBy(loginUser);
@@ -31,12 +33,13 @@ public class IssueService {
 		return issueRepository.findOne(id);
 	}
 	
+	@Transactional
 	public Issue update(User loginUser, long id, String newComment) throws UnAuthenticationException {
 		Issue issue = issueRepository.findOne(id);
-		Issue updatedIssue = issue.update(loginUser, newComment);
-		return issueRepository.save(updatedIssue);
+		return issue.update(loginUser, newComment);
 	}
 	
+	@Transactional
 	public void delete(User loginUser, long id) throws UnAuthenticationException {
 		Issue issue = issueRepository.findOne(id);
 		issue.delete(loginUser);

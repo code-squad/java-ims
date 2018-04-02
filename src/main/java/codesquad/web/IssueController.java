@@ -1,7 +1,6 @@
 package codesquad.web;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,7 @@ public class IssueController {
 	private IssueService issueService;
 
 	@GetMapping("/form")
-	public String form(HttpSession session) {
+	public String form() {
 		return "/issue/form";
 	}
 
@@ -43,7 +42,11 @@ public class IssueController {
 
 	@GetMapping("/{id}")
 	public String show(@PathVariable Long id, Model model) {
+		log.debug("start controller");
+		log.debug("id is " + id);
 		Issue issue = issueService.findById(id);
+		log.debug("issue is " + issue.toString());
+		
 		model.addAttribute(issue);
 		return "/issue/show";
 	}

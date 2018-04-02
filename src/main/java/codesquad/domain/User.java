@@ -72,16 +72,17 @@ public class User extends AbstractEntity {
 		return this.userId.equals(userId);
 	}
 
-	public void update(User loginUser, User target) {
+	public User update(User loginUser, User target) {
 		if (!matchUserId(loginUser.getUserId())) {
 			throw new UnAuthorizedException();
 		}
 
 		if (!matchPassword(target.getPassword())) {
-			return;
+			throw new UnAuthorizedException();
 		}
 
 		this.name = target.name;
+		return this;
 	}
 
 	public boolean matchPassword(String password) {

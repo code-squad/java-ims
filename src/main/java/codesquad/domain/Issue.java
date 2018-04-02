@@ -39,8 +39,9 @@ public class Issue {
 		this.comment = comment;
 	}
 
-	public void writeBy(User loginUser) {
+	public Issue writeBy(User loginUser) {
 		this.writer = loginUser;
+		return this;
 	}
 	
 	public Issue update(User loginUser, String newComment) throws UnAuthenticationException {
