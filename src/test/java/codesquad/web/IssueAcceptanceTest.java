@@ -19,7 +19,7 @@ import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
-	private static final Logger log = LoggerFactory.getLogger(UserAcceptanceTest.class);
+	private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
 
 	@Resource(name = "issueRepository")
 	private IssueRepository issueRepository;
