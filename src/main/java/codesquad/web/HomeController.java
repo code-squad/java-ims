@@ -11,7 +11,7 @@ import codesquad.domain.IssueRepository;
 public class HomeController {
 	@Autowired
 	private IssueRepository issueRepository;
-	
+
 	@GetMapping("/")
 	public String home(Model model) {
 		model.addAttribute("issues", issueRepository.findByDeleted(false));

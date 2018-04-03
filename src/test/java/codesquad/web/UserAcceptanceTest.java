@@ -3,7 +3,6 @@ package codesquad.web;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -27,7 +26,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void createForm() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/users/form", String.class);
+        ResponseEntity<String> response = template.getForEntity("/users/join", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         log.debug("body : {}", response.getBody());
     }
@@ -38,29 +37,27 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("userId", userId)
                 .addParameter("password", "password")
-                .addParameter("name", "자바지기")
-                .addParameter("email", "javajigi@slipp.net").build();
+                .addParameter("name", "자바지기").build();
 
-        ResponseEntity<String> response = template.postForEntity("/users", request, String.class);
+        ResponseEntity<String> response = template.postForEntity("/users/create", request, String.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(userRepository.findByUserId(userId));
-        assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
     }
 
     @Test
     public void updateForm_no_login() throws Exception {
-        ResponseEntity<String> response = template.getForEntity(String.format("/users/%d/form", loginUser.getId()),
-                String.class);
+        ResponseEntity<String> response = template.getForEntity(String.format("/users/%d/updateForm", loginUser.getId()), String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 
     @Test
     public void updateForm_login() throws Exception {
         ResponseEntity<String> response = basicAuthTemplate
-                .getForEntity(String.format("/users/%d/form", loginUser.getId()), String.class);
+                .getForEntity(String.format("/users/%d/updateForm", loginUser.getId()), String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().contains(loginUser.getName()), is(true));
+        assertThat(response.getBody().contains(loginUser.getUserId()), is(true));
     }
 
     @Test
@@ -72,9 +69,9 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("_method", "put")
+                .addParameter("userId", "java")
                 .addParameter("password", "pass2")
-                .addParameter("name", "재성2")
-                .addParameter("email", "javajigi@slipp.net").build();
+                .addParameter("name", "재성2").build();
 
         return template.postForEntity(String.format("/users/%d", loginUser.getId()), request, String.class);
     }
@@ -83,6 +80,6 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void update() throws Exception {
         ResponseEntity<String> response = update(basicAuthTemplate);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
     }
 }
