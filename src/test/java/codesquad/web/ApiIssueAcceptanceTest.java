@@ -120,5 +120,35 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 		basicAuthTemplate(user).delete(String.format("/api/issue/%d", dbIssue.getId()));
 		assertTrue(issueRepository.findBySubject("test7").isDeleted());
 	}
+	
+	@Test
+	public void delete_no_login() {
+		User user = userRepository.findOne((long) 1);
+		//make issue
+		IssueDto issue = new IssueDto("test8", "test8 comment");
+		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue/newIssue", issue, String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+		Issue dbIssue = issueRepository.findBySubject("test8");
+		
+		//delete test
+		assertFalse(issueRepository.findBySubject("test8").isDeleted());
+		template().delete(String.format("/api/issue/%d", dbIssue.getId()));
+		assertFalse(issueRepository.findBySubject("test8").isDeleted());
+	}
+	
+	@Test
+	public void delete_anotherUser_login() {
+		User user = userRepository.findOne((long) 2);
+		//make issue
+		IssueDto issue = new IssueDto("test9", "test9 comment");
+		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue/newIssue", issue, String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+		Issue dbIssue = issueRepository.findBySubject("test9");
+		
+		//delete test
+		assertFalse(issueRepository.findBySubject("test9").isDeleted());
+		basicAuthTemplate().delete(String.format("/api/issue/%d", dbIssue.getId()));
+		assertFalse(issueRepository.findBySubject("test9").isDeleted());
+	}
 
 }
