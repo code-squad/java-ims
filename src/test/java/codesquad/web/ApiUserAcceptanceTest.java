@@ -15,7 +15,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 
 	@Test
 	public void login_success() {
-		UserDto newUser = createUserDto("testuser1");
+		UserDto newUser = createUserDto("testuser5");
 		createResource("/api/users", newUser);
         
 		ResponseEntity<String> loginResponse = template().postForEntity("/api/users/login", newUser, String.class);
@@ -24,7 +24,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 	
 	@Test
 	public void login_not_success() {
-		UserDto newUser = createUserDto("testuser1");
+		UserDto newUser = createUserDto("testuser6");
 		
 		ResponseEntity<String> loginResponse = template().postForEntity("/api/users/login", newUser, String.class);
 		assertThat(loginResponse.getStatusCode(), is(HttpStatus.FORBIDDEN));

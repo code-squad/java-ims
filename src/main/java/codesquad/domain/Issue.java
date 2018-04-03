@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
 
 import codesquad.UnAuthenticationException;
+import codesquad.dto.IssueDto;
 
 @Entity
 public class Issue {
@@ -65,6 +66,10 @@ public class Issue {
 	
 	public boolean isDeleted() {
 		return deleted;
+	}
+	
+	public IssueDto _toIssueDto() {
+		return new IssueDto(this.subject, this.comment);
 	}
 
 	// === getter setter methods (behind) ===

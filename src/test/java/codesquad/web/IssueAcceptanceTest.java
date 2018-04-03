@@ -175,24 +175,24 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	public void delete_no_login() {
 		//make issue
 		HttpEntity<MultiValueMap<String, Object>> request1 = HtmlFormDataBuilder.urlEncodedForm()
-				.addParameter("subject", "delete-login-test")
+				.addParameter("subject", "delete-login-test2")
 				.addParameter("comment", "this is delete test.").build();
 		ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issue/newIssue", request1, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		
-		Issue issue = issueRepository.findBySubject("delete-login-test");
+		Issue issue = issueRepository.findBySubject("delete-login-test2");
 		log.debug("issue is " + issue.toString());
 		assertFalse(issue.isDeleted());
 		
 		//delete test (guest delete test)
 		template.delete(String.format("/issue/%d/deleteIssue", issue.getId()));
-		Issue dbIssue = issueRepository.findBySubject("delete-login-test");
+		Issue dbIssue = issueRepository.findBySubject("delete-login-test2");
 		assertFalse(dbIssue.isDeleted());
 		
 		//delete test (another user delete test)
 		User user = userRepository.findOne((long) 2);
 		basicAuthTemplate(user).delete(String.format("/issue/%d/deleteIssue", issue.getId()));
-		Issue dbIssue2 = issueRepository.findBySubject("delete-login-test");
+		Issue dbIssue2 = issueRepository.findBySubject("delete-login-test2");
 		assertFalse(dbIssue2.isDeleted());
 	}
 }
