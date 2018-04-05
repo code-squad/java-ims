@@ -46,4 +46,5 @@ public class ApiUserController {
     public void update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody UserDto updatedUser) {
         userService.update(loginUser, id, updatedUser);
     }
+    
 }
