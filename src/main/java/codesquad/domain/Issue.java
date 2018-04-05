@@ -53,7 +53,6 @@ public class Issue extends AbstractEntity {
 	
 	@OneToMany
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_answers"))
-	@OrderBy("contents")
 	private List<Answer> answers;
 
 	private boolean deleted = false;

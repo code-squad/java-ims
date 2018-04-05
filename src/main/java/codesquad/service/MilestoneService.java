@@ -31,8 +31,10 @@ public class MilestoneService {
 	}
 	
 	@Transactional
-	public void addMilestone(Issue issue, long milestoneId) {
-		issue.setMilestone(findByStoneId(milestoneId));
+	public Milestone addMilestone(Issue issue, long milestoneId) {
+		Milestone milestone = findByStoneId(milestoneId);
+		issue.setMilestone(milestone);
+		return milestone;
 	}
 
 }

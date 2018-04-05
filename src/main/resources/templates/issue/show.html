@@ -84,15 +84,23 @@
 					<div class="section-spacer"></div>
 
 					<button id="milestone-menu" class="mdl-button mdl-js-button">
-						Milestone</button>
+						{{^Issue.milestone}}
+						Milestone
+						{{/Issue.milestone}}
+						{{#Issue.milestone}}
+						{{title}}
+						{{/Issue.milestone}}
+					</button>
 
 					<!-- milestone list -->
 					<ul
 						class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
 						for="milestone-menu">
-						<li class="mdl-menu__item mdl-button--accent"><a
-							href="/issue/1/setMilestone/0">{{#Issue}}{{milestone.title}}
-								{{milestone.endDate}}{{/Issue}}</a></li>
+						{{#Milestones}}
+						<li class="mdl-menu__item mdl-button--accent" id="/api/milestones/{{id}}/issues/{{Issue.id}}">
+							<a class="milestone-items" href="/api/milestones/{{id}}/issues/{{Issue.id}}">{{title}}</a>
+						</li>
+						{{/Milestones}}
 					</ul>
 
 					<button id="label-menu" class="mdl-button mdl-js-button">
@@ -192,23 +200,20 @@
 					<!-- comments end -->
 				</div>
 
-				{{#Issue.answers}}
-				{{^deleted}}
-				<div class="comment mdl-color-text--grey-700" id = "{{id}}">
-						<a href="#" class="article-author-name"> {{writer.name}}</a>
-						<p>{{contents}}</p>
-						<ul class="article-util-list">
-							<li>
-								<a href="/answers/{{id}}/issues/{{Issue.id}}">수정</a>
-							</li>
-							<li class="delete-comment-parent" id="/api/answers/{{id}}/issues/{{Issue.id}}">
-								<a class="delete-comments" href="/api/answers/{{id}}/issues/{{Issue.id}}">삭제</a>
-							</li>
-						</ul>
+				{{#Issue.answers}} {{^deleted}}
+				<div class="comment mdl-color-text--grey-700" id="{{id}}">
+					<a href="#" class="article-author-name"> {{writer.name}}</a>
+					<p>{{contents}}</p>
+					<ul class="article-util-list">
+						<li><a href="/answers/{{id}}/issues/{{Issue.id}}">수정</a></li>
+						<li class="delete-comment-parent"
+							id="/api/answers/{{id}}/issues/{{Issue.id}}"><a
+							class="delete-comments"
+							href="/api/answers/{{id}}/issues/{{Issue.id}}">삭제</a></li>
+					</ul>
 				</div>
 				<hr>
-				{{/deleted}}
-				{{/Issue.answers}}
+				{{/deleted}} {{/Issue.answers}}
 
 				<form action="/issue/{{Issue.id}}/uploadFile"
 					enctype="multipart/form-data" method="POST" id="comment-div">
@@ -240,6 +245,7 @@
 			</div>
 		</div>
 		<script type="text/template" id="answerTemplate">
+			<hr>
  				<div class="comment mdl-color-text--grey-700" id = "{2}">
 						<a href="#" class="article-author-name"> {0}</a>
 						<p>{1}</p>
@@ -253,7 +259,13 @@
 						</ul>
 				</div>
 
-</script> <footer class="mdl-mini-footer">
+</script>
+			<script type="text/template" id="milestoneTemplate">
+				<button id="milestone-menu" class="mdl-button mdl-js-button">
+					{0}
+				</button>
+
+			</script> <footer class="mdl-mini-footer">
 			<div class="mdl-mini-footer--left-section">
 				<div class="mdl-logo mdl-color-text--grey-600">
 					Proudly powered by <a href="https://github.com/Byeol">Byeol</a>

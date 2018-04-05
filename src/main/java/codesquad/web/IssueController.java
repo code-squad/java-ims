@@ -29,6 +29,9 @@ public class IssueController {
 	@Autowired
 	IssueService issueService;
 	
+	@Autowired
+	MilestoneService milestoneService;
+	
 	@GetMapping("")
 	public String form() {
 		return "/issue/form";
@@ -43,6 +46,7 @@ public class IssueController {
 	@GetMapping("/{id}")
 	public String detail(@PathVariable long id, Model model) {
 		model.addAttribute("Issue", issueService.findById(id));
+		model.addAttribute("Milestones", milestoneService.findStoneAll());
 		return "/issue/show";
 	}
 

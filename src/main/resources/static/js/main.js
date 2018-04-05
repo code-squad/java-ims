@@ -1,3 +1,40 @@
+$(".milestone-items").click(addMilestone);
+
+function addMilestone(e){
+	e.preventDefault();
+
+	var addBtn = $(this);
+	var addMilestoneUrl = addBtn.closest(".mdl-menu__item").attr("id");
+	console.log(addMilestoneUrl);
+
+	$.ajax({
+		type : 'post',
+		url : addMilestoneUrl,
+		dataType : 'json',
+		error : function(xhr, status) {
+			console.log("add milestone fail");
+
+		},
+		success: function(data, status) {
+			console.log("success!!");
+			console.log(data.title);
+			console.log(data);
+
+
+            var milestoneTemplate = $("#milestoneTemplate").html();
+
+
+            var template = milestoneTemplate.format(data.title);
+            $("#milestone-menu").remove();
+            console.log(template);
+            $(template).insertAfter(".section-spacer").show(1000);
+
+		}
+
+	})
+}
+
+
 $(".delete-comments").click(deleteAnswer);
 
 
@@ -53,12 +90,17 @@ function onError() {
 }
 
 function onSuccess(data, status) {
-	console.log("status : " + status);
-	console.log(data);
-	var answerTemplate = $("#answerTemplate").html();
-	
-	var template = answerTemplate.format(data.writer.name, data.contents, data.id);
-	$(template).appendTo("#before-comment").hide().fadeIn(500);
+    console.log("status : " + status);
+    console.log(data);
+    var answerTemplate = $("#answerTemplate").html();
+
+    var template = answerTemplate.format(data.writer.name, data.contents, data.id);
+    if (data.id < 1) {
+        $(template).insertAfter("#comment").hide().fadeIn(500);
+    }
+    else
+        $(template).insertAfter("#" + (data.id - 1).toString()).hide().fadeIn(500);
+
 	console.log(template);
 	$("#comment-form textarea[name=contents]").val("");
 }
