@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.UnAuthenticationException;
 import codesquad.domain.Issue;
+import codesquad.domain.MilestoneRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
@@ -25,9 +27,12 @@ import codesquad.service.IssueService;
 public class IssueController {
 	private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
+	@Autowired
+	private MilestoneRepository milestoneRepository;
+	
 	@Resource(name = "issueService")
 	private IssueService issueService;
-
+	
 	@GetMapping("/form")
 	public String form() {
 		return "/issue/form";
@@ -48,6 +53,7 @@ public class IssueController {
 		log.debug("issue is " + issue.toString());
 		
 		model.addAttribute(issue);
+		model.addAttribute("milestones", milestoneRepository.findByDeleted(false));
 		return "/issue/show";
 	}
 	
@@ -90,5 +96,10 @@ public class IssueController {
 			return "redirect:/issue/{id}/updateFail";
 		}
 		return "redirect:/";
+	}
+	
+	@PostMapping("/{id}/addComment")
+	public String addComment(@PathVariable long id, String comment) {
+		
 	}
 }

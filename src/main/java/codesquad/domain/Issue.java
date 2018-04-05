@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -7,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
 import codesquad.UnAuthenticationException;
@@ -29,6 +32,11 @@ public class Issue {
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_writer"))
 	private User writer;
+	
+	@OneToMany
+	@Column(nullable = false, length = 300)
+	private List<String> commentList;
+	
 
 	private boolean deleted = false;
 

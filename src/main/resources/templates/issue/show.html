@@ -71,6 +71,10 @@
 							</li>
 							<li class="mdl-menu__item"><a href="/issue/1/setMilestone/3">Milestone3</a>
 							</li>
+							{{# milestones }}
+							<li class="mdl-menu__item"><a href="/issue/{{issue.id}}/setMilestone/{{id}}">{{subject}}</a>
+							</li>
+							{{/ milestones }}
 						</ul>
 
 						<button id="label-menu" class="mdl-button mdl-js-button">
@@ -175,7 +179,7 @@
 
 						<!-- comments end -->
 					</div>
-					<form action="/issue/1/uploadFile" enctype="multipart/form-data"
+					<form action="/issue/{{issue.id}}/uploadFile" enctype="multipart/form-data"
 						method="POST">
 						<div style="margin: 10px;">
 							<input type="file" name="file" id="file" />
@@ -184,7 +188,7 @@
 					</form>
 					<div
 						class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-						<form action="/issue/1/addComment" method="POST">
+						<form action="/issue/{{issue.id}}/addComment" method="POST">
 							<div
 								class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 								<textarea rows=5 class="mdl-textfield__input" id="comment"

@@ -12,11 +12,11 @@ import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
-import codesquad.web.UserController;
+import codesquad.web.IssueController;
 
 @Service
 public class IssueService {
-	private static final Logger log = LoggerFactory.getLogger(UserController.class);
+	private static final Logger log = LoggerFactory.getLogger(IssueController.class);
 
 	@Resource
 	private IssueRepository issueRepository;
