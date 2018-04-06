@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.util.MultiValueMap;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import support.test.BasicAuthAcceptanceTest;
@@ -194,5 +196,24 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		basicAuthTemplate(user).delete(String.format("/issue/%d/deleteIssue", issue.getId()));
 		Issue dbIssue2 = issueRepository.findBySubject("delete-login-test2");
 		assertFalse(dbIssue2.isDeleted());
+	}
+	
+	@Test
+	public void makeManager() {
+		//make issue
+		HttpEntity<MultiValueMap<String, Object>> request1 = HtmlFormDataBuilder.urlEncodedForm()
+				.addParameter("subject", "testIssue")
+				.addParameter("comment", "this is test.").build();
+		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/newIssue", request1, String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+
+		Issue issue = issueRepository.findBySubject("testIssue");
+		log.debug("issue is " + issue.toString());
+
+		//makeManager test
+		ResponseEntity<String> totalResponse = basicAuthTemplate().getForEntity(String.format("/issue/%d/setAssignee/%d", issue.getId(), (long) 2), String.class);
+		
+		assertThat(totalResponse.getStatusCode(), is(HttpStatus.OK));
+		assertEquals(issueRepository.findBySubject("testIssue").getManager(), userRepository.findOne((long) 2));
 	}
 }

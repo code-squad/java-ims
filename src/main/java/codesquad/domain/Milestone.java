@@ -32,7 +32,7 @@ public class Milestone {
 	private List<Issue> issues;
 	
 	private boolean deleted = false;
-
+	
 	public Milestone() {
 	}
 	
@@ -100,7 +100,7 @@ public class Milestone {
 	public void setIssues(List<Issue> issues) {
 		this.issues = issues;
 	}
-
+	
 	//toString method
 	@Override
 	public String toString() {

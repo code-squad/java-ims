@@ -25,6 +25,12 @@ public class IssueService {
 	
 	@Resource
 	private MilestoneService milestoneService;
+	
+	@Resource
+	private UserService userService;
+	
+	@Resource
+	private LabelService labelService;
 
 	public Issue add(User loginUser, IssueDto issue) {
 		log.debug("Issue service (add) in");
@@ -56,6 +62,21 @@ public class IssueService {
 	public void registerMilestone(long issueId, long milestoneId) {
 		Issue issue = issueRepository.findOne(issueId);
 		issue.registerMilestone(milestoneService.addIssueThenReturnMilestone(issue, milestoneId));
+	}
+	
+	@Transactional
+	public void makeManager(long id, long userId, User loginUser) {
+		log.debug("issue service(makeManager) in");
+		Issue issue = issueRepository.findOne(id);
+		User selectedUser = userService.findById(loginUser, userId);
+		issue.managedBy(selectedUser);
+	}
+	
+	@Transactional
+	public void updateLabel(User loginUser, long id, long labelId) {
+		log.debug("issue service(updateLabel) in");
+		Issue issue = issueRepository.findOne(id);
+		issue.updateLabel(loginUser, labelService.findOne(labelId));
 	}
 
 }

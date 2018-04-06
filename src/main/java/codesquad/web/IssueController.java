@@ -21,6 +21,8 @@ import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.LabelService;
+import codesquad.service.UserService;
 
 @Controller
 @RequestMapping("/issue")
@@ -32,6 +34,12 @@ public class IssueController {
 	
 	@Resource(name = "issueService")
 	private IssueService issueService;
+	
+	@Resource(name = "userService")
+	private UserService userService;
+	
+	@Resource(name = "labelService")
+	private LabelService labelService;
 	
 	@GetMapping("/form")
 	public String form() {
@@ -54,6 +62,8 @@ public class IssueController {
 		
 		model.addAttribute(issue);
 		model.addAttribute("milestones", milestoneRepository.findByDeleted(false));
+		model.addAttribute("users", userService.findAll());
+		model.addAttribute("labels", labelService.findAll());
 		return "/issue/show";
 	}
 	
@@ -101,6 +111,19 @@ public class IssueController {
 	@GetMapping("/{id}/registerMilestone/{milestoneId}")
 	public String addComment(@PathVariable long id, @PathVariable long milestoneId) {
 		issueService.registerMilestone(id, milestoneId);
-		return "redirect:/";
+		return String.format("redirect:/issue/%d", id);
+	}
+	
+	@GetMapping("/{id}/setAssignee/{userId}")
+	public String makeManager(@PathVariable long id, @PathVariable long userId, @LoginUser User loginUser) {
+		System.out.println("FUCK");
+		issueService.makeManager(id, userId, loginUser);
+		return String.format("redirect:/issue/%d", id);
+	}
+	
+	@GetMapping("/{id}/setLabel/{labelId}")
+	public String updateLabel(@PathVariable long id, @PathVariable long labelId, @LoginUser User loginUser) {
+		issueService.updateLabel(loginUser, id, labelId);
+		return String.format("redirect:/issue/%d", id);
 	}
 }

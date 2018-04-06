@@ -35,9 +35,9 @@ public class UserService {
 	}
 
 	public User findById(User loginUser, long id) {
+		log.debug("Userservice findeById systemIn");
 		User user = userRepository.findOne(id);
-		log.debug("systemIn");
-		
+		log.debug("-=-user is " + user);
 		return Optional.of(userRepository.findOne(id)).orElseThrow(UnAuthorizedException::new);
 	}
 

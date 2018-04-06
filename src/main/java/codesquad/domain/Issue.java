@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Size;
 
 import codesquad.UnAuthenticationException;
@@ -36,6 +37,14 @@ public class Issue {
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_milestone"))
 	private Milestone milestone;
+	
+	@OneToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "issue_manager"))
+	private User manager;
+	
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "issue_label"))
+	private Label label;
 
 	private boolean deleted = false;
 
@@ -46,9 +55,14 @@ public class Issue {
 		this.subject = subject;
 		this.comment = comment;
 	}
+	
+	public void managedBy(User manager) {
+		this.manager = manager;
+	}
 
 	public Issue writeBy(User loginUser) {
 		this.writer = loginUser;
+		this.manager = loginUser;
 		return this;
 	}
 	
@@ -64,6 +78,12 @@ public class Issue {
 		return this;
 	}
 	
+	public void updateLabel(User loginUser, Label label) {
+		if (this.isManager(loginUser) || this.isOwner(loginUser)) {
+			this.label = label;
+		}
+	}
+	
 	public void delete(User loginUser) throws UnAuthenticationException {
 		if (!this.isOwner(loginUser)) {
 			throw new UnAuthenticationException();
@@ -73,6 +93,10 @@ public class Issue {
 	
 	public boolean isOwner(User loginUser) {
 		return this.writer.equals(loginUser);
+	}
+	
+	public boolean isManager(User loginUser) {
+		return this.manager.equals(loginUser);
 	}
 	
 	public boolean isDeleted() {
@@ -111,5 +135,20 @@ public class Issue {
 	public void setMilestone(Milestone milestone) {
 		this.milestone = milestone;
 	}
-	
+
+	public User getManager() {
+		return manager;
+	}
+
+	public void setManager(User manager) {
+		this.manager = manager;
+	}
+
+	public Label getLabel() {
+		return label;
+	}
+
+	public void setLabel(Label label) {
+		this.label = label;
+	}
 }
