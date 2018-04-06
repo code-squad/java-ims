@@ -50,6 +50,10 @@ public class Issue extends AbstractEntity {
 	@ManyToMany
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_labels"))
 	private List<Label> labels;
+	
+	@OneToMany
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_answers"))
+	private List<Answer> answers;
 
 	private boolean deleted = false;
 
@@ -135,6 +139,16 @@ public class Issue extends AbstractEntity {
 	public List<Label> getLabels() {
 		return labels;
 	}
+	
+	
+	public List<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswer(Answer answer) {
+		answers.add(answer);
+	}
+	
 
 	public IssueDto toIssueDto() {
 		return new IssueDto(getId(), title, contents);
@@ -203,6 +217,6 @@ public class Issue extends AbstractEntity {
 		return "Issue [title=" + title + ", contents=" + contents + ", writer=" + writer + ", assignee=" + assignee
 				+ ", milestone=" + milestone + ", labels=" + labels + ", deleted=" + deleted + "]";
 	}
-	
+
 
 }

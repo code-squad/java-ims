@@ -1,6 +1,9 @@
 package codesquad.domain;
 
 import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,15 +44,20 @@ public class Milestone extends AbstractEntity {
 	public Milestone() {
 	}
 
-	public Milestone(String title, Date startDate, Date endDate) {
-		this(0L, title, startDate, endDate);
+	public Milestone(String title, String startDate, String endDate) throws ParseException {
+		this(0L, title ,startDate, endDate);
 	}
 
-	public Milestone(long id, String title, Date startDate, Date endDate) {
+	public Milestone(long id, String title, String startDate, String endDate) throws ParseException {
 		super(id);
 		this.title = title;
-		this.startDate = startDate;
-		this.endDate = endDate;
+		this.startDate = convertTime(startDate);
+		this.endDate = convertTime(endDate);
+	}
+	
+	public static Date convertTime(String date) throws ParseException {
+		SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+		return transFormat.parse(date);
 	}
 
 	public String getTitle() {

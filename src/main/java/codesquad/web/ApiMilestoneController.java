@@ -46,6 +46,13 @@ public class ApiMilestoneController {
 		return milestoneService.findByStoneId(id);
 	}
 	
+	@PostMapping("/{milestoneId}/issues/{id}")
+	public Milestone addMilestone(@LoginUser User loginUser,  @PathVariable long id, @PathVariable long milestoneId) {
+		log.info("controller in!@!");
+		return milestoneService.addMilestone(issueService.findById(id), milestoneId);
+	}
+
+	
 	
 
 }

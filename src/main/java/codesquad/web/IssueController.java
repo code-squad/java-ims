@@ -27,7 +27,16 @@ import codesquad.service.UserService;
 public class IssueController {
 
 	@Autowired
+	UserService userService;
+
+	@Autowired
+	LabelService labelService;
+
+	@Autowired
 	IssueService issueService;
+	
+	@Autowired
+	MilestoneService milestoneService;
 	
 	@GetMapping("")
 	public String form() {
@@ -43,6 +52,9 @@ public class IssueController {
 	@GetMapping("/{id}")
 	public String detail(@PathVariable long id, Model model) {
 		model.addAttribute("Issue", issueService.findById(id));
+		model.addAttribute("Milestones", milestoneService.findStoneAll());
+		model.addAttribute("Labels", labelService.findLabelAll());
+		model.addAttribute("Users", userService.findAll());
 		return "/issue/show";
 	}
 

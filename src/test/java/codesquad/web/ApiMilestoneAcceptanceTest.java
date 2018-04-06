@@ -29,7 +29,6 @@ import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 public class ApiMilestoneAcceptanceTest extends AcceptanceTest {
-
 	private static final Logger log = LoggerFactory.getLogger(ApiMilestoneAcceptanceTest.class);
 
 	@Autowired

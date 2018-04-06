@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.MultiValueMap;
 
+import codesquad.domain.Answer;
+import codesquad.domain.AnswerRepository;
 import codesquad.domain.Issue;
 import codesquad.domain.Label;
 import codesquad.domain.Milestone;
@@ -37,6 +39,9 @@ public abstract class AcceptanceTest {
     
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private AnswerRepository answerRepository;
     
     @Autowired
     private IssueService issueService;
@@ -67,12 +72,16 @@ public abstract class AcceptanceTest {
         return userRepository.findByUserId(userId).get();
     }
     
+    protected Long findAnswerId(String contents) {
+    	for (Answer answer : answerRepository.findAll()) {
+			if(answer.getContents().equals(contents))
+				return answer.getId();
+		}
+    	return null;
+    }
+    
     public Milestone createTestMilestone(String title) throws ParseException {
-		SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		Date endDate = transFormat.parse("2018-03-23 11:51");
-		Date startDate = transFormat.parse("2018-03-23 11:49");
-
-		return new Milestone(title, startDate, endDate);
+		return new Milestone(title, "2018-03-23T11:51", "2018-03-23T11:59");
 	}
     
     public ResponseEntity<String> createTestLabel(TestRestTemplate myTemplate, String title, String color){
@@ -109,7 +118,7 @@ public abstract class AcceptanceTest {
 
     
     protected String createResource(String path, Object bodyPayload) {
-        ResponseEntity<String> response = template().postForEntity(path, bodyPayload, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity(path, bodyPayload, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         return response.getHeaders().getLocation().getPath();
     }

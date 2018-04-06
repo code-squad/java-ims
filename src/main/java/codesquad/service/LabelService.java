@@ -39,8 +39,10 @@ public class LabelService {
 	}
 
 	@Transactional
-	public void addLabel(Issue issue,long labelId) {
-		issue.setLabel(findByLabelId(labelId));
+	public Label addLabel(Issue issue,long labelId) {
+		Label label = findByLabelId(labelId);
+		issue.setLabel(label);
+		return label;
 	}
 
 }

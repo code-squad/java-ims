@@ -21,17 +21,10 @@
         <div class="mdl-layout-spacer"></div>
         <!-- Tabs -->
 		<nav class="mdl-navigation">
-          <a class="mdl-navigation__link" href="/issues">Issues</a>
-          <a class="mdl-navigation__link" href="/milestones">Milestones</a>
-          <a class="mdl-navigation__link" href="/labels">Labels</a>
-          {{^loginedUser}}
-          <a class="mdl-navigation__link" href="/users/loginForm.html">login</a>
-          <a class="mdl-navigation__link" href="/users/form.html">join</a>
-          {{/loginedUser}}
-          {{#loginedUser}}
-          <a class="mdl-navigation__link" href="/users/loginForm.html">logout</a>
-          <a class="mdl-navigation__link" href="/user/updateForm.html">myInfo</a>
-          {{/loginedUser}}
+			<a class="mdl-navigation__link" href="/">Issues</a>
+			<a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
+			<a class="mdl-navigation__link" href="/user/login.html">login</a>
+			<a class="mdl-navigation__link" href="/user/join.html">join</a>
 		</nav>
       </div>
     </header>
@@ -42,26 +35,24 @@
             <i class="material-icons" role="presentation">arrow_back</i>
           </a>
         </div>
-        <form action="/labels" method="POST">
         <div class="issues__posts mdl-grid">
           <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
-            <div class="mdl-color-text--primary-contrast" style="padding-top:40px; padding-bottom:40px;">
-              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
-                <input class="mdl-textfield__input" type="text" id="title" name="title" required>
-                <label class="mdl-textfield__label" for="title">title</label>
-              </div>
-              </br>
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
-                <input class="mdl-textfield__input" type="text" id="color" name="color" required>
-                <label class="mdl-textfield__label" for="color">color</label>
+          {{#Answer}}
+        <form action="/answers/{{id}}/issues/{{issueId}}" method="post" id="comment-update-form">
+        <input type="hidden" name="_method" value="PUT" />
+            <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+              <div class="mdl-textfield mdl-js-textfield" style="width:100%">
+                <textarea class="mdl-textfield__input" style="color:#888" type="text" rows= "10" id="contents" name="contents" required></textarea>
+                <label class="mdl-textfield__label" for="contents">contents</label>
               </div>
             </div>
             <div class="mdl-color-text--primary-contrast mdl-card__supporting-text">
               <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit" style="margin:10px auto; width:200px;">Submit</button>
             </div>
+          </form>
+          {{/Answer}}
           </div>
         </div>
-        </form>
         <footer class="mdl-mini-footer">
           <div class="mdl-mini-footer--left-section">
             <div class="mdl-logo mdl-color-text--grey-600">Proudly powered by <a href="https://github.com/Byeol">Byeol</a></div>

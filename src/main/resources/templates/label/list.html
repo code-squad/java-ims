@@ -23,10 +23,17 @@
         <div class="mdl-layout-spacer"></div>
         <!-- Tabs -->
 		<nav class="mdl-navigation">
-			<a class="mdl-navigation__link" href="/">Issues</a>
-			<a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-			<a class="mdl-navigation__link" href="/user/login.html">login</a>
-			<a class="mdl-navigation__link" href="/user/join.html">join</a>
+          <a class="mdl-navigation__link" href="/issues">Issues</a>
+          <a class="mdl-navigation__link" href="/milestones">Milestones</a>
+          <a class="mdl-navigation__link" href="/labels">Labels</a>
+          {{^loginedUser}}
+          <a class="mdl-navigation__link" href="/users/loginForm.html">login</a>
+          <a class="mdl-navigation__link" href="/users/form.html">join</a>
+          {{/loginedUser}}
+          {{#loginedUser}}
+          <a class="mdl-navigation__link" href="/users/loginForm.html">logout</a>
+          <a class="mdl-navigation__link" href="/user/updateForm.html">myInfo</a>
+          {{/loginedUser}}
 		</nav>
       </div>
     </header>
@@ -36,7 +43,7 @@
             <div class="mdl-card__title mdl-shadow--2dp" style="height:80px;">
               <h2 class="mdl-card__title-text mdl-color-text--grey-800">Milestones</h2>
             </div>
-            <a href="/milestone/form.html" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored show-modal">
+            <a href="/labels/form" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored show-modal">
               <i class="material-icons">add</i>
             </a>
             <div class="mdl-card__supporting-text">
@@ -47,31 +54,11 @@
                   <span class="mdl-list__item-primary-content">
                     {{title}}  {{color}}
                   </span>
-                  <span class="mdl-list__item-secondary-content">
-                    <span class="progress-bar">
-                      <span class="progress" style="width:200.0px"> </span>
-                    </span>
-                    <span class="mdl-list__item-sub-title" style="font-size:13px; color:#888">
-                    2 Open 1 Closed
-                    </span>
-                  </span>
-                  <form action="/issues" method="post">
-                  <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit" style="margin:10px auto; width:200px;">Delete</button>
                 </form>
                 </li>
                
 			  {{/Labels}}"
-             
 
-                  <span class="mdl-list__item-secondary-content">
-                    <span class="progress-bar">
-                      <span class="progress" style="width:150.0px"> </span>
-                    </span>
-                    <span class="mdl-list__item-sub-title" style="font-size:13px; color:#888">
-                    1 Open 1 Closed
-                    </span>
-                  </span>
-                </li>
                 
                
               </ul>
