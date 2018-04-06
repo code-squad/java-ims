@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquad.UnAuthenticationException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.Milestone;
+import codesquad.domain.MilestoneRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.web.IssueController;
@@ -20,6 +22,9 @@ public class IssueService {
 
 	@Resource
 	private IssueRepository issueRepository;
+	
+	@Resource
+	private MilestoneService milestoneService;
 
 	public Issue add(User loginUser, IssueDto issue) {
 		log.debug("Issue service (add) in");
@@ -45,6 +50,12 @@ public class IssueService {
 		log.debug("Issue service (delete) in");
 		Issue issue = issueRepository.findOne(id);
 		issue.delete(loginUser);
+	}
+	
+	@Transactional
+	public void registerMilestone(long issueId, long milestoneId) {
+		Issue issue = issueRepository.findOne(issueId);
+		issue.registerMilestone(milestoneService.addIssueThenReturnMilestone(issue, milestoneId));
 	}
 
 }

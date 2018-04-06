@@ -1,9 +1,15 @@
 package codesquad.domain;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -22,6 +28,9 @@ public class Milestone {
 	@Column(nullable = false)
 	private String endDate;
 	
+	@OneToMany
+	private List<Issue> issues;
+	
 	private boolean deleted = false;
 
 	public Milestone() {
@@ -31,6 +40,11 @@ public class Milestone {
 		this.subject = subject;
 		this.startDate = startDate;
 		this.endDate = endDate;
+	}
+	
+	public Milestone addIssue(Issue issue) {
+		issues.add(issue);
+		return this;
 	}
 	
 	public boolean isDeleted() {
@@ -68,6 +82,23 @@ public class Milestone {
 
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
+	}
+	
+	public List<Issue> getIssues() {
+		return issues;
+	}
+	
+	public Issue getIssue(long id) {
+		for (Issue issue : issues) {
+			if (issue.getId() == id) {
+				return issue;
+			}
+		}
+		return null;
+	}
+
+	public void setIssues(List<Issue> issues) {
+		this.issues = issues;
 	}
 
 	//toString method

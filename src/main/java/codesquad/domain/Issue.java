@@ -33,10 +33,9 @@ public class Issue {
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_writer"))
 	private User writer;
 	
-	@OneToMany
-	@Column(nullable = false, length = 300)
-	private List<String> commentList;
-	
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "issue_milestone"))
+	private Milestone milestone;
 
 	private boolean deleted = false;
 
@@ -51,6 +50,10 @@ public class Issue {
 	public Issue writeBy(User loginUser) {
 		this.writer = loginUser;
 		return this;
+	}
+	
+	public void registerMilestone(Milestone milestone) {
+		this.milestone = milestone;
 	}
 	
 	public Issue update(User loginUser, String newComment) throws UnAuthenticationException {
@@ -100,4 +103,13 @@ public class Issue {
 	public void setWriter(User writer) {
 		this.writer = writer;
 	}
+
+	public Milestone getMilestone() {
+		return milestone;
+	}
+
+	public void setMilestone(Milestone milestone) {
+		this.milestone = milestone;
+	}
+	
 }

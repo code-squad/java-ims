@@ -98,8 +98,9 @@ public class IssueController {
 		return "redirect:/";
 	}
 	
-	@PostMapping("/{id}/addComment")
-	public String addComment(@PathVariable long id, String comment) {
-		
+	@GetMapping("/{id}/registerMilestone/{milestoneId}")
+	public String addComment(@PathVariable long id, @PathVariable long milestoneId) {
+		issueService.registerMilestone(id, milestoneId);
+		return "redirect:/";
 	}
 }
