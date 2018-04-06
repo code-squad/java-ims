@@ -82,13 +82,5 @@ public class UserController {
 		userService.update(loginUser, id, target);
 		return "redirect:/users";
 	}
-	
-	@GetMapping("/{userId}/issues/{id}")
-	public String addAssignee(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId) {
-		userService.addAssignee(loginUser, issueService.findById(id), userId);
-		return String.format("redirect:/issues/%d", id);
-	}
-	
-	
 
 }

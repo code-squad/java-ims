@@ -37,6 +37,11 @@ public class LabelController {
 		model.addAttribute("Labels", labelService.findLabelAll());
 		return "/label/list";
 	}
+
+	@GetMapping("/form")
+	public String form(@LoginUser User loginUser){
+		return "/label/form";
+	}
 	
 	@PutMapping("/{id}")
 	public String update(@LoginUser User loginUser,@PathVariable long id, Label label) {
@@ -49,14 +54,4 @@ public class LabelController {
 		labelService.delete(id);
 		return "redirect:/labels";
 	}
-
-	@GetMapping("/{labelId}/issues/{id}")
-	public String addLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
-		labelService.addLabel(issueService.findById(id), labelId);
-		return String.format("redirect:/issues/%d", id);
-	}
-
-	
-	
-	
 }

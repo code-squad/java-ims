@@ -33,9 +33,6 @@ public class UserService {
 
     public User findById(User loginUser, long id) {
         User user = userRepository.findOne(id);
-        if (!user.equals(loginUser)) {
-            throw new UnAuthorizedException();
-        }
         return user;
     }
 
@@ -58,7 +55,9 @@ public class UserService {
     }
 
     @Transactional
-	public void addAssignee(User loginUser, Issue issue, long userId) {
-		issue.setAssignee(findById(loginUser, userId));
+	public User addAssignee(User loginUser, Issue issue, long userId) {
+        User user = findById(loginUser, userId);
+		issue.setAssignee(user);
+		return user;
 	}
 }

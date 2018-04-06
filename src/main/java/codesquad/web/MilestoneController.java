@@ -51,11 +51,4 @@ public class MilestoneController {
 	public String form(@LoginUser User loginUser) {
 		return "/milestone/form";
 	}
-
-	@GetMapping("/{milestoneId}/issues/{id}")
-	public String addMilestone(@LoginUser User loginUser,  @PathVariable long id, @PathVariable long milestoneId) {
-		milestoneService.addMilestone(issueService.findById(id), milestoneId);
-		return String.format("redirect:/issues/%d", id);
-	}
-
 }
