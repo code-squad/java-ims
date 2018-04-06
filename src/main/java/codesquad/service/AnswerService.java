@@ -24,10 +24,10 @@ public class AnswerService {
 		return answerRepository.save(answer);
 	}
 
+	@Transactional
 	public void update(long id, String contents, User loginUser) {
 		Answer oldAnswer = findById(id);
 		oldAnswer.update(contents, loginUser);
-		answerRepository.save(oldAnswer);
 	}
 
 	@Transactional

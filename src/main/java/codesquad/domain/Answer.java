@@ -76,10 +76,4 @@ public class Answer extends AbstractEntity {
 			throw new IllegalStateException("자신의 답변만 수정할 수 있습니다");
 		deleted = true;
 	}
-	
-	
-	
-	
-	
-	
 }
