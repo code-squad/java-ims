@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,19 +16,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.UnAuthenticationException;
 import codesquad.domain.Issue;
+import codesquad.domain.MilestoneRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.LabelService;
+import codesquad.service.UserService;
 
 @Controller
 @RequestMapping("/issue")
 public class IssueController {
 	private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
+	@Autowired
+	private MilestoneRepository milestoneRepository;
+	
 	@Resource(name = "issueService")
 	private IssueService issueService;
-
+	
+	@Resource(name = "userService")
+	private UserService userService;
+	
+	@Resource(name = "labelService")
+	private LabelService labelService;
+	
 	@GetMapping("/form")
 	public String form() {
 		return "/issue/form";
@@ -48,6 +61,9 @@ public class IssueController {
 		log.debug("issue is " + issue.toString());
 		
 		model.addAttribute(issue);
+		model.addAttribute("milestones", milestoneRepository.findByDeleted(false));
+		model.addAttribute("users", userService.findAll());
+		model.addAttribute("labels", labelService.findAll());
 		return "/issue/show";
 	}
 	
@@ -90,5 +106,24 @@ public class IssueController {
 			return "redirect:/issue/{id}/updateFail";
 		}
 		return "redirect:/";
+	}
+	
+	@GetMapping("/{id}/milestones/{milestoneId}")
+	public String registerMilestone(@PathVariable long id, @PathVariable long milestoneId) {
+		log.debug("issue id : " + id + " | milestone id : " + milestoneId);
+		issueService.registerMilestone(id, milestoneId);
+		return String.format("redirect:/issue/%d", id);
+	}
+	
+	@GetMapping("/{id}/setAssignee/{userId}")
+	public String setAssignee(@PathVariable long id, @PathVariable long userId, @LoginUser User loginUser) {
+		issueService.makeManager(id, userId, loginUser);
+		return String.format("redirect:/issue/%d", id);
+	}
+	
+	@GetMapping("/{id}/setLabel/{labelId}")
+	public String updateLabel(@PathVariable long id, @PathVariable long labelId, @LoginUser User loginUser) {
+		issueService.updateLabel(loginUser, id, labelId);
+		return String.format("redirect:/issue/%d", id);
 	}
 }
