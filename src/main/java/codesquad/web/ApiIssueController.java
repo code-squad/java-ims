@@ -38,7 +38,7 @@ public class ApiIssueController {
 	@Resource(name = "milestoneService")
 	private MilestoneService milestoneService;
 	
-	@PostMapping("/newIssue")
+	@PostMapping("")
 	public ResponseEntity<Void> create(@LoginUser User loginUser, @Valid @RequestBody IssueDto issueDto) {
 		log.debug("Api Issue Controller (create) in!");
 		issueService.add(loginUser, issueDto);
@@ -80,7 +80,7 @@ public class ApiIssueController {
 		}
 	}
 	
-	@GetMapping("/{id}/registerMilestone/{milestoneId}")
+	@GetMapping("/{id}/milestones/{milestoneId}")
 	public IssueDto registerMilestone(@PathVariable long id, @PathVariable long milestoneId) {
 		log.debug("Api Issue Controller (registerMilestone) in!");
 		issueService.registerMilestone(id, milestoneId);

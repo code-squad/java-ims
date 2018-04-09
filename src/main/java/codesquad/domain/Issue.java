@@ -67,8 +67,7 @@ public class Issue {
 	}
 	
 	public void registerMilestone(Milestone milestone) {
-		System.out.println("FUCK333");
-		if (milestone.getIssues().contains(this)) {
+		if (milestone.checkContain(this)) {
 			this.milestone = milestone;
 		}
 	}
@@ -166,9 +165,4 @@ public class Issue {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-	
 }

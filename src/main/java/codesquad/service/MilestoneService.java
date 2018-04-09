@@ -20,17 +20,20 @@ public class MilestoneService {
 	
 	private static final Logger log = LoggerFactory.getLogger(MilestoneController.class);
 	
-	public void add(User loginUser, String subject, String startDate, String endDate) {
+	public void add(User loginUser, Milestone milestone) {
 		log.debug("milestone service in.");
-		Milestone newMilestone = new Milestone(subject, startDate, endDate);
-		log.debug("new milestone is " + newMilestone.toString());
-		milestoneRepository.save(newMilestone);
+		log.debug("new milestone is " + milestone.toString());
+		milestoneRepository.save(milestone);
 		log.debug("repository save complete.");
 	}
 	
 	public Milestone findById(long id) {
 		log.debug("milestone service (find by id) in");
 		return milestoneRepository.findOne(id);
+	}
+	
+	public  Iterable<Milestone> findNotDeleted() {
+		return  milestoneRepository.findByDeleted(false);
 	}
 	
 	@Transactional

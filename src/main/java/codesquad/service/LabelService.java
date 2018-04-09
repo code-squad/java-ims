@@ -30,6 +30,10 @@ public class LabelService {
 		return labelRepository.findAll();
 	}
 	
+	public Iterable<Label> findNotDeleted() {
+		return labelRepository.findByDeleted(false);
+	}
+	
 	public void create(User loginUser, String subject) {
 		log.debug("Label service(create) in");
 		Label label = new Label(subject);

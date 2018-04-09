@@ -49,9 +49,15 @@ public class Milestone {
 	}
 	
 	public Milestone deleteIssue(Issue issue) {
-		System.out.println("FUCK222");
 		issues.remove(issue);
 		return this;
+	}
+	
+	public boolean checkContain(Issue issue) {
+		if (issues.contains(issue)) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean isDeleted() {

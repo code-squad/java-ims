@@ -4,7 +4,6 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.UnAuthenticationException;
 import codesquad.domain.Label;
-import codesquad.domain.LabelRepository;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.LabelService;
@@ -25,9 +23,6 @@ import codesquad.service.LabelService;
 @RequestMapping("/label")
 public class LabelController {
 	private static final Logger log = LoggerFactory.getLogger(MilestoneController.class);
-
-	@Autowired
-	private LabelRepository labelRepository;
 	
 	@Resource (name = "labelService")
 	private LabelService labelService;
@@ -35,13 +30,13 @@ public class LabelController {
 	@GetMapping("")
 	public String list(Model model) {
 		log.debug("label controller(list) in.");
-		model.addAttribute("labels", labelRepository.findByDeleted(false));
+		model.addAttribute("labels", labelService.findNotDeleted());
 		return "/label/list";
 	}
 	
 	@GetMapping("/{id}")
 	public String show(@PathVariable long id, Model model) {
-		Label label = labelRepository.findOne(id);
+		Label label = labelService.findOne(id);
 		model.addAttribute("label", label);
 		return "/label/show";
 	}
@@ -59,7 +54,7 @@ public class LabelController {
 	
 	@GetMapping("/{id}/updateLabel")
 	public String updateForm(@PathVariable long id, Model model) {
-		Label label = labelRepository.findOne(id);
+		Label label = labelService.findOne(id);
 		model.addAttribute("label", label);
 		return "/label/labelUpdateForm";
 	}

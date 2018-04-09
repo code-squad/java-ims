@@ -95,8 +95,4 @@ public class Label {
 	public User getWriter() {
 		return writer;
 	}
-
-	public void setWriter(User writer) {
-		this.writer = writer;
-	}
 }

@@ -26,14 +26,14 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 	@Test
 	public void create_login() {
 		IssueDto issue = new IssueDto("test1", "test1 comment");
-		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/api/issue/newIssue", issue, String.class);
+		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/api/issue", issue, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 	}
 
 	@Test
 	public void create_no_login() {
 		IssueDto issue = new IssueDto("test2", "test2 comment");
-		ResponseEntity<String> response = template().postForEntity("/api/issue/newIssue", issue, String.class);
+		ResponseEntity<String> response = template().postForEntity("/api/issue", issue, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
 
@@ -41,7 +41,7 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 	public void show() {
 		//make issue
 		IssueDto issue = new IssueDto("test3", "test3 comment");
-		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/api/issue/newIssue", issue, String.class);
+		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/api/issue", issue, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 
 		//show test
@@ -55,7 +55,7 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 		User user = userRepository.findOne((long) 1);
 		//make issue
 		IssueDto issue = new IssueDto("test4", "test4 comment");
-		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue/newIssue", issue, String.class);
+		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue", issue, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		Issue dbIssue = issueRepository.findBySubject("test4");
 		
@@ -73,7 +73,7 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 		User user = userRepository.findOne((long) 1);
 		//make issue
 		IssueDto issue = new IssueDto("test5", "test5 comment");
-		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue/newIssue", issue, String.class);
+		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue", issue, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		Issue dbIssue = issueRepository.findBySubject("test5");
 		
@@ -92,7 +92,7 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 		User user = userRepository.findOne((long) 2);
 		//make issue
 		IssueDto issue = new IssueDto("test6", "test6 comment");
-		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue/newIssue", issue, String.class);
+		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue", issue, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		Issue dbIssue = issueRepository.findBySubject("test6");
 		
@@ -111,7 +111,7 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 		User user = userRepository.findOne((long) 1);
 		//make issue
 		IssueDto issue = new IssueDto("test7", "test7 comment");
-		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue/newIssue", issue, String.class);
+		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue", issue, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		Issue dbIssue = issueRepository.findBySubject("test7");
 		
@@ -126,7 +126,7 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 		User user = userRepository.findOne((long) 1);
 		//make issue
 		IssueDto issue = new IssueDto("test8", "test8 comment");
-		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue/newIssue", issue, String.class);
+		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue", issue, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		Issue dbIssue = issueRepository.findBySubject("test8");
 		
@@ -141,7 +141,7 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 		User user = userRepository.findOne((long) 2);
 		//make issue
 		IssueDto issue = new IssueDto("test9", "test9 comment");
-		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue/newIssue", issue, String.class);
+		ResponseEntity<String> response = basicAuthTemplate(user).postForEntity("/api/issue", issue, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		Issue dbIssue = issueRepository.findBySubject("test9");
 		

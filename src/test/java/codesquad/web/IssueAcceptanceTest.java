@@ -221,10 +221,9 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		long milestoneId = milestoneRepository.findBySubject("testMilestone1").getId();
 
 		//register milestone test
-		ResponseEntity<String> totalResponse = basicAuthTemplate().getForEntity(String.format("/issue/%d/registerMilestone/%d", issueId, milestoneId), String.class);
+		ResponseEntity<String> totalResponse = basicAuthTemplate().getForEntity(String.format("/issue/%d/milestones/%d", issueId, milestoneId), String.class);
 		assertThat(totalResponse.getStatusCode(), is(HttpStatus.OK));
 		assertEquals(issueRepository.findBySubject("milestone issue").getMilestone().getId(), milestoneId);
-		
 	}
 
 	@Test
