@@ -22,7 +22,7 @@ public class Label {
 	
 	@Size(min = 3, max = 100)
 	@Column(unique = true, nullable = false, length = 30)
-	private String level;
+	private String subject;
 	
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "label_writer"))
@@ -36,8 +36,15 @@ public class Label {
 	public Label() {
 	}
 	
-	public Label(String level) {
-		this.level = level;
+	public Label(String subject) {
+		this.subject = subject;
+	}
+	
+	public void update(User loginUser, String subject) throws UnAuthenticationException {
+		if (!this.isOwner(loginUser)) {
+			throw new UnAuthenticationException();
+		}
+		this.subject = subject;
 	}
 	
 	public void delete(User loginUser) throws UnAuthenticationException {
@@ -69,12 +76,12 @@ public class Label {
 		this.id = id;
 	}
 
-	public String getLevel() {
-		return level;
+	public String getSubject() {
+		return subject;
 	}
 
-	public void setLevel(String level) {
-		this.level = level;
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
 	public boolean isDeleted() {

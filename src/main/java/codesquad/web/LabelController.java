@@ -10,8 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import codesquad.UnAuthenticationException;
 import codesquad.domain.Label;
 import codesquad.domain.LabelRepository;
 import codesquad.domain.User;
@@ -49,8 +51,26 @@ public class LabelController {
 	}
 	
 	@PostMapping("/newLabel")
-	public String create(@LoginUser User loginUser, String level) {
-		labelService.create(loginUser, level);
+	public String create(@LoginUser User loginUser, String subject) {
+		labelService.create(loginUser, subject);
 		return "redirect:/label";
+	}
+	
+	@GetMapping("/{id}/updateLabel")
+	public String updateForm(@PathVariable long id, Model model) {
+		Label label = labelRepository.findOne(id);
+		model.addAttribute("label", label);
+		return "/label/labelUpdateForm";
+	}
+	
+	@PutMapping("/{id}")
+	public String update(@LoginUser User loginUser, @PathVariable long id, String subject) {
+		try {
+			labelService.update(loginUser, id, subject);
+		} catch (UnAuthenticationException e) {
+			e.printStackTrace();
+			log.debug(e.getMessage());
+		}
+		return "redirect:/label/{id}";
 	}
 }
