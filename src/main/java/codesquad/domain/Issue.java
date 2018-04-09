@@ -38,9 +38,9 @@ public class Issue {
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_milestone"))
 	private Milestone milestone;
 	
-	@OneToOne
+	@OneToMany
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_manager"))
-	private User manager;
+	private List<User> manager;
 	
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_label"))
@@ -57,12 +57,14 @@ public class Issue {
 	}
 	
 	public void managedBy(User manager) {
-		this.manager = manager;
+		if (this.isManager(manager)) {
+			return;
+		}
+		this.manager.add(manager);
 	}
 
 	public Issue writeBy(User loginUser) {
 		this.writer = loginUser;
-		this.manager = loginUser;
 		return this;
 	}
 	
@@ -98,7 +100,7 @@ public class Issue {
 	}
 	
 	public boolean isManager(User loginUser) {
-		return this.manager.equals(loginUser);
+		return this.manager.contains(loginUser);
 	}
 	
 	public boolean isDeleted() {
@@ -138,12 +140,8 @@ public class Issue {
 		this.milestone = milestone;
 	}
 
-	public User getManager() {
+	public List<User> getManager() {
 		return manager;
-	}
-
-	public void setManager(User manager) {
-		this.manager = manager;
 	}
 
 	public Label getLabel() {

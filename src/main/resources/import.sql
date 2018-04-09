@@ -13,6 +13,6 @@ INSERT INTO label (id, deleted, subject, writer_id) values (3, false, 'label3 - 
 INSERT INTO label (id, deleted, subject, writer_id) values (4, false, 'label4 - Working', 1);
 INSERT INTO label (id, deleted, subject, writer_id) values (5, false, 'label5 - InReview', 1);
 
-INSERT INTO issue (id, comment, deleted, label_id, subject, manager_id, milestone_id, writer_id) values (1, 'test1 comment.', false, 1, '-=-test1-=-', null, null, 1);
-INSERT INTO issue (id, comment, deleted, label_id, subject, manager_id, milestone_id, writer_id) values (2, 'test2 comment.', false, 2, '-=-test2-=-', null, null, 2);
-INSERT INTO issue (id, comment, deleted, label_id, subject, manager_id, milestone_id, writer_id) values (3, 'test3 comment.', false, 3, '-=-test3-=-', null, null, 3);
+INSERT INTO issue (id, comment, deleted, label_id, subject, milestone_id, writer_id) values (1, 'test1 comment.', false, 1, '-=-test1-=-', null, 1);
+INSERT INTO issue (id, comment, deleted, label_id, subject, milestone_id, writer_id) values (2, 'test2 comment.', false, 2, '-=-test2-=-', null, 2);
+INSERT INTO issue (id, comment, deleted, label_id, subject, milestone_id, writer_id) values (3, 'test3 comment.', false, 3, '-=-test3-=-', null, 3);
