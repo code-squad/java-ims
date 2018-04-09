@@ -109,14 +109,13 @@ public class IssueController {
 	}
 	
 	@GetMapping("/{id}/registerMilestone/{milestoneId}")
-	public String addComment(@PathVariable long id, @PathVariable long milestoneId) {
+	public String registerMilestone(@PathVariable long id, @PathVariable long milestoneId) {
 		issueService.registerMilestone(id, milestoneId);
 		return String.format("redirect:/issue/%d", id);
 	}
 	
 	@GetMapping("/{id}/setAssignee/{userId}")
-	public String makeManager(@PathVariable long id, @PathVariable long userId, @LoginUser User loginUser) {
-		System.out.println("FUCK");
+	public String setAssignee(@PathVariable long id, @PathVariable long userId, @LoginUser User loginUser) {
 		issueService.makeManager(id, userId, loginUser);
 		return String.format("redirect:/issue/%d", id);
 	}

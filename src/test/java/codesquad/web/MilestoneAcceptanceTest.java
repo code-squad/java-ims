@@ -51,7 +51,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 	public void create_login() {
 		User user = userRepository.findOne((long) 1);
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-				.addParameter("subject", "testMilestone.")
+				.addParameter("subject", "testMilestone1")
 				.addParameter("startDate", "2018-01-01-12:00:00")
 				.addParameter("endDate", "2018-02-01-12:00:00").build();
 
@@ -59,7 +59,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 
-		Milestone dbMilestone = milestoneRepository.findBySubject("testMilestone.");
+		Milestone dbMilestone = milestoneRepository.findBySubject("testMilestone1");
 		assertNotNull(dbMilestone);
 		assertEquals(dbMilestone.getStartDate(), "2018-01-01-12:00:00");
 		assertEquals(dbMilestone.getEndDate(), "2018-02-01-12:00:00");
@@ -68,30 +68,14 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 	@Test
 	public void create_no_login() {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-				.addParameter("subject", "testMilestone.")
+				.addParameter("subject", "testMilestone2")
 				.addParameter("startDate", "2018-01-01-12:00:00")
 				.addParameter("endDate", "2018-02-01-12:00:00").build();
 
 		ResponseEntity<String> response = template().postForEntity("/milestone/newMilestone", request, String.class);
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
-		assertNull(milestoneRepository.findBySubject("testMilestone."));
-	}
-
-	@Test
-	public void show() {
-		//make milestone
-		User user = userRepository.findOne((long) 1);
-		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-				.addParameter("subject", "testMilestone.")
-				.addParameter("startDate", "2018-01-01-12:00:00")
-				.addParameter("endDate", "2018-02-01-12:00:00").build();
-		basicAuthTemplate(user).postForEntity("/milestone/newMilestone", request, String.class);
-		Milestone dbMilestone = milestoneRepository.findBySubject("testMilestone.");
-
-		//show test
-		ResponseEntity<String> showResponse = template().getForEntity(String.format("/milestone/%d", dbMilestone.getId()), String.class);
-		assertThat(showResponse.getStatusCode(), is(HttpStatus.OK));
+		assertNull(milestoneRepository.findBySubject("testMilestone2"));
 	}
 
 	@Test
@@ -110,11 +94,11 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 
 		//make milestone
 		HttpEntity<MultiValueMap<String, Object>> request2 = HtmlFormDataBuilder.urlEncodedForm()
-				.addParameter("subject", "testMilestone.")
+				.addParameter("subject", "testMilestone3")
 				.addParameter("startDate", "2018-01-01-12:00:00")
 				.addParameter("endDate", "2018-02-01-12:00:00").build();
 		basicAuthTemplate(user).postForEntity("/milestone/newMilestone", request2, String.class);
-		Milestone dbMilestone = milestoneRepository.findBySubject("testMilestone.");
+		Milestone dbMilestone = milestoneRepository.findBySubject("testMilestone3");
 
 		//addIssueTest
 		ResponseEntity<String> totalResponse = basicAuthTemplate(user).getForEntity(String.format("/issue/%d/registerMilestone/%d", issue.getId(), dbMilestone.getId()), String.class);

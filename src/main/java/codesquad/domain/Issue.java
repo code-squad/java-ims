@@ -67,7 +67,9 @@ public class Issue {
 	}
 	
 	public void registerMilestone(Milestone milestone) {
-		this.milestone = milestone;
+		if (milestone.getIssues().contains(this)) {
+			this.milestone = milestone;
+		}
 	}
 	
 	public Issue update(User loginUser, String newComment) throws UnAuthenticationException {

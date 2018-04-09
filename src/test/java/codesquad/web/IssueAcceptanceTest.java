@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -17,7 +16,7 @@ import org.springframework.util.MultiValueMap;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
-import codesquad.domain.Milestone;
+import codesquad.domain.MilestoneRepository;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import support.test.BasicAuthAcceptanceTest;
@@ -31,6 +30,9 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
 	@Resource
 	private UserRepository userRepository;
+
+	@Resource
+	private MilestoneRepository milestoneRepository;
 
 	@Test
 	public void form() {
@@ -166,13 +168,13 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		Issue issue = issueRepository.findBySubject("delete-login-test");
 		log.debug("issue is " + issue.toString());
 		assertFalse(issue.isDeleted());
-		
+
 		//delete test
 		basicAuthTemplate.delete(String.format("/issue/%d/deleteIssue", issue.getId()));
 		Issue dbIssue = issueRepository.findBySubject("delete-login-test");
 		assertTrue(dbIssue.isDeleted());
 	}
-	
+
 	@Test
 	public void delete_no_login() {
 		//make issue
@@ -181,23 +183,50 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 				.addParameter("comment", "this is delete test.").build();
 		ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issue/newIssue", request1, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-		
+
 		Issue issue = issueRepository.findBySubject("delete-login-test2");
 		log.debug("issue is " + issue.toString());
 		assertFalse(issue.isDeleted());
-		
+
 		//delete test (guest delete test)
 		template.delete(String.format("/issue/%d/deleteIssue", issue.getId()));
 		Issue dbIssue = issueRepository.findBySubject("delete-login-test2");
 		assertFalse(dbIssue.isDeleted());
-		
+
 		//delete test (another user delete test)
 		User user = userRepository.findOne((long) 2);
 		basicAuthTemplate(user).delete(String.format("/issue/%d/deleteIssue", issue.getId()));
 		Issue dbIssue2 = issueRepository.findBySubject("delete-login-test2");
 		assertFalse(dbIssue2.isDeleted());
 	}
-	
+
+	@Test
+	public void registerMilestone() {
+		//make issue
+		HttpEntity<MultiValueMap<String, Object>> request1 = HtmlFormDataBuilder.urlEncodedForm()
+				.addParameter("subject", "milestone issue")
+				.addParameter("comment", "this is test.").build();
+		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/newIssue", request1, String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+		long issueId = issueRepository.findBySubject("milestone issue").getId();
+
+		//make milestone
+		HttpEntity<MultiValueMap<String, Object>> request2 = HtmlFormDataBuilder.urlEncodedForm()
+				.addParameter("subject", "testMilestone1")
+				.addParameter("startDate", "2018-01-01-12:00:00")
+				.addParameter("endDate", "2018-02-01-12:00:00").build();
+
+		ResponseEntity<String> milestoneResponse = basicAuthTemplate().postForEntity("/milestone/newMilestone", request2, String.class);
+		assertThat(milestoneResponse.getStatusCode(), is(HttpStatus.FOUND));
+		long milestoneId = milestoneRepository.findBySubject("testMilestone1").getId();
+
+		//register milestone test
+		ResponseEntity<String> totalResponse = basicAuthTemplate().getForEntity(String.format("/issue/%d/registerMilestone/%d", issueId, milestoneId), String.class);
+		assertThat(totalResponse.getStatusCode(), is(HttpStatus.OK));
+		assertEquals(issueRepository.findBySubject("milestone issue").getMilestone().getId(), milestoneId);
+		
+	}
+
 	@Test
 	public void makeManager() {
 		//make issue
@@ -212,7 +241,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
 		//makeManager test
 		ResponseEntity<String> totalResponse = basicAuthTemplate().getForEntity(String.format("/issue/%d/setAssignee/%d", issue.getId(), (long) 2), String.class);
-		
+
 		assertThat(totalResponse.getStatusCode(), is(HttpStatus.OK));
 		assertEquals(issueRepository.findBySubject("testIssue").getManager(), userRepository.findOne((long) 2));
 	}
