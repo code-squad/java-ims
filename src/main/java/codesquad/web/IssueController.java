@@ -110,6 +110,7 @@ public class IssueController {
 	
 	@GetMapping("/{id}/registerMilestone/{milestoneId}")
 	public String registerMilestone(@PathVariable long id, @PathVariable long milestoneId) {
+		log.debug("issue id : " + id + " | milestone id : " + milestoneId);
 		issueService.registerMilestone(id, milestoneId);
 		return String.format("redirect:/issue/%d", id);
 	}

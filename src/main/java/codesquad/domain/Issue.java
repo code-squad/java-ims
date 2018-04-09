@@ -67,6 +67,7 @@ public class Issue {
 	}
 	
 	public void registerMilestone(Milestone milestone) {
+		System.out.println("FUCK333");
 		if (milestone.getIssues().contains(this)) {
 			this.milestone = milestone;
 		}
@@ -153,4 +154,21 @@ public class Issue {
 	public void setLabel(Label label) {
 		this.label = label;
 	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+	
 }

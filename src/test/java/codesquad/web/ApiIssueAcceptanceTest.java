@@ -150,5 +150,4 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 		basicAuthTemplate().delete(String.format("/api/issue/%d", dbIssue.getId()));
 		assertFalse(issueRepository.findBySubject("test9").isDeleted());
 	}
-
 }

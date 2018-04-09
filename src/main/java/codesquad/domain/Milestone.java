@@ -43,7 +43,14 @@ public class Milestone {
 	}
 	
 	public Milestone addIssue(Issue issue) {
+		System.out.println("FUCK111");
 		issues.add(issue);
+		return this;
+	}
+	
+	public Milestone deleteIssue(Issue issue) {
+		System.out.println("FUCK222");
+		issues.remove(issue);
 		return this;
 	}
 	
@@ -106,5 +113,8 @@ public class Milestone {
 	public String toString() {
 		return "Milestone [subject=" + subject + ", startDate=" + startDate + ", endDate=" + endDate + ", deleted=" + deleted + "]";
 	}
-	
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 }

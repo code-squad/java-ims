@@ -25,6 +25,7 @@ import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
 
 @RestController
 @RequestMapping("/api/issue")
@@ -33,6 +34,9 @@ public class ApiIssueController {
 	
 	@Resource(name = "issueService")
 	private IssueService issueService;
+	
+	@Resource(name = "milestoneService")
+	private MilestoneService milestoneService;
 	
 	@PostMapping("/newIssue")
 	public ResponseEntity<Void> create(@LoginUser User loginUser, @Valid @RequestBody IssueDto issueDto) {
@@ -74,5 +78,15 @@ public class ApiIssueController {
 			e.printStackTrace();
 			log.debug("error : " + e.getMessage());
 		}
+	}
+	
+	@GetMapping("/{id}/registerMilestone/{milestoneId}")
+	public IssueDto registerMilestone(@PathVariable long id, @PathVariable long milestoneId) {
+		log.debug("Api Issue Controller (registerMilestone) in!");
+		issueService.registerMilestone(id, milestoneId);
+		Issue issue = issueService.findById(id);
+		IssueDto issueDto = new IssueDto(issue.getSubject(), issue.getComment());
+		issueDto.setMilestone(milestoneService.findById(milestoneId));
+		return issueDto;
 	}
 }
