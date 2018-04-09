@@ -21,7 +21,7 @@ public class Label {
 	private long id;
 	
 	@Size(min = 3, max = 100)
-	@Column(unique = true, nullable = false, length = 30)
+	@Column(unique = false, nullable = false, length = 30)
 	private String subject;
 	
 	@ManyToOne

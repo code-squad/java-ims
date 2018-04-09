@@ -43,4 +43,11 @@ public class LabelService {
 		Label label = labelRepository.findOne(id);
 		label.update(loginUser, subject);
 	}
+	
+	@Transactional
+	public void delete(User loginUser, long id) throws UnAuthenticationException {
+		log.debug("Label service(delete) in");
+		Label label = labelRepository.findOne(id);
+		label.delete(loginUser);
+	}
 }
