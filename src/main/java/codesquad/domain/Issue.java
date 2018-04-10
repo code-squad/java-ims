@@ -55,6 +55,10 @@ public class Issue extends AbstractEntity {
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_answers"))
 	private List<Answer> answers;
 
+	@OneToMany
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_attachments"))
+	private  List<Attachment> attachments;
+
 	private boolean deleted = false;
 
 	public Issue() {
@@ -147,6 +151,13 @@ public class Issue extends AbstractEntity {
 
 	public void setAnswer(Answer answer) {
 		answers.add(answer);
+	}
+
+	public void setAttachments(Attachment attachment){
+		attachments.add(attachment);
+	}
+	public List<Attachment> getAttachments(){
+		return attachments;
 	}
 	
 

@@ -3,17 +3,9 @@ package codesquad.service;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
+import codesquad.domain.*;
 import org.springframework.stereotype.Service;
 
-import codesquad.domain.Answer;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.Label;
-import codesquad.domain.LabelRepository;
-import codesquad.domain.Milestone;
-import codesquad.domain.MilestoneRepository;
-import codesquad.domain.User;
-import codesquad.domain.UserRepository;
 import codesquad.dto.IssueDto;
 
 @Service
@@ -56,6 +48,10 @@ public class IssueService {
 		issue.setAnswer(answer);
 		issueRepository.save(issue);
 	}
-	
 
+	public void addAttachment(Attachment attachment, long id) {
+		Issue issue = findById(id);
+		issue.setAttachments(attachment);
+		issueRepository.save(issue);
+	}
 }

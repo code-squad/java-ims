@@ -12,10 +12,6 @@ import support.test.AcceptanceTest;
 public class ApiAnswerAcceptanceTest extends AcceptanceTest{
 	private static final Logger log = LoggerFactory.getLogger(ApiAnswerAcceptanceTest.class);
 
-		// o TODO Answer 생성 수정 삭제 만들기 - domain, repository, service
-		//   TODO api controller 모자른거 추가
-		//   TODO ajax를 이용해 답변 기능 먼저 만들기
-		//   TODO milestone, label, assignee 적용
 		
 	@Test
 	public void create() throws Exception {
