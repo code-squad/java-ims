@@ -4,8 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +42,7 @@ public abstract class AcceptanceTest {
     private AnswerRepository answerRepository;
     
     @Autowired
-    private IssueService issueService;
+    private IssueService  issueService;
     
     @Autowired
     private MilestoneService milestoneService;
@@ -78,6 +76,13 @@ public abstract class AcceptanceTest {
 				return answer.getId();
 		}
     	return null;
+    }
+
+    public ResponseEntity<String> createTestIssue(String title, String contents){
+        HtmlFormDataBuilder dataBuilder = HtmlFormDataBuilder.urlEncodedForm().addParameter("title", title)
+                .addParameter("contents", contents);
+        HttpEntity<MultiValueMap<String, Object>> request = dataBuilder.build();
+        return basicAuthTemplate().postForEntity("/issues", request, String.class);
     }
     
     public Milestone createTestMilestone(String title) throws ParseException {
