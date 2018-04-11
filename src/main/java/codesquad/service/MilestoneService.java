@@ -35,11 +35,4 @@ public class MilestoneService {
 	public  Iterable<Milestone> findNotDeleted() {
 		return  milestoneRepository.findByDeleted(false);
 	}
-	
-	@Transactional
-	public Milestone addIssueThenReturnMilestone(Issue issue, long milestoneId) {
-		log.debug("milestone service (addIssueThenReturnMilestone) in.");
-		Milestone milestone = this.findById(milestoneId);
-		return milestone.addIssue(issue);
-	}
 }

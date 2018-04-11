@@ -294,6 +294,7 @@ body .issues {
 a {
   text-decoration: none;
   color: inherit;
+  display: block;
 }
 
 .issues-card-wide.mdl-card {

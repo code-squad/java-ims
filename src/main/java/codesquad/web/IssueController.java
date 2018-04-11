@@ -86,13 +86,16 @@ public class IssueController {
 			model.addAttribute("issue", issueService.findById(id));
 			return "redirect:/issue/{id}/updateFail";
 		}
-		return "/issue/show";
+		return String.format("redirect:/issue/%d", id);
 	}
 	
 	@GetMapping("/{id}/updateFail")
 	public String updateFail(@PathVariable Long id, Model model) {
 		model.addAttribute("errorMessage", "수정 권한이 없습니다.");
 		model.addAttribute("issue", issueService.findById(id));
+		model.addAttribute("milestones", milestoneRepository.findByDeleted(false));
+		model.addAttribute("users", userService.findAll());
+		model.addAttribute("labels", labelService.findAll());
 		return "/issue/show";
 	}
 	
@@ -117,8 +120,13 @@ public class IssueController {
 	
 	@GetMapping("/{id}/setAssignee/{userId}")
 	public String setAssignee(@PathVariable long id, @PathVariable long userId, @LoginUser User loginUser) {
-		issueService.makeManager(id, userId, loginUser);
-		return String.format("redirect:/issue/%d", id);
+		try {
+			issueService.makeManager(id, userId, loginUser);
+			return String.format("redirect:/issue/%d", id);
+		} catch (UnAuthenticationException e) {
+			e.printStackTrace();
+		}
+		return String.format("/issue/%d/updateFail", id);
 	}
 	
 	@GetMapping("/{id}/setLabel/{labelId}")

@@ -12,25 +12,34 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 public class Milestone {
 	@Id
 	@GeneratedValue
+	@JsonProperty
 	private long id;
 	
 	@Size(min = 3, max = 50)
 	@Column(nullable = false)
+	@JsonProperty
 	private String subject;
 	
 	@Column(nullable = false)
+	@JsonProperty
 	private String startDate;
 	
 	@Column(nullable = false)
+	@JsonProperty
 	private String endDate;
 	
 	@OneToMany
+	@JsonIgnore
 	private List<Issue> issues;
 	
+	@JsonProperty
 	private boolean deleted = false;
 	
 	public Milestone() {
@@ -42,19 +51,13 @@ public class Milestone {
 		this.endDate = endDate;
 	}
 	
-	public Milestone addIssue(Issue issue) {
-		System.out.println("FUCK111");
-		issues.add(issue);
-		return this;
-	}
-	
 	public Milestone deleteIssue(Issue issue) {
 		issues.remove(issue);
 		return this;
 	}
 	
 	public boolean checkContain(Issue issue) {
-		if (issues.contains(issue)) {
+		if (this.issues.contains(issue)) {
 			return true;
 		}
 		return false;

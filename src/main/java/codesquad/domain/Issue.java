@@ -61,6 +61,10 @@ public class Issue {
 			return;
 		}
 		this.manager.add(manager);
+		
+		for (User user : this.manager) {
+			System.out.println("manager list : " + user);
+		}
 	}
 
 	public Issue writeBy(User loginUser) {
@@ -69,9 +73,7 @@ public class Issue {
 	}
 	
 	public void registerMilestone(Milestone milestone) {
-		if (milestone.checkContain(this)) {
-			this.milestone = milestone;
-		}
+		this.milestone = milestone;
 	}
 	
 	public Issue update(User loginUser, String newComment) throws UnAuthenticationException {
@@ -108,7 +110,7 @@ public class Issue {
 	}
 	
 	public IssueDto _toIssueDto() {
-		return new IssueDto(this.subject, this.comment);
+		return new IssueDto(this.subject, this.comment, this.writer, this.manager, this.label);
 	}
 
 	// === getter setter methods (behind) ===

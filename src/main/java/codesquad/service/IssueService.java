@@ -35,8 +35,7 @@ public class IssueService {
 	public Issue add(User loginUser, IssueDto issue) {
 		log.debug("Issue service (add) in");
 		Issue newIssue = issue._toIssue();
-		newIssue.writeBy(loginUser);
-		return issueRepository.save(newIssue);
+		return issueRepository.save(newIssue.writeBy(loginUser));
 	}
 
 	public Issue findById(long id) {
@@ -62,15 +61,19 @@ public class IssueService {
 	public void registerMilestone(long issueId, long milestoneId) {
 		log.debug("issueService (registerMilestone) in");
 		Issue issue = issueRepository.findOne(issueId);
-		issue.registerMilestone(milestoneService.addIssueThenReturnMilestone(issue, milestoneId));
+		issue.registerMilestone(milestoneService.findById(milestoneId));
 	}
-
+	
 	@Transactional
-	public void makeManager(long id, long userId, User loginUser) {
+	public void makeManager(long id, long userId, User loginUser) throws UnAuthenticationException {
 		log.debug("issue service(makeManager) in");
 		Issue issue = issueRepository.findOne(id);
-		User selectedUser = userService.findById(loginUser, userId);
-		issue.managedBy(selectedUser);
+		if (issue.isManager(loginUser) || issue.isOwner(loginUser)) {
+			User selectedUser = userService.findById(loginUser, userId);
+			issue.managedBy(selectedUser);
+			return;
+		}
+		throw new UnAuthenticationException();
 	}
 
 	@Transactional

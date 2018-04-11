@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -81,11 +82,11 @@ public class ApiIssueController {
 	}
 	
 	@GetMapping("/{id}/milestones/{milestoneId}")
-	public IssueDto registerMilestone(@PathVariable long id, @PathVariable long milestoneId) {
+	public IssueDto registerMilestone(@PathVariable long id, @PathVariable long milestoneId, Model model, @LoginUser User loginUser) {
 		log.debug("Api Issue Controller (registerMilestone) in!");
 		issueService.registerMilestone(id, milestoneId);
 		Issue issue = issueService.findById(id);
-		IssueDto issueDto = new IssueDto(issue.getSubject(), issue.getComment());
+		IssueDto issueDto = issue._toIssueDto();
 		issueDto.setMilestone(milestoneService.findById(milestoneId));
 		return issueDto;
 	}
