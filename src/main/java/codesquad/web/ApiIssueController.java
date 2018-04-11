@@ -84,10 +84,12 @@ public class ApiIssueController {
 	@GetMapping("/{id}/milestones/{milestoneId}")
 	public IssueDto registerMilestone(@PathVariable long id, @PathVariable long milestoneId, Model model, @LoginUser User loginUser) {
 		log.debug("Api Issue Controller (registerMilestone) in!");
-		issueService.registerMilestone(id, milestoneId);
+		issueService.registerMilestone(id, milestoneId, loginUser);
+		log.debug("wow!!");
 		
 		IssueDto issueDto = issueService.findById(id)._toIssueDto();
 		issueDto.setMilestone(milestoneService.findById(milestoneId));
+		log.debug("issueDto is " + issueDto.toString());
 		return issueDto;
 	}
 }

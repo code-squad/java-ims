@@ -60,7 +60,7 @@ public class IssueController {
 		Issue issue = issueService.findById(id);
 		log.debug("issue is " + issue.toString());
 		
-		model.addAttribute(issue);
+		model.addAttribute("issue", issue);
 		model.addAttribute("milestones", milestoneRepository.findByDeleted(false));
 		model.addAttribute("users", userService.findAll());
 		model.addAttribute("labels", labelService.findAll());
@@ -112,9 +112,9 @@ public class IssueController {
 	}
 	
 	@GetMapping("/{id}/milestones/{milestoneId}")
-	public String registerMilestone(@PathVariable long id, @PathVariable long milestoneId) {
+	public String registerMilestone(@PathVariable long id, @PathVariable long milestoneId, @LoginUser User loginUser) {
 		log.debug("issue id : " + id + " | milestone id : " + milestoneId);
-		issueService.registerMilestone(id, milestoneId);
+		issueService.registerMilestone(id, milestoneId, loginUser);
 		return String.format("redirect:/issue/%d", id);
 	}
 	

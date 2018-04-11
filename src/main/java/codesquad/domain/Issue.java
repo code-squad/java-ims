@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import codesquad.UnAuthenticationException;
 import codesquad.dto.IssueDto;
 
@@ -41,6 +43,10 @@ public class Issue {
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_manager"))
 	private List<User> manager;
 	
+	@OneToMany
+	@JoinColumn(foreignKey = @ForeignKey(name = "issue_answer"))
+	private List<Answer> comments;
+	
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_label"))
 	private Label label;
@@ -69,6 +75,15 @@ public class Issue {
 	
 	public void registerMilestone(Milestone milestone) {
 		this.milestone = milestone;
+	}
+	
+	public Answer addCommentsThatRegisteredMilestone(User loginUser) {
+		String comment = loginUser.getUserId() + " changed milestone to [ " + this.milestone.getSubject() + " ] on ";
+		Answer newAnswer = new Answer(comment);
+		newAnswer.writeBy(loginUser);
+		this.comments.add(newAnswer);
+		
+		return newAnswer;
 	}
 	
 	public Issue update(User loginUser, String newComment) throws UnAuthenticationException {
@@ -159,5 +174,13 @@ public class Issue {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public List<Answer> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Answer> comments) {
+		this.comments = comments;
 	}
 }

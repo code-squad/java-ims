@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.UnAuthenticationException;
+import codesquad.domain.Answer;
+import codesquad.domain.AnswerRepository;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
@@ -23,6 +25,9 @@ public class IssueService {
 
 	@Resource
 	private MilestoneService milestoneService;
+	
+	@Resource
+	private AnswerRepository answerRepository;
 
 	@Resource
 	private UserService userService;
@@ -56,10 +61,12 @@ public class IssueService {
 	}
 
 	@Transactional
-	public void registerMilestone(long issueId, long milestoneId) {
+	public void registerMilestone(long issueId, long milestoneId, User loginUser) {
 		log.debug("issueService (registerMilestone) in");
 		Issue issue = issueRepository.findOne(issueId);
 		issue.registerMilestone(milestoneService.findById(milestoneId));
+		Answer newAnswer = issue.addCommentsThatRegisteredMilestone(loginUser);
+		answerRepository.save(newAnswer);
 	}
 	
 	@Transactional
