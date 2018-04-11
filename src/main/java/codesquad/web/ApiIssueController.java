@@ -85,8 +85,8 @@ public class ApiIssueController {
 	public IssueDto registerMilestone(@PathVariable long id, @PathVariable long milestoneId, Model model, @LoginUser User loginUser) {
 		log.debug("Api Issue Controller (registerMilestone) in!");
 		issueService.registerMilestone(id, milestoneId);
-		Issue issue = issueService.findById(id);
-		IssueDto issueDto = issue._toIssueDto();
+		
+		IssueDto issueDto = issueService.findById(id)._toIssueDto();
 		issueDto.setMilestone(milestoneService.findById(milestoneId));
 		return issueDto;
 	}

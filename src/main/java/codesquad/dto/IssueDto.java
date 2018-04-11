@@ -1,5 +1,6 @@
 package codesquad.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -23,6 +24,7 @@ public class IssueDto {
 	private Milestone milestone;
 	private List<User> manager;
 	private Label label;
+	private ArrayList<String> comments;
 	private boolean deleted = false;
 
 	public IssueDto() {
@@ -50,6 +52,9 @@ public class IssueDto {
 		return subject;
 	}
 
+	public List<String> getComments() {
+		return comments;
+	}
 
 	public String getComment() {
 		return comment;

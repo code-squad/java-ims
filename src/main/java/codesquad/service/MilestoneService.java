@@ -1,13 +1,11 @@
 package codesquad.service;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import codesquad.domain.Issue;
 import codesquad.domain.Milestone;
 import codesquad.domain.MilestoneRepository;
 import codesquad.domain.User;

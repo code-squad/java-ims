@@ -115,7 +115,21 @@
 					</script>
 					
 					<div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments issue-comment issue-comments">
-
+					{{# issue }}
+					<!-- <script type="text/template" data-template="issue-comment"> -->
+ 						<div class="comment mdl-color-text--grey-700 issue-comment">
+							<header class="comment__header">
+								<img class="comment__avatar2" height="48" width="48"
+									src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140"
+									alt="javajigi">
+								<div class="comment__author">
+									<strong> <span>{{comment}}</span></strong>
+								</div>
+							</header>
+						</div>
+						<hr>
+					<!-- </script> -->
+					{{/ issue }}
 						<!-- comments start -->
 
 

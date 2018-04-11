@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.Size;
 
 import codesquad.UnAuthenticationException;
@@ -45,7 +44,7 @@ public class Issue {
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_label"))
 	private Label label;
-
+	
 	private boolean deleted = false;
 
 	public Issue() {
@@ -61,10 +60,6 @@ public class Issue {
 			return;
 		}
 		this.manager.add(manager);
-		
-		for (User user : this.manager) {
-			System.out.println("manager list : " + user);
-		}
 	}
 
 	public Issue writeBy(User loginUser) {
@@ -130,10 +125,6 @@ public class Issue {
 		return writer;
 	}
 	
-	public void setWriter(User writer) {
-		this.writer = writer;
-	}
-
 	public Milestone getMilestone() {
 		return milestone;
 	}
@@ -150,6 +141,10 @@ public class Issue {
 		return label;
 	}
 
+	public void setWriter(User writer) {
+		this.writer = writer;
+	}
+	
 	public void setLabel(Label label) {
 		this.label = label;
 	}

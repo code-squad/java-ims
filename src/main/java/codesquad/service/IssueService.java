@@ -10,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import codesquad.UnAuthenticationException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
-import codesquad.domain.Milestone;
-import codesquad.domain.MilestoneRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.web.IssueController;
@@ -81,6 +79,12 @@ public class IssueService {
 		log.debug("issue service(updateLabel) in");
 		Issue issue = issueRepository.findOne(id);
 		issue.updateLabel(loginUser, labelService.findOne(labelId));
+	}
+	
+	@Transactional
+	public void addComments(String comment) {
+		log.debug("issue service(addComments) in");
+		
 	}
 
 }
