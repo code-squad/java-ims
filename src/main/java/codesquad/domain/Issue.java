@@ -12,8 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import codesquad.UnAuthenticationException;
 import codesquad.dto.IssueDto;
 
@@ -94,10 +92,21 @@ public class Issue {
 		return this;
 	}
 	
-	public void updateLabel(User loginUser, Label label) {
+	public void updateLabel(User loginUser, Label label) throws UnAuthenticationException {
 		if (this.isManager(loginUser) || this.isOwner(loginUser)) {
 			this.label = label;
+			return;
 		}
+		throw new UnAuthenticationException();
+	}
+	
+	public Answer updateLabelThenMakeComment(User loginUser) {
+		String comment = loginUser.getUserId() + " add label to [ " + this.label.getSubject() + " ] on ";
+		Answer newAnswer = new Answer(comment);
+		newAnswer.writeBy(loginUser);
+		this.comments.add(newAnswer);
+		
+		return newAnswer;
 	}
 	
 	public void delete(User loginUser) throws UnAuthenticationException {

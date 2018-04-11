@@ -85,11 +85,22 @@ public class ApiIssueController {
 	public IssueDto registerMilestone(@PathVariable long id, @PathVariable long milestoneId, Model model, @LoginUser User loginUser) {
 		log.debug("Api Issue Controller (registerMilestone) in!");
 		issueService.registerMilestone(id, milestoneId, loginUser);
-		log.debug("wow!!");
 		
 		IssueDto issueDto = issueService.findById(id)._toIssueDto();
 		issueDto.setMilestone(milestoneService.findById(milestoneId));
-		log.debug("issueDto is " + issueDto.toString());
 		return issueDto;
+	}
+	
+	@GetMapping("/{id}/setLabel/{labelId}")
+	public IssueDto updateLabel(@PathVariable long id, @PathVariable long labelId, @LoginUser User loginUser) {
+		log.debug("Api Issue Controller (updateLabel) in!");
+		try {
+			issueService.updateLabel(loginUser, id, labelId);
+		} catch (UnAuthenticationException e) {
+			e.printStackTrace();
+		}
+		IssueDto issueDto = issueService.findById(id)._toIssueDto();
+		return issueDto;
+		
 	}
 }

@@ -82,10 +82,12 @@ public class IssueService {
 	}
 
 	@Transactional
-	public void updateLabel(User loginUser, long id, long labelId) {
+	public void updateLabel(User loginUser, long id, long labelId) throws UnAuthenticationException {
 		log.debug("issue service(updateLabel) in");
 		Issue issue = issueRepository.findOne(id);
 		issue.updateLabel(loginUser, labelService.findOne(labelId));
+		Answer newAnswer = issue.updateLabelThenMakeComment(loginUser);
+		answerRepository.save(newAnswer);
 	}
 	
 	@Transactional

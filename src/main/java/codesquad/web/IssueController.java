@@ -111,12 +111,12 @@ public class IssueController {
 		return "redirect:/";
 	}
 	
-	@GetMapping("/{id}/milestones/{milestoneId}")
-	public String registerMilestone(@PathVariable long id, @PathVariable long milestoneId, @LoginUser User loginUser) {
-		log.debug("issue id : " + id + " | milestone id : " + milestoneId);
-		issueService.registerMilestone(id, milestoneId, loginUser);
-		return String.format("redirect:/issue/%d", id);
-	}
+//	@GetMapping("/{id}/milestones/{milestoneId}")
+//	public String registerMilestone(@PathVariable long id, @PathVariable long milestoneId, @LoginUser User loginUser) {
+//		log.debug("issue id : " + id + " | milestone id : " + milestoneId);
+//		issueService.registerMilestone(id, milestoneId, loginUser);
+//		return String.format("redirect:/issue/%d", id);
+//	}
 	
 	@GetMapping("/{id}/setAssignee/{userId}")
 	public String setAssignee(@PathVariable long id, @PathVariable long userId, @LoginUser User loginUser) {
@@ -129,9 +129,9 @@ public class IssueController {
 		return String.format("/issue/%d/updateFail", id);
 	}
 	
-	@GetMapping("/{id}/setLabel/{labelId}")
-	public String updateLabel(@PathVariable long id, @PathVariable long labelId, @LoginUser User loginUser) {
-		issueService.updateLabel(loginUser, id, labelId);
-		return String.format("redirect:/issue/%d", id);
-	}
+//	@GetMapping("/{id}/setLabel/{labelId}")
+//	public String updateLabel(@PathVariable long id, @PathVariable long labelId, @LoginUser User loginUser) {
+//		issueService.updateLabel(loginUser, id, labelId);
+//		return String.format("redirect:/issue/%d", id);
+//	}
 }
