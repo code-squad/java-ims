@@ -12,11 +12,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import codesquad.UnAuthenticationException;
 import codesquad.dto.IssueDto;
+import codesquad.web.IssueController;
 
 @Entity
 public class Issue {
+	private static final Logger log = LoggerFactory.getLogger(IssueController.class);
+	
 	@Id
 	@GeneratedValue
 	private long id;

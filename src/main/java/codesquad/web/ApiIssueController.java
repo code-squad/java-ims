@@ -92,15 +92,17 @@ public class ApiIssueController {
 	}
 	
 	@GetMapping("/{id}/setLabel/{labelId}")
-	public IssueDto updateLabel(@PathVariable long id, @PathVariable long labelId, @LoginUser User loginUser) {
+	public IssueDto updateLabel(@PathVariable long id, @PathVariable long labelId, @LoginUser User loginUser) throws UnAuthenticationException {
 		log.debug("Api Issue Controller (updateLabel) in!");
 		try {
 			issueService.updateLabel(loginUser, id, labelId);
 		} catch (UnAuthenticationException e) {
 			e.printStackTrace();
+			log.debug("ERROR!");
+			throw new UnAuthenticationException();
 		}
 		IssueDto issueDto = issueService.findById(id)._toIssueDto();
+		log.debug("return issue is : " + issueDto.toString());
 		return issueDto;
-		
 	}
 }

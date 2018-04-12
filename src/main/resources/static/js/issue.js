@@ -19,6 +19,12 @@ function registerMilestone(e) {
 
 function onError() {
 	console.log("ERROR");
+	
+	//change color. (to notice fail.)
+	issue_fail_effect();
+	
+	
+	
 }
 
 function onSuccessMilestone(data, status) {
@@ -67,6 +73,16 @@ function issue_success_effect() {
 	$(".issue-title-line").attr("style", "background-color:#39C435");
 	$(".issue-title-line").animate({width: "70%",}, 1000);
 	$(".issue-title-line").animate({width: "100%",}, 1000);
+}
+
+function issue_fail_effect() {
+	$(".alert-danger").fadeIn();
+	$(".alert-danger").text("[ERROR] 수정 권한이 없습니다.");
+	$(".issue-title-line").attr("style", "background-color:red");
+	$(".issue-title-line").animate({width: "70%",}, 1000);
+	$(".issue-title-line").animate({width: "100%",}, 1000);
+	$(".alert-danger").animate({width: "100%",}, 800);
+	$(".alert-danger").fadeOut();
 }
 
 String.prototype.format = function() {

@@ -85,9 +85,14 @@ public class IssueService {
 	public void updateLabel(User loginUser, long id, long labelId) throws UnAuthenticationException {
 		log.debug("issue service(updateLabel) in");
 		Issue issue = issueRepository.findOne(id);
-		issue.updateLabel(loginUser, labelService.findOne(labelId));
-		Answer newAnswer = issue.updateLabelThenMakeComment(loginUser);
-		answerRepository.save(newAnswer);
+		try {
+			issue.updateLabel(loginUser, labelService.findOne(labelId));
+			Answer newAnswer = issue.updateLabelThenMakeComment(loginUser);
+			answerRepository.save(newAnswer);
+		} catch (UnAuthenticationException e) {
+			e.printStackTrace();
+			throw new UnAuthenticationException();
+		}
 	}
 	
 	@Transactional

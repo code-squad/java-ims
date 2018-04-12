@@ -87,9 +87,11 @@ public class IssueDto {
 	public void setMilestone(Milestone milestone) {
 		this.milestone = milestone;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "IssueDto [subject=" + subject + ", comment=" + comment + "]";
+		return "IssueDto [subject=" + subject + ", comment=" + comment + ", writer=" + writer + ", milestone="
+				+ milestone + ", manager=" + manager + ", label=" + label + ", comments=" + comments + ", deleted="
+				+ deleted + "]";
 	}
 }
