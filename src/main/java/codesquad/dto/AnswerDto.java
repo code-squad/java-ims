@@ -1,9 +1,8 @@
-package codesquad.domain;
+package codesquad.dto;
 
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,10 +10,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
 
-import codesquad.dto.AnswerDto;
+import codesquad.domain.Answer;
+import codesquad.domain.User;
 
-@Entity
-public class Answer {
+public class AnswerDto {
 	@Id
 	@GeneratedValue
 	private long id;
@@ -31,37 +30,27 @@ public class Answer {
 	
 	private LocalDateTime createTime;
 	
-	public Answer() {
+	public AnswerDto() {
 	}
 	
-	public Answer(String comment) {
+	public AnswerDto(String comment, User writer, LocalDateTime createTime) {
 		this.comment = comment;
-		this.createTime = LocalDateTime.now();
+		this.writer = writer;
+		this.createTime = createTime;
 	}
 	
-	public AnswerDto _toAnswerDto() {
-		return new AnswerDto(this.comment, this.writer, this.createTime);
+	public Answer _toAnswer() {
+		return new Answer(this.comment);
 	}
 	
-	public Answer writeBy(User loginUser) {
-		this.writer = loginUser;
-		return this;
-	}
-	
-	public void delete(User loginUser) {
-		if (!this.isOwner(loginUser)) {
-			return;
-		}
-		this.deleted = true;
-	}
-	
-	public boolean isOwner(User loginUser) {
-		return this.writer.equals(loginUser);
-	}
-	
-	//getter(), setter() methods.
+	//getter() methods
+
 	public long getId() {
 		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getComment() {
@@ -82,7 +71,7 @@ public class Answer {
 
 	@Override
 	public String toString() {
-		return "Answer [id=" + id + ", comment=" + comment + ", writer=" + writer + ", deleted=" + deleted
+		return "AnswerDto [id=" + id + ", comment=" + comment + ", writer=" + writer + ", deleted=" + deleted
 				+ ", createTime=" + createTime + "]";
 	}
 }

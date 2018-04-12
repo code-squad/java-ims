@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.UnAuthenticationException;
+import codesquad.domain.Answer;
 import codesquad.domain.Issue;
 import codesquad.domain.User;
+import codesquad.dto.AnswerDto;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
@@ -104,5 +106,24 @@ public class ApiIssueController {
 		IssueDto issueDto = issueService.findById(id)._toIssueDto();
 		log.debug("return issue is : " + issueDto.toString());
 		return issueDto;
+	}
+	
+	@GetMapping("/{id}/setAssignee/{userId}")
+	public IssueDto setAssignee(@PathVariable long id, @PathVariable long userId, @LoginUser User loginUser) throws UnAuthenticationException {
+		log.debug("Api Issue Controller (setAssignee) in!");
+		try {
+			issueService.makeManager(id, userId, loginUser);
+			return issueService.findById(id)._toIssueDto();
+		} catch (UnAuthenticationException e) {
+			e.printStackTrace();
+			throw new UnAuthenticationException();
+		}
+	}
+	
+	@PostMapping("/{id}/addComment")
+	public AnswerDto makeAnswer(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody String comment) {
+		log.debug("Api Issue Controller (makeAnswer) in!");
+		Answer addedAnswer = issueService.addComments(loginUser, id, comment);
+		return addedAnswer._toAnswerDto();
 	}
 }

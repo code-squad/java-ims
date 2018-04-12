@@ -82,7 +82,12 @@ public class Issue {
 	}
 	
 	public Answer addCommentsThatRegisteredMilestone(User loginUser) {
+		log.debug("register milestone and add comments method !");
 		String comment = loginUser.getUserId() + " changed milestone to [ " + this.milestone.getSubject() + " ] on ";
+		return addComment(loginUser, comment);
+	}
+	
+	public Answer addComment(User loginUser, String comment) {
 		Answer newAnswer = new Answer(comment);
 		newAnswer.writeBy(loginUser);
 		this.comments.add(newAnswer);

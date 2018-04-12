@@ -86,7 +86,7 @@
 							class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
 							for="assignee-menu">
 							{{# users }}
-							<li class="mdl-menu__item"><a href="/issue/{{issue.id}}/setAssignee/{{id}}">{{userId}} | {{name}}</a>
+							<li class="mdl-menu__item"><a href="/api/issue/{{issue.id}}/setAssignee/{{id}}" class="assignee-menu">{{userId}} | {{name}}</a>
 							</li>
 							{{/ users }}
 						</ul>
@@ -96,7 +96,7 @@
 					</div>
 					{{/issue}}
 					
-					<script type="text/template" data-template="issue-comment">
+					<script type="text/template" data-template="issue-comment-milestone">
  						<div class="comment mdl-color-text--grey-700 issue-comment">
 							<header class="comment__header">
 								<img class="comment__avatar2" height="48" width="48"
@@ -105,8 +105,37 @@
 								<div class="comment__author">
 									<strong> <span>{0}</span> <span>changed milestone to 
 											[ {1} ] on [ {2} ]</span>
-
-
+									</strong>
+								</div>
+							</header>
+						</div>
+						<hr>
+					</script>
+					
+					<script type="text/template" data-template="issue-comment-label">
+ 						<div class="comment mdl-color-text--grey-700 issue-comment">
+							<header class="comment__header">
+								<img class="comment__avatar2" height="48" width="48"
+									src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140"
+									alt="javajigi">
+								<div class="comment__author">
+									<strong> <span>{0}</span> <span>changed label to 
+											[ {1} ] on [ {2} ]</span>
+									</strong>
+								</div>
+							</header>
+						</div>
+						<hr>
+					</script>
+					
+					<script type="text/template" data-template="issue-comment">
+ 						<div class="comment mdl-color-text--grey-700 issue-comment">
+							<header class="comment__header">
+								<img class="comment__avatar2" height="48" width="48"
+									src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140"
+									alt="javajigi">
+								<div class="comment__author">
+									<strong> <span>{0}'s comment : </span> <span> {1} | [new!] </span>
 									</strong>
 								</div>
 							</header>
@@ -122,7 +151,7 @@
 									src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140"
 									alt="javajigi">
 								<div class="comment__author">
-									<strong> <span>{{comment}} {{createTime}}</span></strong>
+									<strong> <span>{{writer.userId}}'s comment : {{comment}} | {{createTime}}</span></strong>
 								</div>
 							</header>
 						</div>
@@ -177,9 +206,8 @@
 							<button class="mdl-button" type="submit">upload file</button>
 						</div>
 					</form>
-					<div
-						class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-						<form action="/issue/{{issue.id}}/addComment" method="POST">
+					<div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+						<form action="/api/issue/{{issue.id}}/addComment" method="POST" class="addcomment">
 							<div
 								class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 								<textarea rows=5 class="mdl-textfield__input" id="comment"

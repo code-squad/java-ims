@@ -118,16 +118,16 @@ public class IssueController {
 //		return String.format("redirect:/issue/%d", id);
 //	}
 	
-	@GetMapping("/{id}/setAssignee/{userId}")
-	public String setAssignee(@PathVariable long id, @PathVariable long userId, @LoginUser User loginUser) {
-		try {
-			issueService.makeManager(id, userId, loginUser);
-			return String.format("redirect:/issue/%d", id);
-		} catch (UnAuthenticationException e) {
-			e.printStackTrace();
-		}
-		return String.format("/issue/%d/updateFail", id);
-	}
+//	@GetMapping("/{id}/setAssignee/{userId}")
+//	public String setAssignee(@PathVariable long id, @PathVariable long userId, @LoginUser User loginUser) {
+//		try {
+//			issueService.makeManager(id, userId, loginUser);
+//			return String.format("redirect:/issue/%d", id);
+//		} catch (UnAuthenticationException e) {
+//			e.printStackTrace();
+//		}
+//		return String.format("/issue/%d/updateFail", id);
+//	}
 	
 //	@GetMapping("/{id}/setLabel/{labelId}")
 //	public String updateLabel(@PathVariable long id, @PathVariable long labelId, @LoginUser User loginUser) {

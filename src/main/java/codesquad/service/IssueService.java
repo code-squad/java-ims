@@ -96,9 +96,11 @@ public class IssueService {
 	}
 	
 	@Transactional
-	public void addComments(String comment) {
+	public Answer addComments(User loginUser, long id, String comment) {
 		log.debug("issue service(addComments) in");
-		
+		Issue issue = issueRepository.findOne(id);
+		Answer addedAnswer = issue.addComment(loginUser, comment);
+		return answerRepository.save(addedAnswer);
 	}
 
 }
