@@ -170,18 +170,6 @@ public class Issue {
 		return writer;
 	}
 	
-	public Milestone getMilestone() {
-		return milestone;
-	}
-
-	public List<User> getManager() {
-		return manager;
-	}
-
-	public Label getLabel() {
-		return label;
-	}
-	
 	public List<Answer> getComments() {
 		return comments;
 	}

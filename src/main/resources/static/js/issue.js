@@ -119,14 +119,11 @@ function onSuccessLabel(data, status) {
 	console.log(data);
 	
 	//change color. (to notice success.)
-	issue_success_effect();
+	assignee_success_effect();
 	
 	//add comment to notice.
 	var timestamp = new Date();
 	var answerCommentTemplate = $('[data-template="issue-comment-label"]').html();
-	var template = answerCommentTemplate.format(data.writer.userId, data.label.subject, timestamp);
-	$("#label-menu").text(data.label.subject);
-	$(".issue-comments").append(template);
 }
 
 function onSuccessAssignee(data, status) {
