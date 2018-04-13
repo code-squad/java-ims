@@ -1,10 +1,12 @@
 package codesquad.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.validation.constraints.Size;
 
 import codesquad.domain.Issue;
-import codesquad.domain.Label;
 import codesquad.domain.Milestone;
 import codesquad.domain.User;
 
@@ -19,8 +21,7 @@ public class IssueDto {
 	
 	private User writer;
 	private Milestone milestone;
-	private User manager;
-	private Label label;
+	private ArrayList<String> comments;
 	private boolean deleted = false;
 
 	public IssueDto() {
@@ -29,6 +30,12 @@ public class IssueDto {
 	public IssueDto(String subject, String comment) {
 		this.subject = subject;
 		this.comment = comment;
+	}
+	
+	public IssueDto(String subject, String comment, User writer) {
+		this.subject = subject;
+		this.comment = comment;
+		this.writer = writer;
 	}
 
 	public Issue _toIssue() {
@@ -40,16 +47,25 @@ public class IssueDto {
 		return subject;
 	}
 
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public List<String> getComments() {
+		return comments;
 	}
 
 	public String getComment() {
 		return comment;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
+
+	public User getWriter() {
+		return writer;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setMilestone(Milestone milestone) {
+		this.milestone = milestone;
 	}
 
 	public User getWriter() {
@@ -94,6 +110,7 @@ public class IssueDto {
 
 	@Override
 	public String toString() {
-		return "IssueDto [subject=" + subject + ", comment=" + comment + "]";
+		return "IssueDto [subject=" + subject + ", comment=" + comment + ", writer=" + writer + ", milestone="
+				+ milestone + ", comments=" + comments + ", deleted=" + deleted + "]";
 	}
 }

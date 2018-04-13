@@ -60,7 +60,7 @@ public class IssueController {
 		Issue issue = issueService.findById(id);
 		log.debug("issue is " + issue.toString());
 		
-		model.addAttribute(issue);
+		model.addAttribute("issue", issue);
 		model.addAttribute("milestones", milestoneRepository.findByDeleted(false));
 		model.addAttribute("users", userService.findAll());
 		model.addAttribute("labels", labelService.findAll());
@@ -86,13 +86,16 @@ public class IssueController {
 			model.addAttribute("issue", issueService.findById(id));
 			return "redirect:/issue/{id}/updateFail";
 		}
-		return "/issue/show";
+		return String.format("redirect:/issue/%d", id);
 	}
 	
 	@GetMapping("/{id}/updateFail")
 	public String updateFail(@PathVariable Long id, Model model) {
 		model.addAttribute("errorMessage", "수정 권한이 없습니다.");
 		model.addAttribute("issue", issueService.findById(id));
+		model.addAttribute("milestones", milestoneRepository.findByDeleted(false));
+		model.addAttribute("users", userService.findAll());
+		model.addAttribute("labels", labelService.findAll());
 		return "/issue/show";
 	}
 	
@@ -106,24 +109,5 @@ public class IssueController {
 			return "redirect:/issue/{id}/updateFail";
 		}
 		return "redirect:/";
-	}
-	
-	@GetMapping("/{id}/milestones/{milestoneId}")
-	public String registerMilestone(@PathVariable long id, @PathVariable long milestoneId) {
-		log.debug("issue id : " + id + " | milestone id : " + milestoneId);
-		issueService.registerMilestone(id, milestoneId);
-		return String.format("redirect:/issue/%d", id);
-	}
-	
-	@GetMapping("/{id}/setAssignee/{userId}")
-	public String setAssignee(@PathVariable long id, @PathVariable long userId, @LoginUser User loginUser) {
-		issueService.makeManager(id, userId, loginUser);
-		return String.format("redirect:/issue/%d", id);
-	}
-	
-	@GetMapping("/{id}/setLabel/{labelId}")
-	public String updateLabel(@PathVariable long id, @PathVariable long labelId, @LoginUser User loginUser) {
-		issueService.updateLabel(loginUser, id, labelId);
-		return String.format("redirect:/issue/%d", id);
 	}
 }

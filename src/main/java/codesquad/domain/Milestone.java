@@ -4,33 +4,39 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Milestone {
 	@Id
 	@GeneratedValue
+	@JsonProperty
 	private long id;
 	
 	@Size(min = 3, max = 50)
 	@Column(nullable = false)
+	@JsonProperty
 	private String subject;
 	
 	@Column(nullable = false)
+	@JsonProperty
 	private String startDate;
 	
 	@Column(nullable = false)
+	@JsonProperty
 	private String endDate;
 	
 	@OneToMany
+	@JsonIgnore
 	private List<Issue> issues;
 	
+	@JsonProperty
 	private boolean deleted = false;
 	
 	public Milestone() {
@@ -42,19 +48,13 @@ public class Milestone {
 		this.endDate = endDate;
 	}
 	
-	public Milestone addIssue(Issue issue) {
-		System.out.println("FUCK111");
-		issues.add(issue);
-		return this;
-	}
-	
 	public Milestone deleteIssue(Issue issue) {
 		issues.remove(issue);
 		return this;
 	}
 	
 	public boolean checkContain(Issue issue) {
-		if (issues.contains(issue)) {
+		if (this.issues.contains(issue)) {
 			return true;
 		}
 		return false;
@@ -68,33 +68,17 @@ public class Milestone {
 	public long getId() {
 		return id;
 	}
-	
-	public void setId(long id) {
-		this.id = id;
-	}
-	
+
 	public String getSubject() {
 		return subject;
-	}
-	
-	public void setSubject(String subject) {
-		this.subject = subject;
 	}
 	
 	public String getStartDate() {
 		return startDate;
 	}
-
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
-
+	
 	public String getEndDate() {
 		return endDate;
-	}
-
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
 	}
 	
 	public List<Issue> getIssues() {
@@ -118,9 +102,5 @@ public class Milestone {
 	@Override
 	public String toString() {
 		return "Milestone [subject=" + subject + ", startDate=" + startDate + ", endDate=" + endDate + ", deleted=" + deleted + "]";
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
 	}
 }

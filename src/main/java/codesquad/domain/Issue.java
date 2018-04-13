@@ -10,44 +10,64 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+
 import javax.validation.constraints.Size;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codesquad.UnAuthenticationException;
 import codesquad.dto.IssueDto;
+import codesquad.web.IssueController;
 
 @Entity
 public class Issue {
+	private static final Logger log = LoggerFactory.getLogger(IssueController.class);
+	
 	@Id
 	@GeneratedValue
 	private long id;
 
+	@JsonProperty
 	@Size(min = 3, max = 100)
 	@Column(unique = false, nullable = false, length = 100)
 	private String subject;
 
+	@JsonProperty
 	@Size(min = 3, max = 300)
 	@Column(nullable = false, length = 300)
 	private String comment;
 	
+	@JsonProperty
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_writer"))
 	private User writer;
 	
+	@JsonProperty
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_milestone"))
 	private Milestone milestone;
 	
+
+	@JsonProperty
 	@OneToMany
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_manager"))
 	private List<User> manager;
 	
+	@JsonProperty
+	@OneToMany
+	@JoinColumn(foreignKey = @ForeignKey(name = "issue_answer"))
+	private List<Answer> comments;
+	
+	@JsonProperty
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_label"))
 	private Label label;
 
 	private boolean deleted = false;
-
+	
 	public Issue() {
 	}
 
@@ -69,9 +89,20 @@ public class Issue {
 	}
 	
 	public void registerMilestone(Milestone milestone) {
-		if (milestone.checkContain(this)) {
-			this.milestone = milestone;
-		}
+		this.milestone = milestone;
+	}
+	
+	public Answer addCommentsThatRegisteredMilestone(User loginUser) {
+		log.debug("register milestone and add comments method !");
+		String comment = loginUser.getUserId() + " changed milestone to [ " + this.milestone.getSubject() + " ] on ";
+		return addComment(loginUser, comment);
+	}
+	
+	public Answer addComment(User loginUser, String comment) {
+		Answer newAnswer = new Answer(comment);
+		newAnswer.writeBy(loginUser);
+		this.comments.add(newAnswer);
+		return newAnswer;
 	}
 	
 	public Issue update(User loginUser, String newComment) throws UnAuthenticationException {
@@ -82,10 +113,21 @@ public class Issue {
 		return this;
 	}
 	
-	public void updateLabel(User loginUser, Label label) {
+	public void updateLabel(User loginUser, Label label) throws UnAuthenticationException {
 		if (this.isManager(loginUser) || this.isOwner(loginUser)) {
 			this.label = label;
+			return;
 		}
+		throw new UnAuthenticationException();
+	}
+	
+	public Answer updateLabelThenMakeComment(User loginUser) {
+		String comment = loginUser.getUserId() + " add label to [ " + this.label.getSubject() + " ] on ";
+		Answer newAnswer = new Answer(comment);
+		newAnswer.writeBy(loginUser);
+		this.comments.add(newAnswer);
+		
+		return newAnswer;
 	}
 	
 	public void delete(User loginUser) throws UnAuthenticationException {
@@ -108,7 +150,7 @@ public class Issue {
 	}
 	
 	public IssueDto _toIssueDto() {
-		return new IssueDto(this.subject, this.comment);
+		return new IssueDto(this.subject, this.comment, this.writer);
 	}
 
 	// === getter setter methods (behind) ===
@@ -128,8 +170,20 @@ public class Issue {
 		return writer;
 	}
 	
-	public void setWriter(User writer) {
-		this.writer = writer;
+	public Milestone getMilestone() {
+		return milestone;
+	}
+
+	public List<User> getManager() {
+		return manager;
+	}
+
+	public Label getLabel() {
+		return label;
+	}
+	
+	public List<Answer> getComments() {
+		return comments;
 	}
 
 	public Milestone getMilestone() {

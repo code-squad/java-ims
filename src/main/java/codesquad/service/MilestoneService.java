@@ -1,13 +1,10 @@
 package codesquad.service;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import codesquad.domain.Issue;
 import codesquad.domain.Milestone;
 import codesquad.domain.MilestoneRepository;
 import codesquad.domain.User;
@@ -34,12 +31,5 @@ public class MilestoneService {
 	
 	public  Iterable<Milestone> findNotDeleted() {
 		return  milestoneRepository.findByDeleted(false);
-	}
-	
-	@Transactional
-	public Milestone addIssueThenReturnMilestone(Issue issue, long milestoneId) {
-		log.debug("milestone service (addIssueThenReturnMilestone) in.");
-		Milestone milestone = this.findById(milestoneId);
-		return milestone.addIssue(issue);
 	}
 }

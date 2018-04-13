@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.UnAuthenticationException;
+import codesquad.domain.Answer;
+import codesquad.domain.AnswerRepository;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.Milestone;
@@ -25,6 +27,9 @@ public class IssueService {
 
 	@Resource
 	private MilestoneService milestoneService;
+  
+	@Resource
+	private AnswerRepository answerRepository;
 
 	@Resource
 	private UserService userService;
@@ -35,8 +40,7 @@ public class IssueService {
 	public Issue add(User loginUser, IssueDto issue) {
 		log.debug("Issue service (add) in");
 		Issue newIssue = issue._toIssue();
-		newIssue.writeBy(loginUser);
-		return issueRepository.save(newIssue);
+		return issueRepository.save(newIssue.writeBy(loginUser));
 	}
 
 	public Issue findById(long id) {
@@ -59,25 +63,46 @@ public class IssueService {
 	}
 
 	@Transactional
-	public void registerMilestone(long issueId, long milestoneId) {
+	public void registerMilestone(long issueId, long milestoneId, User loginUser) {
 		log.debug("issueService (registerMilestone) in");
 		Issue issue = issueRepository.findOne(issueId);
-		issue.registerMilestone(milestoneService.addIssueThenReturnMilestone(issue, milestoneId));
+		issue.registerMilestone(milestoneService.findById(milestoneId));
+		Answer newAnswer = issue.addCommentsThatRegisteredMilestone(loginUser);
+		answerRepository.save(newAnswer);
 	}
-
+	
 	@Transactional
-	public void makeManager(long id, long userId, User loginUser) {
+	public void makeManager(long id, long userId, User loginUser) throws UnAuthenticationException {
 		log.debug("issue service(makeManager) in");
 		Issue issue = issueRepository.findOne(id);
-		User selectedUser = userService.findById(loginUser, userId);
-		issue.managedBy(selectedUser);
+		if (issue.isManager(loginUser) || issue.isOwner(loginUser)) {
+			User selectedUser = userService.findById(loginUser, userId);
+			issue.managedBy(selectedUser);
+			return;
+		}
+		throw new UnAuthenticationException();
 	}
 
 	@Transactional
-	public void updateLabel(User loginUser, long id, long labelId) {
+	public void updateLabel(User loginUser, long id, long labelId) throws UnAuthenticationException {
 		log.debug("issue service(updateLabel) in");
 		Issue issue = issueRepository.findOne(id);
-		issue.updateLabel(loginUser, labelService.findOne(labelId));
+		try {
+			issue.updateLabel(loginUser, labelService.findOne(labelId));
+			Answer newAnswer = issue.updateLabelThenMakeComment(loginUser);
+			answerRepository.save(newAnswer);
+		} catch (UnAuthenticationException e) {
+			e.printStackTrace();
+			throw new UnAuthenticationException();
+		}
+	}
+	
+	@Transactional
+	public Answer addComments(User loginUser, long id, String comment) {
+		log.debug("issue service(addComments) in");
+		Issue issue = issueRepository.findOne(id);
+		Answer addedAnswer = issue.addComment(loginUser, comment);
+		return answerRepository.save(addedAnswer);
 	}
 
 }
