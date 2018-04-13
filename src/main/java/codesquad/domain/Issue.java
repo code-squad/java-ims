@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
 import javax.validation.constraints.Size;
 
 import org.slf4j.Logger;
@@ -49,6 +50,7 @@ public class Issue {
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_milestone"))
 	private Milestone milestone;
 	
+
 	@JsonProperty
 	@OneToMany
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_manager"))
@@ -63,7 +65,7 @@ public class Issue {
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_label"))
 	private Label label;
-	
+
 	private boolean deleted = false;
 	
 	public Issue() {
@@ -100,7 +102,6 @@ public class Issue {
 		Answer newAnswer = new Answer(comment);
 		newAnswer.writeBy(loginUser);
 		this.comments.add(newAnswer);
-		
 		return newAnswer;
 	}
 	
@@ -183,5 +184,37 @@ public class Issue {
 	
 	public List<Answer> getComments() {
 		return comments;
+	}
+
+	public Milestone getMilestone() {
+		return milestone;
+	}
+
+	public void setMilestone(Milestone milestone) {
+		this.milestone = milestone;
+	}
+
+	public List<User> getManager() {
+		return manager;
+	}
+
+	public Label getLabel() {
+		return label;
+	}
+
+	public void setLabel(Label label) {
+		this.label = label;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

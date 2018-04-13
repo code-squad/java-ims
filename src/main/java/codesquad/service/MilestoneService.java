@@ -5,7 +5,6 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import codesquad.domain.Milestone;
 import codesquad.domain.MilestoneRepository;
 import codesquad.domain.User;

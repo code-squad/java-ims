@@ -68,7 +68,7 @@ public class Milestone {
 	public long getId() {
 		return id;
 	}
-	
+
 	public String getSubject() {
 		return subject;
 	}

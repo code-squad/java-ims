@@ -12,6 +12,8 @@ import codesquad.domain.Answer;
 import codesquad.domain.AnswerRepository;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.Milestone;
+import codesquad.domain.MilestoneRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.web.IssueController;
@@ -25,7 +27,7 @@ public class IssueService {
 
 	@Resource
 	private MilestoneService milestoneService;
-	
+  
 	@Resource
 	private AnswerRepository answerRepository;
 
