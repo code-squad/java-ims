@@ -52,7 +52,7 @@ public class LabelController {
 		return "redirect:/label";
 	}
 	
-	@GetMapping("/{id}/updateLabel")
+	@GetMapping("/{id}/updateForm")
 	public String updateForm(@PathVariable long id, Model model) {
 		Label label = labelService.findOne(id);
 		model.addAttribute("label", label);
@@ -70,8 +70,9 @@ public class LabelController {
 		return "redirect:/label/{id}";
 	}
 	
-	@DeleteMapping("/{id}/deleteLabel")
+	@DeleteMapping("/{id}")
 	public String delete(@LoginUser User loginUser, @PathVariable long id) {
+		log.debug("INININ");
 		try {
 			labelService.delete(loginUser, id);
 		} catch (UnAuthenticationException e) {

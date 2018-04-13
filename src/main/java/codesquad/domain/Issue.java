@@ -15,6 +15,8 @@ import javax.validation.constraints.Size;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import codesquad.UnAuthenticationException;
 import codesquad.dto.IssueDto;
 import codesquad.web.IssueController;
@@ -27,36 +29,43 @@ public class Issue {
 	@GeneratedValue
 	private long id;
 
+	@JsonProperty
 	@Size(min = 3, max = 100)
 	@Column(unique = false, nullable = false, length = 100)
 	private String subject;
 
+	@JsonProperty
 	@Size(min = 3, max = 300)
 	@Column(nullable = false, length = 300)
 	private String comment;
 	
+	@JsonProperty
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_writer"))
 	private User writer;
 	
+	@JsonProperty
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_milestone"))
 	private Milestone milestone;
 	
+	@JsonProperty
 	@OneToMany
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_manager"))
 	private List<User> manager;
 	
+	@JsonProperty
 	@OneToMany
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_answer"))
 	private List<Answer> comments;
 	
+	@JsonProperty
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_label"))
 	private Label label;
 	
 	private boolean deleted = false;
-
+	
 	public Issue() {
 	}
 
@@ -140,7 +149,7 @@ public class Issue {
 	}
 	
 	public IssueDto _toIssueDto() {
-		return new IssueDto(this.subject, this.comment, this.writer, this.manager, this.label);
+		return new IssueDto(this.subject, this.comment, this.writer);
 	}
 
 	// === getter setter methods (behind) ===
@@ -164,10 +173,6 @@ public class Issue {
 		return milestone;
 	}
 
-	public void setMilestone(Milestone milestone) {
-		this.milestone = milestone;
-	}
-
 	public List<User> getManager() {
 		return manager;
 	}
@@ -175,32 +180,8 @@ public class Issue {
 	public Label getLabel() {
 		return label;
 	}
-
-	public void setWriter(User writer) {
-		this.writer = writer;
-	}
 	
-	public void setLabel(Label label) {
-		this.label = label;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
 	public List<Answer> getComments() {
 		return comments;
-	}
-
-	public void setComments(List<Answer> comments) {
-		this.comments = comments;
 	}
 }

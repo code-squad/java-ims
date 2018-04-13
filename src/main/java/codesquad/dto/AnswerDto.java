@@ -49,10 +49,6 @@ public class AnswerDto {
 		return id;
 	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public String getComment() {
 		return comment;
 	}
