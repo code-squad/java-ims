@@ -102,5 +102,4 @@ public class IssueService {
 		Answer addedAnswer = issue.addComment(loginUser, comment);
 		return answerRepository.save(addedAnswer);
 	}
-
 }
