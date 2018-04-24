@@ -1,15 +1,21 @@
 package codesquad.service;
 
+import java.io.File;
+import java.io.IOException;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import codesquad.UnAuthenticationException;
 import codesquad.domain.Answer;
 import codesquad.domain.AnswerRepository;
+import codesquad.domain.Attachment;
+import codesquad.domain.AttachmentRepository;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
@@ -28,6 +34,9 @@ public class IssueService {
   
 	@Resource
 	private AnswerRepository answerRepository;
+	
+	@Resource
+	private AttachmentRepository attchmentRepository;
 
 	@Resource
 	private UserService userService;
@@ -101,5 +110,23 @@ public class IssueService {
 		Issue issue = issueRepository.findOne(id);
 		Answer addedAnswer = issue.addComment(loginUser, comment);
 		return answerRepository.save(addedAnswer);
+	}
+	
+	@Transactional
+	public Attachment uploadFile(long id, MultipartFile file) throws IllegalStateException, IOException {
+		long time = System.currentTimeMillis(); 
+		
+		File dbFile = new File("/Users/koo/Documents/projects/level3/java-ims/file/" + time + file.getOriginalFilename());
+		file.transferTo(dbFile);
+
+		Attachment uploadedFile = new Attachment(file.getOriginalFilename(), dbFile.getName(), dbFile.getAbsolutePath());
+		attchmentRepository.save(uploadedFile);
+
+		Issue issue = issueRepository.findOne(id);
+		issue.addSttchment(uploadedFile);
+
+		log.debug("dbfile originName : " + uploadedFile.getOriginName() + "dbfile name : " + uploadedFile.getName()
+		+ ", dbfile path : " + uploadedFile.getPath() + ", db id is : " + uploadedFile.getId());
+		return uploadedFile;
 	}
 }

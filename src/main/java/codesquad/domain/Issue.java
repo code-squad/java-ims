@@ -62,6 +62,11 @@ public class Issue {
 	private List<Answer> comments;
 	
 	@JsonProperty
+	@OneToMany
+	@JoinColumn(foreignKey = @ForeignKey(name = "issue_attchment"))
+	private List<Attachment> files;
+	
+	@JsonProperty
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "issue_label"))
 	private Label label;
@@ -82,6 +87,8 @@ public class Issue {
 		}
 		this.manager.add(manager);
 	}
+	
+	
 
 	public Issue writeBy(User loginUser) {
 		this.writer = loginUser;
@@ -103,6 +110,11 @@ public class Issue {
 		newAnswer.writeBy(loginUser);
 		this.comments.add(newAnswer);
 		return newAnswer;
+	}
+	
+	public Attachment addSttchment(Attachment file) {
+		this.files.add(file);
+		return file;
 	}
 	
 	public Issue update(User loginUser, String newComment) throws UnAuthenticationException {
@@ -162,8 +174,16 @@ public class Issue {
 		return subject;
 	}
 
+	public List<Attachment> getFiles() {
+		return files;
+	}
+
 	public String getComment() {
 		return comment;
+	}
+	
+	public Integer getCommentsSize() {
+		return this.comments.size();
 	}
 	
 	public User getWriter() {

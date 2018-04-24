@@ -4,9 +4,20 @@ $(".milestone-menu").click(registerMilestone);
 $(".label-menu").click(updateLabel);
 $(".assignee-menu").click(addManager);
 $(".new-comment [type=submit]").click(addComments);
+//$(".upload [type=submit]").click(test);
+
+function test(e) {
+	e.preventDefault();
+	console.log("test in");
+	
+	var file = $(".upload-file-submit").serialize();
+	console.log("file name : " + file.value);
+	
+	var url = $(".upload").attr("action");
+	console.log("url is : " + url);
+}
 
 function addComments(e) {
-	console.log("FUCK!");
 	e.preventDefault();
 	
 	var queryString = $("#comment").serialize();

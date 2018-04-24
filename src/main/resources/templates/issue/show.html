@@ -157,53 +157,27 @@
 						</div>
 						<hr>
 					{{/ issue.comments }}
-						<!-- comments start -->
-
-
-
-						<!-- <div class="comment mdl-color-text--grey-700">
+					
+					{{# issue.files }}
+						<div class="comment mdl-color-text--grey-700 issue-comment">
 							<header class="comment__header">
 								<img class="comment__avatar2" height="48" width="48"
-									src="https://avatars1.githubusercontent.com/u/7744966?v=3&u=1bd7d2e72800c0d5a1a5a2e04da851d30b3c13c7&s=140"
-									alt="cca-company">
+									src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140"
+									alt="javajigi">
 								<div class="comment__author">
-									<strong> <a>cca-company</a> <span>comment new
-											issue! on 2017-01-14</span>
-
-
-									</strong>
+									<strong><span> file is uploaded : <a href="/attachments/{{id}}">{{originName}}</a></span></strong>
 								</div>
 							</header>
 						</div>
 						<hr>
-
-
-
-						<div class="comment mdl-color-text--grey-700">
-							<header class="comment__header">
-								<img class="comment__avatar2" height="48" width="48"
-									src="https://avatars3.githubusercontent.com/u/14341811?v=3&s=400"
-									alt="진저애비">
-								<div class="comment__author">
-									<strong> <a>진저애비</a> upload file <a href="upload file"
-										target="_blank">[view]</a>
-
-
-
-									</strong>
-								</div>
-							</header>
-						</div>
-						<hr> -->
-
-
-						<!-- comments end -->
+					{{/ issue.files }}
+					
 					</div>
 					<form action="/issue/{{issue.id}}/uploadFile" enctype="multipart/form-data"
-						method="POST">
-						<div style="margin: 10px;">
-							<input type="file" name="file" id="file" />
-							<button class="mdl-button" type="submit">upload file</button>
+						method="POST" class="upload">
+						<div style="margin: 10px;" id="upload-file">
+							<input type="file" name="file" id="file"/>
+							<button class="mdl-button upload-file-submit" type="submit">upload file</button>
 						</div>
 					</form>
 					<div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">

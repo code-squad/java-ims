@@ -1,5 +1,7 @@
 package codesquad.web;
 
+import java.io.IOException;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -13,8 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import codesquad.UnAuthenticationException;
+import codesquad.domain.Attachment;
 import codesquad.domain.Issue;
 import codesquad.domain.MilestoneRepository;
 import codesquad.domain.User;
@@ -109,5 +113,23 @@ public class IssueController {
 			return "redirect:/issue/{id}/updateFail";
 		}
 		return "redirect:/";
+	}
+	
+	@PostMapping("/{id}/uploadFile")
+	public String uploadFile(@PathVariable long id, @LoginUser User loginUser, MultipartFile file) {
+		Attachment dbFile;
+		try {
+			log.debug("original file name: {}", file.getOriginalFilename());
+			log.debug("contenttype: {}", file.getContentType());
+			dbFile = issueService.uploadFile(id, file);
+			log.debug("file upload complete. path is : " + dbFile.getPath());
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			return String.format("redirect:/issue/%d", id);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return String.format("redirect:/issue/%d", id);
+		}
+		return String.format("redirect:/issue/%d", id);
 	}
 }
