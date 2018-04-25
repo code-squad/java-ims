@@ -55,19 +55,6 @@ public class IssueDto {
 		return comment;
 	}
 
-
-	public User getWriter() {
-		return writer;
-	}
-
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setMilestone(Milestone milestone) {
-		this.milestone = milestone;
-	}
-
 	public User getWriter() {
 		return writer;
 	}
@@ -82,22 +69,6 @@ public class IssueDto {
 
 	public void setMilestone(Milestone milestone) {
 		this.milestone = milestone;
-	}
-
-	public User getManager() {
-		return manager;
-	}
-
-	public void setManager(User manager) {
-		this.manager = manager;
-	}
-
-	public Label getLabel() {
-		return label;
-	}
-
-	public void setLabel(Label label) {
-		this.label = label;
 	}
 
 	public boolean isDeleted() {
