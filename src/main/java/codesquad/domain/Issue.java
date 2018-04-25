@@ -112,7 +112,7 @@ public class Issue {
 		return newAnswer;
 	}
 	
-	public Attachment addSttchment(Attachment file) {
+	public Attachment addAttachment(Attachment file) {
 		this.files.add(file);
 		return file;
 	}

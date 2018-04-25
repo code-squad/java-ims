@@ -18,6 +18,7 @@ import codesquad.domain.Attachment;
 import codesquad.domain.AttachmentRepository;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.ServerPath;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.web.IssueController;
@@ -36,7 +37,7 @@ public class IssueService {
 	private AnswerRepository answerRepository;
 	
 	@Resource
-	private AttachmentRepository attchmentRepository;
+	private AttachmentRepository attachmentRepository;
 
 	@Resource
 	private UserService userService;
@@ -116,17 +117,19 @@ public class IssueService {
 	public Attachment uploadFile(long id, MultipartFile file) throws IllegalStateException, IOException {
 		long time = System.currentTimeMillis(); 
 		
-		File dbFile = new File("/Users/koo/Documents/projects/level3/java-ims/file/" + time + file.getOriginalFilename());
-		file.transferTo(dbFile);
-
-		Attachment uploadedFile = new Attachment(file.getOriginalFilename(), dbFile.getName(), dbFile.getAbsolutePath());
-		attchmentRepository.save(uploadedFile);
+		ServerPath serverPath = new ServerPath();
+		File fileToCheckIO = new File(serverPath.getServerPath() + file.getOriginalFilename());
+		File dbFile = new File(serverPath.getServerPath() + time);
+		
+		file.transferTo(fileToCheckIO);
+		fileToCheckIO.renameTo(dbFile);
+		
+		Attachment uploadedFile = new Attachment(file.getOriginalFilename(), dbFile.getName(), dbFile.getAbsolutePath(), file.getContentType());
+		attachmentRepository.save(uploadedFile);
 
 		Issue issue = issueRepository.findOne(id);
-		issue.addSttchment(uploadedFile);
+		issue.addAttachment(uploadedFile);
 
-		log.debug("dbfile originName : " + uploadedFile.getOriginName() + "dbfile name : " + uploadedFile.getName()
-		+ ", dbfile path : " + uploadedFile.getPath() + ", db id is : " + uploadedFile.getId());
 		return uploadedFile;
 	}
 }

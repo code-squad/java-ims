@@ -23,14 +23,18 @@ public class Attachment {
 
 	@JsonProperty
 	private String path;
+	
+	@JsonProperty
+	private String type;
 
 	public Attachment() {
 	}
 
-	public Attachment(String originName, String name, String path) {
+	public Attachment(String originName, String name, String path, String type) {
 		this.originName = originName;
 		this.name = name;
 		this.path = path;
+		this.type = type;
 	}
 	
 	//getter(), setter() methods
@@ -40,6 +44,10 @@ public class Attachment {
 
 	public String getOriginName() {
 		return originName;
+	}
+
+	public String getType() {
+		return type;
 	}
 
 	public String getName() {
@@ -52,6 +60,7 @@ public class Attachment {
 
 	@Override
 	public String toString() {
-		return "Attachment [id=" + id + ", originName=" + originName + ", name=" + name + ", path=" + path + "]";
+		return "Attachment [id=" + id + ", originName=" + originName + ", name=" + name + ", path=" + path + ", type="
+				+ type + "]";
 	}
 }

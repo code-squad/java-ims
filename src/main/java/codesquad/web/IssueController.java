@@ -117,12 +117,11 @@ public class IssueController {
 	
 	@PostMapping("/{id}/uploadFile")
 	public String uploadFile(@PathVariable long id, @LoginUser User loginUser, MultipartFile file) {
-		Attachment dbFile;
 		try {
 			log.debug("original file name: {}", file.getOriginalFilename());
 			log.debug("contenttype: {}", file.getContentType());
-			dbFile = issueService.uploadFile(id, file);
-			log.debug("file upload complete. path is : " + dbFile.getPath());
+			Attachment dbFile = issueService.uploadFile(id, file);
+			log.debug("dbfile originName : " + dbFile.getOriginName() + ", dbfile name : " + dbFile.getName() + ", dbfile path : " + dbFile.getPath() + ", db id is : " + dbFile.getId());
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 			return String.format("redirect:/issue/%d", id);
