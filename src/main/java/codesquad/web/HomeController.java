@@ -16,7 +16,6 @@ public class HomeController {
 	
 	@GetMapping("")
 	public String home(Model model) {
-		System.out.println("오냐");
 		model.addAttribute("issues", issueService.findAll());
 		return "index";
 	}
