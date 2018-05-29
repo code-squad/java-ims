@@ -45,7 +45,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 				.addParameter("subject", "제").addParameter("comment", "내용내용").build();
 		ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-		assertThat(response.getBody().contains("제목은 3~15글자로 작성해주세요."), is(true));
+		assertThat(response.getBody().contains("이슈의 제목은"), is(true));
 	}
 
 	@Test

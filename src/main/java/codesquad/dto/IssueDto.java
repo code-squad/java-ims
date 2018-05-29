@@ -11,11 +11,11 @@ public class IssueDto {
 	private long id;
 	
 	@NotNull(message = "제목을 작성해주세요.")
-	@Length(min = 3, max = 15, message = "제목은 3~15글자로 작성해주세요.")
+	@Length(min = 3, max = 15, message =  "{issue.subject.length}")
 	private String subject;
 	
 	@NotNull(message = "내용을 작성해주세요.")
-	@Length(min=1, message="내용은 1글자 이상 작성해주세요.")
+	@Length(min=1, message="{issue.comment.length}")
 	private String comment;
 
 	public IssueDto() {
