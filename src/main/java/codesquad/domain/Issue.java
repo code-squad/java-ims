@@ -6,6 +6,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Size;
 
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
@@ -17,6 +18,7 @@ public class Issue extends AbstractEntity {
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
 	private User writer;
 
+	@Size(min=2, max=15)
 	@Column(nullable = false)
 	private String subject;
 
@@ -36,25 +38,13 @@ public class Issue extends AbstractEntity {
 		return writer;
 	}
 
-	public void setWriter(User writer) {
-		this.writer = writer;
-	}
-
 	
 	public String getSubject() {
 		return subject;
 	}
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
 	public String getComment() {
 		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
 	}
 
 	public IssueDto toIssueDto() {
