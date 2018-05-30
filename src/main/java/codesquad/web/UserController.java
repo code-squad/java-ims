@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import codesquad.UnAuthenticationException;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
 import codesquad.security.LoginUser;
@@ -25,6 +27,29 @@ public class UserController {
     @Resource(name = "userService")
     private UserService userService;
 
+    @GetMapping("/login")
+    public String loginForm() {
+    	return "/user/login";
+    }
+    
+    @PostMapping("/login")
+    public String login(String userId, String password, HttpSession session, Model model) {
+    	try {
+			User loginUser = userService.login(userId, password);
+			session.setAttribute("loginUser", loginUser);
+		} catch (UnAuthenticationException e) {
+			model.addAttribute("errorMessage", "아이디 또는 비밀번호가 다릅니다.");
+			return "/user/login";
+		}
+    	return "redirect:/";
+    }
+    
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+    	session.removeAttribute("loginUser");
+    	return "redirect:/";
+    }
+    
     @GetMapping("/form")
     public String form() {
         return "/user/form";
