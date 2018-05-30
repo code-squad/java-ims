@@ -48,9 +48,10 @@
                 <i class="material-icons">delete</i>
               </a>
             </div>
+            {{#issue}}
             <div class="mdl-card__title mdl-color-text--grey-50">
               <i class="material-icons">check_circle</i>
-              <h2 class="mdl-card__title-text">testIssue #1</h2>
+              <h2 class="mdl-card__title-text">{{subject}}</h2>
             </div>
             
             <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
@@ -58,10 +59,10 @@
               <div style="margin-right:20px;">
                 <div class="author-text">
                   <strong>
-                    <a href="https://github.com/javajigi" class="author">javajigi</a>
+                    <a href="https://github.com/javajigi" class="author">이번단계미구현</a>
                   </strong>
                 </div>
-                <span>2017-01-14</span>
+                <span>{{formattedCreateDate}}</span>
               </div>
               <a href="/issue/1/setOpen" class="mdl-button mdl-button--colored mdl-js-button">
                       Close issue
@@ -133,8 +134,9 @@
               </ul>
             </div>
             <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
-              <p>comment here!</p>
+              <p>{{comment}}</p>
             </div>
+            {{/issue}}
             <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
 
               <!-- comments start -->
