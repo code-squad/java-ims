@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.UnAuthenticationException;
+import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
+import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;
 
@@ -36,9 +38,9 @@ public class UserController {
     public String login(String userId, String password, HttpSession session, Model model) {
     	try {
 			User loginUser = userService.login(userId, password);
-			session.setAttribute("loginUser", loginUser);
-		} catch (UnAuthenticationException e) {
-			model.addAttribute("errorMessage", "아이디 또는 비밀번호가 다릅니다.");
+			session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, loginUser);
+		} catch (UnAuthenticationException | NullPointerException e) {
+			model.addAttribute("errorMessage", e.getMessage());
 			return "/user/login";
 		}
     	return "redirect:/";
@@ -46,7 +48,7 @@ public class UserController {
     
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-    	session.removeAttribute("loginUser");
+    	session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
     	return "redirect:/";
     }
     
@@ -70,9 +72,15 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
-        userService.update(loginUser, id, target);
-        return "redirect:/users";
+    public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target, Model model) {
+        try {
+			userService.update(loginUser, id, target);
+		} catch (UnAuthenticationException|UnAuthorizedException e) {
+			model.addAttribute("errorMessage", e.getMessage());
+	        model.addAttribute("user", userService.findById(loginUser, id));
+	        return "user/updateForm";
+		}
+        return "redirect:/";
     }
 
 }

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import codesquad.UnAuthenticationException;
+import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
 import codesquad.security.LoginUser;
@@ -43,7 +45,7 @@ public class ApiUserController {
     }
     
     @PutMapping("{id}")
-    public void update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody UserDto updatedUser) {
+    public void update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody UserDto updatedUser) throws UnAuthenticationException {
         userService.update(loginUser, id, updatedUser);
     }
 }

@@ -1,13 +1,13 @@
 package codesquad.domain;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 
 public class UserTest {
@@ -44,30 +44,29 @@ public class UserTest {
     }
 
     @Test
-    public void update_match_password() {
+    public void update_match_password() throws UnAuthenticationException {
         User origin = newUser("sanjigi");
         User target = new User("sanjigi", "password", "name2");
         origin.update(origin, target);
         assertThat(origin.getName(), is(target.getName()));
     }
 
-    @Test
-    public void update_mismatch_password() {
+    @Test(expected=UnAuthenticationException.class)
+    public void update_mismatch_password() throws UnAuthorizedException, UnAuthenticationException {
         User origin = newUser("sanjigi", "password");
         User target = new User("sanjigi", "password2", "name2");
         origin.update(origin, target);
-        assertThat(origin.getName(), is(not(target.getName())));
     }
     
-    @Test
+    /*@Test
     public void match_password() throws Exception {
-        User user = newUser("sanjigi");
-        assertTrue(user.matchPassword(user.getPassword()));
-    }
+        User user = newUser("sanjigi", "test");
+        assertThat(user.matchPassword("test"), is(true));
+    }*/
     
-    @Test
+    @Test(expected=UnAuthenticationException.class)
     public void mismatch_password() throws Exception {
         User user = newUser("sanjigi");
-        assertFalse(user.matchPassword(user.getPassword() + "2"));
+       user.matchPassword(user.getPassword() + "2");
     }
 }

@@ -30,14 +30,14 @@
 				<nav class="mdl-navigation">
 					<a class="mdl-navigation__link" href="/">Issues</a> <a
 						class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-					{{^loginUser}}
+					{{^loginedUser}}
 					<a class="mdl-navigation__link" href="/users/login">login</a> <a
 						class="mdl-navigation__link" href="/users/form">join</a>
-					{{/loginUser}}
-					{{#loginUser}}
+					{{/loginedUser}}
+					{{#loginedUser}}
 					<a class="mdl-navigation__link" href="/users/logout">logout</a> <a
-						class="mdl-navigation__link" href="/users/">my(개인정보수정)</a>
-					{{/loginUser}}
+						class="mdl-navigation__link" href="/users/{{id}}/form">my(개인정보수정)</a>
+					{{/loginedUser}}
 				</nav>
 			</div>
 		</header>
