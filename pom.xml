@@ -42,10 +42,11 @@
 			<artifactId>handlebars-spring-boot-starter</artifactId>
 			<version>0.3.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.38</version>
 		</dependency>
 		<dependency>
 			<groupId>net.rakugakibox.spring.boot</groupId>
@@ -70,6 +71,10 @@
 			<version>3.10.0</version>
 			<scope>test</scope>
 		</dependency>
+<!-- 		  <dependency> -->
+<!--             <groupId>org.hibernate.validator</groupId> -->
+<!--             <artifactId>hibernate-validator</artifactId> -->
+<!--         </dependency> -->
 	</dependencies>
 
 	<build>
