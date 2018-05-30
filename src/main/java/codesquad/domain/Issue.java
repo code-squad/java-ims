@@ -6,9 +6,11 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Size;
 
 import codesquad.dto.IssueDto;
+import codesquad.security.HttpSessionUtils;
 import support.domain.AbstractEntity;
 
 @Entity
@@ -46,6 +48,10 @@ public class Issue extends AbstractEntity {
 	public String getComment() {
 		return comment;
 	}
+	
+	public void writeBy(User loginUser) {
+		writer = loginUser;
+	}
 
 	public IssueDto toIssueDto() {
 		return new IssueDto(getId(), this.subject, this.comment);
@@ -54,6 +60,15 @@ public class Issue extends AbstractEntity {
 	@Override
 	public String toString() {
 		return "Issue [writer=" + writer + ", subject=" + subject + ", comment=" + comment + "]";
+	}
+	
+	public boolean isOwner(HttpSession session) {
+		return writer.equals(HttpSessionUtils.getUserFromSession(session));
+	}
+
+	public void update(Issue issue) {
+		this.subject = issue.subject;
+		this.comment = issue.comment;
 	}
 
 }

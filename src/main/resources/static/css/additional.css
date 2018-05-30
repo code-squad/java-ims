@@ -5,5 +5,9 @@
 }
 
 .ml-38per {
-    margin-left: 38%;
-    }
+	margin-left: 38%;
+}
+
+.dp-ib {
+	display: inline-block !important;
+}

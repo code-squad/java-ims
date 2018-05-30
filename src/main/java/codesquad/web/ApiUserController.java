@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.UnAuthenticationException;
-import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
 import codesquad.security.LoginUser;
