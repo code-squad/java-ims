@@ -7,11 +7,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.security.sasl.AuthenticationException;
-import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.core.sym.Name;
+
 import codesquad.dto.IssueDto;
-import codesquad.security.HttpSessionUtils;
 import support.domain.AbstractEntity;
 
 @Entity
@@ -28,6 +28,12 @@ public class Issue extends AbstractEntity {
 	@Lob
 	@Column(nullable = false)
 	private String comment;
+	
+	@ManyToOne
+	@JoinColumn(nullable=true, foreignKey = @ForeignKey(name ="fk_issue_mileStone"))
+	private MileStone mileStone;
+	
+	private boolean closed = true;
 
 	public Issue() {
 	}
