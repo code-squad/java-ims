@@ -1,8 +1,5 @@
-
-
-
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,7 +24,7 @@
 		<nav class="mdl-navigation">
 			<a class="mdl-navigation__link" href="/">Issues</a>
 			<a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-			<a class="mdl-navigation__link" href="/users/login">login</a>
+			<a class="mdl-navigation__link" href="/user/login.html">login</a>
 			<a class="mdl-navigation__link" href="/user/join.html">join</a>
 		</nav>
       </div>
@@ -41,27 +38,28 @@
         </div>
         <div class="issues__posts mdl-grid">
           <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
-        <form action="/users/login" method="post">
+        <form action="/issues/{{id}}" method="post">
+        <input type="hidden" name="_method" value="put"/>
+        {{#issue}}
             <div class="mdl-card__title mdl-color-text--grey-50" style="height:100px;">
-              <h4>Login Member</h4>
-            </div>
-            <div class="mdl-card__supporting-text">
-              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
-                <input class="mdl-textfield__input" type="text" id="userId" name="userId" required>
-                <label class="mdl-textfield__label" for="userId">User ID</label>
+              <i class="material-icons">check_circle</i>
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:90%">
+                <input class="mdl-textfield__input" type="text" id="subject" name="subject" value="{{subject}}" required>
+                <span class="errorMsg">{{errors.subjectMsg}}</span>
+                <label class="mdl-textfield__label" for="subject">Subject</label>
               </div>
             </div>
-            <div class="mdl-card__supporting-text">
-              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
-                <input class="mdl-textfield__input" type="password" id="password" name="password" required>
-                <label class="mdl-textfield__label" for="password">Password</label>
+            <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+              <div class="mdl-textfield mdl-js-textfield" style="width:100%">
+                <textarea class="mdl-textfield__input" style="color:#888" type="text" rows= "10" id="comment" name="comment" required>{{comment}}</textarea>
+                <span class="errorMsg">{{errors.commentMsg}}</span>
+                <label class="mdl-textfield__label" for="comment">Comment</label>
               </div>
             </div>
-                   <span class="errorMsg ml-38per">{{errorMessage}}</span>
-            <div class="mdl-card__supporting-text">
+            <div class="mdl-color-text--primary-contrast mdl-card__supporting-text">
               <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit" style="margin:10px auto; width:200px;">Submit</button>
             </div>
-
+            {{/issue}}
           </form>
           </div>
         </div>
@@ -77,6 +75,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script>
       $('.back-btn').on('click',function(){history.back();})
+    </script>
+    <script type="text/javascript">
+    $(function(){
+    	
+    });
     </script>
   </body>
 </html>

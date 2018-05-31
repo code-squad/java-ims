@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.blue_grey-orange.min.css">
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/additional.css">
   </head>
   <body>
     <div class="issues issues--wrap mdl-layout mdl-js-layout has-drawer is-upgraded">
@@ -40,14 +41,19 @@
         </div>
         <div class="issues__posts mdl-grid">
           <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+          {{#owner}}
             <div class="mdl-card__menu">
-              <a href="/updateIssue/1" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+              <a href="/issues/{{id}}/form" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
                 <i class="material-icons">edit</i>
               </a>
-              <a href="/deleteIssue/1" id="issues-menu-lower-right" class="mdl-button mdl-js-button mdl-button--icon">
+              <form name="issueForm" class="dp-ib" action="/issues/{{id}}" method="post">
+              <input type="hidden" name="_method" value="delete"/>
+              <a href="#"  onclick="javascript:document.issueForm.submit();" id="issues-menu-lower-right" class="mdl-button mdl-js-button mdl-button--icon">
                 <i class="material-icons">delete</i>
               </a>
+              </form>
             </div>
+            {{/owner}}
             {{#issue}}
             <div class="mdl-card__title mdl-color-text--grey-50">
               <i class="material-icons">check_circle</i>
@@ -59,7 +65,7 @@
               <div style="margin-right:20px;">
                 <div class="author-text">
                   <strong>
-                    <a href="https://github.com/javajigi" class="author">이번단계미구현</a>
+                    <a href="https://github.com/javajigi" class="author">{{writer.name}}</a>
                   </strong>
                 </div>
                 <span>{{formattedCreateDate}}</span>

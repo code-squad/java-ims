@@ -39,7 +39,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("userId", userId)
                 .addParameter("password", "password")
                 .addParameter("name", "자바지기")
-                .addParameter("email", "javajigi@slipp.net").build();
+                .build();
 
         ResponseEntity<String> response = template.postForEntity("/users", request, String.class);
 
@@ -72,9 +72,10 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("_method", "put")
-                .addParameter("password", "pass2")
+                .addParameter("userId", "javajigi")
+                .addParameter("password", "test1234")
                 .addParameter("name", "재성2")
-                .addParameter("email", "javajigi@slipp.net").build();
+                .build();
 
         return template.postForEntity(String.format("/users/%d", loginUser.getId()), request, String.class);
     }

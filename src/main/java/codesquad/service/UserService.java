@@ -1,7 +1,6 @@
 package codesquad.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.Resource;
 
@@ -23,7 +22,7 @@ public class UserService {
         return userRepository.save(userDto._toUser());
     }
 
-    public User update(User loginUser, long id, UserDto updatedUser) {
+    public User update(User loginUser, long id, UserDto updatedUser) throws UnAuthorizedException, UnAuthenticationException {
         User original = findById(loginUser, id);
         original.update(loginUser, updatedUser._toUser());
         return userRepository.save(original);
@@ -39,17 +38,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User login(String userId, String password) throws UnAuthenticationException {
-        Optional<User> maybeUser = userRepository.findByUserId(userId);
-        if (!maybeUser.isPresent()) {
-            throw new UnAuthenticationException();
-        }
-
-        User user = maybeUser.get();
-        if (!user.matchPassword(password)) {
-            throw new UnAuthenticationException();
-        }
-
+    public User login(String userId, String password) throws UnAuthenticationException , NullPointerException {
+    	User user = userRepository.findByUserId(userId).orElseThrow(() -> new NullPointerException("존재하지 않는 아이디입니다."));
+    	user.matchPassword(password);
         return user;
     }
 }

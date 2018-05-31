@@ -6,6 +6,7 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import codesquad.dto.UserDto;
 import support.domain.AbstractEntity;
@@ -72,20 +73,18 @@ public class User extends AbstractEntity {
         return this.userId.equals(userId);
     }
     
-    public void update(User loginUser, User target) {
+    public void update(User loginUser, User target) throws UnAuthorizedException, UnAuthenticationException {
         if (!matchUserId(loginUser.getUserId())) {
             throw new UnAuthorizedException();
         }
-
-        if (!matchPassword(target.getPassword())) {
-            return;
-        }
-
+        matchPassword(target.getPassword());
         this.name = target.name;
     }
 
-    public boolean matchPassword(String password) {
-        return this.password.equals(password);
+    public void matchPassword(String password) throws UnAuthenticationException{
+        if (!this.password.equals(password)) {
+            throw new UnAuthenticationException("비밀번호가 다릅니다.");
+        }
     }
 
     public UserDto _toUserDto() {
