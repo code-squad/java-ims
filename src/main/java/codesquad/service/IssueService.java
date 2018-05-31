@@ -3,8 +3,11 @@ package codesquad.service;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.security.sasl.AuthenticationException;
+import javax.validation.Valid;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
@@ -31,14 +34,16 @@ public class IssueService {
 		return issueRepository.findById(id).orElseThrow(NullPointerException::new);
 	}
 
-	public void update(Long id, IssueDto issueDto) {
+	
+	@Transactional
+	public void update(User loginUser, Long id, IssueDto issueDto) throws AuthenticationException {
 		Issue baseIssue = issueRepository.findById(id).orElseThrow(NullPointerException::new);
-		baseIssue.update(issueDto.toIssue());
-		issueRepository.save(baseIssue);
+		baseIssue.update(loginUser,issueDto.toIssue());
 	}
 
-	public void delete(Long id) {
+	public void delete(User loginUser, Long id) throws AuthenticationException {
 		Issue issue = issueRepository.findById(id).orElseThrow(NullPointerException::new);
+		issue.checkOwner(loginUser);
 		issueRepository.delete(issue);
 	}
 	

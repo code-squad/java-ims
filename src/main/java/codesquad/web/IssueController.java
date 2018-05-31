@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import javax.annotation.Resource;
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -55,7 +56,7 @@ public class IssueController {
 	public String showIssue(@PathVariable Long id, Model model, HttpSession session) {
 		Issue issue = issueService.findById(id);
 		model.addAttribute("issue", issue);
-		if(issue.isOwner(session)) {
+		if(issue.isOwner(HttpSessionUtils.getUserFromSession(session))) {
 			model.addAttribute("owner", issue);
 		}
 		return "/issue/show";
@@ -72,21 +73,20 @@ public class IssueController {
 	}
 	
 	@PutMapping("/{id}")
-	public String update(@LoginUser User loginUser, @PathVariable Long id, @Valid IssueDto issueDto, Model model) {
+	public String update(@LoginUser User loginUser, @PathVariable Long id, @Valid IssueDto issueDto) throws AuthenticationException {
 		if(loginUser.isGuestUser()) {
 			return "/user/login_failed";
 		}
-		
-		issueService.update(id, issueDto);
+		issueService.update(loginUser, id, issueDto);
 		return String.format("redirect:/issues/%d", id);
 
 	}
 	@DeleteMapping("/{id}")
-	public String delete(@LoginUser User loginUser, @PathVariable Long id) {
+	public String delete(@LoginUser User loginUser, @PathVariable Long id) throws AuthenticationException {
 		if(loginUser.isGuestUser()) {
 			return "/user/login_failed";
 		}
-		issueService.delete(id);
+		issueService.delete(loginUser,id);
 		return "redirect:/";
 	}
 }

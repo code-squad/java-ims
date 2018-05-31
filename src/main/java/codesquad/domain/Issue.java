@@ -6,6 +6,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Size;
 
@@ -20,7 +21,7 @@ public class Issue extends AbstractEntity {
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
 	private User writer;
 
-	@Size(min=2, max=15)
+	@Size(min = 2, max = 15)
 	@Column(nullable = false)
 	private String subject;
 
@@ -40,7 +41,6 @@ public class Issue extends AbstractEntity {
 		return writer;
 	}
 
-	
 	public String getSubject() {
 		return subject;
 	}
@@ -48,7 +48,7 @@ public class Issue extends AbstractEntity {
 	public String getComment() {
 		return comment;
 	}
-	
+
 	public void writeBy(User loginUser) {
 		writer = loginUser;
 	}
@@ -57,18 +57,25 @@ public class Issue extends AbstractEntity {
 		return new IssueDto(getId(), this.subject, this.comment);
 	}
 
+	public boolean isOwner(User loginUser) {
+		return writer.equals(loginUser);
+	}
+
+	public void update(User loginUser, Issue issue) throws AuthenticationException {
+		checkOwner(loginUser);
+		this.subject = issue.subject;
+		this.comment = issue.comment;
+	}
+	
+	public void checkOwner(User loginUser) throws AuthenticationException {
+		if(!isOwner(loginUser)) {
+			throw new AuthenticationException("본인의 글만 수정, 삭제 가능");
+		}
+	}
+
 	@Override
 	public String toString() {
 		return "Issue [writer=" + writer + ", subject=" + subject + ", comment=" + comment + "]";
-	}
-	
-	public boolean isOwner(HttpSession session) {
-		return writer.equals(HttpSessionUtils.getUserFromSession(session));
-	}
-
-	public void update(Issue issue) {
-		this.subject = issue.subject;
-		this.comment = issue.comment;
 	}
 
 }
