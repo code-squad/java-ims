@@ -99,5 +99,11 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertThat(issueRepository.findById(1L).isPresent(), is(false));
 	}
+	
+	@Test
+	public void setMileStone() {
+		ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/issues/%d/setMileStone/%d",3L,1L), String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+	}
 
 }

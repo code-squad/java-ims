@@ -83,4 +83,10 @@ public class Issue extends AbstractEntity {
 		return "Issue [writer=" + writer + ", subject=" + subject + ", comment=" + comment + "]";
 	}
 
+	public void setMileStone(User loginUser, MileStone mileStone) throws AuthenticationException {
+		checkOwner(loginUser);
+		this.mileStone = mileStone;
+		this.closed = false;
+	}
+
 }

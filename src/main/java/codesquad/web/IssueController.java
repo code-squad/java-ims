@@ -21,6 +21,7 @@ import codesquad.dto.IssueDto;
 import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MileStoneService;
 import codesquad.validate.IssueValidate;
 
 @Controller
@@ -30,6 +31,10 @@ public class IssueController {
 	@Resource(name = "issueService")
 	private IssueService issueService;
 
+	@Resource(name ="mileStoneService")
+	private MileStoneService mileStoneService;
+	
+	
 	@GetMapping("/form")
 	public String form(HttpSession session) {
 		if(!HttpSessionUtils.isLoginUser(session)) {
@@ -41,7 +46,7 @@ public class IssueController {
 	@PostMapping("")
 	public String create(@LoginUser User loginUser, @Valid IssueDto issueDto, BindingResult bindingResult, Model model) {
 		if(loginUser.isGuestUser()) {
-			return "/user/login_failed";
+			return "/users/login";
 		}
 		
 		if (bindingResult.hasErrors()) {
@@ -59,13 +64,14 @@ public class IssueController {
 		if(issue.isOwner(HttpSessionUtils.getUserFromSession(session))) {
 			model.addAttribute("owner", issue);
 		}
+		model.addAttribute("mileStones", mileStoneService.findAll());
 		return "/issue/show";
 	}
 	
 	@GetMapping("/{id}/form")
 	public String updateForm(@LoginUser User loginUser, @PathVariable Long id, Model model) {
 		if(loginUser.isGuestUser()) {
-			return "/user/login_failed";
+			return "/users/login";
 		}
 		
 		model.addAttribute("issue", issueService.findById(id));
@@ -75,7 +81,7 @@ public class IssueController {
 	@PutMapping("/{id}")
 	public String update(@LoginUser User loginUser, @PathVariable Long id, @Valid IssueDto issueDto) throws AuthenticationException {
 		if(loginUser.isGuestUser()) {
-			return "/user/login_failed";
+			return "/users/login";
 		}
 		issueService.update(loginUser, id, issueDto);
 		return String.format("redirect:/issues/%d", id);
@@ -84,9 +90,19 @@ public class IssueController {
 	@DeleteMapping("/{id}")
 	public String delete(@LoginUser User loginUser, @PathVariable Long id) throws AuthenticationException {
 		if(loginUser.isGuestUser()) {
-			return "/user/login_failed";
+			return "/users/login";
 		}
 		issueService.delete(loginUser,id);
 		return "redirect:/";
+	}
+	
+	
+	@GetMapping("/{id}/setMileStone/{mileStoneId}")
+	public String setMileStone(HttpSession session, @PathVariable Long id, @PathVariable Long mileStoneId) throws AuthenticationException {
+		if(!HttpSessionUtils.isLoginUser(session)) {
+			return "/users/login";
+		}
+		issueService.setMileStone(HttpSessionUtils.getUserFromSession(session), id, mileStoneId);
+		return String.format("/issues/%d", id);
 	}
 }
