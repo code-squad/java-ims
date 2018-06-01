@@ -81,11 +81,31 @@ public class MileStone extends AbstractEntity {
 	public String getFormattedEndDate() {
 		return endDate.format(ofPattern().withLocale(ofLocale()));
 	}
-	
+
 	public DateTimeFormatter ofPattern() {
 		return DateTimeFormatter.ofPattern("MMM dd, yyyy");
 	}
-	
+
+	public int getOpenIssue() {
+		int open = 0;
+		for (int i = 0; i < issues.size(); i++) {
+			if (!issues.get(i).isClosed()) {
+				open++;
+			}
+		}
+		return open;
+	}
+
+	public int getCloseIssue() {
+		int close = 0;
+		for (int i = 0; i < issues.size(); i++) {
+			if (issues.get(i).isClosed()) {
+				close++;
+			}
+		}
+		return close;
+	}
+
 	public Locale ofLocale() {
 		return Locale.ENGLISH;
 	}

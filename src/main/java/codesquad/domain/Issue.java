@@ -66,6 +66,10 @@ public class Issue extends AbstractEntity {
 		return writer.equals(loginUser);
 	}
 
+	public boolean isClosed() {
+		return closed;
+	}
+
 	public void update(User loginUser, Issue issue) throws AuthenticationException {
 		checkOwner(loginUser);
 		this.subject = issue.subject;
