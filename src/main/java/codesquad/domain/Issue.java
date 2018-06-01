@@ -20,6 +20,10 @@ public class Issue extends AbstractEntity {
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
 	private User writer;
 
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+	private User assignee;
+	
 	@Size(min = 2, max = 15)
 	@Column(nullable = false)
 	private String subject;
@@ -91,6 +95,11 @@ public class Issue extends AbstractEntity {
 		checkOwner(loginUser);
 		this.mileStone = mileStone;
 		this.closed = false;
+	}
+
+	public void setAssignee(User loginUser, User assignee) throws AuthenticationException {
+		checkOwner(loginUser);
+		this.assignee = assignee;
 	}
 
 }

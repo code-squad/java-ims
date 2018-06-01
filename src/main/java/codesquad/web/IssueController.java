@@ -22,12 +22,16 @@ import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import codesquad.service.MileStoneService;
+import codesquad.service.UserService;
 import codesquad.validate.IssueValidate;
 
 @Controller
 @RequestMapping("/issues")
 public class IssueController {
-
+	
+	@Resource(name = "userService")
+	private UserService userService;
+	
 	@Resource(name = "issueService")
 	private IssueService issueService;
 
@@ -65,6 +69,7 @@ public class IssueController {
 			model.addAttribute("owner", issue);
 		}
 		model.addAttribute("mileStones", mileStoneService.findAll());
+		model.addAttribute("users",userService.findAll());
 		return "/issue/show";
 	}
 	
@@ -103,6 +108,15 @@ public class IssueController {
 			return "/users/login";
 		}
 		issueService.setMileStone(HttpSessionUtils.getUserFromSession(session), id, mileStoneId);
+		return String.format("/issues/%d", id);
+	}
+
+	@GetMapping("/{id}/setAssignee/{userId}")
+	public String setAssignee(HttpSession session, @PathVariable Long id, @PathVariable Long userId) throws AuthenticationException {
+		if(!HttpSessionUtils.isLoginUser(session)) {
+			return "/users/login";
+		}
+		issueService.setAssignee(HttpSessionUtils.getUserFromSession(session), id, userId);
 		return String.format("/issues/%d", id);
 	}
 }

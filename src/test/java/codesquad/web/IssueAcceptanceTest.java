@@ -106,4 +106,10 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 	}
 
+	@Test
+	public void setAssignee() {
+		ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/issues/%d/setAssignee/%d",3L,1L), String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+	}
+
 }

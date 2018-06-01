@@ -13,11 +13,16 @@ import codesquad.domain.IssueRepository;
 import codesquad.domain.MileStone;
 import codesquad.domain.MileStoneRepository;
 import codesquad.domain.User;
+import codesquad.domain.UserRepository;
 import codesquad.dto.IssueDto;
 
 @Service
 public class IssueService {
 
+	
+	@Resource(name ="userRepository")
+	private UserRepository userRepository;
+	
 	@Resource(name="issueRepository")
 	private IssueRepository issueRepository;
 	
@@ -57,5 +62,13 @@ public class IssueService {
 		MileStone mileStone = mileStoneRepository.findById(mileStoneId).orElseThrow(NullPointerException::new);
 		issue.setMileStone(loginUser, mileStone);
 	}
+
+	@Transactional
+	public void setAssignee(User loginUser, Long id, Long userId) throws AuthenticationException {
+		Issue issue = findById(id);
+		User assignee = userRepository.findById(userId).orElseThrow(NullPointerException::new);
+		issue.setAssignee(loginUser, assignee);
+	}
+	
 	
 }
