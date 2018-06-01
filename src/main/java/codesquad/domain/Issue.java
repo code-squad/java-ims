@@ -9,7 +9,6 @@ import javax.persistence.ManyToOne;
 import javax.security.sasl.AuthenticationException;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.core.sym.Name;
 
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;

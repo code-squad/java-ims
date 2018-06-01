@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.security.sasl.AuthenticationException;
-import javax.validation.Valid;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
