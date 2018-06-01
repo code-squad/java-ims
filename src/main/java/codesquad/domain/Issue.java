@@ -35,6 +35,10 @@ public class Issue extends AbstractEntity {
 	@ManyToOne
 	@JoinColumn(nullable=true, foreignKey = @ForeignKey(name ="fk_issue_mileStone"))
 	private MileStone mileStone;
+
+	@ManyToOne
+	@JoinColumn(nullable=true, foreignKey = @ForeignKey(name="fk_issue_label"))
+	private Label label;
 	
 	private boolean closed = true;
 
@@ -100,6 +104,11 @@ public class Issue extends AbstractEntity {
 	public void setAssignee(User loginUser, User assignee) throws AuthenticationException {
 		checkOwner(loginUser);
 		this.assignee = assignee;
+	}
+
+	public void setLabel(User loginUser, Label label) throws AuthenticationException {
+		checkOwner(loginUser);
+		this.label = label;
 	}
 
 }

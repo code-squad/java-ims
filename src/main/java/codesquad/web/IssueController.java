@@ -70,6 +70,7 @@ public class IssueController {
 		}
 		model.addAttribute("mileStones", mileStoneService.findAll());
 		model.addAttribute("users",userService.findAll());
+		model.addAttribute("labels", issueService.findAllLabels());
 		return "/issue/show";
 	}
 	
@@ -118,5 +119,20 @@ public class IssueController {
 		}
 		issueService.setAssignee(HttpSessionUtils.getUserFromSession(session), id, userId);
 		return String.format("/issues/%d", id);
+	}
+
+	@GetMapping("/{id}/setLabel/{labelId}")
+	public String setLabel(HttpSession session, @PathVariable Long id, @PathVariable Long labelId) throws AuthenticationException {
+		if(!HttpSessionUtils.isLoginUser(session)) {
+			return "/users/login";
+		}
+		issueService.setLabel(HttpSessionUtils.getUserFromSession(session), id, labelId);
+		return String.format("/issues/%d", id);
+	}
+	
+	@GetMapping("/labels")
+	public String showLabels(Model model) {
+		model.addAttribute("labels", issueService.findAllLabels());
+		return "/label/list";
 	}
 }

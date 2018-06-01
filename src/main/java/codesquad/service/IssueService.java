@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.Label;
+import codesquad.domain.LabelRepository;
 import codesquad.domain.MileStone;
 import codesquad.domain.MileStoneRepository;
 import codesquad.domain.User;
@@ -29,6 +31,9 @@ public class IssueService {
 	@Resource(name="mileStoneRepository")
 	private MileStoneRepository mileStoneRepository;
 	
+	@Resource(name="labelRepository")
+	private LabelRepository labelRepository;
+	
 	public Issue add(User loginUser, IssueDto issueDto) {
 		Issue issue = issueDto.toIssue();
 		issue.writeBy(loginUser);
@@ -41,6 +46,10 @@ public class IssueService {
 
 	public Issue findById(Long id) {
 		return issueRepository.findById(id).orElseThrow(()->new NullPointerException("존재하지 않는 이슈"));
+	}
+
+	public List<Label> findAllLabels() {
+		return labelRepository.findAll();
 	}
 
 	
@@ -70,5 +79,12 @@ public class IssueService {
 		issue.setAssignee(loginUser, assignee);
 	}
 	
+	@Transactional
+	public void setLabel(User loginUser, Long id, Long labelId) throws AuthenticationException {
+		Issue issue = findById(id);
+		Label label = labelRepository.findById(labelId).orElseThrow(NullPointerException::new);
+		issue.setLabel(loginUser, label);
+	}
+
 	
 }

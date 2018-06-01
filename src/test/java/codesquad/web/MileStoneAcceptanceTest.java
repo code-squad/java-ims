@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
-import codesquad.domain.IssueRepository;
 import codesquad.domain.MileStoneRepository;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
@@ -45,7 +44,6 @@ public class MileStoneAcceptanceTest extends BasicAuthAcceptanceTest {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
 				.addParameter("subject", "제목제목").addParameter("startDate", "2018-06-30T14:03")
 				.addParameter("endDate", "2018-07-12T16:02").build();
-
 		ResponseEntity<String> response = template.postForEntity("/milestone", request, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 		
