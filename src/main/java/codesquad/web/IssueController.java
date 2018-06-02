@@ -1,7 +1,6 @@
 package codesquad.web;
 
 import javax.annotation.Resource;
-import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import codesquad.UnAuthenticationException;
 import codesquad.domain.Issue;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
@@ -85,7 +85,7 @@ public class IssueController {
 	}
 	
 	@PutMapping("/{id}")
-	public String update(@LoginUser User loginUser, @PathVariable Long id, @Valid IssueDto issueDto) throws AuthenticationException {
+	public String update(@LoginUser User loginUser, @PathVariable Long id, @Valid IssueDto issueDto) throws UnAuthenticationException {
 		if(loginUser.isGuestUser()) {
 			return "/users/login";
 		}
@@ -94,7 +94,7 @@ public class IssueController {
 
 	}
 	@DeleteMapping("/{id}")
-	public String delete(@LoginUser User loginUser, @PathVariable Long id) throws AuthenticationException {
+	public String delete(@LoginUser User loginUser, @PathVariable Long id) throws UnAuthenticationException {
 		if(loginUser.isGuestUser()) {
 			return "/users/login";
 		}
@@ -103,30 +103,30 @@ public class IssueController {
 	}
 	
 	
-	@GetMapping("/{id}/setMileStone/{mileStoneId}")
-	public String setMileStone(HttpSession session, @PathVariable Long id, @PathVariable Long mileStoneId) throws AuthenticationException {
+	@GetMapping("/{id}/putInMileStone/{mileStoneId}")
+	public String putInMileStone(HttpSession session, @PathVariable Long id, @PathVariable Long mileStoneId) throws UnAuthenticationException {
 		if(!HttpSessionUtils.isLoginUser(session)) {
 			return "/users/login";
 		}
-		issueService.setMileStone(HttpSessionUtils.getUserFromSession(session), id, mileStoneId);
+		issueService.putInMileStone(HttpSessionUtils.getUserFromSession(session), id, mileStoneId);
 		return String.format("/issues/%d", id);
 	}
 
-	@GetMapping("/{id}/setAssignee/{userId}")
-	public String setAssignee(HttpSession session, @PathVariable Long id, @PathVariable Long userId) throws AuthenticationException {
+	@GetMapping("/{id}/appointAssignee/{userId}")
+	public String appointAssignee(HttpSession session, @PathVariable Long id, @PathVariable Long userId) throws UnAuthenticationException {
 		if(!HttpSessionUtils.isLoginUser(session)) {
 			return "/users/login";
 		}
-		issueService.setAssignee(HttpSessionUtils.getUserFromSession(session), id, userId);
+		issueService.appointAssignee(HttpSessionUtils.getUserFromSession(session), id, userId);
 		return String.format("/issues/%d", id);
 	}
 
-	@GetMapping("/{id}/setLabel/{labelId}")
-	public String setLabel(HttpSession session, @PathVariable Long id, @PathVariable Long labelId) throws AuthenticationException {
+	@GetMapping("/{id}/addLabel/{labelId}")
+	public String addLabel(HttpSession session, @PathVariable Long id, @PathVariable Long labelId) throws UnAuthenticationException {
 		if(!HttpSessionUtils.isLoginUser(session)) {
 			return "/users/login";
 		}
-		issueService.setLabel(HttpSessionUtils.getUserFromSession(session), id, labelId);
+		issueService.addLabel(HttpSessionUtils.getUserFromSession(session), id, labelId);
 		return String.format("/issues/%d", id);
 	}
 	

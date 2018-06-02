@@ -3,11 +3,11 @@ package codesquad.service;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.security.sasl.AuthenticationException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codesquad.UnAuthenticationException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.Label;
@@ -54,36 +54,36 @@ public class IssueService {
 
 	
 	@Transactional
-	public void update(User loginUser, Long id, IssueDto issueDto) throws AuthenticationException {
+	public void update(User loginUser, Long id, IssueDto issueDto) throws UnAuthenticationException {
 		Issue baseIssue = findById(id);
 		baseIssue.update(loginUser,issueDto.toIssue());
 	}
 
-	public void delete(User loginUser, Long id) throws AuthenticationException {
+	public void delete(User loginUser, Long id) throws UnAuthenticationException {
 		Issue issue = findById(id);
 		issue.checkOwner(loginUser);
 		issueRepository.delete(issue);
 	}
 
 	@Transactional
-	public void setMileStone(User loginUser, Long id, Long mileStoneId) throws AuthenticationException {
+	public void putInMileStone(User loginUser, Long id, Long mileStoneId) throws UnAuthenticationException {
 		Issue issue = findById(id);
 		MileStone mileStone = mileStoneRepository.findById(mileStoneId).orElseThrow(NullPointerException::new);
-		issue.setMileStone(loginUser, mileStone);
+		issue.putInMileStone(loginUser, mileStone);
 	}
 
 	@Transactional
-	public void setAssignee(User loginUser, Long id, Long userId) throws AuthenticationException {
+	public void appointAssignee(User loginUser, Long id, Long userId) throws UnAuthenticationException {
 		Issue issue = findById(id);
 		User assignee = userRepository.findById(userId).orElseThrow(NullPointerException::new);
-		issue.setAssignee(loginUser, assignee);
+		issue.appointAssignee(loginUser, assignee);
 	}
 	
 	@Transactional
-	public void setLabel(User loginUser, Long id, Long labelId) throws AuthenticationException {
+	public void addLabel(User loginUser, Long id, Long labelId) throws UnAuthenticationException {
 		Issue issue = findById(id);
 		Label label = labelRepository.findById(labelId).orElseThrow(NullPointerException::new);
-		issue.setLabel(loginUser, label);
+		issue.addLabel(loginUser, label);
 	}
 
 	

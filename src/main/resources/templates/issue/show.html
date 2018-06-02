@@ -71,7 +71,7 @@
                   for="milestone-menu">
                   {{#mileStones}}
                       <li class="mdl-menu__item mdl-button--accent">
-                        <a href="/issues/{{issue.id}}/setMileStone/{{id}}">{{subject}}</a>
+                        <a href="/issues/{{issue.id}}/putInMileStone/{{id}}">{{subject}}</a>
                       </li>
                   {{/mileStones}}
               </ul>
@@ -84,7 +84,7 @@
                   for="label-menu">
                       {{#labels}}
                       <li class="mdl-menu__item">
-                        <a href="/issues/{{issue.id}}/setLabel/{{id}}">{{name}}</a>
+                        <a href="/issues/{{issue.id}}/addLabel/{{id}}">{{name}}</a>
                       </li>
                       {{/labels}}
               </ul>
@@ -97,7 +97,7 @@
                   for="assignee-menu">
                   {{#users}}
                       <li class="mdl-menu__item">
-                        <a href="/issues/{{issue.id}}/setAssignee/{{id}}">{{name}}</a>
+                        <a href="/issues/{{issue.id}}/appointAssignee/{{id}}">{{name}}</a>
                       </li>
                   {{/users}}
               </ul>

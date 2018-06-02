@@ -87,22 +87,12 @@ public class MileStone extends AbstractEntity {
 	}
 
 	public int getOpenIssue() {
-		int open = 0;
-		for (int i = 0; i < issues.size(); i++) {
-			if (!issues.get(i).isClosed()) {
-				open++;
-			}
-		}
+		int open =	(int) issues.stream().map(issue-> !issue.isClosed()).count();
 		return open;
 	}
 
 	public int getCloseIssue() {
-		int close = 0;
-		for (int i = 0; i < issues.size(); i++) {
-			if (issues.get(i).isClosed()) {
-				close++;
-			}
-		}
+		int close = (int) issues.stream().map(issue-> issue.isClosed()).count();
 		return close;
 	}
 
@@ -113,5 +103,13 @@ public class MileStone extends AbstractEntity {
 	public void writeBy(User loginUser) {
 		this.writer = loginUser;
 	}
+
+	@Override
+	public String toString() {
+		return "MileStone [writer=" + writer + ", startDate=" + startDate + ", endDate=" + endDate + ", subject="
+				+ subject + ", issues=" + issues + ", closed=" + closed + "]";
+	}
+
+	
 
 }

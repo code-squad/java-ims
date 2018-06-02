@@ -3,6 +3,8 @@ package codesquad.web;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import javax.naming.AuthenticationException;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
+import codesquad.UnAuthenticationException;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.LabelRepository;
+import codesquad.domain.MileStoneRepository;
+import codesquad.domain.User;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
@@ -21,6 +27,12 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
 	@Autowired
 	private IssueRepository issueRepository;
+
+	@Autowired
+	private MileStoneRepository mileStoneRepository;
+
+	@Autowired
+	private LabelRepository labelRepository;
 
 	@Test
 	public void createForm() throws Exception {
@@ -70,52 +82,88 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
 	@Test
 	public void update_noLogin() {
-		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-				.put().addParameter("subject", "바뀐제목제목").addParameter("comment", "바뀐내용내용").build();
-		ResponseEntity<String> response = template.postForEntity(String.format("/issues/%d", 1L), request ,String.class);
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().put()
+				.addParameter("subject", "바뀐제목제목").addParameter("comment", "바뀐내용내용").build();
+		ResponseEntity<String> response = template.postForEntity(String.format("/issues/%d", 1L), request,
+				String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
 
 	@Test
 	public void update_login() {
-		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-				.put().addParameter("subject", "바뀐제목제목").addParameter("comment", "바뀐내용내용").build();
-		ResponseEntity<String> response = basicAuthTemplate().postForEntity(String.format("/issues/%d", 1L), request ,String.class);
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().put()
+				.addParameter("subject", "바뀐제목제목").addParameter("comment", "바뀐내용내용").build();
+		ResponseEntity<String> response = basicAuthTemplate().postForEntity(String.format("/issues/%d", 1L), request,
+				String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertThat(response.getHeaders().getLocation().getPath(), is(String.format("/issues/%d", 1L)));
 	}
-	
+
 	@Test
 	public void delete_noLogin() {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().delete().build();
-		ResponseEntity<String> response = template.postForEntity(String.format("/issues/%d", 1L), request, String.class);
+		ResponseEntity<String> response = template.postForEntity(String.format("/issues/%d", 1L), request,
+				String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
-	
+
 	@Test
 	public void delete_login() {
-		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().addParameter("_method", "delete").build();
-		ResponseEntity<String> response = basicAuthTemplate().postForEntity(String.format("/issues/%d", 1L), request, String.class);
+		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+				.addParameter("_method", "delete").build();
+		ResponseEntity<String> response = basicAuthTemplate().postForEntity(String.format("/issues/%d", 1L), request,
+				String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertThat(issueRepository.findById(1L).isPresent(), is(false));
 	}
+
+	@Test
+	public void putInMileStone() {
+		ResponseEntity<String> response = basicAuthTemplate()
+				.getForEntity(String.format("/issues/%d/putInMileStone/%d", 3L, 1L), String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(issueRepository.findById(3L).get().getMileStone(), is(mileStoneRepository.findById(1L).get()));
+	}
+
+	@Test
+	public void putInMileStone_noIssueOwner() {
+		ResponseEntity<String> response = basicAuthTemplate(otherUser())
+				.getForEntity(String.format("/issues/%d/putInMileStone/%d", 3L, 1L), String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+	}
+
+	@Test
+	public void appointAssignee() {
+		ResponseEntity<String> response = basicAuthTemplate()
+				.getForEntity(String.format("/issues/%d/appointAssignee/%d", 3L, 1L), String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(issueRepository.findById(3L).get().getAssignee(), is(findDefaultUser()));
+	}
+
+	@Test
+	public void appointAssignee_noIssueOwner() {
+		ResponseEntity<String> response = basicAuthTemplate(otherUser())
+				.getForEntity(String.format("/issues/%d/appointAssignee/%d", 3L, 1L), String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+	}
+
+	@Test
+	public void addLabel() {
+		ResponseEntity<String> response = basicAuthTemplate()
+				.getForEntity(String.format("/issues/%d/addLabel/%d", 3L, 1L), String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(issueRepository.findById(3L).get().getLabel(), is(labelRepository.findById(1L).get()));
+	}
 	
 	@Test
-	public void setMileStone() {
-		ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/issues/%d/setMileStone/%d",3L,1L), String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+	public void addLabel_noIssueOwner() {
+		ResponseEntity<String> response = basicAuthTemplate(otherUser())
+				.getForEntity(String.format("/issues/%d/addLabel/%d", 3L, 1L), String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
 	}
 
-	@Test
-	public void setAssignee() {
-		ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/issues/%d/setAssignee/%d",3L,1L), String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+	public User otherUser() {
+		return findByUserId("sanjigi");
 	}
-
-	@Test
-	public void setLabel() {
-		ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/issues/%d/setLabel/%d",3L,1L), String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-	}
-
+	
 }
