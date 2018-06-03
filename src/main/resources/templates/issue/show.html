@@ -18,20 +18,7 @@
   <body>
     <div class="issues issues--wrap mdl-layout mdl-js-layout has-drawer is-upgraded">
 
-    <header class="mdl-layout__header mdl-layout__header--waterfall">
-      <div class="mdl-layout__header-row">
-        <!-- Title -->
-        <span class="mdl-layout-title">Issue Tracking System</span>
-        <div class="mdl-layout-spacer"></div>
-        <!-- Tabs -->
-		<nav class="mdl-navigation">
-			<a class="mdl-navigation__link" href="/">Issues</a>
-			<a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-			<a class="mdl-navigation__link" href="/user/login.html">login</a>
-			<a class="mdl-navigation__link" href="/user/join.html">join</a>
-		</nav>
-      </div>
-    </header>
+{{> include/navigation}}
 
       <main class="mdl-layout__content">
         <div class="issues-back">
@@ -82,15 +69,11 @@
               <!-- milestone list -->
               <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                   for="milestone-menu">
+                  {{#mileStones}}
                       <li class="mdl-menu__item mdl-button--accent">
-                        <a href="/issue/1/setMilestone/0">Milestone1</a>
+                        <a href="/issues/{{issue.id}}/putInMileStone/{{id}}">{{subject}}</a>
                       </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setMilestone/2">Milestone2</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setMilestone/3">Milestone3</a>
-                      </li>
+                  {{/mileStones}}
               </ul>
 
               <button id="label-menu" class="mdl-button mdl-js-button">
@@ -99,21 +82,11 @@
               <!-- label list -->
               <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                   for="label-menu">
+                      {{#labels}}
                       <li class="mdl-menu__item">
-                        <a href="/issue/1/setLabel/1">label1</a>
+                        <a href="/issues/{{issue.id}}/addLabel/{{id}}">{{name}}</a>
                       </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setLabel/2">label2</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setLabel/3">label3</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setLabel/4">label4</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setLabel/5">label5</a>
-                      </li>
+                      {{/labels}}
               </ul>
 
               <button id="assignee-menu" class="mdl-button mdl-js-button">
@@ -122,21 +95,11 @@
               <!-- label list -->
               <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                   for="assignee-menu">
+                  {{#users}}
                       <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/1">javajigi</a>
+                        <a href="/issues/{{issue.id}}/appointAssignee/{{id}}">{{name}}</a>
                       </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/2">cca-company</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/3">진저애비</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/4">신영</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/5">전용우</a>
-                      </li>
+                  {{/users}}
               </ul>
             </div>
             <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
