@@ -3,7 +3,6 @@ package codesquad.web;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import javax.naming.AuthenticationException;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
-import codesquad.UnAuthenticationException;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.LabelRepository;
 import codesquad.domain.MileStoneRepository;
@@ -35,8 +33,15 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	private LabelRepository labelRepository;
 
 	@Test
-	public void createForm() throws Exception {
+	public void createForm_noLogin() throws Exception {
 		ResponseEntity<String> response = template.getForEntity("/issues/form", String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+		log.debug("body : {}", response.getBody());
+	}
+
+	@Test
+	public void createForm_login() throws Exception {
+		ResponseEntity<String> response = basicAuthTemplate().getForEntity("/issues/form", String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		log.debug("body : {}", response.getBody());
 	}
@@ -84,7 +89,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	public void update_noLogin() {
 		HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().put()
 				.addParameter("subject", "바뀐제목제목").addParameter("comment", "바뀐내용내용").build();
-		ResponseEntity<String> response = template.postForEntity(String.format("/issues/%d", 1L), request,
+		ResponseEntity<String> response = template.postForEntity(String.format("/issues/%d", 2L), request,
 				String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
@@ -154,7 +159,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(issueRepository.findById(3L).get().getLabel(), is(labelRepository.findById(1L).get()));
 	}
-	
+
 	@Test
 	public void addLabel_noIssueOwner() {
 		ResponseEntity<String> response = basicAuthTemplate(otherUser())
@@ -165,5 +170,5 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 	public User otherUser() {
 		return findByUserId("sanjigi");
 	}
-	
+
 }

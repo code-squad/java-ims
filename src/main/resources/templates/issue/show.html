@@ -105,73 +105,24 @@
             <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
               <p>{{comment}}</p>
             </div>
-            {{/issue}}
-            <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
+            
+            <div class="comment-article mdl-color-text--primary-contrast mdl-card__supporting-text comments">
 
               <!-- comments start -->
-              
+        	{{#answers}}
               <div class="comment mdl-color-text--grey-700">
                 <header class="comment__header">
-                  <img class="comment__avatar2" height="48" width="48" src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
+                  <img class="comment__avatar2" height="48" width="48" src="#" alt="javajigi">
                   <div class="comment__author">
                     <strong>
-                      <a>javajigi</a>
-
-                      
-                        
-                        
-                          <span>changed milestone 1 on 2017-01-14</span>
-                        
-                      
+                      <a>{{writer.name}}</a>
+                          <span>{{comment}} on {{formattedCreateDate}}</span>
                     </strong>
                   </div>
                 </header>
               </div>
               <hr>
-              
-              
-              
-              <div class="comment mdl-color-text--grey-700">
-                <header class="comment__header">
-                  <img class="comment__avatar2" height="48" width="48" src="https://avatars1.githubusercontent.com/u/7744966?v=3&u=1bd7d2e72800c0d5a1a5a2e04da851d30b3c13c7&s=140" alt="cca-company">
-                  <div class="comment__author">
-                    <strong>
-                      <a>cca-company</a>
-
-                      
-                        
-                        
-                          <span>comment new issue! on 2017-01-14</span>
-                        
-                      
-                    </strong>
-                  </div>
-                </header>
-              </div>
-              <hr>
-              
-              
-              
-              <div class="comment mdl-color-text--grey-700">
-                <header class="comment__header">
-                  <img class="comment__avatar2" height="48" width="48" src="https://avatars3.githubusercontent.com/u/14341811?v=3&s=400" alt="진저애비">
-                  <div class="comment__author">
-                    <strong>
-                      <a>진저애비</a>
-
-                      
-                        
-                          upload file <a href="upload file" target="_blank">[view]</a>
-                        
-                        
-                      
-                    </strong>
-                  </div>
-                </header>
-              </div>
-              <hr>
-              
-              
+              {{/answers}}
               <!-- comments end -->
             </div>
             <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
@@ -181,7 +132,7 @@
               </div>
             </form>
             <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-              <form action="/issue/1/addComment" method="POST">
+              <form class="answer-write" action="/api/issues/{{id}}/answers" method="POST">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                   <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                   <label for="comment" class="mdl-textfield__label">Leave a comment</label>
@@ -191,6 +142,7 @@
                 </button>
             </form>
             </div>
+          {{/issue}}
           </div>
         </div>
         <footer class="mdl-mini-footer">
@@ -201,6 +153,22 @@
       </main>
       <div class="mdl-layout__obfuscator"></div>
     </div>
+    
+<script type="text/template" id="answerTemplate">
+	<div class="comment mdl-color-text--grey-700">
+                <header class="comment__header">
+                  <img class="comment__avatar2" height="48" width="48" src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="{0}">
+                  <div class="comment__author">
+                    <strong>
+                      <a>{0}</a>
+                          <span>{1} on {2}</span>
+                    </strong>
+                  </div>
+                </header>
+              </div>
+              <hr>
+</script>
+    
     <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="/js/main.js"></script>

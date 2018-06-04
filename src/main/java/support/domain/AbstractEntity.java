@@ -10,12 +10,14 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty
     private long id;
 
     @CreatedDate
@@ -35,7 +37,8 @@ public class AbstractEntity {
         return id;
     }
 
-    @JsonIgnore
+    
+    @JsonProperty
     public String getFormattedCreateDate() {
         return getFormattedDate(createDate, "yyyy.MM.dd HH:mm:ss");
     }

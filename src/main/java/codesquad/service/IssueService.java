@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codesquad.UnAuthenticationException;
+import codesquad.domain.Answer;
+import codesquad.domain.AnswerRepository;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.Label;
@@ -33,6 +35,9 @@ public class IssueService {
 	
 	@Resource(name="labelRepository")
 	private LabelRepository labelRepository;
+	
+	@Resource(name="answerRepository")
+	private AnswerRepository answerRepository;
 	
 	public Issue add(User loginUser, IssueDto issueDto) {
 		Issue issue = issueDto.toIssue();
@@ -66,11 +71,10 @@ public class IssueService {
 	}
 
 	@Transactional
-	public Issue putInMileStone(User loginUser, Long id, Long mileStoneId) throws UnAuthenticationException {
+	public void putInMileStone(User loginUser, Long id, Long mileStoneId) throws UnAuthenticationException {
 		Issue issue = findById(id);
 		MileStone mileStone = mileStoneRepository.findById(mileStoneId).orElseThrow(NullPointerException::new);
 		issue.putInMileStone(loginUser, mileStone);
-		return issue;
 	}
 
 	@Transactional
@@ -85,6 +89,11 @@ public class IssueService {
 		Issue issue = findById(id);
 		Label label = labelRepository.findById(labelId).orElseThrow(NullPointerException::new);
 		issue.addLabel(loginUser, label);
+	}
+
+	public Answer addAnswer(User loginUser, Long issueId, String comment) {
+		Issue issue = findById(issueId);
+		return answerRepository.save(new Answer(loginUser, comment, issue));
 	}
 
 	

@@ -77,8 +77,8 @@ public class IssueController {
 	public String update(@LoginUser User loginUser, @PathVariable Long id, @Valid IssueDto issueDto) throws UnAuthenticationException {
 		issueService.update(loginUser, id, issueDto);
 		return String.format("redirect:/issues/%d", id);
-
 	}
+	
 	@DeleteMapping("/{id}")
 	public String delete(@LoginUser User loginUser, @PathVariable Long id) throws UnAuthenticationException {
 		issueService.delete(loginUser,id);
