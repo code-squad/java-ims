@@ -96,5 +96,11 @@ public class IssueService {
 		return answerRepository.save(new Answer(loginUser, comment, issue));
 	}
 
+	public void deleteAnswer(User loginUser, Long answerId) throws UnAuthenticationException {
+		Answer answer = answerRepository.findById(answerId).orElseThrow(NullPointerException::new);
+		answer.checkOwner(loginUser);
+		answerRepository.delete(answer);
+	}
+
 	
 }

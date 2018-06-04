@@ -8,6 +8,7 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import codesquad.UnAuthenticationException;
 import support.domain.AbstractEntity;
 
 @Entity
@@ -35,7 +36,6 @@ public class Answer extends AbstractEntity {
 		this.issue = issue;
 		this.comment = comment;
 	}
-  
 
 	public User getWriter() {
 		return writer;
@@ -49,4 +49,14 @@ public class Answer extends AbstractEntity {
 		return comment;
 	}
 
+	public void checkOwner(User loginUser) throws UnAuthenticationException {
+		if (!isOwner(loginUser)) {
+			throw new UnAuthenticationException("본인의 글만 수정, 삭제 가능");
+		}
+	}
+
+	public boolean isOwner(User loginUser) {
+		return writer.equals(loginUser);
+	}
+	
 }

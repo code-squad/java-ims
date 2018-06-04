@@ -76,13 +76,44 @@ $(".answer-write button[type=submit]").on("click", function(e){
 		success : function(data){
 			console.log(data);
 			var answerTemplate = $("#answerTemplate").html();
-			var template = answerTemplate.format(data.writer.name, data.comment, data.formattedCreateDate);
+			var template = answerTemplate.format(data.writer.name, data.comment, data.formattedCreateDate, data.issue.id, data.id);
 			$(".comment-article").prepend(template);
 		}
 	});
-	
-	
 });
+
+$(document).on("click", ".update-comment", function(e){
+	e.preventDefault();
+});
+
+
+$(document).on("click", ".delete-comment", function(e){
+	e.preventDefault();
+	
+	var deleteBtn = $(this);
+	var url = deleteBtn.attr("href");
+	console.log("삭제url:"+url);
+	
+	$.ajax({
+		type: 'delete',
+		url: url,
+		dataType : 'json',
+		error : function(){
+			location.href =loginUrl;
+		},
+		success : function(data){
+			console.log(data);
+			if(data.valid){
+				alert("성공적으로 삭제되었습니다.");
+				deleteBtn.closest(".comment").remove();
+			}
+			else{
+				alert("자신의 글만 삭제가능합니다.");
+			}
+		}
+	});
+});
+
 
 String.prototype.format = function() {
 	var args = arguments;
