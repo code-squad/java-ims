@@ -71,7 +71,7 @@
                   for="milestone-menu">
                   {{#mileStones}}
                       <li class="mdl-menu__item mdl-button--accent">
-                        <a href="/issues/{{issue.id}}/putInMileStone/{{id}}">{{subject}}</a>
+                        <a class="mileStone-add-btn" href="/issues/{{issue.id}}/putInMileStone/{{id}}">{{subject}}</a>
                       </li>
                   {{/mileStones}}
               </ul>
@@ -203,5 +203,6 @@
     </div>
     <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
   </body>
 </html>

@@ -40,19 +40,12 @@ public class IssueController {
 	
 	
 	@GetMapping("/form")
-	public String form(HttpSession session) {
-		if(!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/login";
-		}
+	public String form(@LoginUser User loginUser) {
 		return "/issue/form";
 	}
 
 	@PostMapping("")
 	public String create(@LoginUser User loginUser, @Valid IssueDto issueDto, BindingResult bindingResult, Model model) {
-		if(loginUser.isGuestUser()) {
-			return "/users/login";
-		}
-		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("errors", IssueValidate.of(bindingResult));
 			return "/issue/form";
@@ -76,57 +69,37 @@ public class IssueController {
 	
 	@GetMapping("/{id}/form")
 	public String updateForm(@LoginUser User loginUser, @PathVariable Long id, Model model) {
-		if(loginUser.isGuestUser()) {
-			return "/users/login";
-		}
-		
 		model.addAttribute("issue", issueService.findById(id));
 		return "/issue/updateForm";
 	}
 	
 	@PutMapping("/{id}")
 	public String update(@LoginUser User loginUser, @PathVariable Long id, @Valid IssueDto issueDto) throws UnAuthenticationException {
-		if(loginUser.isGuestUser()) {
-			return "/users/login";
-		}
 		issueService.update(loginUser, id, issueDto);
 		return String.format("redirect:/issues/%d", id);
 
 	}
 	@DeleteMapping("/{id}")
 	public String delete(@LoginUser User loginUser, @PathVariable Long id) throws UnAuthenticationException {
-		if(loginUser.isGuestUser()) {
-			return "/users/login";
-		}
 		issueService.delete(loginUser,id);
 		return "redirect:/";
 	}
-	
-	
+
 	@GetMapping("/{id}/putInMileStone/{mileStoneId}")
-	public String putInMileStone(HttpSession session, @PathVariable Long id, @PathVariable Long mileStoneId) throws UnAuthenticationException {
-		if(!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/login";
-		}
-		issueService.putInMileStone(HttpSessionUtils.getUserFromSession(session), id, mileStoneId);
+	public String putInMileStone(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long mileStoneId) throws UnAuthenticationException {
+		issueService.putInMileStone(loginUser, id, mileStoneId);
 		return String.format("/issues/%d", id);
 	}
 
 	@GetMapping("/{id}/appointAssignee/{userId}")
-	public String appointAssignee(HttpSession session, @PathVariable Long id, @PathVariable Long userId) throws UnAuthenticationException {
-		if(!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/login";
-		}
-		issueService.appointAssignee(HttpSessionUtils.getUserFromSession(session), id, userId);
+	public String appointAssignee(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long userId) throws UnAuthenticationException {
+		issueService.appointAssignee(loginUser, id, userId);
 		return String.format("/issues/%d", id);
 	}
 
 	@GetMapping("/{id}/addLabel/{labelId}")
-	public String addLabel(HttpSession session, @PathVariable Long id, @PathVariable Long labelId) throws UnAuthenticationException {
-		if(!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/login";
-		}
-		issueService.addLabel(HttpSessionUtils.getUserFromSession(session), id, labelId);
+	public String addLabel(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long labelId) throws UnAuthenticationException {
+		issueService.addLabel(loginUser, id, labelId);
 		return String.format("/issues/%d", id);
 	}
 	

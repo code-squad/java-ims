@@ -66,10 +66,11 @@ public class IssueService {
 	}
 
 	@Transactional
-	public void putInMileStone(User loginUser, Long id, Long mileStoneId) throws UnAuthenticationException {
+	public Issue putInMileStone(User loginUser, Long id, Long mileStoneId) throws UnAuthenticationException {
 		Issue issue = findById(id);
 		MileStone mileStone = mileStoneRepository.findById(mileStoneId).orElseThrow(NullPointerException::new);
 		issue.putInMileStone(loginUser, mileStone);
+		return issue;
 	}
 
 	@Transactional
