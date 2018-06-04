@@ -41,11 +41,5 @@ public class SecurityControllerAdvice {
     public void unAuthentication() {
         log.debug("UnAuthenticationException is happened!");
     }
-    
-    /*
-    @ExceptionHanlder(
-    public String loginRequired() {
-    	return "";
-    }
-    */
+  
 }

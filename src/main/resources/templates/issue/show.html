@@ -84,7 +84,7 @@
                   for="label-menu">
                       {{#labels}}
                       <li class="mdl-menu__item">
-                        <a href="/issues/{{issue.id}}/addLabel/{{id}}">{{name}}</a>
+                        <a class="label-add-btn" href="/issues/{{issue.id}}/addLabel/{{id}}">{{name}}</a>
                       </li>
                       {{/labels}}
               </ul>
@@ -97,7 +97,7 @@
                   for="assignee-menu">
                   {{#users}}
                       <li class="mdl-menu__item">
-                        <a href="/issues/{{issue.id}}/appointAssignee/{{id}}">{{name}}</a>
+                        <a class="assignee-add-btn" href="/issues/{{issue.id}}/appointAssignee/{{id}}">{{name}}</a>
                       </li>
                   {{/users}}
               </ul>
