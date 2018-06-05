@@ -28,4 +28,8 @@ public class Result {
 		return errorMessage;
 	}
 
+	public static Result success(String string) {
+		return new Result(true, string);
+	}
+
 }

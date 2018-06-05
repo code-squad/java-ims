@@ -49,14 +49,26 @@ public class Answer extends AbstractEntity {
 		return comment;
 	}
 
-	public void checkOwner(User loginUser) throws UnAuthenticationException {
+	public Result checkOwnerResult(User loginUser) {
 		if (!isOwner(loginUser)) {
-			throw new UnAuthenticationException("본인의 글만 수정, 삭제 가능");
+			return Result.fail();
+		}
+		return Result.success();
+	}
+
+	public void checkOwner(User loginUser) throws UnAuthenticationException{
+		if (!isOwner(loginUser)) {
+			throw new UnAuthenticationException();
 		}
 	}
 
 	public boolean isOwner(User loginUser) {
 		return writer.equals(loginUser);
+	}
+
+	public void update(User loginUser, String comment) throws UnAuthenticationException {
+		checkOwner(loginUser);
+		this.comment = comment;
 	}
 	
 }

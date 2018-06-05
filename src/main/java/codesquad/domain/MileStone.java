@@ -85,25 +85,12 @@ public class MileStone extends AbstractEntity {
 	}
 
 	public int getOpenIssue() {
-		int open =0;
-//		=	(int) issues.stream().map(issue-> !issue.isClosed()).count();
-		for(int i = 0; i < issues.size(); i++) {
-			if(!issues.get(i).isClosed()) {
-				open ++;
-			}
-		}
+		int open  =	(int) issues.stream().filter(issue-> !issue.isClosed()).count();
 		return open;
 	}
 
 	public int getCloseIssue() {
-		int close=0;
-//		= (int) issues.stream().map(issue-> issue.isClosed()).count();
-		for(int i = 0; i < issues.size(); i++) {
-			if(issues.get(i).isClosed()) {
-				close ++;
-			}
-		}
-		
+		int close= (int) issues.stream().filter(issue-> issue.isClosed()).count();
 		return close;
 	}
 

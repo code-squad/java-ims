@@ -128,17 +128,18 @@
 								src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140"
 								alt="{{writer.name}}">
 							<div class="comment__author">
-								<strong> <a>{{writer.name}}</a> <span>{{comment}}
-										on {{formattedCreateDate}}</span>
+								<strong> <a>{{writer.name}}</a> 
+								<textarea class="add-comment-textarea" readonly="true" name="comment" id="comment">{{comment}}</textarea>
+								<span>on {{formattedCreateDate}}</span>
 								</strong>
 							</div>
 						</header>
 						<div>
 							<ul class="article-util-list" style="display: inline-block;">
 								<li style="display: inline-block;">
-								<a	class="update-comment"	href="/api/issues/{{issue.id}}/answers//{{id}}">수정</a></li>
+								<a	class="update-comment"	href="/api/issues/{{issue.id}}/answers/{{id}}">수정</a></li>
 								<li style="display: inline-block;">
-                                       <a class="delete-comment" href="/api/issues/{{issue.id}}/answers/{{id}}">삭제</a>
+                                <a class="delete-comment" href="/api/issues/{{issue.id}}/answers/{{id}}">삭제</a>
 								</li>
 							</ul>
 						</div>
@@ -189,17 +190,17 @@
 	<div class="comment mdl-color-text--grey-700">
                 <header class="comment__header">
                   <img class="comment__avatar2" height="48" width="48" src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="{0}">
-                  <div class="comment__author">
-                    <strong>
-                      <a>{0}</a>
-                          <span>{1} on {2}</span>
-                    </strong>
-                  </div>
+					<div class="comment__author">
+						<strong> <a>{0}</a> 
+							<textarea class="add-comment-textarea" readonly="true" name="comment", id="comment">{1}</textarea>
+							<span>on {2}</span>
+						</strong>
+					</div>
                 </header>
 				<div>
 						<ul class="article-util-list" style="display: inline-block;">
 							<li style="display: inline-block;">
-							<a	class="update-comment"	href="/api/issues/{3}/answers//{4}">수정</a></li>
+							<a	class="update-comment"	href="/api/issues/{3}/answers/{4}">수정</a></li>
 						<li style="display: inline-block;">
                              <a class="delete-comment" href="/api/issues/{3}/answers/{4}">삭제</a>
 						</li>

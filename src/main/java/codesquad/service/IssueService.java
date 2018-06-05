@@ -16,6 +16,7 @@ import codesquad.domain.Label;
 import codesquad.domain.LabelRepository;
 import codesquad.domain.MileStone;
 import codesquad.domain.MileStoneRepository;
+import codesquad.domain.Result;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.IssueDto;
@@ -100,6 +101,17 @@ public class IssueService {
 		Answer answer = answerRepository.findById(answerId).orElseThrow(NullPointerException::new);
 		answer.checkOwner(loginUser);
 		answerRepository.delete(answer);
+	}
+	
+	@Transactional
+	public Answer updateAnswer(User loginUser, Long answerId, String comment) throws UnAuthenticationException {
+		Answer answer = answerRepository.findById(answerId).orElseThrow(NullPointerException::new);
+		answer.update(loginUser, comment);
+		return answer;
+	}
+
+	public Result checkAnswerOwner(User loginUser, Long answerId) throws UnAuthenticationException {
+		return answerRepository.findById(answerId).orElseThrow(NullPointerException::new).checkOwnerResult(loginUser);
 	}
 
 	
