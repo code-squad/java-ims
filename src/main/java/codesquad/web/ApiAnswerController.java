@@ -34,7 +34,7 @@ public class ApiAnswerController {
 	private IssueService issueService;
 
 	@PostMapping("")
-	public ResponseEntity<Answer> create(@LoginUser User loginUser, @PathVariable Long issueId, String comment) {
+	public ResponseEntity<Answer> create(@LoginUser User loginUser, @PathVariable Long issueId, @RequestBody String comment) {
 		HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/issues/" + issueId));
 		return new ResponseEntity<Answer>(issueService.addAnswer(loginUser, issueId, comment),headers,HttpStatus.CREATED);
