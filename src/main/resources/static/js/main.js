@@ -60,7 +60,7 @@ $(".answer-write button[type=submit]").on("click",function(e) {
 			e.preventDefault();
 			console.log("answer write");
 
-			var queryString = $(".answer-write").serialize();
+			var queryString = $(".mdl-textfield__input").val();
 			var url = $(".answer-write").attr("action");
 			console.log("queryString :" + queryString);
 			console.log("url :" + url);
@@ -68,6 +68,7 @@ $(".answer-write button[type=submit]").on("click",function(e) {
 			$.ajax({
 				type : 'post',
 				url : url,
+				contentType : "application/json",
 				data : queryString,
 				dataType : 'json',
 				error : function() {
