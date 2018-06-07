@@ -56,9 +56,7 @@ $(".assignee-add-btn").on("click", function(e) {
 });
 
 // 글쓰기
-$(".answer-write button[type=submit]").on(
-		"click",
-		function(e) {
+$(".answer-write button[type=submit]").on("click",function(e) {
 			e.preventDefault();
 			console.log("answer write");
 
@@ -77,6 +75,7 @@ $(".answer-write button[type=submit]").on(
 				},
 				success : function(data) {
 					console.log(data);
+					alert("성공적으로 등록");
 					var answerTemplate = $("#answerTemplate").html();
 					var template = answerTemplate.format(data.writer.name,
 							data.comment, data.formattedCreateDate,
@@ -128,7 +127,7 @@ $(document).on(
 					type : 'put',
 					url : url,
 					contentType : "application/json",
-					data : queryString,
+					data :  queryString, 
 					dataType : 'json',
 					error : function() {
 						console.log("error");

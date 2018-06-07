@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import codesquad.domain.Result;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 
@@ -52,10 +53,10 @@ public abstract class AcceptanceTest {
         return response.getHeaders().getLocation().getPath();
     }
 
-    protected String createResource(String path, Object bodyPayload,TestRestTemplate template) {
-    	ResponseEntity<String> response = template.postForEntity(path, bodyPayload, String.class);
-    	assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
-    	return response.getHeaders().getLocation().getPath();
+    protected String createResource(TestRestTemplate template, String path, Object bodyPayload) {
+        ResponseEntity<String> response = template.postForEntity(path, bodyPayload, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+        return response.getHeaders().getLocation().getPath();
     }
     
     protected <T> T getResource(String location, Class<T> responseType, User loginUser) {

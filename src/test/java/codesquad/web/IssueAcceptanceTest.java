@@ -54,6 +54,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertThat(issueRepository.findById(1L).isPresent(), is(true));
 		assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+		
 	}
 
 	@Test
