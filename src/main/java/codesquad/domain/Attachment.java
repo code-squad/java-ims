@@ -1,6 +1,5 @@
 package codesquad.domain;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 import javax.persistence.Column;

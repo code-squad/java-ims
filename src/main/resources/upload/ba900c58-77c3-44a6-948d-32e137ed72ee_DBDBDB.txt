@@ -1,7 +1,0 @@
-﻿grant select,insert,update,delete,create,alter,drop on
-zerock.* to 'zerock'@'localhost' 
-identified by '1234';
-
-grant select,insert,update,delete,create,alter,drop on 
-zerock.* to 'zerock'@'%' 
-identified by '1234';

@@ -1,4 +1,0 @@
-Tomcat 서버 세팅할때 컨텍스트 루트 지정하는 부분이 있을겁니다.
-
-그부분을 보통은 / 혹은 /프로젝트명 이렇게 사용하시는데 / 대신에 공백으로 사용하시면 해당 오류가 발생하지 않습니다.
-경고: The web application [CarProject3] appears to have started a thread named [Abandoned connection cleanup thread] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:

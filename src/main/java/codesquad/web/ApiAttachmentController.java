@@ -37,7 +37,10 @@ public class ApiAttachmentController {
 			throws IllegalStateException, IOException {
 		log.debug("original file name: {}", file.getOriginalFilename());
 		log.debug("contenttype: {}", file.getContentType());
-		return new ResponseEntity<Attachment>(issueService.addAttachment(loginUser, issueId, file), HttpStatus.CREATED);
+		
+		HttpHeaders header = new HttpHeaders();
+		header.setContentType(MediaType.APPLICATION_JSON);
+		return new ResponseEntity<Attachment>(issueService.addAttachment(loginUser, issueId, file), header, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{attachmentId}")
