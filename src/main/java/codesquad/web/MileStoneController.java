@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.domain.User;
 import codesquad.dto.MileStoneDto;
-import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
 import codesquad.service.MileStoneService;
 
@@ -30,19 +29,12 @@ public class MileStoneController {
 	}
 
 	@GetMapping("/form")
-	public String form(HttpSession session) {
-		if (!HttpSessionUtils.isLoginUser(session)) {
-			return "/user/login";
-		}
+	public String form(@LoginUser User loginUser) {
 		return "/milestone/form";
 	}
 	
 	@PostMapping("")
 	public String create(@LoginUser User loginUser, @Valid MileStoneDto mileStoneDto, HttpSession session) {
-		
-		if(loginUser.isGuestUser()) {
-			return "/user/login";
-		}
 		mileStoneService.add(loginUser,mileStoneDto);
 		return "redirect:/milestone";
 	}

@@ -6,7 +6,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 
 public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
@@ -25,7 +24,8 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
 
         LoginUser loginUser = parameter.getParameterAnnotation(LoginUser.class);
         if (loginUser.required()) {
-            throw new UnAuthorizedException("You're required Login!");
+//            throw new UnAuthorizedException("You're required Login!");
+            throw new UnLoginException("You're required Login!");
         }
         return user;
     }

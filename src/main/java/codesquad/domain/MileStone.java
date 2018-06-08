@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
-import org.hibernate.annotations.Where;
 
 import support.domain.AbstractEntity;
 
@@ -35,7 +34,6 @@ public class MileStone extends AbstractEntity {
 	private String subject;
 
 	@OneToMany(mappedBy = "mileStone")
-	@Where(clause = "closed = false")
 	@OrderBy("id ASC")
 	private List<Issue> issues = new ArrayList<>();
 
@@ -87,12 +85,12 @@ public class MileStone extends AbstractEntity {
 	}
 
 	public int getOpenIssue() {
-		int open =	(int) issues.stream().map(issue-> !issue.isClosed()).count();
+		int open  =	(int) issues.stream().filter(issue-> !issue.isClosed()).count();
 		return open;
 	}
 
 	public int getCloseIssue() {
-		int close = (int) issues.stream().map(issue-> issue.isClosed()).count();
+		int close= (int) issues.stream().filter(issue-> issue.isClosed()).count();
 		return close;
 	}
 

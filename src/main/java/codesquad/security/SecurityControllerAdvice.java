@@ -25,12 +25,20 @@ public class SecurityControllerAdvice {
     @ExceptionHandler(UnAuthorizedException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public void unAuthorized() {
-        log.debug("UnAuthorizedException is happened!");
+    	log.debug("UnAuthorizedException is happened!");
     }
     
+    @ExceptionHandler(UnLoginException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public String unLogin() {
+    	log.debug("UnLoginException is happened!");
+    	return "/users/login";
+    }
+  
     @ExceptionHandler(UnAuthenticationException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public void unAuthentication() {
         log.debug("UnAuthenticationException is happened!");
     }
+  
 }

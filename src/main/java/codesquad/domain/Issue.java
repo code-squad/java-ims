@@ -1,12 +1,18 @@
 package codesquad.domain;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import codesquad.UnAuthenticationException;
 import codesquad.dto.IssueDto;
@@ -39,6 +45,11 @@ public class Issue extends AbstractEntity {
 	@JoinColumn(nullable=true, foreignKey = @ForeignKey(name="fk_issue_label"))
 	private Label label;
 	
+	@OneToMany(mappedBy ="issue")
+	@OrderBy("id DESC")
+	@JsonIgnore
+	private List<Answer> answers;
+	
 	private boolean closed = false;
 
 	public Issue() {
@@ -61,6 +72,10 @@ public class Issue extends AbstractEntity {
 		return comment;
 	}
 	
+
+	public List<Answer> getAnswers() {
+		return answers;
+	}
 
 	public MileStone getMileStone() {
 		return mileStone;
@@ -88,7 +103,7 @@ public class Issue extends AbstractEntity {
 	}
 
 	public boolean isClosed() {
-		return closed;
+		return this.closed;
 	}
 
 	public void update(User loginUser, Issue issue) throws UnAuthenticationException {

@@ -11,3 +11,15 @@
 .dp-ib {
 	display: inline-block !important;
 }
+
+.add-comment-textarea{
+	margin-top: 0px;
+    margin-bottom: 0px;
+    resize: none;
+    height: 17px;
+    background-color: #eeeeee;
+    width: 100%;
+    border: 0;
+    overflow: hidden;
+    font: 400 20px Arial;
+}
