@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -39,7 +40,7 @@ public class Attachment extends AbstractEntity {
 	public Attachment() {
 	}
 	
-	public Attachment(User loginUser, Issue issue, MultipartFile file) {
+	public Attachment(User loginUser, Issue issue, MultipartFile file) throws UnsupportedEncodingException {
 		if(file.isEmpty()) {
 			throw new NullPointerException();
 		}
