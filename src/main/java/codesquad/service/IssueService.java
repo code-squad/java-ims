@@ -1,15 +1,23 @@
 package codesquad.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.core.io.PathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import codesquad.UnAuthenticationException;
 import codesquad.domain.Answer;
 import codesquad.domain.AnswerRepository;
+import codesquad.domain.Attachment;
+import codesquad.domain.AttachmentRepository;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.Label;
@@ -24,22 +32,24 @@ import codesquad.dto.IssueDto;
 @Service
 public class IssueService {
 
-	
-	@Resource(name ="userRepository")
+	@Resource(name = "userRepository")
 	private UserRepository userRepository;
-	
-	@Resource(name="issueRepository")
+
+	@Resource(name = "issueRepository")
 	private IssueRepository issueRepository;
-	
-	@Resource(name="mileStoneRepository")
+
+	@Resource(name = "mileStoneRepository")
 	private MileStoneRepository mileStoneRepository;
-	
-	@Resource(name="labelRepository")
+
+	@Resource(name = "labelRepository")
 	private LabelRepository labelRepository;
-	
-	@Resource(name="answerRepository")
+
+	@Resource(name = "answerRepository")
 	private AnswerRepository answerRepository;
-	
+
+	@Resource(name = "attachmentRepository")
+	private AttachmentRepository attachmentRepository;
+
 	public Issue add(User loginUser, IssueDto issueDto) {
 		Issue issue = issueDto.toIssue();
 		issue.writeBy(loginUser);
@@ -51,18 +61,17 @@ public class IssueService {
 	}
 
 	public Issue findById(Long id) {
-		return issueRepository.findById(id).orElseThrow(()->new NullPointerException("존재하지 않는 이슈"));
+		return issueRepository.findById(id).orElseThrow(() -> new NullPointerException("존재하지 않는 이슈"));
 	}
 
 	public List<Label> findAllLabels() {
 		return labelRepository.findAll();
 	}
 
-	
 	@Transactional
 	public void update(User loginUser, Long id, IssueDto issueDto) throws UnAuthenticationException {
 		Issue baseIssue = findById(id);
-		baseIssue.update(loginUser,issueDto.toIssue());
+		baseIssue.update(loginUser, issueDto.toIssue());
 	}
 
 	public void delete(User loginUser, Long id) throws UnAuthenticationException {
@@ -84,7 +93,7 @@ public class IssueService {
 		User assignee = userRepository.findById(userId).orElseThrow(NullPointerException::new);
 		issue.appointAssignee(loginUser, assignee);
 	}
-	
+
 	@Transactional
 	public void addLabel(User loginUser, Long id, Long labelId) throws UnAuthenticationException {
 		Issue issue = findById(id);
@@ -102,7 +111,7 @@ public class IssueService {
 		answer.checkOwner(loginUser);
 		answerRepository.delete(answer);
 	}
-	
+
 	@Transactional
 	public Answer updateAnswer(User loginUser, Long answerId, String comment) throws UnAuthenticationException {
 		Answer answer = answerRepository.findById(answerId).orElseThrow(NullPointerException::new);
@@ -114,5 +123,18 @@ public class IssueService {
 		return answerRepository.findById(answerId).orElseThrow(NullPointerException::new).checkOwnerResult(loginUser);
 	}
 
-	
+	public Attachment addAttachment(User loginUser, Long issueId, MultipartFile file)
+			throws IllegalStateException, IOException {
+		Attachment attachment = new Attachment(loginUser, findById(issueId), file);
+		file.transferTo(new File(attachment.getPath(), attachment.getSaveFileName()));
+		return attachmentRepository.save(attachment);
+	}
+
+	public PathResource downloadAttachment(Long attachmentId) {
+		Attachment attachment = attachmentRepository.findById(attachmentId).orElseThrow(NullPointerException::new);
+		Path path = Paths.get(attachment.getPath() + attachment.getSaveFileName());
+		PathResource resource = new PathResource(path);
+		return resource;
+	}
+
 }
