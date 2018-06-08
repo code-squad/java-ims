@@ -1,0 +1,13 @@
+﻿127.0.0.1
+fur
+furpass
+
+
+내 아이피
+1.252.62.43 
+------------------
+tomcat/webapps/ROOT 안에다가
+
+우리 메타데이터 그 폴더 넣기.이미지폴더
+ <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
+   <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
