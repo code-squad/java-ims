@@ -117,9 +117,30 @@
 					<p>{{comment}}</p>
 				</div>
 
-				<div
-					class="comment-article mdl-color-text--primary-contrast mdl-card__supporting-text comments">
-
+				<div class="comment-article mdl-color-text--primary-contrast mdl-card__supporting-text comments">
+					
+					<!-- attachments start -->
+					{{#attachments}}
+					<div class="comment mdl-color-text--grey-700">
+		                <header class="comment__header">
+		                  <img class="comment__avatar2" height="48" width="48" src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="{{writer.name}}">
+							<div class="comment__author">
+								<strong> <a>{{writer.name}}</a></strong>
+								<div>upload file <a href="/api/attachments/{{id}}">[{{originalFileName}}]</a></div>
+								<span>on {{formattedCreateDate}}</span>
+							</div>
+		                </header>
+						<div>
+								<ul class="article-util-list" style="display: inline-block;">
+								<li style="display: inline-block;">
+                                <a class="delete-comment" href="/api/issues/{{issue.id}}/answers/{{id}}">삭제</a>
+								</li>
+							</ul>
+						</div>
+		              <hr>
+		             </div>
+					{{/attachments}}
+					<!-- attachments end-->
 					<!-- comments start -->
 					{{#answers}}
 					<div class="comment mdl-color-text--grey-700">
@@ -148,10 +169,10 @@
 					{{/answers}}
 					<!-- comments end -->
 				</div>
-				<form action="/issue/1/uploadFile" enctype="multipart/form-data"
+				<form class="file-upload" action="/api/attachments/{{id}}" enctype="multipart/form-data"
 					method="POST">
 					<div style="margin: 10px;">
-						<input type="file" name="file" id="file" />
+						<input class="upload-input" type="file" name="file" id="file" />
 						<button class="mdl-button" type="submit">upload file</button>
 					</div>
 				</form>
@@ -201,6 +222,27 @@
 						<ul class="article-util-list" style="display: inline-block;">
 							<li style="display: inline-block;">
 							<a	class="update-comment"	href="/api/issues/{3}/answers/{4}">수정</a></li>
+						<li style="display: inline-block;">
+                             <a class="delete-comment" href="/api/issues/{3}/answers/{4}">삭제</a>
+						</li>
+					</ul>
+				</div>
+              <hr>
+              </div>
+</script>
+	<script type="text/template" id="uploadTemplate">
+	<div class="comment mdl-color-text--grey-700">
+                <header class="comment__header">
+                  <img class="comment__avatar2" height="48" width="48" src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="{0}">
+					<div class="comment__author">
+						<strong> <a>{0}</a></strong> 
+							<div>upload file <a  href="/api/attachments/{4}">[{1}]</a></div>
+							<span>on {2}</span>
+						</strong>
+					</div>
+                </header>
+				<div>
+						<ul class="article-util-list" style="display: inline-block;">
 						<li style="display: inline-block;">
                              <a class="delete-comment" href="/api/issues/{3}/answers/{4}">삭제</a>
 						</li>

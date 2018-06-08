@@ -61,6 +61,8 @@ $(".answer-write button[type=submit]").on("click",function(e) {
 			console.log("answer write");
 
 			var queryString = $(".mdl-textfield__input").val();
+//			var queryString = $(".answer-write").serialize();
+	
 			var url = $(".answer-write").attr("action");
 			console.log("queryString :" + queryString);
 			console.log("url :" + url);
@@ -69,7 +71,7 @@ $(".answer-write button[type=submit]").on("click",function(e) {
 				type : 'post',
 				url : url,
 				contentType : "application/json",
-				data : queryString,
+				data : '{"comment": '+ queryString + '}',
 				dataType : 'json',
 				error : function() {
 					location.href = loginUrl;
@@ -128,7 +130,7 @@ $(document).on(
 					type : 'put',
 					url : url,
 					contentType : "application/json",
-					data :  queryString, 
+					data :  '{"comment": '+ queryString + '}', 
 					dataType : 'json',
 					error : function() {
 						console.log("error");
@@ -171,6 +173,46 @@ $(document).on("click", ".delete-comment", function(e) {
 			}
 		}
 	});
+});
+
+
+//파일업로드
+$(".file-upload button[type=submit]").on("click",function(e){
+	e.preventDefault();
+	var formData = new FormData($(".file-upload")[0]);
+	console.log("formData"+formData);
+	var url = $(".file-upload").attr("action");
+	console.log("url :"+url);
+	
+	$.ajax({
+		type : 'post',
+		url : url,
+		data : formData,
+		dataType : 'json',
+		processData : false,
+		contentType : false,
+		success : function(data){
+			console.log(data);
+			alert("성공적으로 등록");
+			$(".upload-input").val("");
+			var uploadTemplate = $("#uploadTemplate").html();
+			var template = uploadTemplate.format(data.writer.name,
+					data.originalFileName, data.formattedCreateDate,
+					data.issue.id, data.id);
+			$(".comment-article").prepend(template);
+		},
+		error : function(error){
+			if(error.status == 500){
+				alert("파일을 선택해주세요.");
+			}
+			else if(error.status = 403){
+				location.href = loginUrl;
+			}
+		}
+	});
+	
+	
+	
 });
 
 String.prototype.format = function() {
