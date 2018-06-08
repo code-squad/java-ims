@@ -50,6 +50,11 @@ public class Issue extends AbstractEntity {
 	@JsonIgnore
 	private List<Answer> answers;
 	
+	@OneToMany(mappedBy = "issue")
+	@OrderBy("id DESC")
+	@JsonIgnore
+	private List<Attachment> attachments;
+	
 	private boolean closed = false;
 
 	public Issue() {
@@ -75,6 +80,10 @@ public class Issue extends AbstractEntity {
 
 	public List<Answer> getAnswers() {
 		return answers;
+	}
+
+	public List<Attachment> getAttachments() {
+		return attachments;
 	}
 
 	public MileStone getMileStone() {

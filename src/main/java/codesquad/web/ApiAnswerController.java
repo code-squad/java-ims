@@ -2,6 +2,7 @@ package codesquad.web;
 
 
 import java.net.URI;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -34,10 +35,10 @@ public class ApiAnswerController {
 	private IssueService issueService;
 
 	@PostMapping("")
-	public ResponseEntity<Answer> create(@LoginUser User loginUser, @PathVariable Long issueId, @RequestBody String comment) {
+	public ResponseEntity<Answer> create(@LoginUser User loginUser, @PathVariable Long issueId, @RequestBody Map<String, String> data) {
 		HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/issues/" + issueId));
-		return new ResponseEntity<Answer>(issueService.addAnswer(loginUser, issueId, comment),headers,HttpStatus.CREATED);
+		return new ResponseEntity<Answer>(issueService.addAnswer(loginUser, issueId, data.get("comment")),headers,HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{answerId}")
@@ -46,10 +47,10 @@ public class ApiAnswerController {
 	}
 	
 	@PutMapping("/{answerId}")
-	public ResponseEntity<Result> update(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long answerId, @RequestBody String comment) {
+	public ResponseEntity<Result> update(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long answerId,  @RequestBody Map<String, String> data) {
 		Result result;
 		try {
-			issueService.updateAnswer(loginUser, answerId, comment);
+			issueService.updateAnswer(loginUser, answerId, data.get("comment"));
 			result = Result.success();
 		} catch (UnAuthenticationException e) {
 			result = Result.fail();
