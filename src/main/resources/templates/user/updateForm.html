@@ -17,20 +17,7 @@
   <body>
     <div class="issues issues--wrap mdl-layout mdl-js-layout has-drawer is-upgraded">
 
-    <header class="mdl-layout__header mdl-layout__header--waterfall">
-      <div class="mdl-layout__header-row">
-        <!-- Title -->
-        <span class="mdl-layout-title">Issue Tracking System</span>
-        <div class="mdl-layout-spacer"></div>
-        <!-- Tabs -->
-		<nav class="mdl-navigation">
-			<a class="mdl-navigation__link" href="/">Issues</a>
-			<a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-			<a class="mdl-navigation__link" href="/user/login.html">login</a>
-			<a class="mdl-navigation__link" href="/user/join.html">join</a>
-		</nav>
-      </div>
-    </header>
+      {{>partial/navigation}}
 
       <main class="mdl-layout__content">
         <div class="issues-back">
@@ -38,21 +25,22 @@
             <i class="material-icons" role="presentation">arrow_back</i>
           </a>
         </div>
+        {{#user}}
         <div class="issues__posts mdl-grid">
           <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
-        <form action="/join" enctype="multipart/form-data" method="post">
+        <form action="/users" enctype="multipart/form-data" method="post">
             <div class="mdl-card__title mdl-color-text--grey-50" style="height:100px;">
               <h4>Join Member</h4>
             </div>
             <div class="mdl-card__supporting-text">
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
-                <input class="mdl-textfield__input" type="text" id="userId" name="userId" required>
+                <input class="mdl-textfield__input" type="text" id="userId" name="userId" value={{userId}} required>
                 <label class="mdl-textfield__label" for="userId">User ID</label>
               </div>
             </div>
             <div class="mdl-card__supporting-text">
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
-                <input class="mdl-textfield__input" type="text" id="name" name="name" required>
+                <input class="mdl-textfield__input" type="text" id="name" name="name" value= {{name}} required>
                 <label class="mdl-textfield__label" for="name">Name</label>
               </div>
             </div>
@@ -75,6 +63,7 @@
           </form>
           </div>
         </div>
+        {{/user}}
         <footer class="mdl-mini-footer">
           <div class="mdl-mini-footer--left-section">
             <div class="mdl-logo mdl-color-text--grey-600">Proudly powered by <a href="https://github.com/Byeol">Byeol</a></div>

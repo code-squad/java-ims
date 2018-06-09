@@ -1,7 +1,11 @@
 package codesquad.web;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
+import codesquad.UnAuthenticationException;
+import codesquad.security.HttpSessionUtils;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -30,10 +34,31 @@ public class UserController {
         return "/user/form";
     }
 
+    @GetMapping("")
+    public String list(Model model){
+        model.addAttribute("users", userService.findAll());
+        return "/user/list";
+    }
+
     @PostMapping("")
     public String create(UserDto userDto) {
         userService.add(userDto);
         return "redirect:/users";
+    }
+
+    @GetMapping("/login")
+    public String loginForm(){
+        return "/user/login";
+    }
+
+    @PostMapping("/login")
+    public String login(String userId, String password, HttpSession session) {
+        try {
+            session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, userService.login(userId, password));
+            return "redirect:/";
+        } catch (UnAuthenticationException e) {
+            return "/user/login";
+        }
     }
 
     @GetMapping("/{id}/form")
