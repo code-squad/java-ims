@@ -9,8 +9,6 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import support.domain.AbstractEntity;
@@ -33,18 +31,19 @@ public class Attachment extends AbstractEntity {
 
 	@Column(nullable = false)
 	private String saveFileName;
-
+	
 	@Column(nullable = false)
-	private String path = "c:/codeSquad/java-ims/src/main/resources/upload/";
+	private String path;
 
 	public Attachment() {
 	}
 	
-	public Attachment(User loginUser, Issue issue, String originalName) throws UnsupportedEncodingException {
+	public Attachment(User loginUser, Issue issue, String originalName, String uploadPath) throws UnsupportedEncodingException {
 		this.writer = loginUser;
 		this.issue = issue;
 		this.originalFileName = originalName;
 		this.saveFileName = UUID.randomUUID()+"_"+originalName;
+		this.path = uploadPath;
 	}
 
 	public String getOriginalFileName() {

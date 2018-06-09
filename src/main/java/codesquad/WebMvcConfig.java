@@ -2,7 +2,6 @@ package codesquad;
 
 import java.util.List;
 
-
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,55 +21,56 @@ import support.converter.LocalDateTimeConverter;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new LocalDateConverter("yyyy-MM-dd"));
-        registry.addConverter(new LocalDateTimeConverter("yyyy-MM-dd HH:mm:ss.SSS"));
-    }
+	@Override
+	public void addFormatters(FormatterRegistry registry) {
+		registry.addConverter(new LocalDateConverter("yyyy-MM-dd"));
+		registry.addConverter(new LocalDateTimeConverter("yyyy-MM-dd HH:mm:ss.SSS"));
+	}
 
-    @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages");
-        messageSource.setDefaultEncoding("UTF-8");
-        messageSource.setCacheSeconds(30);
-        return messageSource;
-    }
+	@Bean
+	public MessageSource messageSource() {
+		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+		messageSource.setBasename("classpath:messages");
+		messageSource.setDefaultEncoding("UTF-8");
+		messageSource.setCacheSeconds(30);
+		return messageSource;
+	}
 
-    @Bean
-    public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource) {
-        return new MessageSourceAccessor(messageSource);
-    }
-    
-    @Bean
-    public LocalValidatorFactoryBean validator() {
-        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-        bean.setValidationMessageSource(messageSource());
-        return bean;
-    }
+	@Bean
+	public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource) {
+		return new MessageSourceAccessor(messageSource);
+	}
 
-    @Override
-    public Validator getValidator() {
-        return validator();
-    }
+	@Bean
+	public LocalValidatorFactoryBean validator() {
+		LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+		bean.setValidationMessageSource(messageSource());
+		return bean;
+	}
 
-    @Bean
-    public BasicAuthInterceptor basicAuthInterceptor() {
-        return new BasicAuthInterceptor();
-    }
+	@Override
+	public Validator getValidator() {
+		return validator();
+	}
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(basicAuthInterceptor());
-    }
+	@Bean
+	public BasicAuthInterceptor basicAuthInterceptor() {
+		return new BasicAuthInterceptor();
+	}
 
-    @Bean
-    public LoginUserHandlerMethodArgumentResolver loginUserArgumentResolver() {
-        return new LoginUserHandlerMethodArgumentResolver();
-    }
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(basicAuthInterceptor());
+	}
 
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(loginUserArgumentResolver());
-    }
+	@Bean
+	public LoginUserHandlerMethodArgumentResolver loginUserArgumentResolver() {
+		return new LoginUserHandlerMethodArgumentResolver();
+	}
+
+	@Override
+	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+		argumentResolvers.add(loginUserArgumentResolver());
+	}
+
 }

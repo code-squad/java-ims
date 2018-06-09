@@ -1,23 +1,15 @@
 package codesquad.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.springframework.core.io.PathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import codesquad.UnAuthenticationException;
 import codesquad.domain.Answer;
 import codesquad.domain.AnswerRepository;
-import codesquad.domain.Attachment;
-import codesquad.domain.AttachmentRepository;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.Label;

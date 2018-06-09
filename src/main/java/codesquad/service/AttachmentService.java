@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.PathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,9 @@ public class AttachmentService {
 
 	@Resource(name = "issueRepository")
 	private IssueRepository issueRepository;
+	
+	@Value("${file.upload.path}")
+	private String uploadPath;
 
 	public Issue findById(Long id) {
 		return issueRepository.findById(id).orElseThrow(() -> new NullPointerException("존재하지 않는 이슈"));
@@ -33,7 +37,7 @@ public class AttachmentService {
 	public Attachment addAttachment(User loginUser, Long issueId, MultipartFile file)
 			throws IllegalStateException, IOException {
 		checkFile(file);
-		Attachment attachment = new Attachment(loginUser, findById(issueId), file.getOriginalFilename());
+		Attachment attachment = new Attachment(loginUser, findById(issueId), file.getOriginalFilename(),uploadPath);
 		file.transferTo(new File(attachment.getPath(), attachment.getSaveFileName()));
 		return attachmentRepository.save(attachment);
 	}

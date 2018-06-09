@@ -22,7 +22,6 @@ import codesquad.domain.Attachment;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.AttachmentService;
-import codesquad.service.IssueService;
 
 @RestController
 @RequestMapping("/api/attachments")
@@ -36,6 +35,7 @@ public class ApiAttachmentController {
 	@PostMapping("/{issueId}")
 	public ResponseEntity<Attachment> upload(@LoginUser User loginUser, @PathVariable Long issueId, MultipartFile file)
 			throws IllegalStateException, IOException {
+		
 		log.debug("original file name: {}", file.getOriginalFilename());
 		log.debug("contenttype: {}", file.getContentType());
 		
