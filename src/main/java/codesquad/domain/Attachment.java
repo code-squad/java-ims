@@ -40,14 +40,11 @@ public class Attachment extends AbstractEntity {
 	public Attachment() {
 	}
 	
-	public Attachment(User loginUser, Issue issue, MultipartFile file) throws UnsupportedEncodingException {
-		if(file.isEmpty()) {
-			throw new NullPointerException();
-		}
+	public Attachment(User loginUser, Issue issue, String originalName) throws UnsupportedEncodingException {
 		this.writer = loginUser;
 		this.issue = issue;
-		this.originalFileName = file.getOriginalFilename();
-		this.saveFileName = UUID.randomUUID()+"_"+file.getOriginalFilename();
+		this.originalFileName = originalName;
+		this.saveFileName = UUID.randomUUID()+"_"+originalName;
 	}
 
 	public String getOriginalFileName() {

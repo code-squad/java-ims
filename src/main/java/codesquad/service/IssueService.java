@@ -47,9 +47,6 @@ public class IssueService {
 	@Resource(name = "answerRepository")
 	private AnswerRepository answerRepository;
 
-	@Resource(name = "attachmentRepository")
-	private AttachmentRepository attachmentRepository;
-
 	public Issue add(User loginUser, IssueDto issueDto) {
 		Issue issue = issueDto.toIssue();
 		issue.writeBy(loginUser);
@@ -121,20 +118,6 @@ public class IssueService {
 
 	public Result checkAnswerOwner(User loginUser, Long answerId) throws UnAuthenticationException {
 		return answerRepository.findById(answerId).orElseThrow(NullPointerException::new).checkOwnerResult(loginUser);
-	}
-
-	public Attachment addAttachment(User loginUser, Long issueId, MultipartFile file)
-			throws IllegalStateException, IOException {
-		Attachment attachment = new Attachment(loginUser, findById(issueId), file);
-		file.transferTo(new File(attachment.getPath(), attachment.getSaveFileName()));
-		return attachmentRepository.save(attachment);
-	}
-
-	public PathResource downloadAttachment(Long attachmentId) {
-		Attachment attachment = attachmentRepository.findById(attachmentId).orElseThrow(NullPointerException::new);
-		Path path = Paths.get(attachment.getPath() + attachment.getSaveFileName());
-		PathResource resource = new PathResource(path);
-		return resource;
 	}
 
 }

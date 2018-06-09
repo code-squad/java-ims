@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import codesquad.domain.Attachment;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
+import codesquad.service.AttachmentService;
 import codesquad.service.IssueService;
 
 @RestController
@@ -29,8 +30,8 @@ public class ApiAttachmentController {
 
 	private static final Logger log = LoggerFactory.getLogger(ApiAttachmentController.class);
 
-	@Resource(name = "issueService")
-	private IssueService issueService;
+	@Resource(name = "attachmentService")
+	private AttachmentService attachmentService;
 
 	@PostMapping("/{issueId}")
 	public ResponseEntity<Attachment> upload(@LoginUser User loginUser, @PathVariable Long issueId, MultipartFile file)
@@ -40,12 +41,12 @@ public class ApiAttachmentController {
 		
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(MediaType.APPLICATION_JSON);
-		return new ResponseEntity<Attachment>(issueService.addAttachment(loginUser, issueId, file), header, HttpStatus.CREATED);
+		return new ResponseEntity<Attachment>(attachmentService.addAttachment(loginUser, issueId, file), header, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{attachmentId}")
 	public ResponseEntity<PathResource> download(@PathVariable Long attachmentId) throws IOException {
-		PathResource resource = issueService.downloadAttachment(attachmentId);
+		PathResource resource = attachmentService.downloadAttachment(attachmentId);
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(MediaType.TEXT_XML);
 		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=+" + resource.getFilename());
