@@ -55,7 +55,7 @@ public class UserController {
     public String login(String userId, String password, HttpSession session) {
         try {
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, userService.login(userId, password));
-            return "redirect:/";
+            return "redirect:/users";
         } catch (UnAuthenticationException e) {
             return "/user/login";
         }
