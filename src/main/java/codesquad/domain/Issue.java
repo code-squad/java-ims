@@ -16,6 +16,8 @@ public class Issue extends AbstractEntity {
     @Column(nullable = false)
     private String content;
 
+    private boolean deleted;
+
     public Issue() {
     }
 
@@ -38,5 +40,13 @@ public class Issue extends AbstractEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "Issue{" +
+                "title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                '}';
     }
 }
