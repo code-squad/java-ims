@@ -49,6 +49,34 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
+    public void loginForm(){
+        ResponseEntity<String > response = template.getForEntity("/users/login", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void login_success(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().
+                addParameter("userId", "javajigi").
+                addParameter("password", "test").build();
+
+        ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+    }
+
+    @Test
+    public void login_fail(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().
+                addParameter("userId", "javajigi").
+                addParameter("password", "fail").build();
+
+        ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
     public void updateForm_no_login() throws Exception {
         ResponseEntity<String> response = template.getForEntity(String.format("/users/%d/form", loginUser.getId()),
                 String.class);
@@ -59,6 +87,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void updateForm_login() throws Exception {
         ResponseEntity<String> response = basicAuthTemplate
                 .getForEntity(String.format("/users/%d/form", loginUser.getId()), String.class);
+        log.debug("response : {}", response);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().contains(loginUser.getName()), is(true));
     }
