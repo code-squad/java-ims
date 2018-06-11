@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IssueRepository extends JpaRepository<Issue, Long> {
 
-    List<Issue> findAllByDeleted(boolean deleted);
+    List<Issue> findAllByDeletedFalse();
 }

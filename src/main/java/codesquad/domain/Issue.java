@@ -2,9 +2,7 @@ package codesquad.domain;
 
 import support.domain.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
+import javax.persistence.*;
 
 @Entity
 public class Issue extends AbstractEntity {
@@ -16,7 +14,8 @@ public class Issue extends AbstractEntity {
     @Column(nullable = false)
     private String content;
 
-    private boolean closed;
+    @Enumerated(EnumType.STRING)
+    private IssueStatus status = IssueStatus.OPEN;
 
     private boolean deleted;
 
@@ -24,6 +23,12 @@ public class Issue extends AbstractEntity {
     }
 
     public Issue(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    public Issue(long id, String title, String content) {
+        super(id);
         this.title = title;
         this.content = content;
     }
@@ -48,11 +53,14 @@ public class Issue extends AbstractEntity {
         this.content = content;
     }
 
-    public String getClosed() {
-        if (deleted || closed) {
-            return "Closed";
-        }
-        return "#" + super.getId() + " Open";
+    public String getStatus() {
+        return "#" + super.getId()
+                + " "
+                + status.toString();
+    }
+
+    public void setStatus(IssueStatus status) {
+        this.status = status;
     }
 
     @Override

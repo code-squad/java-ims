@@ -21,7 +21,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(Model model) {
         logger.debug("Retrieving list of all issues...");
-        List<Issue> issues = issueRepository.findAllByDeleted(false);
+        List<Issue> issues = issueRepository.findAllByDeletedFalse();
         logger.debug("Number of Issues in Repo: {}", issues.size());
         model.addAttribute("issues", issues);
         return "index";
