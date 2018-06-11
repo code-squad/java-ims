@@ -15,7 +15,13 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void list() {
-        ResponseEntity<String> response = template().getForEntity("/issues", String.class);
+        ResponseEntity<String> response = template().getForEntity("/", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void form_NOT_Logged_In() {
+        ResponseEntity<String> response = template().getForEntity("/issues/form", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 }

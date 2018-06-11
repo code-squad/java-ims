@@ -3,7 +3,6 @@ package codesquad.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -12,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class IssueController {
     private static final Logger logger = LoggerFactory.getLogger(IssueController.class);
 
-    @GetMapping("")
-    public String list(Model model) {
-        logger.debug("Showing issue list...");
-
-        return "index";
+    @GetMapping("/form")
+    public String form() {
+        logger.debug("Getting issue form...");
+        return "/issue/form.html";
     }
+
+
 }
