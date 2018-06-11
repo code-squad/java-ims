@@ -22,6 +22,7 @@ public class HomeController {
     public String home(Model model) {
         logger.debug("Retrieving list of all issues...");
         List<Issue> issues = issueRepository.findAllByDeleted(false);
+        logger.debug("Number of Issues in Repo: {}", issues.size());
         model.addAttribute("issues", issues);
         return "index";
     }

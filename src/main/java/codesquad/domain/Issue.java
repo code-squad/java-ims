@@ -16,6 +16,8 @@ public class Issue extends AbstractEntity {
     @Column(nullable = false)
     private String content;
 
+    private boolean closed;
+
     private boolean deleted;
 
     public Issue() {
@@ -24,6 +26,10 @@ public class Issue extends AbstractEntity {
     public Issue(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
     public String getTitle() {
@@ -40,6 +46,13 @@ public class Issue extends AbstractEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getClosed() {
+        if (deleted || closed) {
+            return "Closed";
+        }
+        return "#" + super.getId() + " Open";
     }
 
     @Override
