@@ -36,6 +36,11 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @GetMapping("/login")
+    public String loginForm() {
+        return "/user/login";
+    }
+
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
         log.debug("LoginUser : {}", loginUser);
