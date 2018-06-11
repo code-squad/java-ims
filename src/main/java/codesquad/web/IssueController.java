@@ -1,7 +1,6 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
