@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
+import org.springframework.util.MultiValueMap;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -58,5 +60,12 @@ public abstract class AcceptanceTest {
     
     protected ResponseEntity<String> getResource(String location, User loginUser) {
         return basicAuthTemplate(loginUser).getForEntity(location, String.class);
+    }
+
+    protected String createIssueLocation(String subject, String comment) {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", subject)
+                .addParameter("comment", comment).build();
+        return template.postForEntity("/issues", request, String.class).getHeaders().getLocation().toString();
     }
 }
