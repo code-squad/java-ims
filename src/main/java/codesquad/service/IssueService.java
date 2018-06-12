@@ -20,8 +20,8 @@ public class IssueService {
         return issueRepository.save(newIssue.writeBy(loginUser));
     }
 
-    public IssueDto findById(Long id) {
-        return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new)._toIssueDto();
+    public Issue findById(Long id) {
+        return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     public Iterable<Issue> findAll() {
