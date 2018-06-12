@@ -49,16 +49,16 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
-    public void loginForm(){
-        ResponseEntity<String > response = template.getForEntity("/users/login", String.class);
+    public void loginForm() {
+        ResponseEntity<String> response = template.getForEntity("/users/login", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
     @Test
-    public void login_success(){
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().
-                addParameter("userId", "javajigi").
-                addParameter("password", "test").build();
+    public void login_success() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", "javajigi")
+                .addParameter("password", "test").build();
 
         ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
 
@@ -66,10 +66,10 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
-    public void login_fail(){
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().
-                addParameter("userId", "javajigi").
-                addParameter("password", "fail").build();
+    public void login_fail() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", "javajigi")
+                .addParameter("password", "fail").build();
 
         ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
 
