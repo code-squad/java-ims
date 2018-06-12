@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="en">
   <head>
-    {{ partial/head }}
+    {{> partial/head }}
   </head>
   <body>
     <div class="issues issues--wrap mdl-layout mdl-js-layout has-drawer is-upgraded">
 
-    {{ partial/nav }}
+    {{> partial/nav }}
       <main class="mdl-layout__content">
         <div class="issues-back">
           <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon back-btn" title="go back" role="button">
@@ -50,11 +50,11 @@
           </form>
           </div>
         </div>
-        {{ partial/footer }}
+        {{> partial/footer }}
       </main>
       <div class="mdl-layout__obfuscator"></div>
     </div>
-    {{ partial/script }}
+    {{> partial/script }}
     <script src="/js/history.js"></script>
   </body>
 </html>

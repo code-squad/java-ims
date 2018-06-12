@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-	{{ partial/head }}
+	{{> partial/head }}
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.3/dialog-polyfill.css">
 	<link rel="stylesheet" href="/css/tinymce.css">
 </head>
 <body>
 	<div class="issues issues--wrap mdl-layout mdl-js-layout is-upgraded">
 
-		{{ partial/nav }}
+		{{> partial/nav }}
 
 		<main class="mdl-layout__content">
 		<div class="issues__posts mdl-grid">
@@ -230,11 +230,11 @@
 				</div>
 			</div>
 		</div>
-		{{ partial/footer }}
+		{{> partial/footer }}
 		</main>
 		<div class="mdl-layout__obfuscator"></div>
 	</div>
-	{{ partial/script }}
+	{{> partial/script }}
 	<script src="https://cdn.tinymce.com/4/tinymce.min.js"></script>
 	<script src="/js/main.js"></script>
 </body>
