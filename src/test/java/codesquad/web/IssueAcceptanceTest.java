@@ -21,6 +21,10 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
 
     private final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
 
+    public static final String DEFAULT_SUBJECT = "문제가 생겼습니다.";
+    public static final String DEFAULT_COMMENT = "여기는 내용입니다.";
+
+
     @Autowired
     private IssueRepository issueRepository;
 
@@ -33,24 +37,22 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
 
     @Test
     public void create() throws Exception {
-        String subject = "문제가 생겼습니다.";
+
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", subject)
-                .addParameter("comment", "사실 없습니다.").build();
+                .addParameter("subject", DEFAULT_SUBJECT)
+                .addParameter("comment", DEFAULT_COMMENT).build();
 
         ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertNotNull(issueRepository.findBySubject(subject));
+        assertNotNull(issueRepository.findBySubject(DEFAULT_SUBJECT));
     }
 
     @Test
     public void show() {
-        String subject = "문제가 생겼습니다.";
-        String comment = "사실 없습니다.";
-        String location = createIssueLocation(subject, comment);
+        String location = createIssueLocation(DEFAULT_SUBJECT, DEFAULT_COMMENT);
         ResponseEntity<String> response = template.getForEntity(location, String.class);
-        assertTrue(response.getBody().contains(subject));
-        assertTrue(response.getBody().contains(comment));
+        assertTrue(response.getBody().contains(DEFAULT_SUBJECT));
+        assertTrue(response.getBody().contains(DEFAULT_COMMENT));
     }
 
 }
