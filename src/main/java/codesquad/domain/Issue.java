@@ -17,7 +17,7 @@ public class Issue extends AbstractEntity {
     private static final Logger log =  LoggerFactory.getLogger(Issue.class);
 
     @Size(min = 3, max = 50)
-    @Column
+    @Column(nullable = false)
     private String subject;
 
     @Size(min = 3)

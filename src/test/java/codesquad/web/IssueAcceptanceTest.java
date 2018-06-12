@@ -39,7 +39,8 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void list() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/issue", String.class);
+        ResponseEntity<String> response = template.getForEntity("/", String.class);
+        log.info("response : {}", response.getHeaders().getLocation().getPath());
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 

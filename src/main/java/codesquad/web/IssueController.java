@@ -27,18 +27,18 @@ public class IssueController {
         return "/issue/form";
     }
 
-    @GetMapping("")
-    public String list(Model model) {
-        List<Issue> issues = issueService.findAll();
-        model.addAttribute("issues", issues);
-        return "/index";
-    }
+//    @GetMapping("")
+//    public String list(Model model) {
+//        List<Issue> issues = issueService.findAll();
+//        model.addAttribute("issues", issues);
+//        return "/index";
+//    }
 
     @PostMapping("")
     public String create(IssueDto issueDto) {
         log.info("create method called");
         issueService.add(issueDto);
-        return "redirect:/issue";
+        return "redirect:/";
     }
 
     @GetMapping("{id}")
@@ -51,12 +51,12 @@ public class IssueController {
     @PutMapping("{id}")
     public String update(@PathVariable long id, IssueDto target) {
         issueService.update(id, target);
-        return "redirect:/issue";
+        return "redirect:/";
     }
 
     @DeleteMapping("{id}")
     public String delete(@PathVariable long id) {
         issueService.delete(id);
-        return "redirect:/issue";
+        return "redirect:/";
     }
 }
