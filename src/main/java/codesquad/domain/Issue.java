@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
@@ -28,6 +29,18 @@ public class Issue extends AbstractEntity {
         super(0L);
         this.title = title;
         this.contents = contents;
+    }
+
+    public void update(User loginUser, Issue target) {
+        if(!isOwner(loginUser)){
+            throw new UnAuthorizedException();
+        }
+        this.title = target.title;
+        this.contents = target.contents;
+    }
+
+    public boolean isOwner(User loginUser) {
+        return writer.equals(loginUser);
     }
 
     public void writeBy(User writer){

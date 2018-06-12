@@ -1,12 +1,15 @@
 package codesquad.web;
 
+import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.not;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,8 @@ import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 import javax.annotation.Resource;
+import javax.swing.text.html.parser.Entity;
+import java.util.Optional;
 
 public class IssueAcceptanceTest extends AcceptanceTest {
 
@@ -23,9 +28,9 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void create() {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().
-                addParameter("title", "testIssue").
-                addParameter("contents", "testContents").build();
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("title", "testIssue")
+                .addParameter("contents", "testContents").build();
 
         long beforeCount = issueRepository.count();
         ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues", request, String.class);
@@ -35,9 +40,9 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void create_제목_내용_없음() {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().
-                addParameter("title", "").
-                addParameter("contents", "").build();
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("title", "")
+                .addParameter("contents", "").build();
 
         long beforeCount = issueRepository.count();
         ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues", request, String.class);
@@ -47,9 +52,9 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void create_no_login() {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().
-                addParameter("title", "testIssue2").
-                addParameter("contents", "testContents2").build();
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("title", "testIssue2")
+                .addParameter("contents", "testContents2").build();
 
         long beforeCount = issueRepository.count();
         ResponseEntity<String> response = template().postForEntity("/issues", request, String.class);
@@ -65,8 +70,70 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void show(){
-        ResponseEntity<String> response = template().getForEntity("/issues/1", String.class);
+        ResponseEntity<String> response = template().getForEntity("/issues/3", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().contains("test"), is(true));
+        assertThat(response.getBody().contains("test3"), is(true));
+    }
+
+    @Test
+    public void updateForm(){
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity("/issues/1/form", String.class);
+        assertThat(response.getStatusCode(),is(HttpStatus.OK));
+        Issue dbIssue = issueRepository.findById(1L).get();
+        assertTrue(response.getBody().contains(dbIssue.getTitle()));
+    }
+
+    @Test
+    public void updateForm_다른_사용자(){
+        ResponseEntity<String> response = basicAuthTemplate(findByUserId("riverway")).getForEntity("/issues/1/form", String.class);
+        assertThat(response.getStatusCode(),is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void update() throws Exception{
+        ResponseEntity<String> response = update(basicAuthTemplate(), 1);
+        assertThat(response.getStatusCode(),is(HttpStatus.FOUND));
+        Issue dbIssue = issueRepository.findById(1L).get();
+        assertThat(dbIssue.getTitle(), is("updateIssue"));
+    }
+
+    @Test
+    public void update_다른_사용자() throws Exception{
+        ResponseEntity<String> response = update(basicAuthTemplate(findByUserId("riverway")), 4);
+        assertThat(response.getStatusCode(),is(HttpStatus.FORBIDDEN));
+        Issue dbIssue = issueRepository.findById(4L).get();
+        assertThat(dbIssue.getTitle(), is("test4"));
+    }
+
+    private ResponseEntity<String> update(TestRestTemplate template, long number) throws Exception{
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("title", "updateIssue")
+                .addParameter("contents", "updateContents")
+                .addParameter("_method", "put").build();
+        return template.postForEntity(String.format("/issues/%d", number), request, String.class);
+    }
+
+    @Test
+    public void delete(){
+       ResponseEntity<String> response = delete(basicAuthTemplate(findByUserId("riverway")),2L);
+
+       Optional<Issue> dbissue = issueRepository.findById(2L);
+       assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+       assertThat(dbissue.isPresent(), is(false));
+    }
+
+    @Test
+    public void delete_다른_사용자(){
+        ResponseEntity<String> response = delete(basicAuthTemplate(findByUserId("sanjigi")), 3L);
+
+        Optional<Issue> dbissue = issueRepository.findById(3L);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+        assertThat(dbissue.isPresent(), is(true));
+    }
+
+    private ResponseEntity<String> delete(TestRestTemplate template, long number){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "delete").build();
+        return template.postForEntity(String.format("/issues/%d", number), request, String.class);
     }
 }

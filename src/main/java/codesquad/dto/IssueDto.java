@@ -41,4 +41,12 @@ public class IssueDto {
     public Issue toIssue(){
         return new Issue(title, contents);
     }
+
+    @Override
+    public String toString() {
+        return "IssueDto{" +
+                "title='" + title + '\'' +
+                ", contents='" + contents + '\'' +
+                '}';
+    }
 }

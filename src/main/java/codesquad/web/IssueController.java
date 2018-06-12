@@ -9,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -35,9 +32,29 @@ public class IssueController {
         return "redirect:/";
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
         return "/issue/show";
+    }
+
+    @GetMapping("/{id}/form")
+    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+        model.addAttribute("issue", issueService.checkOwner(id, loginUser));
+        log.debug("Success");
+        return "/issue/updateForm";
+    }
+
+    @PutMapping("/{id}")
+    public String update(@LoginUser User loginUser, @PathVariable long id, IssueDto target){
+        log.debug("IssueDto : {}", target);
+        issueService.update(id, loginUser, target);
+        return "redirect:/";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User loginUser, @PathVariable long id){
+        issueService.delete(id, loginUser);
+        return "redirect:/";
     }
 }

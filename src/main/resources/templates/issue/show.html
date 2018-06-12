@@ -29,12 +29,18 @@
         <div class="issues__posts mdl-grid">
           <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
             <div class="mdl-card__menu">
-              <a href="/updateIssue/1" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+              <a href="/issues/{{id}}/form" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
                 <i class="material-icons">edit</i>
               </a>
-              <a href="/deleteIssue/1" id="issues-menu-lower-right" class="mdl-button mdl-js-button mdl-button--icon">
-                <i class="material-icons">delete</i>
-              </a>
+              <form action="/issues/{{id}}" method="post">
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit" id="issues-menu-lower-right" class="mdl-button mdl-js-button mdl-button--icon">
+                  <i class="material-icons">delete</i>
+                </button>
+              </form>
+              <!--<a href="/issues/{{id}}" id="issues-menu-lower-right" class="mdl-button mdl-js-button mdl-button&#45;&#45;icon">-->
+                <!--<i class="material-icons">delete</i>-->
+              <!--</a>-->
             </div>
             <div class="mdl-card__title mdl-color-text--grey-50">
               <i class="material-icons">check_circle</i>
@@ -203,7 +209,7 @@
                   <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                   <label for="comment" class="mdl-textfield__label">Leave a comment</label>
                 </div>
-                <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                  <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
                   <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">add comment</span>
                 </button>
             </form>
