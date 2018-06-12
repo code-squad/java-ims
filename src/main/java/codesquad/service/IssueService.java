@@ -22,7 +22,7 @@ public class IssueService {
         return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new)._toIssueDto();
     }
 
-    public Iterable<Issue> findAllByOrderByIdDesc() {
+    public Iterable<Issue> findAll() {
         return issueRepository.findAllByOrderByIdDesc();
     }
 }

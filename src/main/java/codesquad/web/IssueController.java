@@ -26,7 +26,6 @@ public class IssueController {
 
     @PostMapping("")
     public String create(IssueDto issueDto) {
-
         Issue newIssue = issueService.save(issueDto);
         return "redirect:/issues/" + newIssue.getId();
     }

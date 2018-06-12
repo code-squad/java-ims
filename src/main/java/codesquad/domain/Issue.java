@@ -25,16 +25,16 @@ public class Issue extends AbstractEntity{
 
     public Issue () {}
 
-    public Issue(@Size(min = 3, max = 50) String subject, @Size(min = 5) String comment) {
+    public Issue(String subject, String comment) {
         this.subject = subject;
         this.comment = comment;
     }
 
-    public Issue(@Size(min = 3, max = 50) String subject, @Size(min = 5) String comment, User writer) {
+    public Issue(String subject, String comment, User writer) {
         this(0L, subject, comment, writer);
     }
 
-    public Issue(long id, @Size(min = 3, max = 50) String subject, @Size(min = 5) String comment, User writer) {
+    public Issue(long id, String subject, String comment, User writer) {
         super(id);
         this.subject = subject;
         this.comment = comment;
