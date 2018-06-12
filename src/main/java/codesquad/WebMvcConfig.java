@@ -7,9 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.Ordered;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import codesquad.security.BasicAuthInterceptor;
@@ -19,6 +21,15 @@ import support.converter.LocalDateTimeConverter;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+
+        registry.addViewController("/users/loginForm").setViewName("/user/login");
+        registry.addViewController("/users/form").setViewName("/user/join");
+    }
+
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new LocalDateConverter("yyyy-MM-dd"));

@@ -57,8 +57,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void updateForm_login() throws Exception {
-        ResponseEntity<String> response = basicAuthTemplate
-                .getForEntity(String.format("/users/%d/form", loginUser.getId()), String.class);
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity(String.format("/users/%d/form", loginUser.getId()), String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().contains(loginUser.getName()), is(true));
     }

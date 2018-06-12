@@ -25,11 +25,6 @@ public class UserController {
     @Resource(name = "userService")
     private UserService userService;
 
-    @GetMapping("/form")
-    public String form() {
-        return "/user/form";
-    }
-
     @PostMapping("")
     public String create(UserDto userDto) {
         userService.add(userDto);
@@ -40,7 +35,7 @@ public class UserController {
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
         log.debug("LoginUser : {}", loginUser);
         model.addAttribute("user", userService.findById(loginUser, id));
-        return "/user/updateForm";
+        return "/user/edit";
     }
 
     @PutMapping("/{id}")
