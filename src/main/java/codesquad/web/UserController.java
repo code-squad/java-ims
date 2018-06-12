@@ -55,19 +55,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(String userId, String password, HttpSession session, Model model) {
+    public String login(String userId, String password, HttpSession session, Model model) throws UnAuthenticationException {
         if (isLoginUser(session)) {
             throw new AlreadyLoginException(); // 이미 로그인 한 사용자의 접근 방지
         }
         log.debug("login - id : {}, pw : {}", userId, password);
-        try {
             User loginUser = userService.login(userId, password);
             session.setAttribute(USER_SESSION_KEY, loginUser);
             return "redirect:/";
-        } catch (UnAuthenticationException e) {
-            model.addAttribute("errorMessage", Result.fail(LOGIN_NOT_MATCH_WARNING).getErrorMessage());
-            return "user/loginForm";
-        }
     }
 
     @GetMapping("/{id}/form")

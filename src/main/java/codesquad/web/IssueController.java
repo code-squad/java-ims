@@ -1,7 +1,9 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,13 +22,13 @@ public class IssueController {
     private IssueService issueService;
 
     @GetMapping("/form")
-    public String createForm() {
+    public String createForm(@LoginUser User loginUser) {
         return "issue/form";
     }
 
     @PostMapping("")
-    public String create(IssueDto issueDto) {
-        Issue newIssue = issueService.save(issueDto);
+    public String create(@LoginUser User loginUser, IssueDto issueDto) {
+        Issue newIssue = issueService.save(loginUser, issueDto);
         return "redirect:/issues/" + newIssue.getId();
     }
 

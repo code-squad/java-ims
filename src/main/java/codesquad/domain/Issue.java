@@ -41,8 +41,9 @@ public class Issue extends AbstractEntity{
         this.writer = writer;
     }
 
-    public void writeBy(User loginUser) {
+    public Issue writeBy(User loginUser) {
         this.writer = loginUser;
+        return this;
     }
 
     public String getSubject() {
