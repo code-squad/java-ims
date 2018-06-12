@@ -37,14 +37,14 @@
 				<div class="mdl-card__supporting-text">
 					<ul class="issue-list mdl-list">
 
-						
+							{{#issues}}
 							<li class="mdl-list__item mdl-list__item--two-line">
 								<span class="mdl-list__item-primary-content">
 								    <a> 
 								         <img class="mdl-list__item-avatar" height="48" width="48" src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
 									</a> 
 									<a href="/issue/show.html">
-									    <strong>testIssue</strong>
+									    <strong>{{subject}}</strong>
 									</a>
 									<span class="mdl-list__item-sub-title"> 
 									    #1 Open
@@ -56,7 +56,7 @@
 									<span class="material-icons mdl-badge mdl-badge--overlap" data-badge="1">comment</span>
 								</span>
 							</li>
-						
+							{{/issues}}
 							<li class="mdl-list__item mdl-list__item--two-line">
 								<span class="mdl-list__item-primary-content">
 								    <a> 

@@ -28,7 +28,7 @@ public class IssueController {
     public String create(IssueDto issueDto) {
 
         Issue newIssue = issueService.save(issueDto);
-        return "redirect:/issues" + newIssue.getId();
+        return "redirect:/issues/" + newIssue.getId();
     }
 
     @GetMapping("{id}")

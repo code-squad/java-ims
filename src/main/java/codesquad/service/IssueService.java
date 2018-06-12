@@ -21,4 +21,8 @@ public class IssueService {
     public IssueDto findById(Long id) {
         return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new)._toIssueDto();
     }
+
+    public Iterable<Issue> findAllByOrderByIdDesc() {
+        return issueRepository.findAllByOrderByIdDesc();
+    }
 }
