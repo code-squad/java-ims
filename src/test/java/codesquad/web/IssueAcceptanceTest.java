@@ -34,13 +34,11 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = template.postForEntity("/issue", request, String.class);
         log.info("response : {}", response.getBody());
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertThat(response.getHeaders().getLocation().getPath(), is("/issue"));
     }
 
     @Test
     public void list() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/", String.class);
-        log.info("response : {}", response.getHeaders().getLocation().getPath());
+        ResponseEntity<String> response = template.getForEntity("/issue", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
