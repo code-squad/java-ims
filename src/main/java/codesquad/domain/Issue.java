@@ -8,9 +8,11 @@ import support.domain.AbstractEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 @Entity
+@Table
 public class Issue extends AbstractEntity {
     private static final Logger log =  LoggerFactory.getLogger(Issue.class);
 
@@ -35,6 +37,12 @@ public class Issue extends AbstractEntity {
 
     public Issue() {};
 
+    public void update(Issue target) {
+        this.subject = target.subject;
+        this.comment = target.comment;
+        log.info("after update issue : {}", this.toString());
+    }
+
     public IssueDto toIssueDto() {
         return new IssueDto(this.subject, this.comment);
     }
@@ -45,5 +53,13 @@ public class Issue extends AbstractEntity {
 
     public String getComment() {
         return comment;
+    }
+
+    @Override
+    public String toString() {
+        return "Issue{" +
+                "subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
+                '}';
     }
 }

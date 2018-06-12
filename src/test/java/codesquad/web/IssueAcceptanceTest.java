@@ -38,8 +38,34 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    public void list() throws Exception {
+        ResponseEntity<String> response = template.getForEntity("/issue", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
     public void show() throws Exception {
         ResponseEntity<String> response = template.getForEntity("/issue/1", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void update() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method","put")
+                .addParameter("subject", "updated subject")
+                .addParameter("comment", "updated comment").build();
+        ResponseEntity<String> response = template.postForEntity("/issue/1", request, String.class);
+        log.info("status code : {}", response.getStatusCode());
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/issue"));
+    }
+
+    @Test
+    public void delete() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "delete").build();
+        ResponseEntity<String> response = template.postForEntity("/issue/2", request, String.class);
+        assertThat(response.getHeaders().getLocation().getPath(), is("/issue"));
     }
 }
