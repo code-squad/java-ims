@@ -40,9 +40,9 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("password", "password")
                 .addParameter("name", "자바지기")
                 .addParameter("email", "javajigi@slipp.net").build();
-
+        log.info("request : {}", request.toString());
         ResponseEntity<String> response = template.postForEntity("/users", request, String.class);
-
+        log.info("response : {}", response.getBody());
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(userRepository.findByUserId(userId));
         assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
