@@ -15,4 +15,6 @@ public abstract class BasicAuthAcceptanceTest extends AcceptanceTest {
         loginUser = findDefaultUser();
         basicAuthTemplate = basicAuthTemplate(loginUser);
     }
+
+
 }

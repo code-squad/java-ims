@@ -89,19 +89,13 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void login_success() {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("userId", "javajigi")
-                .addParameter("password", "test").build();
-        ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
+        ResponseEntity<String> response = defaultLogin("javajigi", "test");
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
 
     @Test
     public void login_fail() {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("userId", "javajigi")
-                .addParameter("password", "wrong").build();
-        ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
+        ResponseEntity<String> response = defaultLogin("javajigi", "wrong");
 
         assertFalse(response.getBody().contains("href=\"/users/logout\""));
         assertFalse(response.getBody().contains("href=\"/users/update\""));
@@ -112,12 +106,8 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void logout_success() {
-
-    }
-
-    @Test
-    public void logout_fail_no_login() {
-
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity("/users/logout", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
     private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
@@ -128,6 +118,13 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("email", "javajigi@slipp.net").build();
 
         return template.postForEntity(String.format("/users/%d", loginUser.getId()), request, String.class);
+    }
+
+    private ResponseEntity<String> defaultLogin(String userId, String password) {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", userId)
+                .addParameter("password", password).build();
+        return template.postForEntity("/users/login", request, String.class);
     }
 
 }
