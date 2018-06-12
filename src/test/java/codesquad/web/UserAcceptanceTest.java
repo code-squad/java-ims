@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import static codesquad.util.Result.LOGIN_NOT_MATCH_WARNING;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -93,11 +94,6 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("password", "test").build();
         ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
-        assertTrue(response.getBody().contains("href=\"/users/logout\""));
-        assertTrue(response.getBody().contains("href=\"/users/updateProfile\""));
-        assertFalse(response.getBody().contains("href=\"/users/loginForm\""));
-        assertFalse(response.getBody().contains("href=\"/users/form\""));
     }
 
     @Test
@@ -106,12 +102,12 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("userId", "javajigi")
                 .addParameter("password", "wrong").build();
         ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
-        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+
         assertFalse(response.getBody().contains("href=\"/users/logout\""));
-        assertFalse(response.getBody().contains("href=\"/users/updateProfile\""));
-        assertTrue(response.getBody().contains("href=\"/users/loginForm\""));
+        assertFalse(response.getBody().contains("href=\"/users/update\""));
+        assertTrue(response.getBody().contains("href=\"/users/login/form\""));
         assertTrue(response.getBody().contains("href=\"/users/form\""));
+        assertTrue(response.getBody().contains(LOGIN_NOT_MATCH_WARNING));
     }
 
     @Test

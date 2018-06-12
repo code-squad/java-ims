@@ -49,7 +49,7 @@ public class UserService {
         if (!user.matchPassword(password)) {
             throw new UnAuthenticationException();
         }
-
         return user;
     }
+
 }
