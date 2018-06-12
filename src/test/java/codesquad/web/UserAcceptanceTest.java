@@ -48,34 +48,6 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
-    public void updateForm_no_login() throws Exception {
-        ResponseEntity<String> response = template.getForEntity(String.format("/users/%d/form", loginUser.getId()),
-                String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
-    }
-
-    @Test
-    public void updateForm_login() throws Exception {
-        ResponseEntity<String> response = basicAuthTemplate
-                .getForEntity(String.format("/users/%d/form", loginUser.getId()), String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().contains(loginUser.getName()), is(true));
-    }
-
-    @Test
-    public void update_no_login() throws Exception {
-        ResponseEntity<String> response = update(template);
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
-    }
-    
-    @Test
-    public void update() throws Exception {
-        ResponseEntity<String> response = update(basicAuthTemplate);
-        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
-    }
-
-    @Test
     public void show_login_form() {
         ResponseEntity<String> response = template.getForEntity("/users/login/form", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -98,7 +70,6 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = defaultLogin("javajigi", "wrong");
 
         assertFalse(response.getBody().contains("href=\"/users/logout\""));
-        assertFalse(response.getBody().contains("href=\"/users/update\""));
         assertTrue(response.getBody().contains("href=\"/users/login/form\""));
         assertTrue(response.getBody().contains("href=\"/users/form\""));
         assertTrue(response.getBody().contains(LOGIN_NOT_MATCH_WARNING));
@@ -118,6 +89,34 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("email", "javajigi@slipp.net").build();
 
         return template.postForEntity(String.format("/users/%d", loginUser.getId()), request, String.class);
+    }
+
+    @Test
+    public void updateForm_no_login() throws Exception {
+        ResponseEntity<String> response = template.getForEntity(String.format("/users/%d/form", loginUser.getId()),
+                String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void updateForm_login() throws Exception {
+        ResponseEntity<String> response = basicAuthTemplate
+                .getForEntity(String.format("/users/%d/form", loginUser.getId()), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody().contains(loginUser.getName()), is(true));
+    }
+
+    @Test
+    public void update_no_login() throws Exception {
+        ResponseEntity<String> response = update(template);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void update() throws Exception {
+        ResponseEntity<String> response = update(basicAuthTemplate);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
     }
 
     private ResponseEntity<String> defaultLogin(String userId, String password) {

@@ -40,9 +40,10 @@ public class UserController {
     }
 
     @PostMapping("")
-    public String create(UserDto userDto) {
-        userService.add(userDto);
-        return "redirect:/users";
+    public String create(UserDto userDto, HttpSession session) {
+        User newUser = userService.add(userDto);
+        session.setAttribute(USER_SESSION_KEY, newUser);
+        return "redirect:/";
     }
 
     @GetMapping("/login/form")
@@ -79,7 +80,7 @@ public class UserController {
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
         userService.update(loginUser, id, target);
-        return "redirect:/users";
+        return "redirect:/";
     }
 
     @GetMapping("/logout")

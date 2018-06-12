@@ -9,7 +9,7 @@
             <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
             {{#loginedUser}}
             <a class="mdl-navigation__link" href="/users/logout">Logout</a>
-            <a class="mdl-navigation__link" href="/users/update">Edit profile</a>
+            <a class="mdl-navigation__link" href="/users/{{id}}/form">Edit profile</a>
             {{/loginedUser}}
             {{^loginedUser}}
             <a class="mdl-navigation__link" href="/users/login/form">Login</a>
