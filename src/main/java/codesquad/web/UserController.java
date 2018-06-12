@@ -1,7 +1,10 @@
 package codesquad.web;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
+import codesquad.exception.AlreadyLoginException;
+import codesquad.security.HttpSessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -37,7 +40,10 @@ public class UserController {
     }
 
     @GetMapping("/login/form")
-    public String loginForm() {
+    public String loginForm(HttpSession session) {
+        if (session.getAttribute(HttpSessionUtils.USER_SESSION_KEY) != null) {
+            throw new AlreadyLoginException(); // 이미 로그인 한 사용자의 접근 방지
+        }
         return "/user/loginForm";
     }
 

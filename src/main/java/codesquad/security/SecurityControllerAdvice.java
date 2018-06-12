@@ -2,6 +2,7 @@ package codesquad.security;
 
 import javax.persistence.EntityNotFoundException;
 
+import codesquad.exception.AlreadyLoginException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -32,5 +33,12 @@ public class SecurityControllerAdvice {
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public void unAuthentication() {
         log.debug("UnAuthenticationException is happened!");
+    }
+
+    @ExceptionHandler(AlreadyLoginException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public String unAuthorizedAlreadyLogin() {
+        log.debug("Illegal login user access is happened! ");
+        return "/";
     }
 }

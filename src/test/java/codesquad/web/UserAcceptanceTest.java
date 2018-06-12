@@ -76,15 +76,14 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void show_login_form() {
-        ResponseEntity<String> response = template.getForEntity("/users/loginForm", String.class);
+        ResponseEntity<String> response = template.getForEntity("/users/login/form", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/user/loginForm"));
     }
 
     @Test
     public void show_login_form_fail_already_login() {
-        ResponseEntity<String> response = basicAuthTemplate.getForEntity("/users/loginForm", String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity("/users/login/form", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
     @Test
