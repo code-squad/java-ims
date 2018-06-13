@@ -11,8 +11,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,10 +44,17 @@ public class IssueServiceTest {
 
     @Test
     public void show() {
+        Issue issue = validIssue();
+        when(issueRepo.findById(anyLong())).thenReturn(Optional.of(issue));
+        Issue origin = issueService.get(anyLong()).toIssue();
+
+        assertEquals(issue.getContents(), origin.getContents());
     }
 
-    @Test
+    @Test (expected = EntityNotFoundException.class)
     public void show_fail_not_found() {
+        when(issueRepo.findById(anyLong())).thenReturn(Optional.empty());
+        issueService.get(anyLong());
     }
 
     @Test

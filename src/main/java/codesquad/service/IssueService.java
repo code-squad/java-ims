@@ -7,6 +7,8 @@ import codesquad.dto.IssueDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 public class IssueService {
 
@@ -17,5 +19,9 @@ public class IssueService {
         Issue issue = issueDto.toIssue();
         issue.writeBy(user);
         return issueRepo.save(issue);
+    }
+
+    public IssueDto get(Long id) {
+        return issueRepo.findById(id).map(Issue::toDto).orElseThrow(EntityNotFoundException::new);
     }
 }

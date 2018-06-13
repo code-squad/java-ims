@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import codesquad.dto.IssueDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 import support.domain.UriGeneratable;
 
@@ -77,10 +78,16 @@ public class Issue extends AbstractEntity implements UriGeneratable {
 
     @Override
     public String generateUri() {
-        return String.format("/questions/%d", getId());
+        return String.format("/issues/%d", getId());
     }
 
     public IssueDto toDto() {
         return new IssueDto(getId(), getTitle(), getContents());
+    }
+
+    @Override
+    @JsonIgnore
+    public String getEntityName() {
+        return "issue";
     }
 }

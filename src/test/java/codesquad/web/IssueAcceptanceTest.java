@@ -18,46 +18,45 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     private static final String CREATE_PATH = "/issues";
 
+    private HttpEntity<MultiValueMap<String, Object>> create(String title, String contents) {
+        HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
+        builder.addParameter("title", title);
+        builder.addParameter("contents", contents);
+        return builder.build();
+    }
+
     @Test
     public void create() {
-        HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
-        builder.addParameter("title", "test title");
-        builder.addParameter("contents", "test contents");
-        HttpEntity<MultiValueMap<String, Object>> request = builder.build();
-
-        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, request);
+        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, create("test title", "test contents"));
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         log.debug("redirect uri : {}", response.getHeaders().getLocation().getPath());
     }
 
     @Test
     public void create_fail_unAuthentication() {
-        HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
-        builder.addParameter("title", "test title");
-        builder.addParameter("contents", "test contents");
-        HttpEntity<MultiValueMap<String, Object>> request = builder.build();
-
-        ResponseEntity<String> response = requestPost(template(), CREATE_PATH, request);
+        ResponseEntity<String> response = requestPost(template(), CREATE_PATH, create("test title", "test contents"));
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
     @Test
     public void create_fail_invalid_params() {
-        HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
-        builder.addParameter("title", "t");
-        builder.addParameter("contents", "t");
-        HttpEntity<MultiValueMap<String, Object>> request = builder.build();
-
-        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, request);
+        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, create("t", "t"));
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
     @Test
     public void show() {
+        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, create("test title", "test contents"));
+        String path = getPath(response);
+
+        response = requestGet(path);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
     @Test
     public void show_fail_not_found() {
+        ResponseEntity<String> response = requestGet("/issues/1000");
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
     @Test
