@@ -1,12 +1,14 @@
 package codesquad.domain;
 
+import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
+import support.domain.UriGeneratable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Issue extends AbstractEntity {
+public class Issue extends AbstractEntity implements UriGeneratable {
 
     @Size(min = 3, max = 100)
     @Column(nullable = false, length = 100)
@@ -71,5 +73,14 @@ public class Issue extends AbstractEntity {
                 ", writer=" + writer +
                 ", deleted=" + deleted +
                 '}';
+    }
+
+    @Override
+    public String generateUri() {
+        return String.format("/questions/%d", getId());
+    }
+
+    public IssueDto toDto() {
+        return new IssueDto(getId(), getTitle(), getContents());
     }
 }

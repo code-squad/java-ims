@@ -1,24 +1,41 @@
 package codesquad.service;
 
+import codesquad.domain.Issue;
+import codesquad.domain.IssueRepository;
+import codesquad.domain.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IssueServiceTest {
+    private static final Logger log = LoggerFactory.getLogger(IssueServiceTest.class);
+
+    @Mock
+    private IssueRepository issueRepo;
+
+    @InjectMocks
+    private IssueService issueService;
 
     @Test
     public void create() {
-    }
+        Issue issue = validIssue();
+        when(issueRepo.save(issue)).thenReturn(issue);
 
-    @Test
-    public void create_fail_unAuthentication() {
-    }
-
-    @Test
-    public void create_fail_invalid_params() {
+        Issue savedIssue = issueService.create(any(User.class), issue.toDto());
+        assertEquals(issue.getContents(), savedIssue.getContents());
+        verify(issueRepo, times((1))).save(savedIssue);
+        log.debug("saved Issue : {}, {}", savedIssue.getTitle(), savedIssue.getContents());
     }
 
     @Test
@@ -38,10 +55,6 @@ public class IssueServiceTest {
     }
 
     @Test
-    public void edit_fail_unAuthentication() {
-    }
-
-    @Test
     public void edit_fail_unAuthorized() {
     }
 
@@ -51,10 +64,6 @@ public class IssueServiceTest {
 
     @Test
     public void update_fail_not_found() {
-    }
-
-    @Test
-    public void update_fail_unAuthentication() {
     }
 
     @Test
@@ -70,10 +79,14 @@ public class IssueServiceTest {
     }
 
     @Test
-    public void delete_fail_unAuthentication() {
+    public void delete_fail_unAuthorized() {
     }
 
-    @Test
-    public void delete_fail_unAuthorized() {
+    private Issue validIssue() {
+        return new Issue("test title", "test contents");
+    }
+
+    private Issue invalidIssue() {
+        return new Issue("", "s");
     }
 }

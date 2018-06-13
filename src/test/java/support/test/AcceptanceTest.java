@@ -59,4 +59,8 @@ public abstract class AcceptanceTest {
     protected ResponseEntity<String> getResource(String location, User loginUser) {
         return basicAuthTemplate(loginUser).getForEntity(location, String.class);
     }
+
+    protected ResponseEntity<String> requestPost(TestRestTemplate template, String uri, Object request) {
+        return template.postForEntity(uri, request, String.class);
+    }
 }
