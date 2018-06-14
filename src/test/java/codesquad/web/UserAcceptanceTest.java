@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import codesquad.domain.User;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +36,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void create() throws Exception {
         String userId = "testuser";
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("userId", userId)
-                .addParameter("password", "password")
-                .addParameter("name", "자바지기")
-                .addParameter("email", "javajigi@slipp.net").build();
-
-        ResponseEntity<String> response = template.postForEntity("/users", request, String.class);
+        ResponseEntity<String> response = createTestUser(userId);
 
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(userRepository.findByUserId(userId));
@@ -84,5 +79,28 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = update(basicAuthTemplate);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
+    }
+
+    @Test
+    public void login() throws Exception {
+        ResponseEntity<String> createResponse = createTestUser("krapeaj");
+        assertThat(createResponse.getStatusCode(), is(HttpStatus.FOUND));
+
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", "krapeaj")
+                .addParameter("password", "password")
+                .build();
+        ResponseEntity<String> loginResponse = template.postForEntity("/users/login", request, String.class);
+        assertThat(loginResponse.getStatusCode(), is(HttpStatus.FOUND));
+        assertThat(loginResponse.getHeaders().getLocation().getPath(), is("/"));
+    }
+
+    private ResponseEntity<String> createTestUser(String userId) {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", userId)
+                .addParameter("password", "password")
+                .addParameter("name", "name")
+                .addParameter("email", "email").build();
+        return template.postForEntity("/users", request, String.class);
     }
 }

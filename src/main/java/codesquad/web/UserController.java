@@ -49,4 +49,11 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @PostMapping("/login")
+    public String login(String userId, String password) {
+        log.debug("Logging in...");
+        userService.login(userId, password);
+        return "redirect:/";
+    }
+
 }
