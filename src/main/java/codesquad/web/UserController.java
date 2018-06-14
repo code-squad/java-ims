@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import codesquad.UnAuthenticationException;
+import codesquad.domain.Valid;
 import codesquad.security.HttpSessionUtils;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
@@ -43,7 +44,7 @@ public class UserController {
     @PostMapping("")
     public String create(UserDto userDto) {
         userService.add(userDto);
-        return "redirect:/users";
+        return "redirect:/users/login";
     }
 
     @GetMapping("/login")
@@ -52,13 +53,21 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(String userId, String password, HttpSession session) {
+    public String login(String userId, String password, HttpSession session, Model model) {
         try {
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, userService.login(userId, password));
             return "redirect:/users";
         } catch (UnAuthenticationException e) {
+            Valid valid = Valid.error("아이디 또는 비밀번호가 다릅니다.");
+            model.addAttribute("errorMessage", valid.getErrorMessage());
             return "/user/login";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(@LoginUser User loginUser, HttpSession session){
+        session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+        return "redirect:/";
     }
 
     @GetMapping("/{id}/form")

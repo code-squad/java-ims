@@ -45,7 +45,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(userRepository.findByUserId(userId));
-        assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/users/login"));
     }
 
     @Test
@@ -113,5 +113,18 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = update(basicAuthTemplate);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
+    }
+
+    @Test
+    public void logout(){
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity("/users/logout", String.class);
+        log.debug("response : {}", response);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void logout_로그인_하지않은_유저(){
+        ResponseEntity<String> response = template().getForEntity("/users/logout", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 }
