@@ -1,7 +1,11 @@
 package codesquad.web;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
+import codesquad.UnAuthenticationException;
+import codesquad.security.HttpSessionUtils;
+import com.sun.deploy.net.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -49,4 +53,20 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @GetMapping("/loginForm")
+    public String loginForm() {
+        return "/user/login";
+    }
+
+    @PostMapping("/login")
+    public String login(String userId, String password, HttpSession session) throws UnAuthenticationException {
+        log.info("users/login called");
+        User user = userService.login(userId, password);
+        if (user != null) {
+            session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
+            log.info("로그인 성공");
+            return "redirect/";
+        }
+        throw new UnAuthenticationException("로그인이 실패했습니다.");
+    }
 }
