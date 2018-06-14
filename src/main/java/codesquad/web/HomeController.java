@@ -19,6 +19,6 @@ public class HomeController {
     public String home(Model model) {
         log.info("homeController called");
         model.addAttribute("issues", issueRepository.findAll());
-        return "index";
+        return "/index";
     }
 }

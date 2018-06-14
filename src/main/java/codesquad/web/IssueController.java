@@ -27,12 +27,12 @@ public class IssueController {
         return "/issue/form";
     }
 
-    @GetMapping("")
-    public String list(Model model) {
-        List<Issue> issues = issueService.findAll();
-        model.addAttribute("issues", issues);
-        return "/index";
-    }
+//    @GetMapping("")
+//    public String list(Model model) {
+//        List<Issue> issues = issueService.findAll();
+//        model.addAttribute("issues", issues);
+//        return "/index";
+//    }
 
     @PostMapping("")
     public String create(IssueDto issueDto) {

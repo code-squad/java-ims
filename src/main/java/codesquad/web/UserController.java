@@ -65,7 +65,7 @@ public class UserController {
         if (user != null) {
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
             log.info("로그인 성공");
-            return "redirect/";
+            return "redirect:/";
         }
         throw new UnAuthenticationException("로그인이 실패했습니다.");
     }
