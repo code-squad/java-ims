@@ -87,7 +87,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void update() throws Exception {
         ResponseEntity<String> response = update(basicAuthTemplate);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
     }
 
     private ResponseEntity<String> login(String userId, String password) {
