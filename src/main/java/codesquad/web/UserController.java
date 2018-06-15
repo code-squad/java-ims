@@ -71,4 +71,10 @@ public class UserController {
         }
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        HttpSessionUtils.endSession(session);
+        log.debug("Logout SUCCESSFUL");
+        return "redirect:/";
+    }
 }

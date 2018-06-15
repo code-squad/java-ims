@@ -100,11 +100,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void login_Success() throws Exception {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("userId", loginUser.getUserId())
-                .addParameter("password", loginUser.getPassword())
-                .build();
-        ResponseEntity<String> loginResponse = template.postForEntity("/users/login", request, String.class);
+        ResponseEntity<String> loginResponse = login(loginUser.getUserId(), loginUser.getPassword());
         assertThat(loginResponse.getStatusCode(), is(HttpStatus.FOUND));
         assertThat(loginResponse.getHeaders().getLocation().getPath(), is("/"));
     }
@@ -121,5 +117,17 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> loginResponse = login("wrong userId", loginUser.getPassword());
         assertThat(loginResponse.getStatusCode(), is(HttpStatus.OK));
         assertThat(loginResponse.getBody().contains("아이디 또는 비밀번호가 틀립니다. 다시 로그인 해주세요."), is(true ));
+    }
+
+    @Test
+    public void logout_Success() {
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity("/users/logout", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void logout_NOT_In_Session() {
+        ResponseEntity<String> response = template.getForEntity("/users/logout", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 }
