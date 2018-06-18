@@ -1,6 +1,5 @@
 package codesquad.web;
 
-import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
@@ -29,6 +28,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
     public static final String DEFAULT_COMMENT = "코멘트입니다";
 
     public static final Long DEFAULT_ISSUE_ID = 1L;
+    public static final String DEFAULT_ISSUE_URL = "/issues/1";
 
     @Autowired
     IssueRepository issueRepository;
@@ -79,7 +79,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
 
     @Test
     public void show() {
-        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d", DEFAULT_ISSUE_ID), String.class);
+        ResponseEntity<String> response = template.getForEntity(DEFAULT_ISSUE_URL, String.class);
         assertTrue(response.getBody().contains(DEFAULT_SUBJECT));
         assertTrue(response.getBody().contains(DEFAULT_COMMENT));
     }
@@ -108,9 +108,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
         IssueDto updateIssue = new IssueDto()
                 .setComment("코멘트를 바꾸려고 합니다.")
                 .setSubject("제목을 바꾸려고 합니다.");
-        String location = String.format("/issues/%d", DEFAULT_ISSUE_ID);
-        basicAuthTemplate.put(location, updateIssue);
-        ResponseEntity<String> response = getResource(location, loginUser);
+        basicAuthTemplate.put(DEFAULT_ISSUE_URL, updateIssue);
+        ResponseEntity<String> response = getResource(DEFAULT_ISSUE_URL, loginUser);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().contains(DEFAULT_COMMENT), is(true));
     }
@@ -120,10 +119,9 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
         IssueDto updateIssue = new IssueDto()
                 .setComment("코멘트를 바꾸려고 합니다.")
                 .setSubject("제목을 바꾸려고 합니다.");
-        String location = String.format("/issues/%d", DEFAULT_ISSUE_ID);
         User other = findByUserId("sanjigi");
-        basicAuthTemplate(other).put(location, updateIssue);
-        ResponseEntity<String> response = getResource(location, loginUser);
+        basicAuthTemplate(other).put(DEFAULT_ISSUE_URL, updateIssue);
+        ResponseEntity<String> response = getResource(DEFAULT_ISSUE_URL, loginUser);
         assertThat(response.getBody().contains(DEFAULT_COMMENT), is(true));
     }
 
@@ -132,31 +130,35 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
         IssueDto updateIssue = new IssueDto()
                 .setComment("코멘트를 바꾸려고 합니다.")
                 .setSubject("제목을 바꾸려고 합니다.");
-        String location = String.format("/issues/%d", DEFAULT_ISSUE_ID);
-        template.put(location, updateIssue);
-        ResponseEntity<String> response = getResource(location, loginUser);
+        template.put(DEFAULT_ISSUE_URL, updateIssue);
+        ResponseEntity<String> response = getResource(DEFAULT_ISSUE_URL, loginUser);
         assertThat(response.getBody().contains(DEFAULT_COMMENT), is(true));
     }
 
-//
-//    @Test
-//    public void delete_success() {
-//
-//    }
-//
-//    @Test
-//    public void delete_fail_other_user() {
-//
-//    }
-//
-//    @Test
-//    public void delete_fail_no_login() {
-//
-//    }
 
-    protected HttpEntity<MultiValueMap<String, Object>> updateQuestionReq() {
-        return HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "서브젝트수정")
-                .addParameter("comment", "코멘트수정").build();
+    @Test
+    public void delete_success() {
+        String location = createIssueLocation("delete test1", "test comment");
+        basicAuthTemplate.delete(location);
+        ResponseEntity<String> response = getResource(location, loginUser);
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
+
+    @Test
+    public void delete_fail_other_user() {
+        String location = createIssueLocation("delete test2", "test comment");
+        User other = findByUserId("sanjigi");
+        basicAuthTemplate(other).delete(location);
+        ResponseEntity<String> response = getResource(location, loginUser);
+        assertThat(response.getBody().contains("delete test2"), is(true));
+    }
+
+    @Test
+    public void delete_fail_no_login() {
+        String location = createIssueLocation("delete test3", "test comment");
+        template.delete(location);
+        ResponseEntity<String> response = getResource(location, loginUser);
+        assertThat(response.getBody().contains("delete test3"), is(true));
+    }
+
 }

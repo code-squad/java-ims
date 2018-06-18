@@ -23,7 +23,7 @@ public abstract class BasicAuthAcceptanceTest extends AcceptanceTest {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("subject", subject)
                 .addParameter("comment", comment).build();
-        return basicAuthTemplate.postForEntity("/issues", request, String.class).getHeaders().getLocation().toString();
+        return basicAuthTemplate.postForEntity("/issues", request, String.class).getHeaders().getLocation().toString().split(";")[0];
     }
 
 

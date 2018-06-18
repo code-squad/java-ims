@@ -7,6 +7,7 @@ import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
@@ -36,7 +37,12 @@ public class IssueService {
                 .orElseThrow(UnAuthenticationException::new);
     }
 
+    @Transactional
     public Issue update(User loginUser, Long id, IssueDto target) throws UnAuthenticationException {
         return findById(loginUser, id).update(target);
+    }
+
+    public void delete(User loginUser, Long id) throws UnAuthenticationException {
+        issueRepository.delete(findById(loginUser, id));
     }
 }

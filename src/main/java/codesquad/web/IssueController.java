@@ -50,5 +50,11 @@ public class IssueController {
         return String.format("redirect:%s", issue.generateUrl());
     }
 
+    @DeleteMapping("/{id}")
+    public String deleteIssue(@LoginUser User loginUser, @PathVariable Long id) throws UnAuthenticationException {
+        issueService.delete(loginUser, id);
+        return "redirect:/";
+    }
+
 }
 
