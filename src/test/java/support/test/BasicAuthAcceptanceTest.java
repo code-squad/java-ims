@@ -1,5 +1,6 @@
 package support.test;
 
+import codesquad.domain.Issue;
 import org.junit.Before;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
@@ -24,5 +25,7 @@ public abstract class BasicAuthAcceptanceTest extends AcceptanceTest {
                 .addParameter("comment", comment).build();
         return basicAuthTemplate.postForEntity("/issues", request, String.class).getHeaders().getLocation().toString();
     }
+
+
 
 }

@@ -87,5 +87,9 @@ public class Issue extends AbstractEntity{
                 ", writer=" + writer +
                 '}';
     }
+
+    public boolean isWriter(User loginUser) {
+        return this.writer.equals(loginUser);
+    }
 }
 

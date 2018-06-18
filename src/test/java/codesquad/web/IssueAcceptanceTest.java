@@ -1,6 +1,8 @@
 package codesquad.web;
 
+import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.User;
 import org.junit.After;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -26,7 +28,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
     public static final String DEFAULT_COMMENT = "여기는 내용입니다.";
 
     @Autowired
-    private IssueRepository issueRepository;
+    IssueRepository issueRepository;
 
     @After
     public void logout() {
@@ -70,10 +72,61 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
 
     @Test
     public void show() {
-        String location = createIssueLocation(DEFAULT_SUBJECT, DEFAULT_COMMENT);
+        String location = createIssueLocation("서브젝트입니다.", "코멘트입니다.");
         ResponseEntity<String> response = template.getForEntity(location, String.class);
-        assertTrue(response.getBody().contains(DEFAULT_SUBJECT));
-        assertTrue(response.getBody().contains(DEFAULT_COMMENT));
+        assertTrue(response.getBody().contains("서브젝트입니다."));
+        assertTrue(response.getBody().contains("코멘트입니다."));
     }
 
+    @Test
+    public void updateForm_success() {
+        Issue issue = issueRepository.findById(1L).get();
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity(String.format("/issues/%d/form", issue.getId()), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void updateForm_fail_other_user() {
+        Issue issue = issueRepository.findById(1L).get();
+        User other = findByUserId("sanjigi");
+        ResponseEntity<String> response = basicAuthTemplate(other).getForEntity(String.format("/issues/%d/form", issue.getId()), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+    }
+
+    @Test
+    public void updateForm_fail_no_login() {
+        Issue issue = issueRepository.findById(1L).get();
+        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d/form", issue.getId()), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+//    @Test
+//    public void update_success() {
+//
+//    }
+//
+//    @Test
+//    public void update_fail_other_user() {
+//
+//    }
+//
+//    @Test
+//    public void update_fail_no_login() {
+//
+//    }
+//
+//    @Test
+//    public void delete_success() {
+//
+//    }
+//
+//    @Test
+//    public void delete_fail_other_user() {
+//
+//    }
+//
+//    @Test
+//    public void delete_fail_no_login() {
+//
+//    }
 }

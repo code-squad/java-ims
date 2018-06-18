@@ -1,5 +1,7 @@
 package codesquad.service;
 
+import codesquad.UnAuthenticationException;
+import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
@@ -26,5 +28,11 @@ public class IssueService {
 
     public Iterable<Issue> findAll() {
         return issueRepository.findAllByOrderByIdDesc();
+    }
+
+    public Issue findById(User loginUser, Long id) throws UnAuthenticationException {
+        return issueRepository.findById(id)
+                .filter(issue -> issue.isWriter(loginUser))
+                .orElseThrow(UnAuthenticationException::new);
     }
 }

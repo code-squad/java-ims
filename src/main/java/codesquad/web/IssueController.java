@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.UnAuthenticationException;
 import codesquad.domain.Issue;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 
 @RequestMapping("/issues")
 @Controller
@@ -32,10 +35,16 @@ public class IssueController {
         return "redirect:/issues/" + newIssue.getId();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
         return "issue/show";
+    }
+
+    @GetMapping("/{id}/form")
+    public String updateForm(@LoginUser User loginUser, @PathVariable Long id, Model model) throws UnAuthenticationException {
+        model.addAttribute("issue", issueService.findById(loginUser, id));
+        return "issue/updateForm";
     }
 
 }
