@@ -1,7 +1,7 @@
 package codesquad.domain;
 
+import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 import support.domain.UriGeneratable;
 
@@ -83,5 +83,14 @@ public class Issue extends AbstractEntity implements UriGeneratable {
 
     public IssueDto _toDto() {
         return new IssueDto(getId(), getTitle(), getContents());
+    }
+
+    public IssueDto update(User loginUser, IssueDto updateIssueDto) {
+        if (!writer.equals(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        title = updateIssueDto.getTitle();
+        contents = updateIssueDto.getContents();
+        return _toDto();
     }
 }

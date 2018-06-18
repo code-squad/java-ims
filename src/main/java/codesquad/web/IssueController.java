@@ -10,10 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import support.domain.Entity;
 
 import javax.validation.Valid;
@@ -44,5 +41,11 @@ public class IssueController {
     public String edit(@LoginUser User loginUser, @PathVariable Long id, Model model) {
         model.addAttribute(getEntityName(Entity.ISSUE), issueService.get(loginUser, id).toIssue());
         return String.format("/%s/edit", getEntityName(Entity.ISSUE));
+    }
+
+    @PutMapping("/{id}")
+    public String update(@LoginUser User loginUser, @PathVariable Long id, @Valid IssueDto updateIssueDto) {
+        Issue issue = issueService.update(loginUser, id, updateIssueDto).toIssue();
+        return issue.generateRedirectUri();
     }
 }

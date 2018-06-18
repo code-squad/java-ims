@@ -17,8 +17,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -80,14 +79,16 @@ public class IssueServiceTest {
 
     @Test
     public void update() {
+        when(issueRepo.findById(anyLong())).thenReturn(Optional.of(loginedIssue()));
+        IssueDto updateIssueDto = modifiedIssueDto();
+        IssueDto updated = issueService.update(getUser(), anyLong(), updateIssueDto);
+        assertTrue(updated.getContents().startsWith("modify"));
     }
 
-    @Test
-    public void update_fail_not_found() {
-    }
-
-    @Test
+    @Test(expected = UnAuthorizedException.class)
     public void update_fail_unAuthorized() {
+        when(issueRepo.findById(anyLong())).thenReturn(Optional.of(loginedIssue()));
+        issueService.update(getOtherUser(), anyLong(), modifiedIssueDto());
     }
 
     @Test
@@ -108,6 +109,10 @@ public class IssueServiceTest {
 
     private Issue invalidIssue() {
         return new Issue("", "s");
+    }
+
+    private IssueDto modifiedIssueDto() {
+        return new Issue("modify title", "modify contents")._toDto();
     }
 
     private Issue loginedIssue() {
