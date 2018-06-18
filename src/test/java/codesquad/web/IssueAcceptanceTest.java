@@ -80,6 +80,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
     @Test
     public void show() {
         ResponseEntity<String> response = template.getForEntity(DEFAULT_ISSUE_URL, String.class);
+        log.debug("body : {}", response.getBody());
         assertTrue(response.getBody().contains(DEFAULT_SUBJECT));
         assertTrue(response.getBody().contains(DEFAULT_COMMENT));
     }
@@ -139,9 +140,10 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
     @Test
     public void delete_success() {
         String location = createIssueLocation("delete test1", "test comment");
+        log.debug("created location : {}", location);
         basicAuthTemplate.delete(location);
         ResponseEntity<String> response = getResource(location, loginUser);
-        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
     @Test

@@ -23,6 +23,9 @@ public class Issue extends AbstractEntity implements UriGeneratable{
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    @Column
+    private Boolean deleted = false;
+
     public Issue () {}
 
     public Issue(String subject, String comment) {
@@ -39,6 +42,15 @@ public class Issue extends AbstractEntity implements UriGeneratable{
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public Issue delete() {
+        this.deleted = true;
+        return this;
     }
 
     public Issue writeBy(User loginUser) {
@@ -59,7 +71,17 @@ public class Issue extends AbstractEntity implements UriGeneratable{
     }
 
     public IssueDto _toIssueDto() {
-        return new IssueDto(subject, comment, writer);
+        return new IssueDto(subject, comment);
+    }
+
+    public boolean isWriter(User loginUser) {
+        return this.writer.equals(loginUser);
+    }
+
+    public Issue update(IssueDto target) {
+        this.subject = target.getSubject();
+        this.comment = target.getComment();
+        return this;
     }
 
     @Override
@@ -86,16 +108,6 @@ public class Issue extends AbstractEntity implements UriGeneratable{
                 ", comment='" + comment + '\'' +
                 ", writer=" + writer +
                 '}';
-    }
-
-    public boolean isWriter(User loginUser) {
-        return this.writer.equals(loginUser);
-    }
-
-    public Issue update(IssueDto target) {
-        this.subject = target.getSubject();
-        this.comment = target.getComment();
-        return this;
     }
 
     @Override

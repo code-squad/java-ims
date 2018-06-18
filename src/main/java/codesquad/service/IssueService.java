@@ -1,7 +1,6 @@
 package codesquad.service;
 
 import codesquad.UnAuthenticationException;
-import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
@@ -28,7 +27,7 @@ public class IssueService {
     }
 
     public Iterable<Issue> findAll() {
-        return issueRepository.findAllByOrderByIdDesc();
+        return issueRepository.findAllByDeletedOrderByIdDesc(false);
     }
 
     public Issue findById(User loginUser, Long id) throws UnAuthenticationException {
@@ -42,7 +41,7 @@ public class IssueService {
         return findById(loginUser, id).update(target);
     }
 
-    public void delete(User loginUser, Long id) throws UnAuthenticationException {
-        issueRepository.delete(findById(loginUser, id));
+    public Issue delete(User loginUser, Long id) throws UnAuthenticationException {
+        return findById(loginUser, id).delete();
     }
 }
