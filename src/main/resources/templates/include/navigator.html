@@ -1,0 +1,18 @@
+<header class="mdl-layout__header mdl-layout__header--waterfall">
+    <div class="mdl-layout__header-row">
+        <!-- Title -->
+        <span class="mdl-layout-title">Issue Tracking System</span>
+        <div class="mdl-layout-spacer"></div>
+        <!-- Tabs -->
+        <nav class="mdl-navigation">
+            {{^loginedUser}}
+            <a class="mdl-navigation__link" href="/users/loginForm">login</a>
+            <a class="mdl-navigation__link" href="/users/{{id}}/join">join</a>
+            {{/loginedUser}}
+            {{#loginedUser}}
+            <a class="mdl-navigation__link" href="/">Issues</a>
+            <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
+            {{/loginedUser}}
+        </nav>
+    </div>
+</header>

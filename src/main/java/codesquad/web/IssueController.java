@@ -1,8 +1,11 @@
 package codesquad.web;
 
+import codesquad.CannotDeleteException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
@@ -35,9 +38,9 @@ public class IssueController {
 //    }
 
     @PostMapping("")
-    public String create(IssueDto issueDto) {
+    public String create(@LoginUser User loginUser, IssueDto issueDto) {
         log.info("create method called");
-        issueService.add(issueDto);
+        issueService.add(loginUser, issueDto);
         return "redirect:/issue";
     }
 
@@ -55,8 +58,8 @@ public class IssueController {
     }
 
     @DeleteMapping("{id}")
-    public String delete(@PathVariable long id) {
-        issueService.delete(id);
+    public String delete(@LoginUser User loginUser, @PathVariable long id) throws CannotDeleteException {
+        issueService.delete(loginUser, id);
         return "redirect:/issue";
     }
 }

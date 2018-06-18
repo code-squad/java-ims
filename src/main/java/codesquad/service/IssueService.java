@@ -1,8 +1,11 @@
 package codesquad.service;
 
+import codesquad.CannotDeleteException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import codesquad.security.LoginUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,7 +25,8 @@ public class IssueService {
         return issueRepository.findAll();
     }
 
-    public Issue add(IssueDto issueDto) {
+    public Issue add(User loginUser, IssueDto issueDto) {
+        issueDto.toIssue().writeBy(loginUser);
         log.info("add method called");
         log.info("issueDto : {}", issueDto.toString());
         return issueRepository.save(issueDto.toIssue());
@@ -41,8 +45,11 @@ public class IssueService {
     }
 
     @Transactional
-    public void delete(long id) {
-        log.info("delete method called");
+    public void  delete(User loginUser, long id) throws CannotDeleteException {
+        Issue issue = issueRepository.findById(id).get();
+        if (!issue.isOwner(loginUser))
+            throw new CannotDeleteException("자신이 쓴 글만 삭제할 수 있습니다.");
+        log.info("delete success");
         issueRepository.deleteById(id);
     }
 }

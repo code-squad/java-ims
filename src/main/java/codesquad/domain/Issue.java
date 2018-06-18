@@ -5,10 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -24,10 +21,15 @@ public class Issue extends AbstractEntity {
     @Lob
     private String comment;
 
-    public Issue(long id, String subject, String comment) {
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
+    private User writer;
+
+    public Issue(long id, String subject, String comment, User writer) {
         super(id);
         this.subject = subject;
         this.comment = comment;
+        this.writer = writer;
     }
 
     public Issue(String subject, String comment) {
@@ -43,6 +45,10 @@ public class Issue extends AbstractEntity {
         log.info("after update issue : {}", this.toString());
     }
 
+    public boolean isOwner(User loginUser) {
+        return writer.equals(loginUser);
+    }
+
     public IssueDto toIssueDto() {
         return new IssueDto(this.subject, this.comment);
     }
@@ -55,11 +61,17 @@ public class Issue extends AbstractEntity {
         return comment;
     }
 
+    public void writeBy(User loginUser) {
+        log.info("writeBy : " + loginUser);
+        this.writer = loginUser;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
+                ", writer=" + writer +
                 '}';
     }
 }

@@ -31,7 +31,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
                 .addParameter("comment", "test code comment").build();
         log.info("request : {}", request.toString());
         log.info("request body : {}", request.getBody());
-        ResponseEntity<String> response = template.postForEntity("/issue", request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue", request, String.class);
         log.info("response : {}", response.getBody());
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
@@ -64,7 +64,16 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     public void delete() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("_method", "delete").build();
-        ResponseEntity<String> response = template.postForEntity("/issue/2", request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/1", request, String.class);
+        log.info("path : {}", response.getHeaders().getLocation().getPath());
         assertThat(response.getHeaders().getLocation().getPath(), is("/issue"));
+    }
+
+    @Test
+    public void deleteFail() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "delete").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/2", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 }

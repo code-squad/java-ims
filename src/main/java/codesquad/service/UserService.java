@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import codesquad.UnAuthenticationException;
@@ -15,6 +17,7 @@ import codesquad.dto.UserDto;
 
 @Service
 public class UserService {
+    private static final Logger log =  LoggerFactory.getLogger(UserService.class);
 
     @Resource(name = "userRepository")
     private UserRepository userRepository;
@@ -49,7 +52,7 @@ public class UserService {
         if (!user.matchPassword(password)) {
             throw new UnAuthenticationException();
         }
-
+        log.info("user info on userService : {}", user.toString());
         return user;
     }
 }
