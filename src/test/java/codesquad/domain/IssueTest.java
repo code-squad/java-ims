@@ -1,21 +1,59 @@
 package codesquad.domain;
 
+import codesquad.UnAuthorizedException;
+import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class IssueTest {
+    private static final String ORIGINAL_TITLE = "original title";
+    private static final String ORIGINAL_CONTENT = "original content";
+    private Issue issue;
+    private User writer;
+
+    @Before
+    public void setUp() {
+        issue = new Issue(1, ORIGINAL_TITLE, ORIGINAL_CONTENT);
+        writer = new User("writer", "password", "name");
+        issue.setWriter(writer);
+    }
 
     @Test
     public void getStatus_Open() {
-        Issue issue = new Issue(1, "title", "content");
         assertEquals("#1 Open", issue.getStatus());
     }
 
     @Test
     public void getStatus_Closed() {
-        Issue issue = new Issue(2, "title", "content");
         issue.setStatus(IssueStatus.CLOSED);
-        assertEquals("#2 Closed", issue.getStatus());
+        assertEquals("#1 Closed", issue.getStatus());
+    }
+
+    @Test
+    public void update_Success() {
+        issue.update(writer, new Issue("title", "updated content"));
+        assertThat(issue.getContent(), is("updated content"));
+    }
+
+    @Test(expected = UnAuthorizedException.class)
+    public void update_Writer_LoginUser_Mismatch() {
+        User notWriter = new User("notWriter", "password", "name");
+        issue.update(notWriter, new Issue("title", "updated content"));
+        assertThat(issue.getContent(), is(ORIGINAL_CONTENT));
+    }
+
+    @Test
+    public void delete_Success() {
+        issue.delete(writer);
+        assertThat(issue.isDeleted(), is(true));
+    }
+
+    @Test(expected = UnAuthorizedException.class)
+    public void delete_Writer_LoginUser_Mismatch() {
+        User notWriter = new User("notWriter", "password", "name");
+        issue.delete(notWriter);
+        assertThat(issue.isDeleted(), is(false));
     }
 }
