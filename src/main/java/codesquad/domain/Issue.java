@@ -92,13 +92,19 @@ public class Issue extends AbstractEntity implements UriGeneratable{
         Issue issue = (Issue) o;
         return Objects.equals(subject, issue.subject) &&
                 Objects.equals(comment, issue.comment) &&
-                Objects.equals(writer, issue.writer);
+                Objects.equals(writer, issue.writer) &&
+                Objects.equals(deleted, issue.deleted);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), subject, comment, writer);
+        return Objects.hash(super.hashCode(), subject, comment, writer, deleted);
+    }
+
+    @Override
+    public String generateUrl() {
+        return String.format("/issues/%d", getId());
     }
 
     @Override
@@ -107,12 +113,8 @@ public class Issue extends AbstractEntity implements UriGeneratable{
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 ", writer=" + writer +
+                ", deleted=" + deleted +
                 '}';
-    }
-
-    @Override
-    public String generateUrl() {
-        return String.format("/issues/%d", getId());
     }
 }
 

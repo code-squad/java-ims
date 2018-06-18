@@ -41,6 +41,7 @@ public class IssueService {
         return findById(loginUser, id).update(target);
     }
 
+    @Transactional
     public Issue delete(User loginUser, Long id) throws UnAuthenticationException {
         return findById(loginUser, id).delete();
     }
