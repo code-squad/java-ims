@@ -26,10 +26,8 @@ public class IssueService {
     }
 
     public Issue add(User loginUser, IssueDto issueDto) {
-        issueDto.toIssue().writeBy(loginUser);
-        log.info("add method called");
         log.info("issueDto : {}", issueDto.toString());
-        return issueRepository.save(issueDto.toIssue());
+        return issueRepository.save(issueDto.toIssue().writeBy(loginUser));
     }
 
     public Issue findById(long id) {
@@ -38,10 +36,10 @@ public class IssueService {
     }
 
     @Transactional
-    public void update(long id, IssueDto updateIssue) {
+    public void update(User loginUser, long id, IssueDto updateIssue) throws CannotDeleteException {
         log.info("update method called");
         Issue original = issueRepository.findById(id).get();
-        original.update(updateIssue.toIssue());
+        original.update(loginUser, updateIssue.toIssue());
     }
 
     @Transactional

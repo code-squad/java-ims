@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.CannotDeleteException;
 import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +33,17 @@ public class Issue extends AbstractEntity {
         this.writer = writer;
     }
 
-    public Issue(String subject, String comment) {
+    public Issue(String subject, String comment, User writer) {
         this.subject = subject;
         this.comment = comment;
+        this.writer = writer;
     }
 
     public Issue() {};
 
-    public void update(Issue target) {
+    public void update(User writer, Issue target) throws CannotDeleteException {
+        if (!isOwner(writer))
+            throw new CannotDeleteException("자신이 쓴 글만 업데이트를 할 수 있습니다.");
         this.subject = target.subject;
         this.comment = target.comment;
         log.info("after update issue : {}", this.toString());
@@ -50,7 +54,7 @@ public class Issue extends AbstractEntity {
     }
 
     public IssueDto toIssueDto() {
-        return new IssueDto(this.subject, this.comment);
+        return new IssueDto(this.subject, this.comment, this.writer);
     }
 
     public String getSubject() {
@@ -61,9 +65,14 @@ public class Issue extends AbstractEntity {
         return comment;
     }
 
-    public void writeBy(User loginUser) {
+    public User getWriter() {
+        return writer;
+    }
+
+    public Issue writeBy(User loginUser) {
         log.info("writeBy : " + loginUser);
         this.writer = loginUser;
+        return this;
     }
 
     @Override

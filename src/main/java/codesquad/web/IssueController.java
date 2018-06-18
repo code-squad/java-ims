@@ -30,18 +30,11 @@ public class IssueController {
         return "/issue/form";
     }
 
-//    @GetMapping("")
-//    public String list(Model model) {
-//        List<Issue> issues = issueService.findAll();
-//        model.addAttribute("issues", issues);
-//        return "/index";
-//    }
-
     @PostMapping("")
     public String create(@LoginUser User loginUser, IssueDto issueDto) {
         log.info("create method called");
         issueService.add(loginUser, issueDto);
-        return "redirect:/issue";
+        return "redirect:/";
     }
 
     @GetMapping("{id}")
@@ -52,14 +45,14 @@ public class IssueController {
     }
 
     @PutMapping("{id}")
-    public String update(@PathVariable long id, IssueDto target) {
-        issueService.update(id, target);
-        return "redirect:/issue";
+    public String update(@LoginUser User loginUser, @PathVariable long id, IssueDto target) throws CannotDeleteException {
+        issueService.update(loginUser, id, target);
+        return "redirect:/";
     }
 
     @DeleteMapping("{id}")
     public String delete(@LoginUser User loginUser, @PathVariable long id) throws CannotDeleteException {
         issueService.delete(loginUser, id);
-        return "redirect:/issue";
+        return "redirect:/";
     }
 }

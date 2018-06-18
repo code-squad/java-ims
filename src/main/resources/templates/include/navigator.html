@@ -7,10 +7,12 @@
         <nav class="mdl-navigation">
             {{^loginedUser}}
             <a class="mdl-navigation__link" href="/users/loginForm">login</a>
-            <a class="mdl-navigation__link" href="/users/{{id}}/join">join</a>
+            <a class="mdl-navigation__link" href="/users/form">join</a>
             {{/loginedUser}}
             {{#loginedUser}}
             <a class="mdl-navigation__link" href="/">Issues</a>
+            <a class="mdl-navigation__link" href="/users/logout">logout</a>
+            <a class="mdl-navigation__link" href="/users/{{id}}/form">Edit</a>
             <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
             {{/loginedUser}}
         </nav>

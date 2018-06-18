@@ -31,13 +31,19 @@ public class UserController {
     @Resource(name = "userService")
     private UserService userService;
 
+    @GetMapping("")
+    public String index() {
+        return "redirect:/";
+    }
+
     @GetMapping("/form")
     public String form() {
-        return "/user/form";
+        return "/user/join";
     }
 
     @PostMapping("")
     public String create(UserDto userDto) {
+        log.info("user create called");
         userService.add(userDto);
         return "redirect:/users";
     }
@@ -80,9 +86,9 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/{id}/join")
-    public String join(@LoginUser User loginUser, @PathVariable long id, Model model) {
-        model.addAttribute("user", userService.findById(loginUser, id));
-        return "/user/join";
-    }
+//    @GetMapping("/{id}/join")
+//    public String join(@LoginUser User loginUser, @PathVariable long id, Model model) {
+//        model.addAttribute("user", userService.findById(loginUser, id));
+//        return "/user/join";
+//    }
 }

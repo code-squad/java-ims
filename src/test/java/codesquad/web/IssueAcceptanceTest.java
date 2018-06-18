@@ -19,7 +19,6 @@ import static org.junit.Assert.assertThat;
 
 public class IssueAcceptanceTest extends AcceptanceTest {
     private static final Logger log =  LoggerFactory.getLogger(IssueAcceptanceTest.class);
-    private IssueDto testIssue;
 
     @Autowired
     IssueRepository issueRepository;
@@ -38,7 +37,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void list() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/issue", String.class);
+        ResponseEntity<String> response = template.getForEntity("/", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
@@ -54,10 +53,10 @@ public class IssueAcceptanceTest extends AcceptanceTest {
                 .addParameter("_method","put")
                 .addParameter("subject", "updated subject")
                 .addParameter("comment", "updated comment").build();
-        ResponseEntity<String> response = template.postForEntity("/issue/1", request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/1", request, String.class);
         log.info("status code : {}", response.getStatusCode());
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertThat(response.getHeaders().getLocation().getPath(), is("/issue"));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
     }
 
     @Test
@@ -66,7 +65,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
                 .addParameter("_method", "delete").build();
         ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/1", request, String.class);
         log.info("path : {}", response.getHeaders().getLocation().getPath());
-        assertThat(response.getHeaders().getLocation().getPath(), is("/issue"));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
     }
 
     @Test

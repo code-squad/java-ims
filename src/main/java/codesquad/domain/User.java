@@ -8,10 +8,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import codesquad.UnAuthorizedException;
 import codesquad.dto.UserDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
 
 @Entity
 public class User extends AbstractEntity {
+    private static final Logger log =  LoggerFactory.getLogger(User.class);
     public static final GuestUser GUEST_USER = new GuestUser();
     
     @Size(min = 3, max = 20)
@@ -73,6 +76,7 @@ public class User extends AbstractEntity {
     }
     
     public void update(User loginUser, User target) {
+        log.info("update method called on user");
         if (!matchUserId(loginUser.getUserId())) {
             throw new UnAuthorizedException();
         }
@@ -82,6 +86,7 @@ public class User extends AbstractEntity {
         }
 
         this.name = target.name;
+        this.password = target.password;
     }
 
     public boolean matchPassword(String password) {

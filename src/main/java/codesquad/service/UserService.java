@@ -23,10 +23,12 @@ public class UserService {
     private UserRepository userRepository;
 
     public User add(UserDto userDto) {
+        log.info("user add called");
         return userRepository.save(userDto._toUser());
     }
 
     public User update(User loginUser, long id, UserDto updatedUser) {
+        log.info("update method called on service : {}", updatedUser._toUser().toString());
         User original = findById(loginUser, id);
         original.update(loginUser, updatedUser._toUser());
         return userRepository.save(original);
