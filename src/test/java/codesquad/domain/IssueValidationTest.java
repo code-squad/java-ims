@@ -27,8 +27,8 @@ public class IssueValidationTest {
     }
 
     @Test
-    public void invalid_title() {
-        Issue issue = new Issue("t", "contents");
+    public void invalid_subject() {
+        Issue issue = new Issue("s", "comment");
         Set<ConstraintViolation<Issue>> results = validator.validate(issue);
         assertThat(results.size(), is(1));
 
@@ -39,7 +39,7 @@ public class IssueValidationTest {
 
     @Test
     public void invalid_Issue_params() {
-        Issue issue = new Issue("t", "c");
+        Issue issue = new Issue("s", "c");
         Set<ConstraintViolation<Issue>> results = validator.validate(issue);
         assertThat(results.size(), is(2));
     }

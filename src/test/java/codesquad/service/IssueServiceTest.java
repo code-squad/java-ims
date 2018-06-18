@@ -38,18 +38,18 @@ public class IssueServiceTest {
         when(issueRepo.save(issue)).thenReturn(issue);
 
         Issue savedIssue = issueService.create(any(User.class), issue._toDto());
-        assertEquals(issue.getContents(), savedIssue.getContents());
+        assertEquals(issue.getComment(), savedIssue.getComment());
         verify(issueRepo, times((1))).save(savedIssue);
-        log.debug("saved Issue : {}, {}", savedIssue.getTitle(), savedIssue.getContents());
+        log.debug("saved Issue : {}, {}", savedIssue.getSubject(), savedIssue.getComment());
     }
 
     @Test
     public void show() {
         Issue issue = validIssue();
         when(issueRepo.findById(anyLong())).thenReturn(Optional.of(issue));
-        Issue origin = issueService.get(anyLong()).toIssue();
+        Issue origin = issueService.get(anyLong());
 
-        assertEquals(issue.getContents(), origin.getContents());
+        assertEquals(issue.getComment(), origin.getComment());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -61,8 +61,8 @@ public class IssueServiceTest {
     @Test
     public void edit() {
         when(issueRepo.findById(anyLong())).thenReturn(Optional.of(loginedIssue()));
-        IssueDto issueDto = issueService.get(getUser(), anyLong());
-        assertThat(issueDto.getContents(), is("test contents"));
+        Issue issue = issueService.get(getUser(), anyLong());
+        assertThat(issue.getComment(), is("test contents"));
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -81,8 +81,8 @@ public class IssueServiceTest {
     public void update() {
         when(issueRepo.findById(anyLong())).thenReturn(Optional.of(loginedIssue()));
         IssueDto updateIssueDto = modifiedIssueDto();
-        IssueDto updated = issueService.update(getUser(), anyLong(), updateIssueDto);
-        assertTrue(updated.getContents().startsWith("modify"));
+        Issue updated = issueService.update(getUser(), anyLong(), updateIssueDto);
+        assertTrue(updated.getComment().startsWith("modify"));
     }
 
     @Test(expected = UnAuthorizedException.class)
@@ -104,7 +104,7 @@ public class IssueServiceTest {
     }
 
     private Issue validIssue() {
-        return new Issue("test title", "test contents");
+        return new Issue("test subject", "test comment");
     }
 
     private Issue invalidIssue() {
@@ -112,11 +112,11 @@ public class IssueServiceTest {
     }
 
     private IssueDto modifiedIssueDto() {
-        return new Issue("modify title", "modify contents")._toDto();
+        return new Issue("modify subject", "modify comment")._toDto();
     }
 
     private Issue loginedIssue() {
-        return new Issue("test title", "test contents").writeBy(getUser());
+        return new Issue("test subject", "test contents").writeBy(getUser());
     }
 
     private User getUser() {

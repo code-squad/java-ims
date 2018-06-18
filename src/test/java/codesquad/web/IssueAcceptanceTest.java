@@ -19,23 +19,23 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     private static final String CREATE_PATH = "/issues";
 
-    private HttpEntity<MultiValueMap<String, Object>> getRequest(String title, String contents) {
+    private HttpEntity<MultiValueMap<String, Object>> getRequest(String subject, String comment) {
         HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
-        builder.addParameter("title", title);
-        builder.addParameter("contents", contents);
+        builder.addParameter("subject", subject);
+        builder.addParameter("comment", comment);
         return builder.build();
     }
 
     @Test
     public void create() {
-        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test title", "test contents"));
+        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment"));
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         log.debug("redirect uri : {}", response.getHeaders().getLocation().getPath());
     }
 
     @Test
     public void create_fail_unAuthentication() {
-        ResponseEntity<String> response = requestPost(template(), CREATE_PATH, getRequest("test title", "test contents"));
+        ResponseEntity<String> response = requestPost(template(), CREATE_PATH, getRequest("test subject", "test comment"));
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
@@ -47,7 +47,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void show() {
-        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test title", "test contents"));
+        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment"));
         String path = getPath(response);
 
         response = requestGet(path);
@@ -62,7 +62,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void edit() {
-        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test title", "test contents"))) + "/edit";
+        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment"))) + "/edit";
         log.debug("edit path : {}", editPath);
         ResponseEntity<String> response = requestGet(basicAuthTemplate(), editPath);
 
@@ -77,26 +77,25 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void edit_fail_unAuthentication() {
-        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test title", "test contents"))) + "/edit";
+        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment"))) + "/edit";
         ResponseEntity<String> response = requestGet(template(), editPath);
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
     @Test
     public void edit_fail_unAuthorized() {
-        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test title", "test contents"))) + "/edit";
+        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment"))) + "/edit";
         ResponseEntity<String> response = requestGet(basicAuthTemplate(findByUserId("sanjigi")), editPath);
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 
-
     private ResponseEntity<String> update(TestRestTemplate template) {
-        String path = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test title", "test contents")));
+        String path = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment")));
 
         HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
         builder.addParameter("_method", "put");
-        builder.addParameter("title", "modify title");
-        builder.addParameter("contents", "modify content");
+        builder.addParameter("subject", "modify subject");
+        builder.addParameter("comment", "modify content");
         HttpEntity<MultiValueMap<String, Object>> request = builder.build();
         return template.postForEntity(path, request, String.class);
     }

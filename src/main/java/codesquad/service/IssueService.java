@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 public class IssueService {
@@ -23,21 +24,25 @@ public class IssueService {
         return issueRepo.save(issue);
     }
 
-    public IssueDto get(Long id) {
-        return issueRepo.findById(id).map(Issue::_toDto).orElseThrow(EntityNotFoundException::new);
+    public Issue get(Long id) {
+        return issueRepo.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    public IssueDto get(User loginUser, Long id) {
+    public Issue get(User loginUser, Long id) {
         Issue issue = issueRepo.findById(id).orElseThrow(EntityNotFoundException::new);
         if (!issue.isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }
-        return issue._toDto();
+        return issue;
     }
 
     @Transactional
-    public IssueDto update(User loginUser, Long id, IssueDto updateIssueDto) {
+    public Issue update(User loginUser, Long id, IssueDto updateIssueDto) {
         Issue issue = issueRepo.findById(id).orElseThrow(EntityNotFoundException::new);
         return issue.update(loginUser, updateIssueDto);
+    }
+
+    public List<Issue> getAll() {
+        return issueRepo.findAll();
     }
 }

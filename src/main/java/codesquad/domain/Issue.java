@@ -13,11 +13,11 @@ public class Issue extends AbstractEntity implements UriGeneratable {
 
     @Size(min = 3, max = 100)
     @Column(nullable = false, length = 100)
-    private String title;
+    private String subject;
 
     @Size(min = 3, max = 1000)
     @Column(nullable = false, length = 1000)
-    private String contents;
+    private String comment;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
@@ -28,9 +28,9 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     public Issue() {
     }
 
-    public Issue(String title, String contents) {
-        this.title = title;
-        this.contents = contents;
+    public Issue(String subject, String comment) {
+        this.subject = subject;
+        this.comment = comment;
         deleted = false;
     }
 
@@ -49,12 +49,12 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         return this;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSubject() {
+        return subject;
     }
 
-    public String getContents() {
-        return contents;
+    public String getComment() {
+        return comment;
     }
 
     public boolean isDeleted() {
@@ -65,12 +65,16 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         return writer.equals(loginUser);
     }
 
+    public String getFormattedModifiedDate() {
+        return super.getFormattedModifiedDate();
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
                 "id='" + getId() + '\'' +
-                ", title='" + title + '\'' +
-                ", contents='" + contents + '\'' +
+                ", subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
                 ", writer=" + writer +
                 ", deleted=" + deleted +
                 '}';
@@ -82,15 +86,15 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     }
 
     public IssueDto _toDto() {
-        return new IssueDto(getId(), getTitle(), getContents());
+        return new IssueDto(getId(), getSubject(), getComment());
     }
 
-    public IssueDto update(User loginUser, IssueDto updateIssueDto) {
+    public Issue update(User loginUser, IssueDto updateIssueDto) {
         if (!writer.equals(loginUser)) {
             throw new UnAuthorizedException();
         }
-        title = updateIssueDto.getTitle();
-        contents = updateIssueDto.getContents();
-        return _toDto();
+        subject = updateIssueDto.getSubject();
+        comment = updateIssueDto.getComment();
+        return this;
     }
 }

@@ -8,22 +8,22 @@ public class IssueDto {
     private Long id;
 
     @Size(min = 3, max = 100)
-    private String title;
+    private String subject;
 
     @Size(min = 3, max = 1000)
-    private String contents;
+    private String comment;
 
     public IssueDto() {
     }
 
-    public IssueDto(String title, String contents) {
-        this(0L, title, contents);
+    public IssueDto(String subject, String comment) {
+        this(0L, subject, comment);
     }
 
-    public IssueDto(long id, String title, String contents) {
+    public IssueDto(long id, String subject, String comment) {
         this.id = id;
-        this.title = title;
-        this.contents = contents;
+        this.subject = subject;
+        this.comment = comment;
     }
 
     public Long getId() {
@@ -35,25 +35,25 @@ public class IssueDto {
         return this;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSubject() {
+        return subject;
     }
 
-    public IssueDto setTitle(String title) {
-        this.title = title;
+    public IssueDto setSubject(String subject) {
+        this.subject = subject;
         return this;
     }
 
-    public String getContents() {
-        return contents;
+    public String getComment() {
+        return comment;
     }
 
-    public IssueDto setContents(String contents) {
-        this.contents = contents;
+    public IssueDto setComment(String comment) {
+        this.comment = comment;
         return this;
     }
 
     public Issue toIssue() {
-        return new Issue(title, contents);
+        return new Issue(subject, comment);
     }
 }

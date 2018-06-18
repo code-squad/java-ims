@@ -33,19 +33,19 @@ public class IssueController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
-        model.addAttribute(getEntityName(Entity.ISSUE), issueService.get(id).toIssue());
+        model.addAttribute(getEntityName(Entity.ISSUE), issueService.get(id));
         return String.format("/%s/show", getEntityName(Entity.ISSUE));
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@LoginUser User loginUser, @PathVariable Long id, Model model) {
-        model.addAttribute(getEntityName(Entity.ISSUE), issueService.get(loginUser, id).toIssue());
+        model.addAttribute(getEntityName(Entity.ISSUE), issueService.get(loginUser, id));
         return String.format("/%s/edit", getEntityName(Entity.ISSUE));
     }
 
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable Long id, @Valid IssueDto updateIssueDto) {
-        Issue issue = issueService.update(loginUser, id, updateIssueDto).toIssue();
+        Issue issue = issueService.update(loginUser, id, updateIssueDto);
         return issue.generateRedirectUri();
     }
 }
