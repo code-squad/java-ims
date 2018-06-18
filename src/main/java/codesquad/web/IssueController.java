@@ -43,6 +43,13 @@ public class IssueController {
         return "/issue/show";
     }
 
+    @GetMapping("/{id}/updateForm")
+    public String updateForm(@LoginUser User user, @PathVariable long id, Model model) {
+        Issue target = issueService.findById(id);
+        model.addAttribute("issue", target);
+        return "/issue/updateForm";
+    }
+
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, IssueDto issueDto) {
         UriGeneratable issue = issueService.updateIssue(loginUser, id, issueDto);
