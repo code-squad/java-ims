@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
-public class Issue extends AbstractEntity{
+public class Issue extends AbstractEntity implements UriGeneratable{
 
     @Size(min = 3, max = 50)
     @Column(unique = true, nullable = false, length = 50)
@@ -90,6 +90,17 @@ public class Issue extends AbstractEntity{
 
     public boolean isWriter(User loginUser) {
         return this.writer.equals(loginUser);
+    }
+
+    public Issue update(IssueDto target) {
+        this.subject = target.getSubject();
+        this.comment = target.getComment();
+        return this;
+    }
+
+    @Override
+    public String generateUrl() {
+        return String.format("/issues/%d", getId());
     }
 }
 

@@ -3,6 +3,7 @@ package codesquad.web;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
+import codesquad.dto.IssueDto;
 import org.junit.After;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -24,8 +25,10 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
 
     private final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
 
-    public static final String DEFAULT_SUBJECT = "문제가 생겼습니다.";
-    public static final String DEFAULT_COMMENT = "여기는 내용입니다.";
+    public static final String DEFAULT_SUBJECT = "이슈입니다";
+    public static final String DEFAULT_COMMENT = "코멘트입니다";
+
+    public static final Long DEFAULT_ISSUE_ID = 1L;
 
     @Autowired
     IssueRepository issueRepository;
@@ -50,70 +53,91 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
 
     @Test
     public void create() throws Exception {
+        final String newSubject = "서브젝트이에요";
+        final String newComment = "코멘트으이에요";
 
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", DEFAULT_SUBJECT)
-                .addParameter("comment", DEFAULT_COMMENT).build();
+                .addParameter("subject", newSubject)
+                .addParameter("comment", newComment).build();
 
         ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issues", request, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertNotNull(issueRepository.findBySubject(DEFAULT_SUBJECT));
+        assertNotNull(issueRepository.findBySubject(newSubject));
     }
 
     @Test
     public void create_fail_no_login() throws Exception {
+        final String newSubject = "서브젝트이에요2";
+        final String newComment = "코멘트으이에요2";
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "asdfasdf")
-                .addParameter("comment", DEFAULT_COMMENT).build();
+                .addParameter("subject", newSubject)
+                .addParameter("comment", newComment).build();
 
         ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
-        assertThat(issueRepository.findBySubject("asdfasdf"), is(Optional.empty()));
+        assertThat(issueRepository.findBySubject(newSubject), is(Optional.empty()));
     }
 
     @Test
     public void show() {
-        String location = createIssueLocation("서브젝트입니다.", "코멘트입니다.");
-        ResponseEntity<String> response = template.getForEntity(location, String.class);
-        assertTrue(response.getBody().contains("서브젝트입니다."));
-        assertTrue(response.getBody().contains("코멘트입니다."));
+        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d", DEFAULT_ISSUE_ID), String.class);
+        assertTrue(response.getBody().contains(DEFAULT_SUBJECT));
+        assertTrue(response.getBody().contains(DEFAULT_COMMENT));
     }
 
     @Test
     public void updateForm_success() {
-        Issue issue = issueRepository.findById(1L).get();
-        ResponseEntity<String> response = basicAuthTemplate.getForEntity(String.format("/issues/%d/form", issue.getId()), String.class);
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity(String.format("/issues/%d/form", DEFAULT_ISSUE_ID), String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
     @Test
     public void updateForm_fail_other_user() {
-        Issue issue = issueRepository.findById(1L).get();
         User other = findByUserId("sanjigi");
-        ResponseEntity<String> response = basicAuthTemplate(other).getForEntity(String.format("/issues/%d/form", issue.getId()), String.class);
+        ResponseEntity<String> response = basicAuthTemplate(other).getForEntity(String.format("/issues/%d/form", DEFAULT_ISSUE_ID), String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
     @Test
     public void updateForm_fail_no_login() {
-        Issue issue = issueRepository.findById(1L).get();
-        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d/form", issue.getId()), String.class);
+        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d/form", DEFAULT_ISSUE_ID), String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 
-//    @Test
-//    public void update_success() {
-//
-//    }
-//
-//    @Test
-//    public void update_fail_other_user() {
-//
-//    }
-//
-//    @Test
-//    public void update_fail_no_login() {
-//
-//    }
+    @Test
+    public void update_success() {
+        IssueDto updateIssue = new IssueDto()
+                .setComment("코멘트를 바꾸려고 합니다.")
+                .setSubject("제목을 바꾸려고 합니다.");
+        String location = String.format("/issues/%d", DEFAULT_ISSUE_ID);
+        basicAuthTemplate.put(location, updateIssue);
+        ResponseEntity<String> response = getResource(location, loginUser);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody().contains(DEFAULT_COMMENT), is(true));
+    }
+
+    @Test
+    public void update_fail_other_user() {
+        IssueDto updateIssue = new IssueDto()
+                .setComment("코멘트를 바꾸려고 합니다.")
+                .setSubject("제목을 바꾸려고 합니다.");
+        String location = String.format("/issues/%d", DEFAULT_ISSUE_ID);
+        User other = findByUserId("sanjigi");
+        basicAuthTemplate(other).put(location, updateIssue);
+        ResponseEntity<String> response = getResource(location, loginUser);
+        assertThat(response.getBody().contains(DEFAULT_COMMENT), is(true));
+    }
+
+    @Test
+    public void update_fail_no_login() {
+        IssueDto updateIssue = new IssueDto()
+                .setComment("코멘트를 바꾸려고 합니다.")
+                .setSubject("제목을 바꾸려고 합니다.");
+        String location = String.format("/issues/%d", DEFAULT_ISSUE_ID);
+        template.put(location, updateIssue);
+        ResponseEntity<String> response = getResource(location, loginUser);
+        assertThat(response.getBody().contains(DEFAULT_COMMENT), is(true));
+    }
+
 //
 //    @Test
 //    public void delete_success() {
@@ -129,4 +153,10 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
 //    public void delete_fail_no_login() {
 //
 //    }
+
+    protected HttpEntity<MultiValueMap<String, Object>> updateQuestionReq() {
+        return HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "서브젝트수정")
+                .addParameter("comment", "코멘트수정").build();
+    }
 }

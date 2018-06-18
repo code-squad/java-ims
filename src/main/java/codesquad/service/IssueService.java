@@ -35,4 +35,8 @@ public class IssueService {
                 .filter(issue -> issue.isWriter(loginUser))
                 .orElseThrow(UnAuthenticationException::new);
     }
+
+    public Issue update(User loginUser, Long id, IssueDto target) throws UnAuthenticationException {
+        return findById(loginUser, id).update(target);
+    }
 }
