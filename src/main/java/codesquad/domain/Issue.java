@@ -81,13 +81,7 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         return String.format("/issues/%d", getId());
     }
 
-    public IssueDto toDto() {
+    public IssueDto _toDto() {
         return new IssueDto(getId(), getTitle(), getContents());
-    }
-
-    @Override
-    @JsonIgnore
-    public String getEntityName() {
-        return "issue";
     }
 }

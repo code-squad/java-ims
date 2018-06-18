@@ -72,7 +72,11 @@ public abstract class AcceptanceTest {
         return template.postForEntity(uri, request, String.class);
     }
 
-    protected ResponseEntity<String> requestGet( String uri) {
-        return template().getForEntity(uri, String.class);
+    protected ResponseEntity<String> requestGet(String uri) {
+        return requestGet(template(), uri);
+    }
+
+    protected ResponseEntity<String> requestGet(TestRestTemplate template, String uri) {
+        return template.getForEntity(uri, String.class);
     }
 }

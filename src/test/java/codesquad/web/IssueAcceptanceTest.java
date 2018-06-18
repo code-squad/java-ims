@@ -61,18 +61,33 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void edit() {
+        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, create("test title", "test contents"))) + "/edit";
+        log.debug("edit path : {}", editPath);
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), editPath);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
     @Test
     public void edit_fail_not_found() {
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), "/issues/100/edit");
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
     @Test
     public void edit_fail_unAuthentication() {
+        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, create("test title", "test contents"))) + "/edit";
+        ResponseEntity<String> response = requestGet(template(), editPath);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
     @Test
     public void edit_fail_unAuthorized() {
+        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, create("test title", "test contents"))) + "/edit";
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(findByUserId("sanjigi")), editPath);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 
     @Test

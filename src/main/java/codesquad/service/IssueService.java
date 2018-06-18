@@ -1,5 +1,6 @@
 package codesquad.service;
 
+import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
@@ -15,13 +16,22 @@ public class IssueService {
     @Autowired
     private IssueRepository issueRepo;
 
-    public Issue create(User user, IssueDto issueDto) {
+    public Issue create(User loginUser, IssueDto issueDto) {
         Issue issue = issueDto.toIssue();
-        issue.writeBy(user);
+        issue.writeBy(loginUser);
         return issueRepo.save(issue);
     }
 
     public IssueDto get(Long id) {
-        return issueRepo.findById(id).map(Issue::toDto).orElseThrow(EntityNotFoundException::new);
+        return issueRepo.findById(id).map(Issue::_toDto).orElseThrow(EntityNotFoundException::new);
     }
+
+    public IssueDto get(User loginUser, Long id) {
+        Issue issue = issueRepo.findById(id).orElseThrow(EntityNotFoundException::new);
+        if (!issue.isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        return issue._toDto();
+    }
+
 }
