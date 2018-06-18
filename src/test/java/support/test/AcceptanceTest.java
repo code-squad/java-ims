@@ -3,7 +3,11 @@ package support.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import codesquad.domain.Issue;
+import codesquad.domain.IssueRepository;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -19,6 +23,7 @@ import codesquad.domain.UserRepository;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class AcceptanceTest {
     private static final String DEFAULT_LOGIN_USER = "javajigi";
+    private static final Logger logger = LoggerFactory.getLogger(AcceptanceTest.class);
 
     @Autowired
     protected TestRestTemplate template;

@@ -1,16 +1,17 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.User;
+import codesquad.dto.IssueDto;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import support.domain.UriGeneratable;
 
 @Controller
 @RequestMapping("/issues")
@@ -21,16 +22,17 @@ public class IssueController {
     private IssueService issueService;
 
     @GetMapping("/form")
-    public String form() {
+    public String form(@LoginUser User loginUser) {
         logger.debug("Getting issue form...");
-        return "/issue/form.html";
+        return "/issue/form";
     }
 
     @PostMapping("")
-    public String create(Issue issue) {
-        logger.debug("Created NEW: {}", issue);
-        issueService.addIssue(issue);
-        return "redirect:/";
+    public String create(@LoginUser User loginUser, Issue newIssue) {
+        logger.debug("Created NEW: {}", newIssue);
+        newIssue.setWriter(loginUser);
+        UriGeneratable issue = issueService.addIssue(newIssue);
+        return "redirect:" + issue.generateUri();
     }
 
     @GetMapping("/{id}")
@@ -39,5 +41,26 @@ public class IssueController {
         logger.debug("Showing Question... {}", issue);
         model.addAttribute("issue", issue);
         return "/issue/show";
+    }
+
+    @GetMapping("/{id}/updateForm")
+    public String updateForm(@LoginUser User user, @PathVariable long id, Model model) {
+        Issue target = issueService.findById(id);
+        model.addAttribute("issue", target);
+        return "/issue/updateForm";
+    }
+
+    @PutMapping("/{id}")
+    public String update(@LoginUser User loginUser, @PathVariable long id, IssueDto issueDto) {
+        UriGeneratable issue = issueService.updateIssue(loginUser, id, issueDto);
+        logger.debug("Issue updated...! ");
+        return "redirect:" + issue.generateUri();
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User loginUser, @PathVariable long id) {
+        issueService.deleteIssue(loginUser, id);
+        logger.debug("Issue deleted...!");
+        return "redirect:/";
     }
 }

@@ -1,11 +1,18 @@
 package codesquad.domain;
 
+import codesquad.UnAuthorizedException;
 import support.domain.AbstractEntity;
+import support.domain.UriGeneratable;
 
 import javax.persistence.*;
 
 @Entity
-public class Issue extends AbstractEntity {
+public class Issue extends AbstractEntity implements UriGeneratable {
+    private static final String ROOT_PATH = "/issues/";
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey)
+    private User writer;
 
     @Column(length = 30, nullable = false)
     private String title;
@@ -63,11 +70,39 @@ public class Issue extends AbstractEntity {
         this.status = status;
     }
 
+    public User getWriter() {
+        return writer;
+    }
+
+    public void setWriter(User writer) {
+        this.writer = writer;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
                 "title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 '}';
+    }
+
+    @Override
+    public String generateUri() {
+        return ROOT_PATH + getId();
+    }
+
+    public Issue update(User loginUser, Issue issue) {
+        if (!writer.equals(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        this.content = issue.content;
+        return this;
+    }
+
+    public void delete(User loginUser) {
+        if (!loginUser.equals(writer)) {
+            throw new UnAuthorizedException();
+        }
+        deleted = true;
     }
 }
