@@ -10,6 +10,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 import static codesquad.domain.ContentType.ISSUE;
+import static codesquad.domain.IssueStatus.OPEN;
+import static javax.persistence.EnumType.STRING;
 
 @Entity
 public class Issue extends AbstractEntity implements UriGeneratable {
@@ -25,6 +27,9 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
+
+    @Enumerated(STRING)
+    private IssueStatus status = OPEN;
 
     private boolean deleted = false;
 
@@ -49,6 +54,10 @@ public class Issue extends AbstractEntity implements UriGeneratable {
             writer = loginUser;
         }
         return this;
+    }
+
+    public String getStatus() {
+        return status.toString();
     }
 
     public String getSubject() {

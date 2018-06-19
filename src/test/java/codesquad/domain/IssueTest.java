@@ -28,6 +28,11 @@ public class IssueTest {
     }
 
     @Test
+    public void status_message() {
+        assertThat(issue.getIssueStatus(), is("OPEN"));
+    }
+
+    @Test
     public void update() throws Exception {
         Issue result = issue.update(writer, updateIssueInfo);
         assertThat(result.getComment(), is("modify comment"));
