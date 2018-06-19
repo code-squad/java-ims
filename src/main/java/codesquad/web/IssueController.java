@@ -1,8 +1,11 @@
 package codesquad.web;
 
+import codesquad.CannotDeleteException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
@@ -27,18 +30,11 @@ public class IssueController {
         return "/issue/form";
     }
 
-    @GetMapping("")
-    public String list(Model model) {
-        List<Issue> issues = issueService.findAll();
-        model.addAttribute("issues", issues);
-        return "/index";
-    }
-
     @PostMapping("")
-    public String create(IssueDto issueDto) {
+    public String create(@LoginUser User loginUser, IssueDto issueDto) {
         log.info("create method called");
-        issueService.add(issueDto);
-        return "redirect:/issue";
+        issueService.add(loginUser, issueDto);
+        return "redirect:/";
     }
 
     @GetMapping("{id}")
@@ -49,14 +45,14 @@ public class IssueController {
     }
 
     @PutMapping("{id}")
-    public String update(@PathVariable long id, IssueDto target) {
-        issueService.update(id, target);
-        return "redirect:/issue";
+    public String update(@LoginUser User loginUser, @PathVariable long id, IssueDto target) throws CannotDeleteException {
+        issueService.update(loginUser, id, target);
+        return "redirect:/";
     }
 
     @DeleteMapping("{id}")
-    public String delete(@PathVariable long id) {
-        issueService.delete(id);
-        return "redirect:/issue";
+    public String delete(@LoginUser User loginUser, @PathVariable long id) throws CannotDeleteException {
+        issueService.delete(loginUser, id);
+        return "redirect:/";
     }
 }

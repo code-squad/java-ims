@@ -19,7 +19,6 @@ import static org.junit.Assert.assertThat;
 
 public class IssueAcceptanceTest extends AcceptanceTest {
     private static final Logger log =  LoggerFactory.getLogger(IssueAcceptanceTest.class);
-    private IssueDto testIssue;
 
     @Autowired
     IssueRepository issueRepository;
@@ -31,14 +30,14 @@ public class IssueAcceptanceTest extends AcceptanceTest {
                 .addParameter("comment", "test code comment").build();
         log.info("request : {}", request.toString());
         log.info("request body : {}", request.getBody());
-        ResponseEntity<String> response = template.postForEntity("/issue", request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue", request, String.class);
         log.info("response : {}", response.getBody());
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
 
     @Test
     public void list() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/issue", String.class);
+        ResponseEntity<String> response = template.getForEntity("/", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
@@ -54,17 +53,26 @@ public class IssueAcceptanceTest extends AcceptanceTest {
                 .addParameter("_method","put")
                 .addParameter("subject", "updated subject")
                 .addParameter("comment", "updated comment").build();
-        ResponseEntity<String> response = template.postForEntity("/issue/1", request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/1", request, String.class);
         log.info("status code : {}", response.getStatusCode());
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertThat(response.getHeaders().getLocation().getPath(), is("/issue"));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
     }
 
     @Test
     public void delete() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("_method", "delete").build();
-        ResponseEntity<String> response = template.postForEntity("/issue/2", request, String.class);
-        assertThat(response.getHeaders().getLocation().getPath(), is("/issue"));
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/1", request, String.class);
+        log.info("path : {}", response.getHeaders().getLocation().getPath());
+        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+    }
+
+    @Test
+    public void deleteFail() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "delete").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/2", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 }

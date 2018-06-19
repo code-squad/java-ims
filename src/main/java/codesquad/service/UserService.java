@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import codesquad.UnAuthenticationException;
@@ -15,15 +17,18 @@ import codesquad.dto.UserDto;
 
 @Service
 public class UserService {
+    private static final Logger log =  LoggerFactory.getLogger(UserService.class);
 
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
     public User add(UserDto userDto) {
+        log.info("user add called");
         return userRepository.save(userDto._toUser());
     }
 
     public User update(User loginUser, long id, UserDto updatedUser) {
+        log.info("update method called on service : {}", updatedUser._toUser().toString());
         User original = findById(loginUser, id);
         original.update(loginUser, updatedUser._toUser());
         return userRepository.save(original);
@@ -49,7 +54,7 @@ public class UserService {
         if (!user.matchPassword(password)) {
             throw new UnAuthenticationException();
         }
-
+        log.info("user info on userService : {}", user.toString());
         return user;
     }
 }

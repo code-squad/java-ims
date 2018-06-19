@@ -1,6 +1,7 @@
 package codesquad.dto;
 
 import codesquad.domain.Issue;
+import codesquad.domain.User;
 
 import javax.persistence.Column;
 import javax.persistence.Lob;
@@ -8,6 +9,8 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class IssueDto {
+    private User writer;
+
     @Size(min = 3, max = 50)
     @Column
     private String subject;
@@ -18,19 +21,21 @@ public class IssueDto {
 
     public IssueDto() {};
 
-    public IssueDto(String subject, String comment) {
+    public IssueDto(String subject, String comment, User writer) {
         this.subject = subject;
         this.comment = comment;
+        this.writer = writer;
     }
 
-    public IssueDto(long id, String subject, String comment) {
+    public IssueDto(long id, String subject, String comment, User writer) {
         super();
         this.subject = subject;
         this.comment = comment;
+        this.writer = writer;
     }
 
     public Issue toIssue() {
-        return new Issue(this.subject, this.comment);
+        return new Issue(this.subject, this.comment, this.writer);
     }
 
     public String getSubject() {
@@ -51,6 +56,15 @@ public class IssueDto {
         return this;
     }
 
+    public User getWriter() {
+        return writer;
+    }
+
+    public IssueDto setWriter(User writer) {
+        this.writer = writer;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,7 +82,8 @@ public class IssueDto {
     @Override
     public String toString() {
         return "IssueDto{" +
-                "subject='" + subject + '\'' +
+                "writer=" + writer +
+                ", subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';
     }
