@@ -26,9 +26,9 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
 
-//    @ManyToOne
-//    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue-asignee"))
-//    private User assignee;
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_asignee"))
+    private User assignee;
 
     public Issue() {
     }
@@ -55,11 +55,22 @@ public class Issue extends AbstractEntity {
         this.writer = writer;
     }
 
+    public void setAssignee(User assignee, User loginUser){
+        if(!isOwner(loginUser)){
+            throw new UnAuthorizedException();
+        }
+        this.assignee = assignee;
+    }
+
     public void setMilestone(User loginUser, Milestone milestone) {
         if(!isOwner(loginUser)){
             throw new UnAuthorizedException();
         }
         this.milestone = milestone;
+    }
+
+    public User getAssignee() {
+        return assignee;
     }
 
     public String getTitle() {
@@ -89,6 +100,8 @@ public class Issue extends AbstractEntity {
                 "title='" + title + '\'' +
                 ", contents='" + contents + '\'' +
                 ", writer=" + writer +
+                ", assignee=" + assignee +
+                ", milestone=" + milestone +
                 '}';
     }
 }

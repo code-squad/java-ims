@@ -180,4 +180,40 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         issue = issueRepository.findById(1L).get();
         assertThat(issue.getMilestone().getId(), is(1L));
     }
+
+    @Test
+    public void setAssignee(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/3/assignees/2", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+
+        Issue issue = issueRepository.findById(3L).get();
+        assertThat(issue.getAssignee().getId(), is(2L));
+    }
+
+    @Test
+    public void setAssignee_no_owner_of_issue(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+        ResponseEntity<String> response = basicAuthTemplate(findByUserId("riverway")).postForEntity("/issues/4/assignees/2", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void setAssignee_다른_담당자_지정(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/3/assignees/2", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+
+        Issue issue = issueRepository.findById(3L).get();
+        assertThat(issue.getAssignee().getId(), is(2L));
+
+        response = basicAuthTemplate().postForEntity("/issues/3/assignees/3", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+
+        issue = issueRepository.findById(3L).get();
+        assertThat(issue.getAssignee().getId(), is(3L));
+    }
 }

@@ -77,12 +77,7 @@
                         {{#milestones}}
                         <form action="/issues/{{issue.id}}/milestones/{{id}}" method="post">
                             <input type="hidden" name="_method" value="put">
-                        {{#issue.milestone}}
-                        <li class="mdl-menu__item mdl-button--accent">
-                            {{/issue.milestone}}
-                            {{^issue.milestone}}
                         <li class="mdl-menu__item">
-                            {{/issue.milestone}}
                             <!--<a href="/issues/{{issue.id}}/milestones/{{id}}">{{subject}}</a>-->
                             <button class="mdl-menu__item" type="submit">
                             {{subject}}
@@ -121,21 +116,19 @@
                     <!-- label list -->
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="assignee-menu">
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/1">javajigi</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/2">cca-company</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/3">진저애비</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/4">신영</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/5">전용우</a>
-                        </li>
+                        <!--<li class="mdl-menu__item">-->
+                            <!--<a href="/issue/1/setAssignee/1">javajigi</a>-->
+                        <!--</li>-->
+                        {{#assignees}}
+                        <form action="/issues/{{issue.id}}/assignee/{{id}}" method="post">
+                            <input type="hidden" name="_method" value="put">
+                            <li class="mdl-menu__item">
+                                <button class="mdl-menu__item" type="submit">
+                                    {{userId}}
+                                </button>
+                            </li>
+                        </form>
+                        {{/assignees}}
                     </ul>
                 </div>
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">

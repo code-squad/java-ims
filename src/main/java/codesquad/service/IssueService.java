@@ -58,4 +58,10 @@ public class IssueService {
         Issue issue = findById(id);
         issue.setMilestone(loginUser, milestone);
     }
+
+    @Transactional
+    public void assign(User loginUser, User assignee, long id) {
+        Issue issue = findById(id);
+        issue.setAssignee(assignee, loginUser);
+    }
 }
