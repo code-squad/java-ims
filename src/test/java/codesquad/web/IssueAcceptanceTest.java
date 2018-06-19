@@ -3,6 +3,7 @@ package codesquad.web;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import codesquad.dto.MilestoneDto;
 import org.junit.After;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -163,4 +165,12 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
         assertThat(response.getBody().contains("delete test3"), is(true));
     }
 
+//    @Test
+//    public void add_milestone() {
+//        String location = createIssueLocation("delete test4", "test comment");
+//        MilestoneDto newMilestoneDto = new MilestoneDto("Hellloo2", LocalDateTime.now(), LocalDateTime.now());
+//        ResponseEntity<String> response = basicAuthTemplate.postForEntity("/milestones", newMilestoneDto, String.class);
+//        log.debug("milestone path {}", response.getHeaders().getLocation().getPath());
+//        ResponseEntity<String> response1 = basicAuthTemplate.getForEntity(location, String.class);
+//    }
 }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import support.test.BasicAuthAcceptanceTest;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -41,24 +42,17 @@ public class MilestoneAcceptanceTest extends BasicAuthAcceptanceTest{
     }
 
     @Test
-    public void create_success() {
-        MilestoneDto newMilestoneDto = new MilestoneDto(LocalDateTime.now(), LocalDateTime.now());
+    public void create_success() throws ParseException {
+        MilestoneDto newMilestoneDto = new MilestoneDto("Hellloo1", "2018-02-01T10:15", "2018-05-01T10:15");
         ResponseEntity<String> response = basicAuthTemplate.postForEntity("/milestones", newMilestoneDto, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        // TODO Status FOUND with login user / check milestone schedule
     }
 
     @Test
-    public void create_fail_no_login() {
-        MilestoneDto newMilestoneDto = new MilestoneDto(LocalDateTime.now(), LocalDateTime.now());
+    public void create_fail_no_login() throws ParseException {
+        MilestoneDto newMilestoneDto = new MilestoneDto("Hellloo2", "2018-02-02T10:15", "2018-06-01T10:15");
         ResponseEntity<String> response = template.postForEntity("/milestones", newMilestoneDto, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
-        // TODO Status FOUND with login user / check milestone schedule
     }
-
-
-
-
-
 
 }

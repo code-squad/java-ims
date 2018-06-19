@@ -62,15 +62,11 @@
               <!-- milestone list -->
               <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                   for="milestone-menu">
+                {{#milstones}}
                       <li class="mdl-menu__item mdl-button--accent">
-                        <a href="/issue/1/setMilestone/0">Milestone1</a>
+                        <a href="/issues/{{#issue.id}}/setMilestone/{{id}}">{{subject}}</a>
                       </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setMilestone/2">Milestone2</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setMilestone/3">Milestone3</a>
-                      </li>
+                {{/milestones}}
               </ul>
 
               <button id="label-menu" class="mdl-button mdl-js-button">
@@ -102,21 +98,11 @@
               <!-- label list -->
               <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                   for="assignee-menu">
+                {{#users}}
                       <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/1">javajigi</a>
+                        <a href="/issues/{{issue.id}}/setAssignee/{{id}}">{{name}}</a>
                       </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/2">cca-company</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/3">진저애비</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/4">신영</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/5">전용우</a>
-                      </li>
+                {{/users}}
               </ul>
             </div>
             <div class="mdl-color-text--grey-700 mdl-card__supporting-text">

@@ -3,6 +3,7 @@ package codesquad.domain;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +14,10 @@ public class Milestone extends AbstractEntity implements UriGeneratable{
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
+
+    @Column
+    @Size(min = 5)
+    private String subject;
 
     @OneToMany(mappedBy = "milestone", cascade = CascadeType.ALL)
     private List<Issue> issues;
@@ -25,15 +30,10 @@ public class Milestone extends AbstractEntity implements UriGeneratable{
 
     }
 
-    public Milestone(LocalDateTime startDate, LocalDateTime endDate) {
+    public Milestone(String subject, LocalDateTime startDate, LocalDateTime endDate) {
+        this.subject = subject;
         this.startDate = startDate;
         this.endDate = endDate;
-    }
-
-    public Milestone(LocalDateTime startDate, LocalDateTime endDate, List<Issue> issues) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.issues = issues;
     }
 
     public Milestone(long id, LocalDateTime startDate, LocalDateTime endDate, List<Issue> issues) {

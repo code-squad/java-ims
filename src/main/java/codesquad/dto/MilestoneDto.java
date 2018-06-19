@@ -2,20 +2,40 @@ package codesquad.dto;
 
 import codesquad.domain.Milestone;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class MilestoneDto {
+
+    private String subject;
 
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
 
-    public MilestoneDto() {}
+    public MilestoneDto() throws ParseException {}
 
-    public MilestoneDto(LocalDateTime startDate, LocalDateTime endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
+    public MilestoneDto(String subject, String startDate, String endDate) throws ParseException {
+        this.subject = subject;
+        this.startDate = LocalDateTime.parse(startDate);
+        this.endDate = LocalDateTime.parse(endDate);
+    }
+
+    public Milestone _toEntity() {
+        return new Milestone(subject, startDate, endDate);
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public MilestoneDto setSubject(String subject) {
+        this.subject = subject;
+        return this;
     }
 
     public LocalDateTime getStartDate() {
@@ -36,30 +56,20 @@ public class MilestoneDto {
         return this;
     }
 
-    public Milestone _toEntity() {
-        return new Milestone(startDate, endDate);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MilestoneDto that = (MilestoneDto) o;
-        return Objects.equals(startDate, that.startDate) &&
+        return Objects.equals(subject, that.subject) &&
+                Objects.equals(startDate, that.startDate) &&
                 Objects.equals(endDate, that.endDate);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(startDate, endDate);
-    }
-
-    @Override
-    public String toString() {
-        return "MilestoneDto{" +
-                "startDate=" + startDate +
-                ", endDate=" + endDate +
-                '}';
+        return Objects.hash(subject, startDate, endDate);
     }
 }
+
