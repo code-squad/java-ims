@@ -1,0 +1,56 @@
+package codesquad.domain;
+
+import codesquad.dto.MileStoneDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import support.domain.AbstractEntity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
+
+@Entity
+public class MileStone extends AbstractEntity {
+    private static final Logger log =  LoggerFactory.getLogger(MileStone.class);
+
+    @Size(min = 3, max = 50)
+    @Column(nullable = false)
+    private String subject;
+
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+
+    public MileStone() {}
+
+    public MileStone(@Size(min = 3, max = 50) String subject, LocalDateTime startTime, LocalDateTime endTime) {
+        this.subject = subject;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public MileStoneDto _toMileStoneDto() {
+        return new MileStoneDto(this.subject, this.startTime, this.endTime);
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    @Override
+    public String toString() {
+        return "MileStone{" +
+                "subject='" + subject + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
+    }
+}
