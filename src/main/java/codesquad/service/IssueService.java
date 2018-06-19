@@ -19,7 +19,7 @@ public class IssueService {
 
     public Issue save(User loginUser, IssueDto issueDto) {
         Issue newIssue = issueDto._toIssue();
-        return issueRepository.save(newIssue.writeBy(loginUser));
+        return issueRepository.save(newIssue.writtenBy(loginUser));
     }
 
     public Issue findById(Long id) {

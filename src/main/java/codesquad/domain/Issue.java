@@ -5,6 +5,7 @@ import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -25,6 +26,17 @@ public class Issue extends AbstractEntity implements UriGeneratable{
 
     @Column
     private Boolean deleted = false;
+
+    @Column
+    private Boolean openState = true;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
 
     public Issue () {}
 
@@ -53,8 +65,13 @@ public class Issue extends AbstractEntity implements UriGeneratable{
         return this;
     }
 
-    public Issue writeBy(User loginUser) {
+    public Issue writtenBy(User loginUser) {
         this.writer = loginUser;
+        return this;
+    }
+
+    public Issue assignDirector(User assignee) {
+        this.assignee = assignee;
         return this;
     }
 
@@ -115,6 +132,14 @@ public class Issue extends AbstractEntity implements UriGeneratable{
                 ", writer=" + writer +
                 ", deleted=" + deleted +
                 '}';
+    }
+
+    public boolean isOpen() {
+        return openState;
+    }
+
+    public boolean isClosed() {
+        return !openState;
     }
 }
 
