@@ -10,6 +10,8 @@ import codesquad.UnAuthorizedException;
 import codesquad.dto.UserDto;
 import support.domain.AbstractEntity;
 
+import java.util.Objects;
+
 @Entity
 public class User extends AbstractEntity {
     public static final GuestUser GUEST_USER = new GuestUser();
@@ -107,5 +109,19 @@ public class User extends AbstractEntity {
     @Override
     public String toString() {
         return "User [userId=" + userId + ", password=" + password + ", name=" + name + "]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), userId);
     }
 }

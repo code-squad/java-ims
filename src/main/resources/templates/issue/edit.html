@@ -11,16 +11,17 @@
       <main class="mdl-layout__content">
         <div class="issues-back">
           <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon back-btn" title="go back" role="button">
-            <i class="materialit -icons" role="presentation">arrow_back</i>
+            <i class="material-icons" role="presentation">arrow_back</i>
           </a>
         </div>
         <div class="issues__posts mdl-grid">
           <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
-        <form action="/issues" method="post">
+        <form action="/issues/{issue.id}" method="post">
+            <input type="hidden" name="_method" value="put"/>
             <div class="mdl-card__title mdl-color-text--grey-50" style="height:100px;">
               <i class="material-icons">check_circle</i>
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:90%">
-                <input class="mdl-textfield__input" type="text" id="subject" name="subject" required>
+                <input class="mdl-textfield__input" type="text" id="subject" name="subject" value="{issue.title}" required>
                 <label class="mdl-textfield__label" for="subject">Subject</label>
               </div>
             </div>

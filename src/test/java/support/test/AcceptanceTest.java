@@ -47,7 +47,11 @@ public abstract class AcceptanceTest {
     }
     
     protected String createResource(String path, Object bodyPayload) {
-        ResponseEntity<String> response = template().postForEntity(path, bodyPayload, String.class);
+        return createResource(template(), path, bodyPayload);
+    }
+
+    protected String createResource(TestRestTemplate template, String path, Object bodyPayload) {
+        ResponseEntity<String> response = template.postForEntity(path, bodyPayload, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         return response.getHeaders().getLocation().getPath();
     }
@@ -58,5 +62,21 @@ public abstract class AcceptanceTest {
     
     protected ResponseEntity<String> getResource(String location, User loginUser) {
         return basicAuthTemplate(loginUser).getForEntity(location, String.class);
+    }
+
+    protected String getPath(ResponseEntity<?> response) {
+        return response.getHeaders().getLocation().getPath();
+    }
+
+    protected ResponseEntity<String> requestPost(TestRestTemplate template, String uri, Object request) {
+        return template.postForEntity(uri, request, String.class);
+    }
+
+    protected ResponseEntity<String> requestGet(String uri) {
+        return requestGet(template(), uri);
+    }
+
+    protected ResponseEntity<String> requestGet(TestRestTemplate template, String uri) {
+        return template.getForEntity(uri, String.class);
     }
 }

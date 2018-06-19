@@ -2,9 +2,7 @@ package codesquad.domain;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -69,5 +67,12 @@ public class UserTest {
     public void mismatch_password() throws Exception {
         User user = newUser("sanjigi");
         assertFalse(user.matchPassword(user.getPassword() + "2"));
+    }
+
+    @Test
+    public void equals() throws Exception {
+        User user = newUser("javajigi");
+        User user2 = newUser("javajigi");
+        assertEquals(user, user2);
     }
 }
