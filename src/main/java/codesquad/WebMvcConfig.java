@@ -2,6 +2,7 @@ package codesquad;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,10 @@ import support.converter.LocalDateTimeConverter;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Autowired
+    BasicAuthInterceptor basicAuthInterceptor;
+
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new LocalDateConverter("yyyy-MM-dd"));
@@ -39,16 +44,22 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return new MessageSourceAccessor(messageSource);
     }
 
-    @Bean
-    public BasicAuthInterceptor basicAuthInterceptor() {
-        return new BasicAuthInterceptor();
-    }
+//    @Bean
+//    public BasicAuthInterceptor basicAuthInterceptor() {
+//        return new BasicAuthInterceptor();
+//    }
+
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(basicAuthInterceptor());
+//    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(basicAuthInterceptor());
+        registry.addInterceptor(basicAuthInterceptor);
     }
 
+    // 만약 이 메서드가 여기저기 호출이 되었다고 해서 객체가 여러개 생성되는 것이 아니다.
     @Bean
     public LoginUserHandlerMethodArgumentResolver loginUserArgumentResolver() {
         return new LoginUserHandlerMethodArgumentResolver();

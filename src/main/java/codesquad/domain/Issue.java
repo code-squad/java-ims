@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
-public class Issue extends AbstractEntity{
+public class Issue extends AbstractEntity implements UriGeneratable{
 
     @Size(min = 3, max = 50)
     @Column(unique = true, nullable = false, length = 50)
@@ -22,6 +22,9 @@ public class Issue extends AbstractEntity{
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
+
+    @Column
+    private Boolean deleted = false;
 
     public Issue () {}
 
@@ -41,8 +44,18 @@ public class Issue extends AbstractEntity{
         this.writer = writer;
     }
 
-    public void writeBy(User loginUser) {
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public Issue delete() {
+        this.deleted = true;
+        return this;
+    }
+
+    public Issue writeBy(User loginUser) {
         this.writer = loginUser;
+        return this;
     }
 
     public String getSubject() {
@@ -58,7 +71,17 @@ public class Issue extends AbstractEntity{
     }
 
     public IssueDto _toIssueDto() {
-        return new IssueDto(subject, comment, writer);
+        return new IssueDto(subject, comment);
+    }
+
+    public boolean isWriter(User loginUser) {
+        return this.writer.equals(loginUser);
+    }
+
+    public Issue update(IssueDto target) {
+        this.subject = target.getSubject();
+        this.comment = target.getComment();
+        return this;
     }
 
     @Override
@@ -69,13 +92,19 @@ public class Issue extends AbstractEntity{
         Issue issue = (Issue) o;
         return Objects.equals(subject, issue.subject) &&
                 Objects.equals(comment, issue.comment) &&
-                Objects.equals(writer, issue.writer);
+                Objects.equals(writer, issue.writer) &&
+                Objects.equals(deleted, issue.deleted);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), subject, comment, writer);
+        return Objects.hash(super.hashCode(), subject, comment, writer, deleted);
+    }
+
+    @Override
+    public String generateUrl() {
+        return String.format("/issues/%d", getId());
     }
 
     @Override
@@ -84,6 +113,7 @@ public class Issue extends AbstractEntity{
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 ", writer=" + writer +
+                ", deleted=" + deleted +
                 '}';
     }
 }

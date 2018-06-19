@@ -62,10 +62,4 @@ public abstract class AcceptanceTest {
         return basicAuthTemplate(loginUser).getForEntity(location, String.class);
     }
 
-    protected String createIssueLocation(String subject, String comment) {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", subject)
-                .addParameter("comment", comment).build();
-        return template.postForEntity("/issues", request, String.class).getHeaders().getLocation().toString();
-    }
 }
