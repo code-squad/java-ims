@@ -1,18 +1,28 @@
 package codesquad.web;
 
 import codesquad.domain.User;
+import codesquad.dto.MileStoneDto;
 import codesquad.security.LoginUser;
+import codesquad.service.MileStoneService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
-@RequestMapping("milestone")
-public class MilestoneController {
+import javax.annotation.Resource;
 
-    @GetMapping("/list")
+@Controller
+@RequestMapping("/milestone")
+public class MilestoneController {
+    private static final Logger log =  LoggerFactory.getLogger(MilestoneController.class);
+
+    @Resource(name = "mileStoneService")
+    private MileStoneService mileStoneService;
+
+    @GetMapping("")
     public String showList() {
         return "/milestone/list";
     }
@@ -22,8 +32,11 @@ public class MilestoneController {
         return "/milestone/form";
     }
 
-//    @PostMapping("")
-//    public String add(@LoginUser User loginUser, Model model) {
-//
-//    }
+    @PostMapping("")
+    public String add(MileStoneDto mileStoneDto) {
+        log.info("milestone controller called");
+        log.info("milestone dto : {}", mileStoneDto.toMileStone().toString());
+        mileStoneService.add(mileStoneDto);
+        return "redirect:/milestone";
+    }
 }

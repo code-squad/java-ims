@@ -12,45 +12,86 @@ import java.time.LocalDateTime;
 
 @Entity
 public class MileStone extends AbstractEntity {
-    private static final Logger log =  LoggerFactory.getLogger(MileStone.class);
+//    private static final Logger log =  LoggerFactory.getLogger(MileStone.class);
+//
+//    @Size(min = 3, max = 50)
+//    @Column(nullable = false)
+//    private String subject;
+//
+//    private LocalDateTime startDate;
+//    private LocalDateTime endDate;
+//
+//    public MileStone() {}
+//
+//    public MileStone(@Size(min = 3, max = 50) String subject, LocalDateTime startDate, LocalDateTime endDate) {
+//        this.subject = subject;
+//        this.startDate = startDate;
+//        this.endDate = endDate;
+//    }
+//
+//    public MileStoneDto _toMileStoneDto() {
+//        return new MileStoneDto(this.subject, this.startDate, this.endDate);
+//    }
+//
+//    public String getSubject() {
+//        return subject;
+//    }
+//
+//    public LocalDateTime getStartDate() {
+//        return startDate;
+//    }
+//
+//    public LocalDateTime getEndDate() {
+//        return endDate;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "MileStone{" +
+//                "subject='" + subject + '\'' +
+//                ", startDate=" + startDate +
+//                ", endDate=" + endDate +
+//                '}';
+//    }
+private static final Logger log =  LoggerFactory.getLogger(MileStone.class);
 
     @Size(min = 3, max = 50)
     @Column(nullable = false)
     private String subject;
 
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private String startDate;
+    private String endDate;
 
     public MileStone() {}
 
-    public MileStone(@Size(min = 3, max = 50) String subject, LocalDateTime startTime, LocalDateTime endTime) {
+    public MileStone(@Size(min = 3, max = 50) String subject, String startDate, String endDate) {
         this.subject = subject;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public MileStoneDto _toMileStoneDto() {
-        return new MileStoneDto(this.subject, this.startTime, this.endTime);
+        return new MileStoneDto(this.subject, this.startDate, this.endDate);
     }
 
     public String getSubject() {
         return subject;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
+    public String getEndDate() {
+        return endDate;
     }
 
     @Override
     public String toString() {
         return "MileStone{" +
                 "subject='" + subject + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
                 '}';
     }
 }
