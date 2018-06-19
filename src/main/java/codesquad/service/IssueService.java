@@ -3,6 +3,7 @@ package codesquad.service;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
@@ -50,5 +51,11 @@ public class IssueService {
             throw new UnAuthorizedException();
         }
         issueRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void setMilestone(long id, User loginUser, Milestone milestone){
+        Issue issue = findById(id);
+        issue.setMilestone(loginUser, milestone);
     }
 }

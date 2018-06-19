@@ -1,10 +1,12 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,8 @@ public class IssueController {
     private static final Logger log = LoggerFactory.getLogger(IssueController.class);
     @Resource(name = "issueService")
     private IssueService issueService;
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
 
     @GetMapping("/form")
     public String form(@LoginUser User loginUser) {
@@ -35,6 +39,7 @@ public class IssueController {
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("milestones", milestoneService.findAll());
         return "/issue/show";
     }
 
@@ -56,5 +61,12 @@ public class IssueController {
     public String delete(@LoginUser User loginUser, @PathVariable long id){
         issueService.delete(id, loginUser);
         return "redirect:/";
+    }
+
+    @PutMapping("/{id}/milestones/{milestoneId}")
+    public String setMilestone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long milestoneId){
+        Milestone milestone = milestoneService.findById(milestoneId);
+        issueService.setMilestone(id, loginUser, milestone);
+        return String.format("redirect:/issues/%d", id);
     }
 }

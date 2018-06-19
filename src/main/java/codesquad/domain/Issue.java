@@ -22,17 +22,25 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
+
+//    @ManyToOne
+//    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue-asignee"))
+//    private User assignee;
+
     public Issue() {
     }
 
-    public Issue(String title, String contents){
+    public Issue(String title, String contents) {
         super(0L);
         this.title = title;
         this.contents = contents;
     }
 
     public void update(User loginUser, Issue target) {
-        if(!isOwner(loginUser)){
+        if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }
         this.title = target.title;
@@ -43,8 +51,15 @@ public class Issue extends AbstractEntity {
         return writer.equals(loginUser);
     }
 
-    public void writeBy(User writer){
+    public void writeBy(User writer) {
         this.writer = writer;
+    }
+
+    public void setMilestone(User loginUser, Milestone milestone) {
+        if(!isOwner(loginUser)){
+            throw new UnAuthorizedException();
+        }
+        this.milestone = milestone;
     }
 
     public String getTitle() {
@@ -59,7 +74,11 @@ public class Issue extends AbstractEntity {
         return writer;
     }
 
-    public IssueDto toIssueDto(){
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public IssueDto toIssueDto() {
         return new IssueDto(title, contents);
     }
 
