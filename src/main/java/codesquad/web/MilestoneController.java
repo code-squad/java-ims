@@ -1,6 +1,8 @@
 package codesquad.web;
 
 
+import codesquad.domain.User;
+import codesquad.security.LoginUser;
 import codesquad.service.MilestoneService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,11 @@ public class MilestoneController {
     public String showList(Model model) {
         model.addAttribute("milestones", milestoneService.findAll());
         return "milestone/list";
+    }
+
+    @GetMapping("/form")
+    public String createForm(@LoginUser User loginUser) {
+        return "milestone/form";
     }
 
 }
