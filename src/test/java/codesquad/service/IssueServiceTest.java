@@ -1,6 +1,8 @@
 package codesquad.service;
 
+import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
+import codesquad.domain.DeleteHistoryRepository;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
@@ -28,6 +30,9 @@ public class IssueServiceTest {
 
     @Mock
     private IssueRepository issueRepo;
+
+    @Mock
+    private DeleteHistoryRepository deleteHistoryRepo;
 
     @InjectMocks
     private IssueService issueService;
@@ -92,15 +97,17 @@ public class IssueServiceTest {
     }
 
     @Test
-    public void delete() {
+    public void delete() throws Exception {
+        Issue target = loginedIssue();
+        when(issueRepo.findById(anyLong())).thenReturn(Optional.of(target));
+        when(deleteHistoryRepo.save(any())).thenReturn(target.delete(getUser()));
+        issueService.delete(getUser(), anyLong());
     }
 
-    @Test
-    public void delete_fail_not_found() {
-    }
-
-    @Test
-    public void delete_fail_unAuthorized() {
+    @Test(expected = CannotDeleteException.class)
+    public void delete_fail_unAuthorized() throws Exception {
+        when(issueRepo.findById(anyLong())).thenReturn(Optional.of(loginedIssue()));
+        issueService.delete(getOtherUser(), anyLong());
     }
 
     private Issue validIssue() {

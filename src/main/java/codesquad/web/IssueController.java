@@ -1,12 +1,11 @@
 package codesquad.web;
 
+import codesquad.CannotDeleteException;
 import codesquad.domain.Issue;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,8 +19,6 @@ import static support.domain.Entity.getEntityName;
 @Controller
 @RequestMapping("/issues")
 public class IssueController {
-    private static final Logger log = LoggerFactory.getLogger(IssueController.class);
-
     @Autowired
     private IssueService issueService;
 
@@ -47,5 +44,11 @@ public class IssueController {
     public String update(@LoginUser User loginUser, @PathVariable Long id, @Valid IssueDto updateIssueDto) {
         Issue issue = issueService.update(loginUser, id, updateIssueDto);
         return issue.generateRedirectUri();
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User loginUser, @PathVariable Long id) throws CannotDeleteException {
+        issueService.delete(loginUser, id);
+        return "redirect:/";
     }
 }

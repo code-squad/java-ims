@@ -96,8 +96,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         builder.addParameter("_method", "put");
         builder.addParameter("subject", "modify subject");
         builder.addParameter("comment", "modify content");
-        HttpEntity<MultiValueMap<String, Object>> request = builder.build();
-        return template.postForEntity(path, request, String.class);
+        return template.postForEntity(path, builder.build(), String.class);
     }
 
     @Test
@@ -118,19 +117,28 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 
-    @Test
-    public void delete() {
+    private ResponseEntity<String> delete(TestRestTemplate template) {
+        String path = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment")));
+        HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
+        builder.addParameter("_method", "delete");
+        return template.postForEntity(path, builder.build(), String.class);
     }
 
     @Test
-    public void delete_fail_not_found() {
+    public void delete() {
+        ResponseEntity<String> response = delete(basicAuthTemplate());
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
 
     @Test
     public void delete_fail_unAuthentication() {
+        ResponseEntity<String> response = delete(template());
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
     @Test
     public void delete_fail_unAuthorized() {
+        ResponseEntity<String> response = delete(basicAuthTemplate(findByUserId("sanjigi")));
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 }

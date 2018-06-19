@@ -1,6 +1,8 @@
 package codesquad.service;
 
+import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
+import codesquad.domain.DeleteHistoryRepository;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
@@ -17,6 +19,9 @@ public class IssueService {
 
     @Autowired
     private IssueRepository issueRepo;
+
+    @Autowired
+    private DeleteHistoryRepository deleteHistoryRepo;
 
     public Issue create(User loginUser, IssueDto issueDto) {
         Issue issue = issueDto.toIssue();
@@ -36,13 +41,19 @@ public class IssueService {
         return issue;
     }
 
+    public List<Issue> getAll() {
+        return issueRepo.findAll();
+    }
+
     @Transactional
     public Issue update(User loginUser, Long id, IssueDto updateIssueDto) {
         Issue issue = issueRepo.findById(id).orElseThrow(EntityNotFoundException::new);
         return issue.update(loginUser, updateIssueDto);
     }
 
-    public List<Issue> getAll() {
-        return issueRepo.findAll();
+    @Transactional(rollbackFor = CannotDeleteException.class)
+    public void delete(User loginUser, Long id) throws CannotDeleteException {
+        Issue issue = issueRepo.findById(id).orElseThrow(EntityNotFoundException::new);
+        deleteHistoryRepo.save(issue.delete(loginUser));
     }
 }

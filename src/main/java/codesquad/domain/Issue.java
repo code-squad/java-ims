@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
@@ -7,6 +8,8 @@ import support.domain.UriGeneratable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+
+import static codesquad.domain.ContentType.ISSUE;
 
 @Entity
 public class Issue extends AbstractEntity implements UriGeneratable {
@@ -23,7 +26,7 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
-    private boolean deleted;
+    private boolean deleted = false;
 
     public Issue() {
     }
@@ -31,7 +34,6 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     public Issue(String subject, String comment) {
         this.subject = subject;
         this.comment = comment;
-        deleted = false;
     }
 
     public long getId() {
@@ -96,5 +98,13 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         subject = updateIssueDto.getSubject();
         comment = updateIssueDto.getComment();
         return this;
+    }
+
+    public DeleteHistory delete(User loginUser) throws CannotDeleteException {
+        if (!writer.equals(loginUser)) {
+            throw new CannotDeleteException();
+        }
+        deleted = true;
+        return DeleteHistory.convert(ISSUE, writer, this);
     }
 }
