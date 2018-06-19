@@ -10,6 +10,9 @@ import org.springframework.util.MultiValueMap;
 import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -26,8 +29,8 @@ public class MileStoneAcceptanceTest extends AcceptanceTest {
     public void create() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("subject", "mileStone test")
-                .addParameter("startDate", "2018-6-19")
-                .addParameter("endDate", "2018-7-19").build();
+                .addParameter("startDate", "2018-06-01T08:30")
+                .addParameter("endDate", "2018-07-01T08:30").build();
         log.info("request body : {}", request.getBody());
         ResponseEntity<String> response = basicAuthTemplate().postForEntity("/milestone", request, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));

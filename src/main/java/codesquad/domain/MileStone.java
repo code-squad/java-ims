@@ -12,59 +12,18 @@ import java.time.LocalDateTime;
 
 @Entity
 public class MileStone extends AbstractEntity {
-//    private static final Logger log =  LoggerFactory.getLogger(MileStone.class);
-//
-//    @Size(min = 3, max = 50)
-//    @Column(nullable = false)
-//    private String subject;
-//
-//    private LocalDateTime startDate;
-//    private LocalDateTime endDate;
-//
-//    public MileStone() {}
-//
-//    public MileStone(@Size(min = 3, max = 50) String subject, LocalDateTime startDate, LocalDateTime endDate) {
-//        this.subject = subject;
-//        this.startDate = startDate;
-//        this.endDate = endDate;
-//    }
-//
-//    public MileStoneDto _toMileStoneDto() {
-//        return new MileStoneDto(this.subject, this.startDate, this.endDate);
-//    }
-//
-//    public String getSubject() {
-//        return subject;
-//    }
-//
-//    public LocalDateTime getStartDate() {
-//        return startDate;
-//    }
-//
-//    public LocalDateTime getEndDate() {
-//        return endDate;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "MileStone{" +
-//                "subject='" + subject + '\'' +
-//                ", startDate=" + startDate +
-//                ", endDate=" + endDate +
-//                '}';
-//    }
-private static final Logger log =  LoggerFactory.getLogger(MileStone.class);
+    private static final Logger log =  LoggerFactory.getLogger(MileStone.class);
 
     @Size(min = 3, max = 50)
     @Column(nullable = false)
     private String subject;
 
-    private String startDate;
-    private String endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     public MileStone() {}
 
-    public MileStone(@Size(min = 3, max = 50) String subject, String startDate, String endDate) {
+    public MileStone(@Size(min = 3, max = 50) String subject, LocalDateTime startDate, LocalDateTime endDate) {
         this.subject = subject;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -78,11 +37,11 @@ private static final Logger log =  LoggerFactory.getLogger(MileStone.class);
         return subject;
     }
 
-    public String getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public String getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
