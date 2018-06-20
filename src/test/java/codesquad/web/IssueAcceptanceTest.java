@@ -19,10 +19,6 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     private static final String CREATE_URL = "/issues";
     private static final Logger logger = LoggerFactory.getLogger(IssueAcceptanceTest.class);
 
-    private ResponseEntity<String> getResource(String url, TestRestTemplate template) {
-        return template.getForEntity(url, String.class);
-    }
-
     private ResponseEntity<String> createNewIssue(TestRestTemplate template, String title, String content) {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("title", title)

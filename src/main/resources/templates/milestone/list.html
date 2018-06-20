@@ -41,8 +41,27 @@
             </a>
             <div class="mdl-card__supporting-text">
               <ul class="issue-list mdl-list">
-              
-              
+
+                {{# milestones }}
+                <li class="mdl-list__item mdl-list__item--two-line">
+                  <span class="mdl-list__item-primary-content">
+                    <a href="/milestone/1"><strong>{{subject}}</strong></a>
+                    <span class="mdl-list__item-sub-title">
+                      {{dueDate}}
+                    </span>
+                  </span>
+
+                  <span class="mdl-list__item-secondary-content">
+                    <span class="progress-bar">
+                      <span class="progress" style="width:200.0px"> </span>
+                    </span>
+                    <span class="mdl-list__item-sub-title" style="font-size:13px; color:#888">
+                    {{openIssueCount}} Open {{closedIssueCount}} Closed
+                    </span>
+                  </span>
+                </li>
+                {{/ milestones }}
+
                 <li class="mdl-list__item mdl-list__item--two-line">
                   <span class="mdl-list__item-primary-content">
                     <a href="/milestone/1"><strong>Milestone1</strong></a>

@@ -24,6 +24,9 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     @Enumerated(EnumType.STRING)
     private IssueStatus status = IssueStatus.OPEN;
 
+    @ManyToOne
+    private Milestone milestone;
+
     private boolean deleted;
 
     public Issue() {
@@ -78,6 +81,14 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         this.writer = writer;
     }
 
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
@@ -104,5 +115,9 @@ public class Issue extends AbstractEntity implements UriGeneratable {
             throw new UnAuthorizedException();
         }
         deleted = true;
+    }
+
+    public boolean isOpen() {
+        return status.isOpen();
     }
 }
