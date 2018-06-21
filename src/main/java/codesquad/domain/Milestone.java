@@ -2,7 +2,6 @@ package codesquad.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,6 +26,8 @@ public class Milestone {
 
     @Embedded
     private Issues issues;
+
+    private boolean deleted;
 
 
     public Milestone() {
@@ -115,5 +116,13 @@ public class Milestone {
                 ", dueDate='" + dueDate + '\'' +
                 ", subject='" + subject + '\'' +
                 '}';
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void addIssue(Issue issue) {
+        issues.addIssue(issue);
     }
 }

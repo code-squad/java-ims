@@ -5,6 +5,7 @@ import support.domain.AbstractEntity;
 import support.domain.UriGeneratable;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Issue extends AbstractEntity implements UriGeneratable {
@@ -95,6 +96,25 @@ public class Issue extends AbstractEntity implements UriGeneratable {
                 "title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Issue)) return false;
+        if (!super.equals(o)) return false;
+        Issue issue = (Issue) o;
+        return deleted == issue.deleted &&
+                Objects.equals(writer, issue.writer) &&
+                Objects.equals(title, issue.title) &&
+                Objects.equals(content, issue.content) &&
+                status == issue.status;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), writer, title, content, status, deleted);
     }
 
     @Override

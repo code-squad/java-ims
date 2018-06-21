@@ -60,5 +60,28 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
         assertThat(list.getBody().contains("subject2"), is(false));
     }
 
+    private ResponseEntity<String> addIssue(TestRestTemplate template) {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("id", "1")
+                .build();
+        return template.postForEntity("/milestones/1", request, String.class);
+    }
 
+    @Test
+    public void addIssue_Logged_In() {
+        createMilestone(basicAuthTemplate(), "test milestone");
+
+        ResponseEntity<String> response = addIssue(basicAuthTemplate());
+        String location = response.getHeaders().getLocation().getPath();
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertThat(location, is("/issues/1"));
+    }
+
+    @Test
+    public void addIssue_NOT_Logged_In() {
+        createMilestone(template(), "test milestone");
+
+        ResponseEntity<String> response = addIssue(template());
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
 }
