@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 
+import codesquad.domain.Result;
 import org.springframework.stereotype.Service;
 
 import codesquad.UnAuthenticationException;
@@ -23,7 +26,7 @@ public class UserService {
         return userRepository.save(userDto._toUser());
     }
 
-    public User update(User loginUser, long id, UserDto updatedUser) {
+    public User update(User loginUser, long id, @Valid UserDto updatedUser) {
         User original = findById(loginUser, id);
         original.update(loginUser, updatedUser._toUser());
         return userRepository.save(original);
@@ -51,5 +54,14 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public Result login(UserDto userDto) {
+        return userRepository.findByUserId(userDto.getUserId()).map(user -> {
+            if (user.matchPassword(userDto.getPassword())) {
+                return Result.ok(user);
+            }
+            return Result.fail("로그인 정보가 일치하지않습니다.");
+        }).orElseThrow(EntityNotFoundException::new);
     }
 }

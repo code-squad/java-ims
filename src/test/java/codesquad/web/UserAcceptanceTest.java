@@ -1,10 +1,6 @@
 package codesquad.web;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
+import codesquad.domain.UserRepository;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +10,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-
-import codesquad.domain.UserRepository;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(UserAcceptanceTest.class);
@@ -46,6 +43,43 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(userRepository.findByUserId(userId));
         assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
+    }
+
+    private HttpEntity<MultiValueMap<String, Object>> getCreateUserParams() {
+        HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
+        builder.addParameter("userId", "colin");
+        builder.addParameter("password", "1234");
+        builder.addParameter("name", "colin");
+        return builder.build();
+    }
+
+    private HttpEntity<MultiValueMap<String, Object>> getLoginUserParams(String userId, String password) {
+        HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
+        builder.addParameter("userId", userId);
+        builder.addParameter("password", password);
+        return builder.build();
+    }
+
+    @Test
+    public void login() {
+        ResponseEntity<String> response = requestPost("/users", getCreateUserParams());
+        response = requestPost("/users/login", getLoginUserParams("colin", "1234"));
+        assertThat(getPath(response), is("/"));
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+    }
+
+    @Test
+    public void login_fail_invalid_userId() {
+        ResponseEntity<String> response = requestPost("/users", getCreateUserParams());
+        response = requestPost("/users/login", getLoginUserParams("jinbro", "1234"));
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    }
+
+    @Test
+    public void login_fail_invalid_password() {
+        ResponseEntity<String> response = requestPost("/users", getCreateUserParams());
+        response = requestPost("/users/login", getLoginUserParams("colin", "1111"));
+        assertTrue(response.getBody().contains("로그인 정보가 일치하지않습니다."));
     }
 
     @Test
