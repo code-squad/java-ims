@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Resource;
-import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
-import codesquad.domain.Result;
 import org.springframework.stereotype.Service;
 
 import codesquad.UnAuthenticationException;
@@ -43,25 +41,6 @@ public class UserService {
     }
 
     public User login(String userId, String password) throws UnAuthenticationException {
-        Optional<User> maybeUser = userRepository.findByUserId(userId);
-        if (!maybeUser.isPresent()) {
-            throw new UnAuthenticationException();
-        }
-
-        User user = maybeUser.get();
-        if (!user.matchPassword(password)) {
-            throw new UnAuthenticationException();
-        }
-
-        return user;
-    }
-
-    public Result login(UserDto userDto) {
-        return userRepository.findByUserId(userDto.getUserId()).map(user -> {
-            if (user.matchPassword(userDto.getPassword())) {
-                return Result.ok(user);
-            }
-            return Result.fail("로그인 정보가 일치하지않습니다.");
-        }).orElseThrow(EntityNotFoundException::new);
+        return userRepository.findByUserId(userId).filter(user -> user.matchPassword(password)).orElseThrow(UnAuthenticationException::new);
     }
 }

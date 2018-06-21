@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import codesquad.domain.UserRepository;
+import codesquad.security.SecurityControllerAdvice;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,17 +70,10 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
-    public void login_fail_invalid_userId() {
-        ResponseEntity<String> response = requestPost("/users", getCreateUserParams());
-        response = requestPost("/users/login", getLoginUserParams("jinbro", "1234"));
-        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-    }
-
-    @Test
     public void login_fail_invalid_password() {
         ResponseEntity<String> response = requestPost("/users", getCreateUserParams());
-        response = requestPost("/users/login", getLoginUserParams("colin", "1111"));
-        assertTrue(response.getBody().contains("로그인 정보가 일치하지않습니다."));
+        response = requestPost("/users/login", getLoginUserParams("colin", "111111111"));
+        assertTrue(response.getBody().contains(SecurityControllerAdvice.INVALID_LOGIN_INFO));
     }
 
     @Test

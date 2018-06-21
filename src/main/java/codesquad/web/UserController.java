@@ -1,6 +1,6 @@
 package codesquad.web;
 
-import codesquad.domain.Result;
+import codesquad.UnAuthenticationException;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
 import codesquad.security.HttpSessionUtils;
@@ -32,13 +32,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserDto userDto, HttpSession session, Model model) {
-        Result result = userService.login(userDto);
-        if (!result.isValid()) {
-            model.addAttribute("errMessage", result.get());
-            return "/user/loginFail";
-        }
-        session.setAttribute(USER_SESSION_KEY, result.get());
+    public String login(String userId, String password, HttpSession session) throws UnAuthenticationException {
+        session.setAttribute(USER_SESSION_KEY, userService.login(userId, password));
         return "redirect:/";
     }
 

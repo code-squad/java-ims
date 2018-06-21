@@ -1,5 +1,6 @@
 package codesquad.service;
 
+import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
@@ -16,8 +17,10 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -25,8 +28,9 @@ public class UserServiceTest {
     private static final Logger log = LoggerFactory.getLogger(UserServiceTest.class);
 
     private User user;
-    private UserDto updateUserInfo;
     private User otherUser;
+
+    private UserDto updateUserInfo;
 
     @Mock
     private UserRepository userRepository;
@@ -37,8 +41,9 @@ public class UserServiceTest {
     @Before
     public void setUp() throws Exception {
         user = new User("colin", "1234", "colin");
-        updateUserInfo = new UserDto("colin", "3456", "Colin");
         otherUser = new User("jinbro", "1234", "jinbro");
+
+        updateUserInfo = new UserDto("colin", "3456", "Colin");
     }
 
     @Test
@@ -52,6 +57,18 @@ public class UserServiceTest {
     @Test (expected = UnAuthorizedException.class)
     public void update_fail_unAuthorization() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
-        User updatedUser = userService.update(otherUser, anyLong(), updateUserInfo);
+        userService.update(otherUser, anyLong(), updateUserInfo);
+    }
+
+    @Test
+    public void login() throws Exception {
+        when(userRepository.findByUserId(anyString())).thenReturn(Optional.of(user));
+        userService.login(user.getUserId(), user.getPassword());
+    }
+
+    @Test (expected = UnAuthenticationException.class)
+    public void login_fail_invalid_info() throws Exception {
+        when(userRepository.findByUserId(anyString())).thenReturn(Optional.of(user));
+        userService.login(user.getUserId(),"123124123");
     }
 }
