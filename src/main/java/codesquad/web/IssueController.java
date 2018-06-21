@@ -7,6 +7,7 @@ import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.UserService;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,9 @@ public class IssueController {
     @Resource(name = "issueService")
     IssueService issueService;
 
+    @Resource(name = "userService")
+    UserService userService;
+
     @GetMapping("form")
     public String form() {
         return "/issue/form";
@@ -40,6 +44,7 @@ public class IssueController {
     @GetMapping("{id}")
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("user", userService.findAll());
         return "/issue/show";
     }
 
@@ -52,6 +57,12 @@ public class IssueController {
     @DeleteMapping("{id}")
     public String delete(@LoginUser User loginUser, @PathVariable long id) throws CannotDeleteException {
         issueService.delete(loginUser, id);
+        return "redirect:/";
+    }
+
+    @GetMapping("{id}/setAssignee/{userId}")
+    public String setAssignee(@PathVariable long id, @PathVariable long userId) {
+        log.info("id : {}, userId : {}", id, userId);
         return "redirect:/";
     }
 }
