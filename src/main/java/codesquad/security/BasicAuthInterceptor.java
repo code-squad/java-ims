@@ -6,6 +6,7 @@ import java.util.Base64;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import codesquad.InvalidLoginInfoException;
 import codesquad.dto.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,7 @@ public class BasicAuthInterceptor extends HandlerInterceptorAdapter {
             log.debug("Login Success : {}", user);
             request.getSession().setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
             return true;
-        } catch (UnAuthenticationException e) {
+        } catch (InvalidLoginInfoException e) {
             return true;
         }
     }

@@ -1,6 +1,6 @@
 package codesquad.web;
 
-import codesquad.UnAuthenticationException;
+import codesquad.InvalidLoginInfoException;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
 import codesquad.security.HttpSessionUtils;
@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(String userId, String password, HttpSession session) throws UnAuthenticationException {
+    public String login(String userId, String password, HttpSession session) throws InvalidLoginInfoException {
         session.setAttribute(USER_SESSION_KEY, userService.login(userId, password));
         return "redirect:/";
     }

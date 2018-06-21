@@ -1,6 +1,6 @@
 package codesquad.service;
 
-import codesquad.UnAuthenticationException;
+import codesquad.InvalidLoginInfoException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
@@ -17,10 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -54,7 +51,7 @@ public class UserServiceTest {
         assertEquals(updatedUser.getName(), updateUserInfo.getName());
     }
 
-    @Test (expected = UnAuthorizedException.class)
+    @Test(expected = UnAuthorizedException.class)
     public void update_fail_unAuthorization() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         userService.update(otherUser, anyLong(), updateUserInfo);
@@ -66,9 +63,9 @@ public class UserServiceTest {
         userService.login(user.getUserId(), user.getPassword());
     }
 
-    @Test (expected = UnAuthenticationException.class)
+    @Test(expected = InvalidLoginInfoException.class)
     public void login_fail_invalid_info() throws Exception {
         when(userRepository.findByUserId(anyString())).thenReturn(Optional.of(user));
-        userService.login(user.getUserId(),"123124123");
+        userService.login(user.getUserId(), "123124123");
     }
 }

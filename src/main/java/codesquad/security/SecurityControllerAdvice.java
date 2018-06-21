@@ -1,6 +1,7 @@
 package codesquad.security;
 
 import codesquad.CannotDeleteException;
+import codesquad.InvalidLoginInfoException;
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import org.slf4j.Logger;
@@ -32,9 +33,16 @@ public class SecurityControllerAdvice {
     }
 
     @ExceptionHandler(UnAuthenticationException.class)
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public String unAuthentication(Model model) {
+    @ResponseStatus(value = HttpStatus.FOUND)
+    public String unAuthentication() {
         log.debug("UnAuthenticationException is happened!");
+        return "redirect:/users/loginForm";
+    }
+
+    @ExceptionHandler(InvalidLoginInfoException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public String invalidLoginInfo(Model model) {
+        log.debug("InvalidLoginInfoException is happened!");
         model.addAttribute("errorMessage", INVALID_LOGIN_INFO);
         return "/user/login";
     }
