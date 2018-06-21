@@ -1,17 +1,15 @@
 package codesquad.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
-
-import codesquad.UnAuthenticationException;
+import codesquad.InvalidLoginInfoException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -23,7 +21,7 @@ public class UserService {
         return userRepository.save(userDto._toUser());
     }
 
-    public User update(User loginUser, long id, UserDto updatedUser) {
+    public User update(User loginUser, long id, @Valid UserDto updatedUser) {
         User original = findById(loginUser, id);
         original.update(loginUser, updatedUser._toUser());
         return userRepository.save(original);
@@ -39,17 +37,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User login(String userId, String password) throws UnAuthenticationException {
-        Optional<User> maybeUser = userRepository.findByUserId(userId);
-        if (!maybeUser.isPresent()) {
-            throw new UnAuthenticationException();
-        }
-
-        User user = maybeUser.get();
-        if (!user.matchPassword(password)) {
-            throw new UnAuthenticationException();
-        }
-
-        return user;
+    public User login(String userId, String password) throws InvalidLoginInfoException {
+        return userRepository.findByUserId(userId).filter(user -> user.matchPassword(password)).orElseThrow(InvalidLoginInfoException::new);
     }
 }

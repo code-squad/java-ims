@@ -27,6 +27,18 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    public void form() {
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), "/issues/form");
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void form_fail_not_login() {
+        ResponseEntity<String> response = requestGet(template(), "/issues/form");
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
     public void create() {
         ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment"));
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));

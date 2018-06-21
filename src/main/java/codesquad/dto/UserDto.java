@@ -8,13 +8,19 @@ public class UserDto {
     @Size(min = 3, max = 20)
     private String userId;
 
-    @Size(min = 6, max = 20)
+    @Size(min = 3, max = 20)
     private String password;
 
     @Size(min = 3, max = 20)
     private String name;
 
     public UserDto() {
+    }
+
+    public UserDto(String userId, String password) {
+        super();
+        this.userId = userId;
+        this.password = password;
     }
 
     public UserDto(String userId, String password, String name) {

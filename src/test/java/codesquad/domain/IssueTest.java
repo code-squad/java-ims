@@ -29,7 +29,7 @@ public class IssueTest {
 
     @Test
     public void status_message() {
-        assertThat(issue.getIssueStatus(), is("OPEN"));
+        assertThat(issue.getStatus(), is("OPEN"));
     }
 
     @Test

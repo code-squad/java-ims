@@ -14,13 +14,21 @@ import support.domain.Entity;
 
 import javax.validation.Valid;
 
+import static support.domain.Entity.USER;
 import static support.domain.Entity.getEntityName;
 
 @Controller
 @RequestMapping("/issues")
 public class IssueController {
+
     @Autowired
     private IssueService issueService;
+
+    @GetMapping("/form")
+    public String form(@LoginUser User loginUser, Model model) {
+        model.addAttribute(getEntityName(USER), loginUser);
+        return "/issue/form";
+    }
 
     @PostMapping
     public String create(@LoginUser User loginUser, @Valid IssueDto issueDto) {
