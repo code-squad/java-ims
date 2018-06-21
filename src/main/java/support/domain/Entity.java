@@ -2,7 +2,8 @@ package support.domain;
 
 public enum Entity {
     ISSUE("issue", "issues"),
-    USER("user", "users");
+    USER("user", "users"),
+    MILESTONE("milestone", "milestones");
 
     private String name;
     private String multipleName;
