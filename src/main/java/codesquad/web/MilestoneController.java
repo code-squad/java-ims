@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.domain.MileStone;
 import codesquad.domain.User;
 import codesquad.dto.MileStoneDto;
 import codesquad.security.LoginUser;
@@ -13,9 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Controller
-@RequestMapping("/milestone")
+@RequestMapping("/milestones")
 public class MilestoneController {
     private static final Logger log =  LoggerFactory.getLogger(MilestoneController.class);
 
@@ -23,7 +25,9 @@ public class MilestoneController {
     private MileStoneService mileStoneService;
 
     @GetMapping("")
-    public String showList() {
+    public String showList(Model model) {
+        List<MileStone> mileStones = mileStoneService.findAll();
+        model.addAttribute("milestones", mileStones);
         return "/milestone/list";
     }
 
@@ -37,6 +41,6 @@ public class MilestoneController {
         log.info("milestone controller called");
         log.info("milestone dto : {}", mileStoneDto.toMileStone().toString());
         mileStoneService.add(mileStoneDto);
-        return "redirect:/milestone";
+        return "redirect:/milestones";
     }
 }

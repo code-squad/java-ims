@@ -39,7 +39,6 @@ public class IssueController {
 
     @GetMapping("{id}")
     public String show(@PathVariable long id, Model model) {
-        log.info("issue : {} on show method ", issueService.findById(id));
         model.addAttribute("issue", issueService.findById(id));
         return "/issue/show";
     }

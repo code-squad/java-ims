@@ -18,7 +18,10 @@ public class MileStone extends AbstractEntity {
     @Column(nullable = false)
     private String subject;
 
+    @Column
     private LocalDateTime startDate;
+
+    @Column
     private LocalDateTime endDate;
 
     public MileStone() {}
