@@ -2,6 +2,7 @@ package codesquad.web;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.UserTest;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.not;
@@ -215,5 +216,47 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
         issue = issueRepository.findById(3L).get();
         assertThat(issue.getAssignee().getId(), is(3L));
+    }
+
+    @Test
+    public void setLabel(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/1/labels/1", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+
+        Issue issue = issueRepository.findById(1L).get();
+        assertThat(issue.getLabel().getId(), is(1L));
+    }
+
+    @Test
+    public void setLabel_no_owner_of_issue(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+
+        ResponseEntity<String> response = template().postForEntity("/issues/2/labels/1", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void close(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/4/close", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+
+        Issue issue = issueRepository.findById(4L).get();
+        assertThat(issue.isClosed(), is(true));
+    }
+
+    @Test
+    public void close_다른_사용자(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+
+        ResponseEntity<String> response = basicAuthTemplate(UserTest.SANJIGI).postForEntity("/issues/4/close", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 }

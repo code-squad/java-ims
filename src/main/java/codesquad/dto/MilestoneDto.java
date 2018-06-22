@@ -14,16 +14,17 @@ public class MilestoneDto {
 
     private LocalDateTime endDate;
 
-    public MilestoneDto(){
+
+    public MilestoneDto() {
     }
 
-    public MilestoneDto(String subject, LocalDateTime startDate, LocalDateTime endDate){
+    public MilestoneDto(String subject, LocalDateTime startDate, LocalDateTime endDate) {
         this.subject = subject;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public Milestone toMilestone(){
+    public Milestone toMilestone() {
         return new Milestone(subject, startDate, endDate);
     }
 

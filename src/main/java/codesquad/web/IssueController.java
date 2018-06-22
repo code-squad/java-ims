@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.Label;
 import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
@@ -46,6 +47,7 @@ public class IssueController {
         model.addAttribute("issue", issueService.findById(id));
         model.addAttribute("milestones", milestoneService.findAll());
         model.addAttribute("assignees", userService.findAll());
+        model.addAttribute("labels", Label.values());
         return "/issue/show";
     }
 
@@ -80,6 +82,18 @@ public class IssueController {
     public String assign(@LoginUser User loginUser, @PathVariable long id, @PathVariable long assigneeId){
         User assignee = userService.findAssignee(assigneeId);
         issueService.assign(loginUser, assignee, id);
+        return String.format("redirect:/issues/%d", id);
+    }
+
+    @PutMapping("/{id}/labels/{labelId}")
+    public String setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId){
+        issueService.setLabel(loginUser, id, labelId);
+        return String.format("redirect:/issues/%d", id);
+    }
+
+    @PutMapping("/{id}/close")
+    public String close(@LoginUser User loginUser, @PathVariable long id){
+        issueService.close(loginUser, id);
         return String.format("redirect:/issues/%d", id);
     }
 }

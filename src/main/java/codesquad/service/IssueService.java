@@ -1,10 +1,7 @@
 package codesquad.service;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.Milestone;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,5 +60,17 @@ public class IssueService {
     public void assign(User loginUser, User assignee, long id) {
         Issue issue = findById(id);
         issue.setAssignee(assignee, loginUser);
+    }
+
+    @Transactional
+    public void setLabel(User loginUser, long id, long labelId) {
+        Issue issue = findById(id);
+        issue.setLabel(loginUser, Label.findLabel(labelId));
+    }
+
+    @Transactional
+    public void close(User loginUser, long id) {
+        Issue issue = findById(id);
+        issue.setClosed(loginUser, true);
     }
 }

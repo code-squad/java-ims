@@ -30,6 +30,11 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_asignee"))
     private User assignee;
 
+    @Enumerated(value = EnumType.STRING)
+    private Label label;
+
+    private boolean closed = false;
+
     public Issue() {
     }
 
@@ -55,18 +60,32 @@ public class Issue extends AbstractEntity {
         this.writer = writer;
     }
 
-    public void setAssignee(User assignee, User loginUser){
-        if(!isOwner(loginUser)){
+    public void setAssignee(User assignee, User loginUser) {
+        if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }
         this.assignee = assignee;
     }
 
     public void setMilestone(User loginUser, Milestone milestone) {
-        if(!isOwner(loginUser)){
+        if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }
         this.milestone = milestone;
+    }
+
+    public void setLabel(User loginUser, Label label) {
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        this.label = label;
+    }
+
+    public void setClosed(User loginUser, boolean closed) {
+        if (!isOwner(loginUser)){
+            throw new UnAuthorizedException();
+        }
+        this.closed = closed;
     }
 
     public User getAssignee() {
@@ -87,6 +106,14 @@ public class Issue extends AbstractEntity {
 
     public Milestone getMilestone() {
         return milestone;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public boolean isClosed(){
+        return closed;
     }
 
     public IssueDto toIssueDto() {

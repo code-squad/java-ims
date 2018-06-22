@@ -9,9 +9,10 @@ import javax.persistence.Entity;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Entity
-public class Milestone extends AbstractEntity{
+public class Milestone extends AbstractEntity {
 
     @Size(min = 3)
     @Column(nullable = false, length = 40)
@@ -26,7 +27,7 @@ public class Milestone extends AbstractEntity{
     @Embedded
     private Issues issues;
 
-    public Milestone(){
+    public Milestone() {
     }
 
     public Milestone(String subject, LocalDateTime startDate, LocalDateTime endDate) {
@@ -35,7 +36,7 @@ public class Milestone extends AbstractEntity{
         this.endDate = endDate;
     }
 
-    public MilestoneDto toMilestoneDto(){
+    public MilestoneDto toMilestoneDto() {
         return new MilestoneDto(subject, startDate, endDate);
     }
 
@@ -49,5 +50,13 @@ public class Milestone extends AbstractEntity{
 
     public String getEndDate() {
         return endDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
+    public int getOpen() {
+        return issues.numberOfOpen();
+    }
+
+    public int getClosed() {
+        return issues.sizeOfIssues() - getOpen();
     }
 }

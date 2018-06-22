@@ -59,9 +59,12 @@
                         </div>
                         <span>2017-01-14</span>
                     </div>
-                    <a href="/issue/1/setOpen" class="mdl-button mdl-button--colored mdl-js-button">
+                    <form action="/issues/{{issue.id}}/close" method="post">
+                        <input type="hidden" name="_method" value="put">
+                        <button type="submit" class="mdl-button mdl-button--colored mdl-js-button">
                         Close issue
-                    </a>
+                        </button>
+                    </form>
 
                     <div class="section-spacer"></div>
 
@@ -93,21 +96,16 @@
                     <!-- label list -->
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="label-menu">
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/1">label1</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/2">label2</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/3">label3</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/4">label4</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/5">label5</a>
-                        </li>
+                        {{#labels}}
+                        <form action="/issues/{{issue.id}}/labels/{{id}}" method="post">
+                            <input type="hidden" name="_method" value="put">
+                            <li class="mdl-menu__item">
+                                <button class="mdl-menu__item" type="submit">
+                                    {{name}}
+                                </button>
+                            </li>
+                        </form>
+                        {{/labels}}
                     </ul>
 
                     <button id="assignee-menu" class="mdl-button mdl-js-button">
@@ -120,7 +118,7 @@
                             <!--<a href="/issue/1/setAssignee/1">javajigi</a>-->
                         <!--</li>-->
                         {{#assignees}}
-                        <form action="/issues/{{issue.id}}/assignee/{{id}}" method="post">
+                        <form action="/issues/{{issue.id}}/assignees/{{id}}" method="post">
                             <input type="hidden" name="_method" value="put">
                             <li class="mdl-menu__item">
                                 <button class="mdl-menu__item" type="submit">
