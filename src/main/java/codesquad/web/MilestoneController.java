@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static support.domain.Entity.MILESTONE;
-import static support.domain.Entity.getEntityName;
+import static support.domain.Entity.getMultipleEntityName;
 
 @Controller
 @RequestMapping("/milestones")
@@ -23,14 +23,19 @@ public class MilestoneController {
     private MilestoneService milestoneService;
 
     @GetMapping("/form")
-    public String form(@LoginUser User user, Model model) {
-        model.addAttribute(getEntityName(MILESTONE), user);
+    public String form(@LoginUser User user) {
         return "/milestone/form";
     }
 
     @PostMapping
     public String create(@LoginUser User user, MilestoneDto milestoneDto) {
-        Milestone milestone = milestoneService.create(milestoneDto);
+        Milestone milestone = milestoneService.create(user, milestoneDto);
         return milestone.generateRedirectUri();
+    }
+
+    @GetMapping("/list")
+    public String list(Model model) {
+        model.addAttribute(getMultipleEntityName(MILESTONE), milestoneService.get());
+        return "/milestone/list";
     }
 }

@@ -7,6 +7,7 @@ import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +25,7 @@ public class IssueController {
     private IssueService issueService;
 
     @Autowired
-    private MilestoneRepository milestoneRepo;
+    private MilestoneService milestoneService;
 
     @GetMapping("/form")
     public String form(@LoginUser User loginUser, Model model) {
@@ -41,7 +42,7 @@ public class IssueController {
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
         model.addAttribute(getEntityName(ISSUE), issueService.get(id));
-        model.addAttribute(getMultipleEntityName(MILESTONE), milestoneRepo.findAll());
+        model.addAttribute(getMultipleEntityName(MILESTONE), milestoneService.get());
         return String.format("/%s/show", getEntityName(ISSUE));
     }
 

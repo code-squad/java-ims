@@ -1,7 +1,6 @@
 package codesquad.dto;
 
 import codesquad.domain.Milestone;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -10,7 +9,7 @@ public class MilestoneDto {
     private Long id;
 
     @Size(min = 3, max = 20)
-    private String title;
+    private String subject;
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -27,12 +26,12 @@ public class MilestoneDto {
         return this;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSubject() {
+        return subject;
     }
 
-    public MilestoneDto setTitle(String title) {
-        this.title = title;
+    public MilestoneDto setSubject(String subject) {
+        this.subject = subject;
         return this;
     }
 
@@ -57,13 +56,13 @@ public class MilestoneDto {
     @Override
     public String toString() {
         return "MilestoneDto{" +
-                "title='" + title + '\'' +
+                "title='" + subject + '\'' +
                 ", startDate=" + startDate + '\'' +
                 ", endDate=" + endDate + '\'' +
                 '}';
     }
 
     public Milestone _toMilestone() {
-        return new Milestone(title, startDate, endDate);
+        return new Milestone(subject, startDate, endDate);
     }
 }

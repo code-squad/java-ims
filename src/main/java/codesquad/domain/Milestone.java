@@ -17,7 +17,7 @@ public class Milestone extends AbstractEntity implements UriGeneratable {
 
     @Size(min = 3, max = 20)
     @Column(nullable = false)
-    private String title;
+    private String subject;
 
     @Column(nullable = false)
     private LocalDateTime startDate;
@@ -28,8 +28,8 @@ public class Milestone extends AbstractEntity implements UriGeneratable {
     public Milestone() {
     }
 
-    public Milestone(String title, LocalDateTime startDate, LocalDateTime endDate) {
-        this.title = title;
+    public Milestone(String subject, LocalDateTime startDate, LocalDateTime endDate) {
+        this.subject = subject;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -38,8 +38,8 @@ public class Milestone extends AbstractEntity implements UriGeneratable {
         return super.getId();
     }
 
-    public String getTitle() {
-        return title;
+    public String getSubject() {
+        return subject;
     }
 
     public String getStartDate() {

@@ -31,7 +31,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
 
     static HttpEntity<MultiValueMap<String, Object>> requestCreateMilestone() {
         HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
-        builder.addParameter("title", "test title");
+        builder.addParameter("subject", "test subject");
         builder.addParameter("startDate", "2018-06-22T10:11:30");
         builder.addParameter("endDate", "2015-06-29T14:15:30");
 
