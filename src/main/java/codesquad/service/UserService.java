@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,10 @@ public class UserService {
         User original = findById(loginUser, id);
         original.update(loginUser, updatedUser._toUser());
         return userRepository.save(original);
+    }
+
+    public User findById(long id) {
+        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     public User findById(User loginUser, long id) {

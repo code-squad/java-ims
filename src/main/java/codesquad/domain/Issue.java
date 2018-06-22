@@ -19,12 +19,26 @@ public class Issue extends AbstractEntity implements UriGeneratable{
     @Column(nullable = false)
     private String comment;
 
+    @Column
+    private Boolean deleted = false;
+
+    @Column
+    private Boolean openState = true;
+
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
-    @Column
-    private Boolean deleted = false;
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
+
+    @Enumerated(EnumType.STRING)
+    private Label currentLabel;
 
     public Issue () {}
 
@@ -44,6 +58,10 @@ public class Issue extends AbstractEntity implements UriGeneratable{
         this.writer = writer;
     }
 
+    public Label getCurrentLabel() {
+        return currentLabel;
+    }
+
     public boolean isDeleted() {
         return deleted;
     }
@@ -53,9 +71,18 @@ public class Issue extends AbstractEntity implements UriGeneratable{
         return this;
     }
 
-    public Issue writeBy(User loginUser) {
+    public Issue writtenBy(User loginUser) {
         this.writer = loginUser;
         return this;
+    }
+
+    public Issue assignDirector(User assignee) {
+        this.assignee = assignee;
+        return this;
+    }
+
+    public void assignLabel(Label label) {
+        this.currentLabel = label;
     }
 
     public String getSubject() {
@@ -85,6 +112,32 @@ public class Issue extends AbstractEntity implements UriGeneratable{
     }
 
     @Override
+    public String generateUrl() {
+        return String.format("/issues/%d", getId());
+    }
+
+    public boolean isOpen() {
+        return openState;
+    }
+
+    public boolean isClosed() {
+        return !openState;
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public Issue registerMilestone(Milestone milestone) {
+        this.milestone = milestone;
+        return this;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -92,19 +145,18 @@ public class Issue extends AbstractEntity implements UriGeneratable{
         Issue issue = (Issue) o;
         return Objects.equals(subject, issue.subject) &&
                 Objects.equals(comment, issue.comment) &&
+                Objects.equals(deleted, issue.deleted) &&
+                Objects.equals(openState, issue.openState) &&
                 Objects.equals(writer, issue.writer) &&
-                Objects.equals(deleted, issue.deleted);
+                Objects.equals(milestone, issue.milestone) &&
+                Objects.equals(assignee, issue.assignee) &&
+                currentLabel == issue.currentLabel;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), subject, comment, writer, deleted);
-    }
-
-    @Override
-    public String generateUrl() {
-        return String.format("/issues/%d", getId());
+        return Objects.hash(super.hashCode(), subject, comment, deleted, openState, writer, milestone, assignee, currentLabel);
     }
 
     @Override
@@ -112,8 +164,12 @@ public class Issue extends AbstractEntity implements UriGeneratable{
         return "Issue{" +
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
-                ", writer=" + writer +
                 ", deleted=" + deleted +
+                ", openState=" + openState +
+                ", writer=" + writer +
+                ", milestone=" + milestone +
+                ", assignee=" + assignee +
+                ", currentLabel=" + currentLabel +
                 '}';
     }
 }

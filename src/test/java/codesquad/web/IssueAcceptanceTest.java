@@ -1,8 +1,11 @@
 package codesquad.web;
 
+import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import codesquad.dto.MilestoneDto;
 import org.junit.After;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -15,6 +18,9 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -162,5 +168,70 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
         ResponseEntity<String> response = getResource(location, loginUser);
         assertThat(response.getBody().contains("delete test3"), is(true));
     }
+
+
+
+    @Test
+    public void add_milestone_success() throws ParseException {
+        Long milestoneId = 1L;
+        String location = createIssueLocation("add test1", "test comment");
+        int issueId = parseLocationToId(location);
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity(String.format("%s/setMilestone/%d", location, milestoneId), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        Issue issue = getResource(String.format("/api/issues/%d", issueId), Issue.class, loginUser);
+        assertNotNull(issue.getMilestone());
+    }
+
+    @Test
+    public void add_milestone_fail_no_login() {
+        Long milestoneId = 1L;
+        String location = createIssueLocation("add test2", "test comment");
+        ResponseEntity<String> response = template.getForEntity(String.format("%s/setMilestone/%d", location, milestoneId), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void add_assignee_success() {
+        Long assigneeId = 1L;
+        String location = createIssueLocation("add test3", "test comment");
+        int issueId = parseLocationToId(location);
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity(String.format("%s/setAssignee/%d", location, assigneeId), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        Issue issue = getResource(String.format("/api/issues/%d", issueId), Issue.class, loginUser);
+        assertNotNull(issue.getAssignee());
+    }
+
+    @Test
+    public void add_assignee_fail_no_login() {
+        Long assigneeId = 1L;
+        String location = createIssueLocation("add test4", "test comment");
+        ResponseEntity<String> response = template.getForEntity(String.format("%s/setAssignee/%d", location, assigneeId), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void add_label_success() {
+        Long labelId = 1L;
+        String location = createIssueLocation("add test5", "test comment");
+        int issueId = parseLocationToId(location);
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity(String.format("%s/setLabel/%d", location, labelId), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        Issue issue = getResource(String.format("/api/issues/%d", issueId), Issue.class, loginUser);
+        assertNotNull(issue.getCurrentLabel());
+    }
+
+    @Test
+    public void add_label_fail_no_login() {
+        Long labelId = 1L;
+        String location = createIssueLocation("add test6", "test comment");
+        int issueId = parseLocationToId(location);
+        ResponseEntity<String> response = template.getForEntity(String.format("%s/setAssignee/%d", location, labelId), String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    private int parseLocationToId(String location) {
+        return Integer.parseInt(location.split("/")[location.split("/").length-1]);
+    }
+
 
 }

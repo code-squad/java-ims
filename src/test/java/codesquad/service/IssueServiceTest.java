@@ -53,7 +53,7 @@ public class IssueServiceTest {
     @Test
     public void update_success() throws UnAuthenticationException {
         Issue updateTarget = new Issue("this is subject change", "this is comment change");
-        newIssue.writeBy(javajigi);
+        newIssue.writtenBy(javajigi);
         when(issueRepository.findById(anyLong())
                 .filter(issue -> issue.isWriter(javajigi))).thenReturn(Optional.of(newIssue));
         Issue updateIssue = issueService.update(javajigi, anyLong(), updateTarget._toIssueDto());
@@ -63,7 +63,7 @@ public class IssueServiceTest {
     @Test(expected = UnAuthenticationException.class)
     public void update_fail() throws UnAuthenticationException {
         Issue updateTarget = new Issue("this is subject change", "this is comment change");
-        newIssue.writeBy(javajigi);
+        newIssue.writtenBy(javajigi);
         when(issueRepository.findById(anyLong())
                 .filter(issue -> issue.isWriter(javajigi))).thenReturn(Optional.empty());
         issueService.update(javajigi, anyLong(), updateTarget._toIssueDto());
@@ -71,7 +71,7 @@ public class IssueServiceTest {
 
     @Test
     public void delete_success() throws UnAuthenticationException {
-        newIssue.writeBy(javajigi);
+        newIssue.writtenBy(javajigi);
         when(issueRepository.findById(anyLong())).thenReturn(Optional.of(newIssue));
         issueService.delete(javajigi, anyLong());
         assertThat(newIssue.isDeleted(), is(true));
@@ -79,7 +79,7 @@ public class IssueServiceTest {
 
     @Test(expected = UnAuthenticationException.class)
     public void delete_fail() throws UnAuthenticationException {
-        newIssue.writeBy(javajigi);
+        newIssue.writtenBy(javajigi);
         when(issueRepository.findById(anyLong())).thenReturn(Optional.empty());
         issueService.delete(javajigi, anyLong());
     }
