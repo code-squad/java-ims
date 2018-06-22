@@ -15,13 +15,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class IssueAcceptanceTest extends AcceptanceTest {
-    private static final String DEFAULT_DELETE_URL = "/issues/1";
     private static final String CREATE_URL = "/issues";
     private static final Logger logger = LoggerFactory.getLogger(IssueAcceptanceTest.class);
-
-    private ResponseEntity<String> getResource(String url, TestRestTemplate template) {
-        return template.getForEntity(url, String.class);
-    }
 
     private ResponseEntity<String> createNewIssue(TestRestTemplate template, String title, String content) {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
@@ -112,23 +107,60 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 
-    private ResponseEntity<String> deleteIssue(TestRestTemplate template) {
+    private ResponseEntity<String> deleteIssue(TestRestTemplate template, String location) {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("_method", "delete")
                 .build();
-        return template.postForEntity(DEFAULT_DELETE_URL, request, String.class);
+        return template.postForEntity(location, request, String.class);
     }
 
     @Test
     public void delete_Logged_In() {
-        ResponseEntity<String> response = deleteIssue(basicAuthTemplate());
+        ResponseEntity<String> createResponse = createNewIssue(basicAuthTemplate(), "title6", "content6");
+        String location = createResponse.getHeaders().getLocation().getPath();
+
+        ResponseEntity<String> response = deleteIssue(basicAuthTemplate(), location);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertThat(response.getHeaders().getLocation().getPath(), is("/"));
     }
 
     @Test
     public void delete_NOT_Logged_In() {
-        ResponseEntity<String> response = deleteIssue(template());
+        ResponseEntity<String> createResponse = createNewIssue(basicAuthTemplate(), "title7", "content7");
+        String location = createResponse.getHeaders().getLocation().getPath();
+
+        ResponseEntity<String> response = deleteIssue(template(), location);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    private ResponseEntity<String> setAssignee(TestRestTemplate template) {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "PUT")
+                .build();
+        return template.postForEntity("/issues/1/setAssignee/2", request, String.class);
+    }
+
+    @Test
+    public void setAssignee_Logged_In() {
+        ResponseEntity<String> response = getResource("/issues/1/setAssignee/2", basicAuthTemplate());
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void setAssignee_NOT_Logged_In() {
+        ResponseEntity<String> response = getResource("/issues/1/setAssignee/2", template());
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void setLabel_Logged_In() {
+        ResponseEntity<String> response = getResource("/issues/1/setLabel/1", basicAuthTemplate());
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void setLabel_NOT_Logged_In() {
+        ResponseEntity<String> response = getResource("/issues/1/setLabel/1", template());
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 }

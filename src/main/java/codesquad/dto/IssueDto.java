@@ -9,6 +9,8 @@ import java.util.Objects;
 
 public class IssueDto {
 
+    private long id;
+
     @NotNull
     private User writer;
 
@@ -17,6 +19,17 @@ public class IssueDto {
 
     @Size(min = 3)
     private String content;
+
+    public IssueDto() {
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public User getWriter() {
         return writer;
@@ -65,7 +78,8 @@ public class IssueDto {
     @Override
     public String toString() {
         return "IssueDto{" +
-                "writer=" + writer +
+                "id=" + id +
+                ", writer=" + writer +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 '}';

@@ -5,6 +5,7 @@ import support.domain.AbstractEntity;
 import support.domain.UriGeneratable;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Issue extends AbstractEntity implements UriGeneratable {
@@ -23,6 +24,15 @@ public class Issue extends AbstractEntity implements UriGeneratable {
 
     @Enumerated(EnumType.STRING)
     private IssueStatus status = IssueStatus.OPEN;
+
+    @Enumerated(EnumType.STRING)
+    private Label label;
+
+    @ManyToOne
+    private Milestone milestone;
+
+    @OneToOne
+    private User assignee;
 
     private boolean deleted;
 
@@ -78,12 +88,39 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         this.writer = writer;
     }
 
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
                 "title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Issue)) return false;
+        if (!super.equals(o)) return false;
+        Issue issue = (Issue) o;
+        return deleted == issue.deleted &&
+                Objects.equals(writer, issue.writer) &&
+                Objects.equals(title, issue.title) &&
+                Objects.equals(content, issue.content) &&
+                status == issue.status;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), writer, title, content, status, deleted);
     }
 
     @Override
@@ -104,5 +141,33 @@ public class Issue extends AbstractEntity implements UriGeneratable {
             throw new UnAuthorizedException();
         }
         deleted = true;
+    }
+
+    public boolean isOpen() {
+        return status.isOpen();
+    }
+
+    public Issue setAssignee(User loginUser, User assignee) {
+        if (!loginUser.equals(writer)) {
+            throw new UnAuthorizedException();
+        }
+        this.assignee = assignee;
+        return this;
+    }
+
+    public boolean isAssignee(User assignee) {
+        return this.assignee.equals(assignee);
+    }
+
+    public Issue setLabel(User loginUser, long labelId) {
+        if (!loginUser.equals(writer)) {
+            throw new UnAuthorizedException();
+        }
+        this.label = Label.getLabel(labelId);
+        return this;
+    }
+
+    public boolean isLabel(Label label) {
+        return this.label == label;
     }
 }

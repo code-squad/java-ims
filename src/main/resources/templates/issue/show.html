@@ -80,6 +80,13 @@
                         <li class="mdl-menu__item">
                             <a href="/issue/1/setMilestone/3">Milestone3</a>
                         </li>
+
+                        {{# milestones }}
+                        <li class="mdl-menu__item">
+                            <a href="/milestones/{{id}}">Milestone3</a>
+                        </li>
+                        {{/ milestones }}
+
                     </ul>
 
                     <button id="label-menu" class="mdl-button mdl-js-button">
@@ -126,6 +133,13 @@
                         <li class="mdl-menu__item">
                             <a href="/issue/1/setAssignee/5">전용우</a>
                         </li>
+
+                        {{# users }}
+                        <li class="mdl-menu__item">
+                                <a href="/issues/{{& issue.id }}/setAssignee/{{id}}">{{userId}}</a>
+                        </li>
+                        {{/ users }}
+
                     </ul>
                 </div>
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">

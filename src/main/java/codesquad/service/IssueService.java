@@ -4,6 +4,7 @@ import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,17 @@ public class IssueService {
     public void deleteIssue(User loginUser, long id) {
         Issue target = findById(id);
         target.delete(loginUser);
+    }
+
+    @Transactional
+    public UriGeneratable setAssignee(User loginUser, long id, User assignee) {
+        Issue target = findById(id);
+        return target.setAssignee(loginUser, assignee);
+    }
+
+    @Transactional
+    public UriGeneratable setLabel(User loginUser, long id, long labelId) {
+        Issue target = findById(id);
+        return target.setLabel(loginUser, labelId);
     }
 }

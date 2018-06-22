@@ -1,10 +1,13 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import support.domain.UriGeneratable;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/issues")
 public class IssueController {
@@ -20,6 +25,12 @@ public class IssueController {
 
     @Autowired
     private IssueService issueService;
+
+    @Autowired
+    private MilestoneService milestoneService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/form")
     public String form(@LoginUser User loginUser) {
@@ -38,8 +49,11 @@ public class IssueController {
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
         Issue issue = issueService.findById(id);
-        logger.debug("Showing Question... {}", issue);
+        List<Milestone> milestones = milestoneService.findAll();
+        List<User> users = userService.findAll();
         model.addAttribute("issue", issue);
+        model.addAttribute("milestones", milestones);
+        model.addAttribute("users", users);
         return "/issue/show";
     }
 
@@ -62,5 +76,17 @@ public class IssueController {
         issueService.deleteIssue(loginUser, id);
         logger.debug("Issue deleted...!");
         return "redirect:/";
+    }
+
+    @GetMapping("/{id}/setAssignee/{userId}")
+    public String setAssignee(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId) {
+        UriGeneratable issue = issueService.setAssignee(loginUser, id, userService.findById(userId));
+        return "redirect:" + issue.generateUri();
+    }
+
+    @GetMapping("/{id}/setLabel/{labelId}")
+    public String setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
+        UriGeneratable issue = issueService.setLabel(loginUser, id, labelId);
+        return "redirect:" + issue.generateUri();
     }
 }

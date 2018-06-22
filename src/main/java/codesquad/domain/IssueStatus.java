@@ -10,4 +10,8 @@ public enum IssueStatus {
         }
         return "Closed";
     }
+
+    public boolean isOpen() {
+        return this == OPEN;
+    }
 }
