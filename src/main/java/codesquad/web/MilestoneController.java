@@ -41,6 +41,7 @@ public class MilestoneController {
 
     @PostMapping("")
     public String create(@LoginUser User loginUser, MilestoneDto milestoneDto) {
+        logger.debug("MilestoneDTO: {}", milestoneDto);
         milestoneService.create(milestoneDto);
         return "redirect:/milestones";
     }
