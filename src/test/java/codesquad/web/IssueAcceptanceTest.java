@@ -16,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -165,12 +166,37 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest{
         assertThat(response.getBody().contains("delete test3"), is(true));
     }
 
-//    @Test
-//    public void add_milestone() {
-//        String location = createIssueLocation("delete test4", "test comment");
-//        MilestoneDto newMilestoneDto = new MilestoneDto("Hellloo2", LocalDateTime.now(), LocalDateTime.now());
-//        ResponseEntity<String> response = basicAuthTemplate.postForEntity("/milestones", newMilestoneDto, String.class);
-//        log.debug("milestone path {}", response.getHeaders().getLocation().getPath());
-//        ResponseEntity<String> response1 = basicAuthTemplate.getForEntity(location, String.class);
-//    }
+    @Test
+    public void add_milestone_success() throws ParseException {
+        String location = createIssueLocation("delete test4", "test comment");
+        MilestoneDto newMilestoneDto = new MilestoneDto("Hellloo2", LocalDateTime.now().toString(), LocalDateTime.now().toString());
+        ResponseEntity<String> response = basicAuthTemplate.postForEntity("/milestones", newMilestoneDto, String.class);
+        log.debug("milestone path {}", response.getHeaders().getLocation().getPath());
+        ResponseEntity<String> response1 = basicAuthTemplate.getForEntity(location, String.class);
+    }
+
+    @Test
+    public void add_milestone_fail_no_login() {
+
+    }
+
+    @Test
+    public void add_assignee_success() {
+
+    }
+
+    @Test
+    public void add_assignee_fail_no_login() {
+
+    }
+
+    @Test
+    public void add_label_success() {
+
+    }
+
+    @Test
+    public void add_label_fail_no_login() {
+
+    }
 }

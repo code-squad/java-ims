@@ -55,4 +55,9 @@ public class IssueService {
     public void setAssignee(Long issueId, User assignee) {
         findById(issueId).assignDirector(assignee);
     }
+
+    @Transactional
+    public void setLabel(Long issueId, Label label) {
+        findById(issueId).assignLabel(label);
+    }
 }

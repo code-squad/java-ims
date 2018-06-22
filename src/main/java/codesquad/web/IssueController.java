@@ -2,6 +2,7 @@ package codesquad.web;
 
 import codesquad.UnAuthenticationException;
 import codesquad.domain.Issue;
+import codesquad.domain.Label;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.exception.AlreadyAssignException;
@@ -46,6 +47,7 @@ public class IssueController {
         model.addAttribute("issue", issueService.findById(id));
         model.addAttribute("users", userService.findAll());
         model.addAttribute("milestones", milestoneService.findAll());
+        model.addAttribute("labels", Label.values());
         return "issue/show";
     }
 
@@ -77,6 +79,12 @@ public class IssueController {
     @GetMapping("/{issueId}/setAssignee/{assigneeId}")
     public String setAssignee(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long assigneeId) {
         issueService.setAssignee(issueId, userService.findById(assigneeId));
+        return "redirect:/issues/" + issueId;
+    }
+
+    @GetMapping("/{issueId}/setLabel/{labelId}")
+    public String setLabel(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long labelId) {
+        issueService.setLabel(issueId, Label.of(labelId));
         return "redirect:/issues/" + issueId;
     }
 

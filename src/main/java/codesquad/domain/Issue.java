@@ -19,15 +19,15 @@ public class Issue extends AbstractEntity implements UriGeneratable{
     @Column(nullable = false)
     private String comment;
 
-    @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
-    private User writer;
-
     @Column
     private Boolean deleted = false;
 
     @Column
     private Boolean openState = true;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
+    private User writer;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
@@ -36,6 +36,9 @@ public class Issue extends AbstractEntity implements UriGeneratable{
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
     private User assignee;
+
+    @Enumerated(EnumType.STRING)
+    private Label currentLabel;
 
     public Issue () {}
 
@@ -55,6 +58,10 @@ public class Issue extends AbstractEntity implements UriGeneratable{
         this.writer = writer;
     }
 
+    public Label getCurrentLabel() {
+        return currentLabel;
+    }
+
     public boolean isDeleted() {
         return deleted;
     }
@@ -72,6 +79,10 @@ public class Issue extends AbstractEntity implements UriGeneratable{
     public Issue assignDirector(User assignee) {
         this.assignee = assignee;
         return this;
+    }
+
+    public void assignLabel(Label label) {
+        this.currentLabel = label;
     }
 
     public String getSubject() {
