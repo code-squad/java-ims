@@ -2,6 +2,7 @@ package codesquad.web;
 
 import codesquad.CannotDeleteException;
 import codesquad.domain.Issue;
+import codesquad.domain.MilestoneRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
@@ -10,12 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import support.domain.Entity;
 
 import javax.validation.Valid;
 
-import static support.domain.Entity.USER;
-import static support.domain.Entity.getEntityName;
+import static support.domain.Entity.*;
 
 @Controller
 @RequestMapping("/issues")
@@ -23,6 +22,9 @@ public class IssueController {
 
     @Autowired
     private IssueService issueService;
+
+    @Autowired
+    private MilestoneRepository milestoneRepo;
 
     @GetMapping("/form")
     public String form(@LoginUser User loginUser, Model model) {
@@ -38,14 +40,15 @@ public class IssueController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
-        model.addAttribute(getEntityName(Entity.ISSUE), issueService.get(id));
-        return String.format("/%s/show", getEntityName(Entity.ISSUE));
+        model.addAttribute(getEntityName(ISSUE), issueService.get(id));
+        model.addAttribute(getMultipleEntityName(MILESTONE), milestoneRepo.findAll());
+        return String.format("/%s/show", getEntityName(ISSUE));
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@LoginUser User loginUser, @PathVariable Long id, Model model) {
-        model.addAttribute(getEntityName(Entity.ISSUE), issueService.get(loginUser, id));
-        return String.format("/%s/edit", getEntityName(Entity.ISSUE));
+        model.addAttribute(getEntityName(ISSUE), issueService.get(loginUser, id));
+        return String.format("/%s/edit", getEntityName(ISSUE));
     }
 
     @PutMapping("/{id}")

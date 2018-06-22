@@ -11,15 +11,17 @@ import org.springframework.util.MultiValueMap;
 import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import static codesquad.web.MilestoneAcceptanceTest.requestCreateMilestone;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class IssueAcceptanceTest extends AcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
 
     private static final String CREATE_PATH = "/issues";
 
-    private HttpEntity<MultiValueMap<String, Object>> getRequest(String subject, String comment) {
+    private static HttpEntity<MultiValueMap<String, Object>> requestCreateIssue(String subject, String comment) {
         HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
         builder.addParameter("subject", subject);
         builder.addParameter("comment", comment);
@@ -40,30 +42,33 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void create() {
-        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment"));
+        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment"));
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         log.debug("redirect uri : {}", response.getHeaders().getLocation().getPath());
     }
 
     @Test
     public void create_fail_unAuthentication() {
-        ResponseEntity<String> response = requestPost(template(), CREATE_PATH, getRequest("test subject", "test comment"));
+        ResponseEntity<String> response = requestPost(template(), CREATE_PATH, requestCreateIssue("test subject", "test comment"));
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
     @Test
     public void create_fail_invalid_params() {
-        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("t", "t"));
+        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("t", "t"));
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
     @Test
     public void show() {
-        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment"));
+        ResponseEntity<String> response = requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment"));
         String path = getPath(response);
+
+        requestPost(basicAuthTemplate(), "/milestones", requestCreateMilestone());
 
         response = requestGet(path);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertTrue(response.getBody().contains("test title"));
     }
 
     @Test
@@ -74,7 +79,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void edit() {
-        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment"))) + "/edit";
+        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment"))) + "/edit";
         log.debug("edit path : {}", editPath);
         ResponseEntity<String> response = requestGet(basicAuthTemplate(), editPath);
 
@@ -89,20 +94,20 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void edit_fail_unAuthentication() {
-        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment"))) + "/edit";
+        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment"))) + "/edit";
         ResponseEntity<String> response = requestGet(template(), editPath);
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
     @Test
     public void edit_fail_unAuthorized() {
-        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment"))) + "/edit";
+        String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment"))) + "/edit";
         ResponseEntity<String> response = requestGet(basicAuthTemplate(findByUserId("sanjigi")), editPath);
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 
     private ResponseEntity<String> update(TestRestTemplate template) {
-        String path = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment")));
+        String path = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment")));
 
         HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
         builder.addParameter("_method", "put");
@@ -130,7 +135,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     }
 
     private ResponseEntity<String> delete(TestRestTemplate template) {
-        String path = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, getRequest("test subject", "test comment")));
+        String path = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment")));
         HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
         builder.addParameter("_method", "delete");
         return template.postForEntity(path, builder.build(), String.class);

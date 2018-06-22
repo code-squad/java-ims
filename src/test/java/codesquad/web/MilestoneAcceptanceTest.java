@@ -14,8 +14,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class MilestoneControllerTest extends AcceptanceTest {
-    private static final Logger log = LoggerFactory.getLogger(MilestoneControllerTest.class);
+public class MilestoneAcceptanceTest extends AcceptanceTest {
+    private static final Logger log = LoggerFactory.getLogger(MilestoneAcceptanceTest.class);
 
     @Test
     public void form() {
@@ -29,7 +29,7 @@ public class MilestoneControllerTest extends AcceptanceTest {
         assertTrue(response.getBody().contains("Login Member"));
     }
 
-    private HttpEntity<MultiValueMap<String, Object>> requestCreateMilestone() {
+    static HttpEntity<MultiValueMap<String, Object>> requestCreateMilestone() {
         HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
         builder.addParameter("title", "test title");
         builder.addParameter("startDate", "2018-06-22T10:11:30");
