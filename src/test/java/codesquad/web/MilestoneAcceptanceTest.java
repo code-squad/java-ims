@@ -52,4 +52,11 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
         assertThat(getPath(response), is("/users/loginForm"));
     }
 
+    @Test
+    public void show() {
+        String path = getPath(requestPost(template(), "/milestones", requestCreateMilestone()));
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), "/milestones");
+        assertTrue(response.getBody().contains("test subject"));
+    }
+
 }

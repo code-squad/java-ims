@@ -1,7 +1,6 @@
 package codesquad.domain;
 
 import support.domain.AbstractEntity;
-import support.domain.UriGeneratable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +12,7 @@ import static support.web.TimeFormat.NORMAL;
 import static support.web.TimeFormat.getFormat;
 
 @Entity
-public class Milestone extends AbstractEntity implements UriGeneratable {
+public class Milestone extends AbstractEntity {
 
     @Size(min = 3, max = 20)
     @Column(nullable = false)
@@ -48,10 +47,5 @@ public class Milestone extends AbstractEntity implements UriGeneratable {
 
     public String getEndDate() {
         return endDate.format(DateTimeFormatter.ofPattern(getFormat(NORMAL)));
-    }
-
-    @Override
-    public String generateUri() {
-        return String.format("/milestones/%d", getId());
     }
 }

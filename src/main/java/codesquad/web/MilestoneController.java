@@ -1,6 +1,5 @@
 package codesquad.web;
 
-import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.MilestoneDto;
 import codesquad.security.LoginUser;
@@ -29,12 +28,12 @@ public class MilestoneController {
 
     @PostMapping
     public String create(@LoginUser User user, MilestoneDto milestoneDto) {
-        Milestone milestone = milestoneService.create(user, milestoneDto);
-        return milestone.generateRedirectUri();
+        milestoneService.create(user, milestoneDto);
+        return "redirect:/milestones";
     }
 
-    @GetMapping("/list")
-    public String list(Model model) {
+    @GetMapping
+    public String show(Model model) {
         model.addAttribute(getMultipleEntityName(MILESTONE), milestoneService.get());
         return "/milestone/list";
     }
