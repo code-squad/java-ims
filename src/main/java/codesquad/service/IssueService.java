@@ -3,11 +3,16 @@ package codesquad.service;
 import codesquad.UnAuthenticationException;
 import codesquad.domain.*;
 import codesquad.dto.IssueDto;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.Multimaps;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service("issueService")
 public class IssueService {
@@ -59,5 +64,10 @@ public class IssueService {
     @Transactional
     public void setLabel(Long issueId, Label label) {
         findById(issueId).assignLabel(label);
+    }
+
+    public ImmutableListMultimap<Label, Issue> findByLabel() {
+        List<Issue> issues = (List<Issue>) findAll();
+        return Multimaps.index(issues, input -> input.getCurrentLabel());
     }
 }
