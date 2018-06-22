@@ -5,7 +5,6 @@ import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -102,6 +101,33 @@ public class Issue extends AbstractEntity implements UriGeneratable{
     }
 
     @Override
+    public String generateUrl() {
+        return String.format("/issues/%d", getId());
+    }
+
+    public boolean isOpen() {
+        return openState;
+    }
+
+    public boolean isClosed() {
+        return !openState;
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public Issue registerMilestone(Milestone milestone) {
+        this.milestone = milestone;
+        return this;
+    }
+
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -120,11 +146,6 @@ public class Issue extends AbstractEntity implements UriGeneratable{
     }
 
     @Override
-    public String generateUrl() {
-        return String.format("/issues/%d", getId());
-    }
-
-    @Override
     public String toString() {
         return "Issue{" +
                 "subject='" + subject + '\'' +
@@ -134,12 +155,5 @@ public class Issue extends AbstractEntity implements UriGeneratable{
                 '}';
     }
 
-    public boolean isOpen() {
-        return openState;
-    }
-
-    public boolean isClosed() {
-        return !openState;
-    }
 }
 

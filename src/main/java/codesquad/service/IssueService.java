@@ -1,9 +1,7 @@
 package codesquad.service;
 
 import codesquad.UnAuthenticationException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +14,9 @@ public class IssueService {
 
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
+
+    @Resource(name = "milestoneRepository")
+    private MilestoneRepository milestoneRepository;
 
     public Issue save(User loginUser, IssueDto issueDto) {
         Issue newIssue = issueDto._toIssue();
@@ -44,5 +45,14 @@ public class IssueService {
     @Transactional
     public Issue delete(User loginUser, Long id) throws UnAuthenticationException {
         return findById(loginUser, id).delete();
+    }
+
+    public void setMilestone(Long issueId, Milestone milestone) {
+        issueRepository.save(findById(issueId).registerMilestone(milestone));
+    }
+
+    @Transactional
+    public void setAssignee(Long issueId, User assignee) {
+        findById(issueId).assignDirector(assignee);
     }
 }

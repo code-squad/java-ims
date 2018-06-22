@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.exception.AlreadyAssignException;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 public class Milestone extends AbstractEntity implements UriGeneratable{
@@ -49,15 +51,22 @@ public class Milestone extends AbstractEntity implements UriGeneratable{
     }
 
     public String getFormattedStartDate() {
-        return getFormattedDate(startDate, "d MMM, uuuu");
+        return getFormattedDate(startDate, "MMM d, uuuu");
     }
 
     public String getFormattedEndDate() {
-        return getFormattedDate(endDate, "d MMM, uuuu");
+        return getFormattedDate(endDate, "MMM d, uuuu");
     }
 
     public List<Issue> getIssues() {
         return issues;
+    }
+
+    public void assignIssue(Issue issue) throws AlreadyAssignException {
+        if (!issues.stream().allMatch(i -> i.getId() == issue.getId())) {
+            throw new AlreadyAssignException();
+        }
+        issues.add(issue);
     }
 
     public long getNumberOfOpenIssues() {
@@ -66,6 +75,10 @@ public class Milestone extends AbstractEntity implements UriGeneratable{
 
     public Long getNumberOfClosedIssues() {
         return issues.stream().filter(i -> i.isClosed()).count();
+    }
+
+    public String getSubject() {
+        return subject;
     }
 
     @Override
@@ -98,4 +111,5 @@ public class Milestone extends AbstractEntity implements UriGeneratable{
                 ", issues=" + issues +
                 '}';
     }
+
 }

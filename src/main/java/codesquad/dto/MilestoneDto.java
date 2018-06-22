@@ -13,20 +13,20 @@ public class MilestoneDto {
 
     private String subject;
 
-    private LocalDateTime startDate;
+    private String startDate;
 
-    private LocalDateTime endDate;
+    private String endDate;
 
     public MilestoneDto() throws ParseException {}
 
     public MilestoneDto(String subject, String startDate, String endDate) throws ParseException {
         this.subject = subject;
-        this.startDate = LocalDateTime.parse(startDate);
-        this.endDate = LocalDateTime.parse(endDate);
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Milestone _toEntity() {
-        return new Milestone(subject, startDate, endDate);
+        return new Milestone(subject, LocalDateTime.parse(startDate), LocalDateTime.parse(endDate));
     }
 
     public String getSubject() {
@@ -38,20 +38,20 @@ public class MilestoneDto {
         return this;
     }
 
-    public LocalDateTime getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public MilestoneDto setStartDate(LocalDateTime startDate) {
+    public MilestoneDto setStartDate(String startDate) {
         this.startDate = startDate;
         return this;
     }
 
-    public LocalDateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public MilestoneDto setEndDate(LocalDateTime endDate) {
+    public MilestoneDto setEndDate(String endDate) {
         this.endDate = endDate;
         return this;
     }
@@ -70,6 +70,15 @@ public class MilestoneDto {
     public int hashCode() {
 
         return Objects.hash(subject, startDate, endDate);
+    }
+
+    @Override
+    public String toString() {
+        return "MilestoneDto{" +
+                "subject='" + subject + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                '}';
     }
 }
 
