@@ -3,9 +3,12 @@ package codesquad.web;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import support.test.AcceptanceTest;
+import support.test.HtmlFormDataBuilder;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -25,4 +28,28 @@ public class MilestoneControllerTest extends AcceptanceTest {
         ResponseEntity<String> response = requestGet(template(), "/milestones/form");
         assertTrue(response.getBody().contains("Login Member"));
     }
+
+    private HttpEntity<MultiValueMap<String, Object>> requestCreateMilestone() {
+        HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
+        builder.addParameter("title", "test title");
+        builder.addParameter("startDate", "2018-06-22T10:11:30");
+        builder.addParameter("endDate", "2015-06-29T14:15:30");
+
+        return builder.build();
+    }
+
+    @Test
+    public void create() {
+        ResponseEntity<String> response = requestPost(basicAuthTemplate(), "/milestones", requestCreateMilestone());
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertTrue(getPath(response).startsWith("/milestones"));
+    }
+
+    @Test
+    public void create_fail_unAuthentication() {
+        ResponseEntity<String> response = requestPost(template(), "/milestones", requestCreateMilestone());
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertThat(getPath(response), is("/users/loginForm"));
+    }
+
 }
