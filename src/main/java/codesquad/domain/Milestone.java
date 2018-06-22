@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import codesquad.exception.AlreadyAssignException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -13,14 +14,17 @@ import java.util.Optional;
 @Entity
 public class Milestone extends AbstractEntity implements UriGeneratable{
 
+    @Column
     private LocalDateTime startDate;
 
+    @Column
     private LocalDateTime endDate;
 
     @Column
     @Size(min = 5)
     private String subject;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "milestone", cascade = CascadeType.ALL)
     private List<Issue> issues;
 

@@ -137,7 +137,6 @@ public class Issue extends AbstractEntity implements UriGeneratable{
         return this;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -146,14 +145,18 @@ public class Issue extends AbstractEntity implements UriGeneratable{
         Issue issue = (Issue) o;
         return Objects.equals(subject, issue.subject) &&
                 Objects.equals(comment, issue.comment) &&
+                Objects.equals(deleted, issue.deleted) &&
+                Objects.equals(openState, issue.openState) &&
                 Objects.equals(writer, issue.writer) &&
-                Objects.equals(deleted, issue.deleted);
+                Objects.equals(milestone, issue.milestone) &&
+                Objects.equals(assignee, issue.assignee) &&
+                currentLabel == issue.currentLabel;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), subject, comment, writer, deleted);
+        return Objects.hash(super.hashCode(), subject, comment, deleted, openState, writer, milestone, assignee, currentLabel);
     }
 
     @Override
@@ -161,10 +164,13 @@ public class Issue extends AbstractEntity implements UriGeneratable{
         return "Issue{" +
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
-                ", writer=" + writer +
                 ", deleted=" + deleted +
+                ", openState=" + openState +
+                ", writer=" + writer +
+                ", milestone=" + milestone +
+                ", assignee=" + assignee +
+                ", currentLabel=" + currentLabel +
                 '}';
     }
-
 }
 

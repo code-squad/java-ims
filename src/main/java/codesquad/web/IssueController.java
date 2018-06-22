@@ -72,7 +72,7 @@ public class IssueController {
     @GetMapping("/{issueId}/setMilestone/{milestoneId}")
     public String setMilestone(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long milestoneId) throws AlreadyAssignException {
         issueService.setMilestone(issueId, milestoneService.findById(milestoneId));
-        milestoneService.setIssue(milestoneId, issueService.findById(issueId));
+//        milestoneService.setIssue(milestoneId, issueService.findById(issueId));
         return "redirect:/issues/" + issueId;
     }
 
