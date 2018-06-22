@@ -25,8 +25,14 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     @Enumerated(EnumType.STRING)
     private IssueStatus status = IssueStatus.OPEN;
 
+    @Enumerated(EnumType.STRING)
+    private Label label;
+
     @ManyToOne
     private Milestone milestone;
+
+    @OneToOne
+    private User assignee;
 
     private boolean deleted;
 
@@ -139,5 +145,29 @@ public class Issue extends AbstractEntity implements UriGeneratable {
 
     public boolean isOpen() {
         return status.isOpen();
+    }
+
+    public Issue setAssignee(User loginUser, User assignee) {
+        if (!loginUser.equals(writer)) {
+            throw new UnAuthorizedException();
+        }
+        this.assignee = assignee;
+        return this;
+    }
+
+    public boolean isAssignee(User assignee) {
+        return this.assignee.equals(assignee);
+    }
+
+    public Issue setLabel(User loginUser, long labelId) {
+        if (!loginUser.equals(writer)) {
+            throw new UnAuthorizedException();
+        }
+        this.label = Label.getLabel(labelId);
+        return this;
+    }
+
+    public boolean isLabel(Label label) {
+        return this.label == label;
     }
 }

@@ -44,4 +44,14 @@ public class MilestoneDto {
     public Milestone _toMilestone() {
         return new Milestone(startDate, dueDate, subject);
     }
+
+    @Override
+    public String toString() {
+        return "MilestoneDto{" +
+                "id=" + id +
+                ", startDate='" + startDate + '\'' +
+                ", dueDate='" + dueDate + '\'' +
+                ", subject='" + subject + '\'' +
+                '}';
+    }
 }

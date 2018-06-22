@@ -4,6 +4,8 @@ import codesquad.UnAuthorizedException;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.persistence.EntityNotFoundException;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -55,5 +57,35 @@ public class IssueTest {
         User notWriter = new User("notWriter", "password", "name");
         issue.delete(notWriter);
         assertThat(issue.isDeleted(), is(false));
+    }
+
+    @Test
+    public void setAssignee_Success() {
+        User loginUser = writer;
+        User assignee = new User("assignee", "password", "name");
+        issue.setAssignee(loginUser, assignee);
+        assertTrue(issue.isAssignee(assignee));
+    }
+
+    @Test(expected = UnAuthorizedException.class)
+    public void setAssignee_Fail_LoginUser_And_Writer_Mismatch() {
+        User loginUser = new User("notWriter", "password", "name");
+        User assignee = new User("assignee", "password", "name");
+        issue.setAssignee(loginUser, assignee);
+        assertFalse(issue.isAssignee(assignee));
+    }
+
+    @Test
+    public void setLabel_Success() {
+        User loginUser = writer;
+        issue.setLabel(loginUser, 1L);
+        assertTrue(issue.isLabel(Label.JAVA));
+    }
+
+    @Test(expected = UnAuthorizedException.class)
+    public void setLabel_Fail_LoginUser_And_Writer_Mistmatch() {
+        User loginUser = new User("notWriter", "password", "name");
+        issue.setLabel(loginUser, 1L);
+        assertFalse(issue.isLabel(Label.JAVA));
     }
 }
