@@ -16,21 +16,19 @@ public class Issues {
     public Issues() {
     }
 
+    public Issues(List<Issue> issues){
+        this.issues = issues;
+    }
+
     public List<Issue> getIssues() {
         return issues;
     }
 
-    public int numberOfOpen(){
-        int open = 0;
-        for (Issue issue : issues) {
-            if(!issue.isClosed()){
-                open++;
-            }
-        }
-        return open;
+    public long numberOfOpen() {
+        return issues.stream().filter(issue -> !issue.isClosed()).count();
     }
 
-    public int sizeOfIssues(){
+    public int sizeOfIssues() {
         return issues.size();
     }
 }
