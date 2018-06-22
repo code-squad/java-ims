@@ -2,10 +2,12 @@ package codesquad.web;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.UserTest;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.not;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -135,5 +137,126 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("_method", "delete").build();
         return template.postForEntity(String.format("/issues/%d", number), request, String.class);
+    }
+
+    @Test
+    public void setMilestone(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/1/milestones/1", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        Issue issue = issueRepository.findById(1L).get();
+        assertThat(issue.getMilestone().getId(), is(1L));
+    }
+
+    @Test
+    public void setMilestone_no_owner_of_issue(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/2/milestones/1", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void setMilestone_no_login(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+        ResponseEntity<String> response = template().postForEntity("/issues/2/milestones/2", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+        Issue issue = issueRepository.findById(1L).get();
+        assertNull(issue.getMilestone());
+    }
+
+    @Test
+    public void setMilestone_다른_마일스톤_지정(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/1/milestones/1", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        Issue issue = issueRepository.findById(1L).get();
+        assertThat(issue.getMilestone().getId(), is(1L));
+
+        response = basicAuthTemplate().postForEntity("/issues/1/milestones/1", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        issue = issueRepository.findById(1L).get();
+        assertThat(issue.getMilestone().getId(), is(1L));
+    }
+
+    @Test
+    public void setAssignee(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/3/assignees/2", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+
+        Issue issue = issueRepository.findById(3L).get();
+        assertThat(issue.getAssignee().getId(), is(2L));
+    }
+
+    @Test
+    public void setAssignee_no_owner_of_issue(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+        ResponseEntity<String> response = basicAuthTemplate(findByUserId("riverway")).postForEntity("/issues/4/assignees/2", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void setAssignee_다른_담당자_지정(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/3/assignees/2", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+
+        Issue issue = issueRepository.findById(3L).get();
+        assertThat(issue.getAssignee().getId(), is(2L));
+
+        response = basicAuthTemplate().postForEntity("/issues/3/assignees/3", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+
+        issue = issueRepository.findById(3L).get();
+        assertThat(issue.getAssignee().getId(), is(3L));
+    }
+
+    @Test
+    public void setLabel(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/1/labels/1", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+
+        Issue issue = issueRepository.findById(1L).get();
+        assertThat(issue.getLabel().getId(), is(1L));
+    }
+
+    @Test
+    public void setLabel_no_owner_of_issue(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+
+        ResponseEntity<String> response = template().postForEntity("/issues/2/labels/1", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void close(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/4/close", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+
+        Issue issue = issueRepository.findById(4L).get();
+        assertThat(issue.isClosed(), is(true));
+    }
+
+    @Test
+    public void close_다른_사용자(){
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put").build();
+
+        ResponseEntity<String> response = basicAuthTemplate(UserTest.SANJIGI).postForEntity("/issues/4/close", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 }

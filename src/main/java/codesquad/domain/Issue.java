@@ -22,17 +22,30 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_asignee"))
+    private User assignee;
+
+    @Enumerated(value = EnumType.STRING)
+    private Label label;
+
+    private boolean closed = false;
+
     public Issue() {
     }
 
-    public Issue(String title, String contents){
+    public Issue(String title, String contents) {
         super(0L);
         this.title = title;
         this.contents = contents;
     }
 
     public void update(User loginUser, Issue target) {
-        if(!isOwner(loginUser)){
+        if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }
         this.title = target.title;
@@ -43,8 +56,40 @@ public class Issue extends AbstractEntity {
         return writer.equals(loginUser);
     }
 
-    public void writeBy(User writer){
+    public void writeBy(User writer) {
         this.writer = writer;
+    }
+
+    public void setAssignee(User assignee, User loginUser) {
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        this.assignee = assignee;
+    }
+
+    public void setMilestone(User loginUser, Milestone milestone) {
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        this.milestone = milestone;
+    }
+
+    public void setLabel(User loginUser, Label label) {
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        this.label = label;
+    }
+
+    public void setClosed(User loginUser, boolean closed) {
+        if (!isOwner(loginUser)){
+            throw new UnAuthorizedException();
+        }
+        this.closed = closed;
+    }
+
+    public User getAssignee() {
+        return assignee;
     }
 
     public String getTitle() {
@@ -59,7 +104,19 @@ public class Issue extends AbstractEntity {
         return writer;
     }
 
-    public IssueDto toIssueDto(){
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public boolean isClosed(){
+        return closed;
+    }
+
+    public IssueDto toIssueDto() {
         return new IssueDto(title, contents);
     }
 
@@ -70,6 +127,8 @@ public class Issue extends AbstractEntity {
                 "title='" + title + '\'' +
                 ", contents='" + contents + '\'' +
                 ", writer=" + writer +
+                ", assignee=" + assignee +
+                ", milestone=" + milestone +
                 '}';
     }
 }
