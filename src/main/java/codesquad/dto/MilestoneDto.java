@@ -2,6 +2,7 @@ package codesquad.dto;
 
 import codesquad.domain.Milestone;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
@@ -11,7 +12,10 @@ public class MilestoneDto {
     @Size(min = 3, max = 20)
     private String subject;
 
+    @NotNull
     private LocalDateTime startDate;
+
+    @NotNull
     private LocalDateTime endDate;
 
     public MilestoneDto() {

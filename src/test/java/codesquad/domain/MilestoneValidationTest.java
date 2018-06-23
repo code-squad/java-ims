@@ -9,15 +9,15 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class IssueValidationTest {
-    private static final Logger log = LoggerFactory.getLogger(IssueValidationTest.class);
-
-    private static Validator validator;
+public class MilestoneValidationTest {
+    private static final Logger log = LoggerFactory.getLogger(MilestoneValidationTest.class);
+    private Validator validator;
 
     @Before
     public void setUp() throws Exception {
@@ -27,19 +27,12 @@ public class IssueValidationTest {
 
     @Test
     public void invalid_subject() {
-        Issue issue = new Issue("s", "comment");
-        Set<ConstraintViolation<Issue>> results = validator.validate(issue);
+        Milestone milestone = new Milestone("", LocalDateTime.now(), LocalDateTime.now());
+        Set<ConstraintViolation<Milestone>> results = validator.validate(milestone);
         assertThat(results.size(), is(1));
 
-        for (ConstraintViolation violation : results) {
-            log.debug("validation err result : {}", violation.getMessage());
+        for (ConstraintViolation result : results) {
+            log.debug("validation error message : ", result.getMessage());
         }
-    }
-
-    @Test
-    public void invalid_Issue_params() {
-        Issue issue = new Issue("s", "c");
-        Set<ConstraintViolation<Issue>> results = validator.validate(issue);
-        assertThat(results.size(), is(2));
     }
 }

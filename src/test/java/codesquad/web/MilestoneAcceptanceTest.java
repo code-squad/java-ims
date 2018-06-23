@@ -30,11 +30,14 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
     }
 
     static HttpEntity<MultiValueMap<String, Object>> requestCreateMilestone() {
-        HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
-        builder.addParameter("subject", "test subject");
-        builder.addParameter("startDate", "2018-06-22T10:11:30");
-        builder.addParameter("endDate", "2015-06-29T14:15:30");
+        return requestCreateMilestone("test subejct");
+    }
 
+    static HttpEntity<MultiValueMap<String, Object>> requestCreateMilestone(String subject) {
+        HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
+        builder.addParameter("subject", subject);
+        builder.addParameter("startDate", "2018-06-22T10:11:30");
+        builder.addParameter("endDate", "2018-06-29T14:15:30");
         return builder.build();
     }
 
@@ -50,6 +53,13 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = requestPost(template(), "/milestones", requestCreateMilestone());
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertThat(getPath(response), is("/users/loginForm"));
+    }
+
+    @Test
+    public void create_fail_invalid_params() {
+        ResponseEntity<String> response = requestPost(basicAuthTemplate(), "/milestones", requestCreateMilestone(""));
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertThat(getPath(response), is("/milestones"));
     }
 
     @Test
