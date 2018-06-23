@@ -20,7 +20,7 @@ public class HomeAcceptanceTest extends AcceptanceTest {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("subject", subject)
                 .addParameter("comment", "사실 없습니다.").build();
-        template.postForEntity("/issues", request, String.class); // create
+        basicAuthTemplate().postForEntity("/issues", request, String.class); // create
         ResponseEntity<String> response = template.getForEntity("/", String.class); // index.html
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));

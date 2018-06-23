@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(String userId, String password, HttpSession session, Model model) throws UnAuthenticationException {
+    public String login(String userId, String password, HttpSession session) throws UnAuthenticationException {
         if (isLoginUser(session)) {
             throw new AlreadyLoginException(); // 이미 로그인 한 사용자의 접근 방지
         }
@@ -75,7 +75,7 @@ public class UserController {
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
         userService.update(loginUser, id, target);
-        return "redirect:/";
+        return "redirect:/users";
     }
 
     @GetMapping("/logout")
