@@ -1,9 +1,8 @@
 package support.test;
 
+import codesquad.domain.User;
 import org.junit.Before;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-
-import codesquad.domain.User;
 
 public abstract class BasicAuthAcceptanceTest extends AcceptanceTest {
     protected TestRestTemplate basicAuthTemplate;
