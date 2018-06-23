@@ -3,7 +3,6 @@ package codesquad.service;
 import codesquad.domain.Issue;
 import codesquad.domain.Milestone;
 import codesquad.domain.MilestoneRepository;
-import codesquad.dto.IssueDto;
 import codesquad.dto.MilestoneDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,5 +36,10 @@ public class MilestoneService {
     public void add(long milestoneId, Issue issue) {
         Milestone milestone = findById(milestoneId);
         milestone.addIssue(issue);
+    }
+
+    @Transactional
+    public void add(MilestoneDto milestoneDto) {
+        milestoneRepository.save(milestoneDto._toMilestone());
     }
 }
