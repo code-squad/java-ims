@@ -2,7 +2,6 @@ package codesquad.web;
 
 import codesquad.CannotDeleteException;
 import codesquad.domain.Issue;
-import codesquad.domain.MilestoneRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
@@ -62,5 +61,12 @@ public class IssueController {
     public String delete(@LoginUser User loginUser, @PathVariable Long id) throws CannotDeleteException {
         issueService.delete(loginUser, id);
         return "redirect:/";
+    }
+
+    @GetMapping("/{id}/setMilestone/{milestoneId}")
+    public String selectMilestone(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long milestoneId) {
+        Issue issue = issueService.selectMilestone(id, milestoneService.get(milestoneId));
+        milestoneService.addIssue(milestoneId, issue);
+        return issue.generateRedirectUri();
     }
 }

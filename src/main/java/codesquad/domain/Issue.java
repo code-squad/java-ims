@@ -33,6 +33,9 @@ public class Issue extends AbstractEntity implements UriGeneratable {
 
     private boolean deleted = false;
 
+    @ManyToOne
+    private Milestone milestone;
+
     public Issue() {
     }
 
@@ -115,5 +118,10 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         }
         deleted = true;
         return DeleteHistory.convert(ISSUE, writer, this);
+    }
+
+    public Issue selectMilestone(Milestone milestone) {
+        this.milestone = milestone;
+        return this;
     }
 }

@@ -2,10 +2,7 @@ package codesquad.service;
 
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
-import codesquad.domain.DeleteHistoryRepository;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,5 +52,10 @@ public class IssueService {
     public void delete(User loginUser, Long id) throws CannotDeleteException {
         Issue issue = issueRepo.findById(id).orElseThrow(EntityNotFoundException::new);
         deleteHistoryRepo.save(issue.delete(loginUser));
+    }
+
+    @Transactional
+    public Issue selectMilestone(Long id, Milestone milestone) {
+        return issueRepo.findById(id).map(issue -> issue.selectMilestone(milestone)).orElseThrow(EntityNotFoundException::new);
     }
 }

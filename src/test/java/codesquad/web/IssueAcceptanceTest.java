@@ -11,6 +11,7 @@ import org.springframework.util.MultiValueMap;
 import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import static codesquad.security.SecurityControllerAdvice.INVALID_LOGIN_INFO;
 import static codesquad.web.MilestoneAcceptanceTest.requestCreateMilestone;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -50,7 +51,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     @Test
     public void create_fail_unAuthentication() {
         ResponseEntity<String> response = requestPost(template(), CREATE_PATH, requestCreateIssue("test subject", "test comment"));
-        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
 
     @Test
@@ -68,7 +69,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
         response = requestGet(path);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertTrue(response.getBody().contains("test title"));
+        assertTrue(response.getBody().contains("test subject"));
     }
 
     @Test
@@ -96,7 +97,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     public void edit_fail_unAuthentication() {
         String editPath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment"))) + "/edit";
         ResponseEntity<String> response = requestGet(template(), editPath);
-        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+        assertTrue(response.getBody().contains("Login Member"));
     }
 
     @Test
@@ -125,7 +126,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     @Test
     public void update_fail_unAuthentication() {
         ResponseEntity<String> response = update(template());
-        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
 
     @Test
@@ -150,12 +151,46 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     @Test
     public void delete_fail_unAuthentication() {
         ResponseEntity<String> response = delete(template());
-        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
 
     @Test
     public void delete_fail_unAuthorized() {
         ResponseEntity<String> response = delete(basicAuthTemplate(findByUserId("sanjigi")));
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void selectMilestone() {
+        String issuePath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment")));
+        requestPost(basicAuthTemplate(), "/milestones", requestCreateMilestone());
+
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), issuePath + "/setMilestone/1");
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void selectMilestone_fail_unAuthentication() {
+        String issuePath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment")));
+        requestPost(basicAuthTemplate(), "/milestones", requestCreateMilestone());
+
+        ResponseEntity<String> response = requestGet(template(), issuePath + "/setMilestone/1");
+        assertTrue(response.getBody().contains("Login Member"));
+    }
+
+    @Test
+    public void selectMilestone_fail_invalid_Issue_Id() {
+        String issuePath = "/issues/100";
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), issuePath + "/setMilestone/1");
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    }
+
+    @Test
+    public void selectMilestone_fail_invalid_Milestone_Id() {
+        String issuePath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment")));
+        requestPost(basicAuthTemplate(), "/milestones", requestCreateMilestone());
+
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), issuePath + "/setMilestone/100");
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 }

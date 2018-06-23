@@ -22,13 +22,13 @@ public class MilestoneController {
     private MilestoneService milestoneService;
 
     @GetMapping("/form")
-    public String form(@LoginUser User user) {
+    public String form(@LoginUser User loginUser) {
         return "/milestone/form";
     }
 
     @PostMapping
-    public String create(@LoginUser User user, MilestoneDto milestoneDto) {
-        milestoneService.create(user, milestoneDto);
+    public String create(@LoginUser User loginUser, MilestoneDto milestoneDto) {
+        milestoneService.create(loginUser, milestoneDto);
         return "redirect:/milestones";
     }
 

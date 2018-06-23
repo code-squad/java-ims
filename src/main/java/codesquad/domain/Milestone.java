@@ -3,6 +3,7 @@ package codesquad.domain;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -23,6 +24,9 @@ public class Milestone extends AbstractEntity {
 
     @Column(nullable = false)
     private LocalDateTime endDate;
+
+    @Embedded
+    private Issues issues = new Issues();
 
     public Milestone() {
     }
@@ -47,5 +51,10 @@ public class Milestone extends AbstractEntity {
 
     public String getEndDate() {
         return endDate.format(DateTimeFormatter.ofPattern(getFormat(NORMAL)));
+    }
+
+    public Milestone addIssue(Issue issue) {
+        issues.add(issue);
+        return this;
     }
 }
