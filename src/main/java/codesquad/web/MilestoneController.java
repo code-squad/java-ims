@@ -43,7 +43,7 @@ public class MilestoneController {
 
     @GetMapping
     public String show(Model model) {
-        model.addAttribute(getMultipleEntityName(MILESTONE), milestoneService.get());
+        model.addAttribute(getMultipleEntityName(MILESTONE), milestoneService.findAll());
         return "/milestone/list";
     }
 }

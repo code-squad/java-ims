@@ -41,14 +41,14 @@ public class MilestoneServiceTest {
     @Test
     public void get() {
         when(milestoneRepo.findById(anyLong())).thenReturn(Optional.of(milestone));
-        Milestone milestone = milestoneService.get(anyLong());
+        Milestone milestone = milestoneService.findAll(anyLong());
         assertThat(milestone.getSubject(), is("test subject"));
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void get_fail_not_exist_entity() {
         when(milestoneRepo.findById(anyLong())).thenReturn(Optional.empty());
-        milestoneService.get(anyLong());
+        milestoneService.findAll(anyLong());
     }
 
     @Test(expected = EntityNotFoundException.class)

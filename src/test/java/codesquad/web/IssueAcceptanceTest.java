@@ -11,7 +11,6 @@ import org.springframework.util.MultiValueMap;
 import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
-import static codesquad.security.SecurityControllerAdvice.INVALID_LOGIN_INFO;
 import static codesquad.web.MilestoneAcceptanceTest.requestCreateMilestone;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -191,6 +190,33 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         requestPost(basicAuthTemplate(), "/milestones", requestCreateMilestone());
 
         ResponseEntity<String> response = requestGet(basicAuthTemplate(), issuePath + "/setMilestone/100");
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    }
+
+    @Test
+    public void selectAssignee() {
+        String issuePath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment")));
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), issuePath + "/setAssignee/1");
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void selectAssignee_unAuthentication() {
+        String issuePath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment")));
+        ResponseEntity<String> response = requestGet(template(), issuePath + "/setAssignee/1");
+        assertTrue(response.getBody().contains("Login Member"));
+    }
+
+    @Test
+    public void selectAssignee_invalid_Issue_Id() {
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), "/issues/100/setAssignee/1");
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    }
+
+    @Test
+    public void selectAssignee_invalid_User_Id() {
+        String issuePath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment")));
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), issuePath + "/setAssignee/100");
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 }

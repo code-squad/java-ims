@@ -22,11 +22,11 @@ public class MilestoneService {
         return milestoneRepo.save(milestoneDto._toMilestone());
     }
 
-    public List<Milestone> get() {
+    public List<Milestone> findAll() {
         return milestoneRepo.findAll();
     }
 
-    public Milestone get(Long milestoneId) {
+    public Milestone findAll(Long milestoneId) {
         return milestoneRepo.findById(milestoneId).orElseThrow(EntityNotFoundException::new);
     }
 

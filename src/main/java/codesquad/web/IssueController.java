@@ -7,6 +7,7 @@ import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +27,9 @@ public class IssueController {
     @Autowired
     private MilestoneService milestoneService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/form")
     public String form(@LoginUser User loginUser, Model model) {
         model.addAttribute(getEntityName(USER), loginUser);
@@ -40,14 +44,15 @@ public class IssueController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
-        model.addAttribute(getEntityName(ISSUE), issueService.get(id));
-        model.addAttribute(getMultipleEntityName(MILESTONE), milestoneService.get());
+        model.addAttribute(getEntityName(ISSUE), issueService.findById(id));
+        model.addAttribute(getMultipleEntityName(MILESTONE), milestoneService.findAll());
+        model.addAttribute(getMultipleEntityName(USER), userService.findAll());
         return String.format("/%s/show", getEntityName(ISSUE));
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@LoginUser User loginUser, @PathVariable Long id, Model model) {
-        model.addAttribute(getEntityName(ISSUE), issueService.get(loginUser, id));
+        model.addAttribute(getEntityName(ISSUE), issueService.findById(loginUser, id));
         return String.format("/%s/edit", getEntityName(ISSUE));
     }
 
@@ -65,8 +70,14 @@ public class IssueController {
 
     @GetMapping("/{id}/setMilestone/{milestoneId}")
     public String selectMilestone(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long milestoneId) {
-        Issue issue = issueService.selectMilestone(id, milestoneService.get(milestoneId));
+        Issue issue = issueService.selectMilestone(id, milestoneService.findAll(milestoneId));
         milestoneService.addIssue(milestoneId, issue);
+        return issue.generateRedirectUri();
+    }
+
+    @GetMapping("/{id}/setAssignee/{userId}")
+    public String selectAssignee(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long userId) {
+        Issue issue = issueService.selectAssignee(id, userService.findById(userId));
         return issue.generateRedirectUri();
     }
 }

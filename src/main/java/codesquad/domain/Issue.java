@@ -34,7 +34,12 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     private boolean deleted = false;
 
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
 
     public Issue() {
     }
@@ -89,7 +94,7 @@ public class Issue extends AbstractEntity implements UriGeneratable {
                 "id='" + getId() + '\'' +
                 ", subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
-                ", writer=" + writer +
+                ", writer=" + writer.getName() +
                 ", deleted=" + deleted +
                 '}';
     }
@@ -123,5 +128,18 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     public Issue selectMilestone(Milestone milestone) {
         this.milestone = milestone;
         return this;
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public Issue selectAssignee(User assignee) {
+        this.assignee = assignee;
+        return this;
+    }
+
+    public User getAssignee() {
+        return assignee;
     }
 }
