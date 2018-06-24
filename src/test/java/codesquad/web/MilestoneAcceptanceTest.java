@@ -41,12 +41,12 @@ public class MilestoneAcceptanceTest extends BasicAuthAcceptanceTest{
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 
-    @Test
-    public void create_success() throws ParseException {
-        MilestoneDto newMilestoneDto = new MilestoneDto("Hellloo1", "2018-02-01T10:15", "2018-05-01T10:15");
-        ResponseEntity<String> response = basicAuthTemplate.postForEntity("/milestones", newMilestoneDto, String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-    }
+//    @Test
+//    public void create_success() throws ParseException {
+//        MilestoneDto newMilestoneDto = new MilestoneDto("Hellloo1", "2018-02-01T10:15", "2018-05-01T10:15");
+//        ResponseEntity<String> response = basicAuthTemplate.postForEntity("/milestones", newMilestoneDto, String.class);
+//        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+//    }
 
     @Test
     public void create_fail_no_login() throws ParseException {
