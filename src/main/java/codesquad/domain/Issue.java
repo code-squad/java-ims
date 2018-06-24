@@ -30,7 +30,10 @@ public class Issue extends AbstractEntity implements UriGeneratable {
 
     @Enumerated(STRING)
     private IssueStatus status = OPEN;
-    
+
+    @Enumerated(STRING)
+    private Label label;
+
     private boolean deleted = false;
 
     @ManyToOne
@@ -121,6 +124,15 @@ public class Issue extends AbstractEntity implements UriGeneratable {
 
     public User getAssignee() {
         return assignee;
+    }
+
+    public Issue selectLabel(Label label) {
+        this.label = label;
+        return this;
+    }
+
+    public String getLabel() {
+        return label.name();
     }
 
     public boolean isClosed() {

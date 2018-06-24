@@ -63,4 +63,9 @@ public class IssueService {
     public Issue selectAssignee(Long id, User assignee) {
         return issueRepo.findById(id).map(issue -> issue.selectAssignee(assignee)).orElseThrow(EntityNotFoundException::new);
     }
+
+    @Transactional
+    public Issue selectLabel(Long id, Label label) {
+        return issueRepo.findById(id).map(issue -> issue.selectLabel(label)).orElseThrow(EntityNotFoundException::new);
+    }
 }

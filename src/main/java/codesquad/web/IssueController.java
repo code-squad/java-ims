@@ -2,6 +2,7 @@ package codesquad.web;
 
 import codesquad.CannotDeleteException;
 import codesquad.domain.Issue;
+import codesquad.domain.Label;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
@@ -47,6 +48,7 @@ public class IssueController {
         model.addAttribute(getEntityName(ISSUE), issueService.findById(id));
         model.addAttribute(getMultipleEntityName(MILESTONE), milestoneService.findAll());
         model.addAttribute(getMultipleEntityName(USER), userService.findAll());
+        model.addAttribute("labels", Label.getAll());
         return String.format("/%s/show", getEntityName(ISSUE));
     }
 
@@ -78,6 +80,12 @@ public class IssueController {
     @GetMapping("/{id}/setAssignee/{userId}")
     public String selectAssignee(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long userId) {
         Issue issue = issueService.selectAssignee(id, userService.findById(userId));
+        return issue.generateRedirectUri();
+    }
+
+    @GetMapping("/{id}/setLabel/{labelId}")
+    public String selectLabel(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long labelId) {
+        Issue issue = issueService.selectLabel(id, Label.get(labelId));
         return issue.generateRedirectUri();
     }
 }

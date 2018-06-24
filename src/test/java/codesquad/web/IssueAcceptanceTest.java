@@ -219,4 +219,31 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = requestGet(basicAuthTemplate(), issuePath + "/setAssignee/100");
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
+
+    @Test
+    public void selectLabel() {
+        String issuePath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment")));
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), issuePath + "/setLabel/1");
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void selectLabel_fail_unAuthentication() {
+        String issuePath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment")));
+        ResponseEntity<String> response = requestGet(template(), issuePath + "/setLabel/1");
+        assertTrue(response.getBody().contains("Login Member"));
+    }
+
+    @Test
+    public void selectLabel_fail_invalid_issue_id() {
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), "/issues/100/setLabel/1");
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    }
+
+    @Test
+    public void selectLabel_fail_invalid_label_id() {
+        String issuePath = getPath(requestPost(basicAuthTemplate(), CREATE_PATH, requestCreateIssue("test subject", "test comment")));
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), issuePath + "/setLabel/100");
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    }
 }
