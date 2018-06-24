@@ -53,6 +53,14 @@ public class Milestone extends AbstractEntity {
         return endDate.format(DateTimeFormatter.ofPattern(getFormat(NORMAL)));
     }
 
+    public int getOpenIssueCount() {
+        return issues.getOpenCount();
+    }
+
+    public int getCloseIssueCount() {
+        return issues.getCloseCount();
+    }
+
     public Milestone addIssue(Issue issue) {
         issues.add(issue);
         return this;

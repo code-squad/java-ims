@@ -53,11 +53,9 @@
               <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="milestone-menu">
 
                   {{#milestones}}
-                  <li class="mdl-menu__item mdl-button--accent">
-                        <a href="/issues/{{issue.id}}/setMilestone/{{id}}">
-                            {{subject}}
-                        </a>
-                  </li>
+                  <a href="/issues/{{issue.id}}/setMilestone/{{id}}">
+                    <li class="mdl-menu__item mdl-button--accent">{{subject}}</li>
+                  </a>
                   {{/milestones}}
 
               </ul>
@@ -67,21 +65,11 @@
               </button>
               <!-- label list -->
               <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="label-menu">
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setLabel/1">label1</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setLabel/2">label2</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setLabel/3">label3</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setLabel/4">label4</a>
-                      </li>
-                      <li class="mdl-menu__item">
-                        <a href="/issue/1/setLabel/5">label5</a>
-                      </li>
+
+                <a href="/issue/1/setLabel/1">
+                  <li class="mdl-menu__item">label1</li>
+                </a>
+
               </ul>
 
               <button id="assignee-menu" class="mdl-button mdl-js-button">
@@ -90,9 +78,9 @@
               <!-- label list -->
               <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="assignee-menu">
                   {{#users}}
-                  <li class="mdl-menu__item">
-                      <a href="/issues/{{issue.id}}/setAssignee/{{id}}">{{name}}</a>
-                  </li>
+                  <a href="/issues/{{issue.id}}/setAssignee/{{id}}">
+                    <li class="mdl-menu__item">{{name}}</li>
+                  </a>
                   {{/users}}
               </ul>
             </div>

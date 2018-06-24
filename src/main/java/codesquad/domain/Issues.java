@@ -16,4 +16,12 @@ public class Issues {
         issues.add(issue);
         return this;
     }
+
+    public int getOpenCount() {
+        return (int) issues.stream().filter(issue -> !issue.isClosed()).count();
+    }
+
+    public int getCloseCount() {
+        return (int) issues.stream().filter(Issue::isClosed).count();
+    }
 }
