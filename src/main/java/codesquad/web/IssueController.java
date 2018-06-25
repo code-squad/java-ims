@@ -1,10 +1,7 @@
 package codesquad.web;
 
 import codesquad.CannotDeleteException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.MileStone;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
@@ -51,6 +48,7 @@ public class IssueController {
         model.addAttribute("issue", issueService.findById(id));
         model.addAttribute("user", userService.findAll());
         model.addAttribute("milestones", mileStoneService.findAll());
+        model.addAttribute("labels", Label.values());
         return "/issue/show";
     }
 
@@ -83,6 +81,12 @@ public class IssueController {
     @PutMapping("/{issueId}/setAssignee/{id}")
     public String assignee(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id) throws CannotDeleteException {
         issueService.setAssginee(loginUser, issueId, id);
+        return "redirect:/issue/{issueId}";
+    }
+
+    @PutMapping("/{issueId}/setLabel/{id}")
+    public String labeling(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id) throws CannotDeleteException {
+        issueService.setLabel(loginUser, issueId, id);
         return "redirect:/issue/{issueId}";
     }
 }

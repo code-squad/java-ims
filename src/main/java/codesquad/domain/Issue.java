@@ -34,6 +34,9 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
     private User assignee;
 
+    @Column
+    private Label label;
+
     public Issue(long id, String subject, String comment, User writer) {
         super(id);
         this.subject = subject;
@@ -112,6 +115,13 @@ public class Issue extends AbstractEntity {
         return this;
     }
 
+    public Issue updateLabel(User loginUser, Label label) throws CannotDeleteException {
+        if (!isOwner(loginUser))
+            throw new CannotDeleteException("자신이 쓴 글만 라벨을 설정 수 있습니다.");
+        this.label = label;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
@@ -120,6 +130,7 @@ public class Issue extends AbstractEntity {
                 ", writer=" + writer +
                 ", mileStone=" + mileStone +
                 ", assignee=" + assignee +
+                ", label=" + label +
                 '}';
     }
 }

@@ -66,7 +66,14 @@ public class IssueService {
         if (!issue.isOwner(loginUser))
             throw new CannotDeleteException("자신이 쓴 글만 담당자를 설정할 수 있습니다.");
         log.info("setAssginee called");
-        issue = issue.updateAssignee(loginUser, userRepository.findById(id).get());
-        log.info("result : {}", issue.toString());
+        issue.updateAssignee(loginUser, userRepository.findById(id).get());
+    }
+
+    @Transactional
+    public void setLabel(User loginUser, long issueId, long id) throws CannotDeleteException {
+        Issue issue = issueRepository.findById(issueId).get();
+        if (!issue.isOwner(loginUser))
+            throw new CannotDeleteException("자신이 쓴 글만 라벨을 설정할 수 있습니다.");
+        issue.updateLabel(loginUser, Label.values()[(int)id]);
     }
 }
