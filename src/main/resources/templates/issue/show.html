@@ -83,7 +83,7 @@
 
                         {{# milestones }}
                         <li class="mdl-menu__item">
-                            <a href="/milestones/{{id}}">Milestone3</a>
+                            <a href="/issues/{{& issue.id}}/setMilestone/{{id}}">Milestone3</a>
                         </li>
                         {{/ milestones }}
 
@@ -110,6 +110,13 @@
                         <li class="mdl-menu__item">
                             <a href="/issue/1/setLabel/5">label5</a>
                         </li>
+
+                        {{# labels }}
+                        <li class="mdl-menu__item">
+                            <a href="/issues/{{& issue.id}}/setLabel/{{id}}">{{label}}</a>
+                        </li>
+                        {{/ labels }}
+
                     </ul>
 
                     <button id="assignee-menu" class="mdl-button mdl-js-button">

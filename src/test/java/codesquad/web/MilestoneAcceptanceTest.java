@@ -33,7 +33,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 
-    private ResponseEntity<String> createMilestone(TestRestTemplate template, String subject) {
+    public ResponseEntity<String> createMilestone(TestRestTemplate template, String subject) {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("startDate", "2018-06-19T12:00")
                 .addParameter("dueDate", "2018-07-20T12:00")

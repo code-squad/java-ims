@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.Label;
 import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
@@ -48,12 +49,10 @@ public class IssueController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
-        Issue issue = issueService.findById(id);
-        List<Milestone> milestones = milestoneService.findAll();
-        List<User> users = userService.findAll();
-        model.addAttribute("issue", issue);
-        model.addAttribute("milestones", milestones);
-        model.addAttribute("users", users);
+        model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("milestones", milestoneService.findAll());
+        model.addAttribute("users", userService.findAll());
+        model.addAttribute("labels", Label.values());
         return "/issue/show";
     }
 
@@ -88,5 +87,11 @@ public class IssueController {
     public String setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
         UriGeneratable issue = issueService.setLabel(loginUser, id, labelId);
         return "redirect:" + issue.generateUri();
+    }
+
+    @GetMapping("/{id}/setMilestone/{milestoneId}")
+    public String setMilestone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long milestoneId) {
+        UriGeneratable issue = issueService.setMilestone(loginUser, id, milestoneId);
+        return "redirect:/" + issue.generateUri();
     }
 }
