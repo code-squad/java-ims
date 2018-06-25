@@ -35,6 +35,7 @@ public class Issue extends AbstractEntity {
     private User assignee;
 
     @Column
+    @Enumerated
     private Label label;
 
     public Issue(long id, String subject, String comment, User writer) {

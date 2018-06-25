@@ -21,7 +21,7 @@ public class MileStoneAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void list() throws Exception {
-        ResponseEntity<String> response = basicAuthTemplate().getForEntity("/milestone", String.class);
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity("/milestones", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
@@ -32,7 +32,7 @@ public class MileStoneAcceptanceTest extends AcceptanceTest {
                 .addParameter("startDate", "2018-06-01T08:30")
                 .addParameter("endDate", "2018-07-01T08:30").build();
         log.info("request body : {}", request.getBody());
-        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/milestone", request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/milestones", request, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
 }
