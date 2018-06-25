@@ -18,12 +18,12 @@ public class UserService {
     private UserRepository userRepository;
 
     public User add(UserDto userDto) {
-        return userRepository.save(userDto._toUser());
+        return userRepository.save(userDto.toUser());
     }
 
     public User update(User loginUser, long id, UserDto updatedUser) {
         User original = findById(loginUser, id);
-        original.update(loginUser, updatedUser._toUser());
+        original.update(loginUser, updatedUser.toUser());
         return userRepository.save(original);
     }
 

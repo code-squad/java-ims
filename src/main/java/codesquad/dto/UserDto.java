@@ -48,8 +48,8 @@ public class UserDto {
         this.name = name;
     }
 
-    public User _toUser() {
-        return new User(this.userId, this.password, this.name);
+    public User toUser() {
+        return new User(userId, password, name);
     }
 
     @Override
