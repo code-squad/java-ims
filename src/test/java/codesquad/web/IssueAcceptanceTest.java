@@ -47,6 +47,19 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
+    public void create_fail() {
+        Long id = 1L;
+
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("id", id)
+                .addParameter("comment", "test comment")
+                .build();
+
+        ResponseEntity<String> responseEntity = template.postForEntity("/issues", request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    @Test
     public void list() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("subject", "test subject")
