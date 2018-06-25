@@ -3,6 +3,7 @@ package codesquad.web;
 import codesquad.CannotDeleteException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.MileStone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
@@ -72,9 +73,10 @@ public class IssueController {
     }
 
     @PutMapping("/{issueId}/setMilestone/{id}")
-    public String update(@PathVariable long issueId, @PathVariable long id) {
-        
-        return "redirect:/";
-    // /issue/{{issue.id}}/setMilestone/{{id}}
+    public String update(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id) throws CannotDeleteException {
+        MileStone mileStone = mileStoneService.findById(id);
+        log.info("milestone on controller : {}", mileStone.toString());
+        issueService.setMileStone(loginUser, issueId, mileStone);
+        return "redirect:/issue/{issueId}";
     }
 }

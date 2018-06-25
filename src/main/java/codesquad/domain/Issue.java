@@ -43,6 +43,13 @@ public class Issue extends AbstractEntity {
         this.writer = writer;
     }
 
+    public Issue(String subject, String comment, User writer, MileStone mileStone) {
+        this.subject = subject;
+        this.comment = comment;
+        this.writer = writer;
+        this.mileStone = mileStone;
+    }
+
     public Issue() {};
 
     public void update(User writer, Issue target) throws CannotDeleteException {
@@ -62,7 +69,7 @@ public class Issue extends AbstractEntity {
     }
 
     public IssueDto toIssueDto() {
-        return new IssueDto(this.subject, this.comment, this.writer);
+        return new IssueDto(this.subject, this.comment, this.writer, this.mileStone);
     }
 
     public String getSubject() {
@@ -77,9 +84,17 @@ public class Issue extends AbstractEntity {
         return writer;
     }
 
+
     public Issue writeBy(User loginUser) {
         log.info("writeBy : " + loginUser);
         this.writer = loginUser;
+        return this;
+    }
+
+    public Issue updateMileStone(User loginUser, MileStone mileStone) throws CannotDeleteException {
+        if (!isOwner(loginUser))
+            throw new CannotDeleteException("자신이 쓴 글만 설정할 수 있습니다.");
+        this.mileStone = mileStone;
         return this;
     }
 
@@ -89,6 +104,7 @@ public class Issue extends AbstractEntity {
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 ", writer=" + writer +
+                ", mileStone=" + mileStone +
                 '}';
     }
 }

@@ -26,4 +26,8 @@ public class MileStoneService {
     public List<MileStone> findAll() {
         return mileStoneRepository.findAll();
     }
+
+    public MileStone findById(long id) {
+        return mileStoneRepository.findById(id).get();
+    }
 }
