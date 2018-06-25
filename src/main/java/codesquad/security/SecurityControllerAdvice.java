@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class SecurityControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(SecurityControllerAdvice.class);
 
-    public static final String INVALID_LOGIN_INFO = "로그인 정보가 올바르지 않습니다.";
+    private static final String ERROR_MESSAGE = "errorMessage";
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
@@ -43,7 +44,7 @@ public class SecurityControllerAdvice {
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public String invalidLoginInfo(Model model) {
         log.debug("InvalidLoginInfoException is happened!");
-        model.addAttribute("errorMessage", INVALID_LOGIN_INFO);
+        model.addAttribute(ERROR_MESSAGE, "로그인 정보가 올바르지 않습니다.");
         return "/user/login";
     }
 

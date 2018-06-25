@@ -31,7 +31,18 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     @Enumerated(STRING)
     private IssueStatus status = OPEN;
 
+    @Enumerated(STRING)
+    private Label label;
+
     private boolean deleted = false;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
 
     public Issue() {
     }
@@ -80,26 +91,6 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         return super.getFormattedModifiedDate();
     }
 
-    @Override
-    public String toString() {
-        return "Issue{" +
-                "id='" + getId() + '\'' +
-                ", subject='" + subject + '\'' +
-                ", comment='" + comment + '\'' +
-                ", writer=" + writer +
-                ", deleted=" + deleted +
-                '}';
-    }
-
-    @Override
-    public String generateUri() {
-        return String.format("/issues/%d", getId());
-    }
-
-    public IssueDto _toDto() {
-        return new IssueDto(getId(), getSubject(), getComment());
-    }
-
     public Issue update(User loginUser, IssueDto updateIssueDto) {
         if (!writer.equals(loginUser)) {
             throw new UnAuthorizedException();
@@ -115,5 +106,56 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         }
         deleted = true;
         return DeleteHistory.convert(ISSUE, writer, this);
+    }
+
+    public Issue selectMilestone(Milestone milestone) {
+        this.milestone = milestone;
+        return this;
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public Issue selectAssignee(User assignee) {
+        this.assignee = assignee;
+        return this;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public Issue selectLabel(Label label) {
+        this.label = label;
+        return this;
+    }
+
+    public String getLabel() {
+        return label.name();
+    }
+
+    public boolean isClosed() {
+        return IssueStatus.isClosed(status);
+    }
+
+    @Override
+    public String toString() {
+        return "Issue{" +
+                "subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
+                ", writer=" + writer.getName() +
+                ", status=" + status.name() +
+                ", deleted=" + deleted +
+                '}';
+    }
+
+    @Override
+    public String generateUri() {
+        return String.format("/issues/%d", getId());
+    }
+
+    public IssueDto _toDto() {
+        return new IssueDto(getId(), getSubject(), getComment());
     }
 }

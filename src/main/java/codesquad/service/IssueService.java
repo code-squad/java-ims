@@ -2,10 +2,7 @@ package codesquad.service;
 
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
-import codesquad.domain.DeleteHistoryRepository;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,11 +26,11 @@ public class IssueService {
         return issueRepo.save(issue);
     }
 
-    public Issue get(Long id) {
+    public Issue findById(Long id) {
         return issueRepo.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    public Issue get(User loginUser, Long id) {
+    public Issue findById(User loginUser, Long id) {
         Issue issue = issueRepo.findById(id).orElseThrow(EntityNotFoundException::new);
         if (!issue.isOwner(loginUser)) {
             throw new UnAuthorizedException();
@@ -55,5 +52,20 @@ public class IssueService {
     public void delete(User loginUser, Long id) throws CannotDeleteException {
         Issue issue = issueRepo.findById(id).orElseThrow(EntityNotFoundException::new);
         deleteHistoryRepo.save(issue.delete(loginUser));
+    }
+
+    @Transactional
+    public Issue selectMilestone(Long id, Milestone milestone) {
+        return issueRepo.findById(id).map(issue -> issue.selectMilestone(milestone)).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional
+    public Issue selectAssignee(Long id, User assignee) {
+        return issueRepo.findById(id).map(issue -> issue.selectAssignee(assignee)).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional
+    public Issue selectLabel(Long id, Label label) {
+        return issueRepo.findById(id).map(issue -> issue.selectLabel(label)).orElseThrow(EntityNotFoundException::new);
     }
 }

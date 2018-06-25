@@ -7,15 +7,16 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.xml.bind.ValidationException;
+import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class ValidationControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(ValidationControllerAdvice.class);
 
-    @ExceptionHandler(ValidationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void handleValidationException() {
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.FOUND)
+    public String handleValidationException(HttpServletRequest request) {
         log.debug("ValidationException is happened!");
+        return "redirect:" + request.getRequestURI();
     }
 }

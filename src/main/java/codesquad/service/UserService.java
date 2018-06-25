@@ -8,8 +8,10 @@ import codesquad.dto.UserDto;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -28,9 +30,11 @@ public class UserService {
     }
 
     public User findById(User loginUser, long id) {
-        return userRepository.findById(id)
-                .filter(user -> user.equals(loginUser))
-                .orElseThrow(UnAuthorizedException::new);
+        return Optional.of(findById(id)).filter(user -> user.equals(loginUser)).orElseThrow(UnAuthorizedException::new);
+    }
+
+    public User findById(long id) {
+        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     public List<User> findAll() {

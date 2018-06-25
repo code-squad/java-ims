@@ -2,20 +2,21 @@ package codesquad.web;
 
 import codesquad.CannotDeleteException;
 import codesquad.domain.Issue;
+import codesquad.domain.Label;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import support.domain.Entity;
 
 import javax.validation.Valid;
 
-import static support.domain.Entity.USER;
-import static support.domain.Entity.getEntityName;
+import static support.domain.Entity.*;
 
 @Controller
 @RequestMapping("/issues")
@@ -23,6 +24,12 @@ public class IssueController {
 
     @Autowired
     private IssueService issueService;
+
+    @Autowired
+    private MilestoneService milestoneService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/form")
     public String form(@LoginUser User loginUser, Model model) {
@@ -38,14 +45,17 @@ public class IssueController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
-        model.addAttribute(getEntityName(Entity.ISSUE), issueService.get(id));
-        return String.format("/%s/show", getEntityName(Entity.ISSUE));
+        model.addAttribute(getEntityName(ISSUE), issueService.findById(id));
+        model.addAttribute(getMultipleEntityName(MILESTONE), milestoneService.findAll());
+        model.addAttribute(getMultipleEntityName(USER), userService.findAll());
+        model.addAttribute("labels", Label.getAll());
+        return String.format("/%s/show", getEntityName(ISSUE));
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@LoginUser User loginUser, @PathVariable Long id, Model model) {
-        model.addAttribute(getEntityName(Entity.ISSUE), issueService.get(loginUser, id));
-        return String.format("/%s/edit", getEntityName(Entity.ISSUE));
+        model.addAttribute(getEntityName(ISSUE), issueService.findById(loginUser, id));
+        return String.format("/%s/edit", getEntityName(ISSUE));
     }
 
     @PutMapping("/{id}")
@@ -58,5 +68,24 @@ public class IssueController {
     public String delete(@LoginUser User loginUser, @PathVariable Long id) throws CannotDeleteException {
         issueService.delete(loginUser, id);
         return "redirect:/";
+    }
+
+    @GetMapping("/{id}/setMilestone/{milestoneId}")
+    public String selectMilestone(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long milestoneId) {
+        Issue issue = issueService.selectMilestone(id, milestoneService.findAll(milestoneId));
+        milestoneService.addIssue(milestoneId, issue);
+        return issue.generateRedirectUri();
+    }
+
+    @GetMapping("/{id}/setAssignee/{userId}")
+    public String selectAssignee(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long userId) {
+        Issue issue = issueService.selectAssignee(id, userService.findById(userId));
+        return issue.generateRedirectUri();
+    }
+
+    @GetMapping("/{id}/setLabel/{labelId}")
+    public String selectLabel(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long labelId) {
+        Issue issue = issueService.selectLabel(id, Label.get(labelId));
+        return issue.generateRedirectUri();
     }
 }

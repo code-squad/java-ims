@@ -2,10 +2,7 @@ package codesquad.service;
 
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
-import codesquad.domain.DeleteHistoryRepository;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -52,7 +50,7 @@ public class IssueServiceTest {
     public void show() {
         Issue issue = validIssue();
         when(issueRepo.findById(anyLong())).thenReturn(Optional.of(issue));
-        Issue origin = issueService.get(anyLong());
+        Issue origin = issueService.findById(anyLong());
 
         assertEquals(issue.getComment(), origin.getComment());
     }
@@ -60,26 +58,26 @@ public class IssueServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void show_fail_not_found() {
         when(issueRepo.findById(anyLong())).thenReturn(Optional.empty());
-        issueService.get(anyLong());
+        issueService.findById(anyLong());
     }
 
     @Test
     public void edit() {
         when(issueRepo.findById(anyLong())).thenReturn(Optional.of(loginedIssue()));
-        Issue issue = issueService.get(getUser(), anyLong());
+        Issue issue = issueService.findById(getUser(), anyLong());
         assertThat(issue.getComment(), is("test contents"));
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void edit_fail_not_found() {
         when(issueRepo.findById(anyLong())).thenReturn(Optional.empty());
-        issueService.get(getUser(), anyLong());
+        issueService.findById(getUser(), anyLong());
     }
 
     @Test(expected = UnAuthorizedException.class)
     public void edit_fail_unAuthorized() {
         when(issueRepo.findById(anyLong())).thenReturn(Optional.of(loginedIssue()));
-        issueService.get(getOtherUser(), anyLong());
+        issueService.findById(getOtherUser(), anyLong());
     }
 
     @Test
@@ -110,6 +108,30 @@ public class IssueServiceTest {
         issueService.delete(getOtherUser(), anyLong());
     }
 
+    @Test
+    public void selectMilestone() {
+        when(issueRepo.findById(anyLong())).thenReturn(Optional.of(loginedIssue()));
+        issueService.selectMilestone(anyLong(), getMilestone());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void selectMilestone_fail_not_exist_issue() {
+        when(issueRepo.findById(anyLong())).thenReturn(Optional.empty());
+        issueService.selectMilestone(anyLong(), getMilestone());
+    }
+
+    @Test
+    public void selectAssignee() {
+        when(issueRepo.findById(anyLong())).thenReturn(Optional.of(loginedIssue()));
+        issueService.selectAssignee(anyLong(), getOtherUser());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void selectAssignee_fail_not_exist_issue() {
+        when(issueRepo.findById(anyLong())).thenReturn(Optional.empty());
+        issueService.selectAssignee(anyLong(), getOtherUser());
+    }
+
     private Issue validIssue() {
         return new Issue("test subject", "test comment");
     }
@@ -132,5 +154,9 @@ public class IssueServiceTest {
 
     private User getOtherUser() {
         return new User("jinbro", "1234", "jinbro");
+    }
+
+    private Milestone getMilestone() {
+        return new Milestone("test subject", LocalDateTime.now(), LocalDateTime.now());
     }
 }

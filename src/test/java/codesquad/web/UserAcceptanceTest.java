@@ -73,7 +73,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void login_fail_invalid_password() {
         ResponseEntity<String> response = requestPost("/users", getCreateUserParams());
         response = requestPost("/users/login", getLoginUserParams("colin", "111111111"));
-        assertTrue(response.getBody().contains(SecurityControllerAdvice.INVALID_LOGIN_INFO));
+        assertTrue(response.getBody().contains("로그인 정보가 올바르지 않습니다."));
     }
 
     @Test
