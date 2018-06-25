@@ -19,8 +19,8 @@ public class IssueService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
-    @Resource(name = "mileStoneRepository")
-    private MileStoneRepository mileStoneRepository;
+    @Resource(name = "userRepository")
+    private UserRepository userRepository;
 
     public List<Issue> findAll() {
         return issueRepository.findAll();
@@ -58,5 +58,15 @@ public class IssueService {
         if (!issue.isOwner(loginUser))
             throw new CannotDeleteException("자신이 쓴 글만 설정할 수 있습니다.");
         issue.updateMileStone(loginUser, mileStone);
+    }
+
+    @Transactional
+    public void setAssginee(User loginUser, long issueId, long id) throws CannotDeleteException {
+        Issue issue = issueRepository.findById(issueId).get();
+        if (!issue.isOwner(loginUser))
+            throw new CannotDeleteException("자신이 쓴 글만 담당자를 설정할 수 있습니다.");
+        log.info("setAssginee called");
+        issue = issue.updateAssignee(loginUser, userRepository.findById(id).get());
+        log.info("result : {}", issue.toString());
     }
 }

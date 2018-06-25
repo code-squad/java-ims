@@ -53,9 +53,6 @@
               <!-- milestone list -->
               <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="milestone-menu">
                 {{#milestones}}
-                      <!--<li class="mdl-menu__item">-->
-                        <!--<a href="/issue/{{issue.id}}/setMilestone/{{id}}">{{subject}}</a>-->
-                      <!--</li>-->
                   <form class="form-delete" action="/issue/{{issue.id}}/setMilestone/{{id}}" method="POST">
                     <input type="hidden" name="_method" value="PUT">
                     <li class="mdl-menu__item">
@@ -96,9 +93,15 @@
               <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                   for="assignee-menu">
                 {{#user}}
-                      <li class="mdl-menu__item">
-                        <a href="/issue/{{issue.id}}/setAssignee/{{id}}">{{userId}}</a>
-                      </li>
+                      <!--<li class="mdl-menu__item">-->
+                        <!--<a href="/issue/{{issue.id}}/setAssignee/{{id}}">{{userId}}</a>-->
+                      <!--</li>-->
+                <form class="form-delete" action="/issue/{{issue.id}}/setAssignee/{{id}}" method="POST">
+                  <input type="hidden" name="_method" value="PUT">
+                  <li class="mdl-menu__item">
+                    <button type="submit" class="delete-answer-button">{{userId}}</button>
+                  </li>
+                </form>
                 {{/user}}
               </ul>
             </div>

@@ -30,6 +30,10 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private MileStone mileStone;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
+
     public Issue(long id, String subject, String comment, User writer) {
         super(id);
         this.subject = subject;
@@ -84,10 +88,20 @@ public class Issue extends AbstractEntity {
         return writer;
     }
 
+    public User getAssignee() {
+        return assignee;
+    }
 
     public Issue writeBy(User loginUser) {
         log.info("writeBy : " + loginUser);
         this.writer = loginUser;
+        return this;
+    }
+
+    public Issue updateAssignee(User loginUser, User assignee) throws CannotDeleteException {
+        if (!isOwner(loginUser))
+            throw new CannotDeleteException("자신이 쓴 글만 담당자를 설정할 수 있습니다.");
+        this.assignee = assignee;
         return this;
     }
 
@@ -105,6 +119,7 @@ public class Issue extends AbstractEntity {
                 ", comment='" + comment + '\'' +
                 ", writer=" + writer +
                 ", mileStone=" + mileStone +
+                ", assignee=" + assignee +
                 '}';
     }
 }

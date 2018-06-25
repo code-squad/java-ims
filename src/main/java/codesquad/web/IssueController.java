@@ -79,4 +79,10 @@ public class IssueController {
         issueService.setMileStone(loginUser, issueId, mileStone);
         return "redirect:/issue/{issueId}";
     }
+
+    @PutMapping("/{issueId}/setAssignee/{id}")
+    public String assignee(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id) throws CannotDeleteException {
+        issueService.setAssginee(loginUser, issueId, id);
+        return "redirect:/issue/{issueId}";
+    }
 }

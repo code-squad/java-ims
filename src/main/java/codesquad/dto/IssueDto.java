@@ -79,7 +79,6 @@ public class IssueDto {
 
     public IssueDto setMileStone(MileStone mileStone) {
         this.mileStone = mileStone;
-        log.info("setMileStone called");
         return this;
     }
 
