@@ -72,17 +72,17 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = defaultLogin("javajigi", "test");
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
+
+    @Test
+    public void login_fail() {
+        basicAuthTemplate.getForEntity("/users/logout", String.class);
+        ResponseEntity<String> response = defaultLogin("javajigi", "wronggg");
 //
-//    @Test
-//    public void login_fail() {
-//        basicAuthTemplate.getForEntity("/users/logout", String.class);
-//        ResponseEntity<String> response = defaultLogin("javajigi", "wronggg");
-////
-////        assertFalse(response.getBody().contains("href=\"/users/logout\""));
-////        assertTrue(response.getBody().contains("href=\"/users/login/form\""));
-////        assertTrue(response.getBody().contains("href=\"/users/form\""));
-////        assertTrue(response.getBody().contains(LOGIN_NOT_MATCH_WARNING));
-//    }
+//        assertFalse(response.getBody().contains("href=\"/users/logout\""));
+//        assertTrue(response.getBody().contains("href=\"/users/login/form\""));
+//        assertTrue(response.getBody().contains("href=\"/users/form\""));
+//        assertTrue(response.getBody().contains(LOGIN_NOT_MATCH_WARNING));
+    }
 
     @Test
     public void logout_success() {
