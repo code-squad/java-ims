@@ -29,9 +29,9 @@
       <!-- Tabs -->
       <nav class="mdl-navigation">
         <a class="mdl-navigation__link" href="/">Issues</a>
-        <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-        <a class="mdl-navigation__link" href="/user/login.html">login</a>
-        <a class="mdl-navigation__link" href="/user/join.html">join</a>
+        <a class="mdl-navigation__link" href="/milestones">Milestones</a>
+        <a class="mdl-navigation__link" href="/users/login">login</a>
+        <a class="mdl-navigation__link" href="/users/form">join</a>
       </nav>
     </div>
   </header>
@@ -43,7 +43,7 @@
         <div class="mdl-card__title" style="height:80px;">
           <h2 class="mdl-card__title-text mdl-color-text--grey-800">Issues</h2>
         </div>
-        <a href="/issue/form.html"
+        <a href="/issues/form"
            class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored show-modal">
           <i class="material-icons">add</i>
         </a>
@@ -56,7 +56,7 @@
 								         <img class="mdl-list__item-avatar" height="48" width="48"
                               src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
 									</a> 
-									<a href="/issue/show.html">
+									<a href="/issues/{{id}}">
 									    <strong>{{subject}}</strong>
 									</a>
 									<span class="mdl-list__item-sub-title"> 

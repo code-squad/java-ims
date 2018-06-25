@@ -22,13 +22,13 @@ public class UserController {
 
     @GetMapping("/form")
     public String form() {
-        return "/user/form";
+        return "/user/join";
     }
 
     @PostMapping("")
     public String create(UserDto userDto) {
         userService.add(userDto);
-        return "redirect:/users";
+        return "redirect:/";
     }
 
     @GetMapping("/{id}/form")

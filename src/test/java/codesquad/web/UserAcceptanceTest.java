@@ -42,7 +42,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(userRepository.findByUserId(userId));
-        assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/"));
     }
 
     @Test

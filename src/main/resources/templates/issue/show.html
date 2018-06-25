@@ -24,9 +24,9 @@
       <!-- Tabs -->
       <nav class="mdl-navigation">
         <a class="mdl-navigation__link" href="/">Issues</a>
-        <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-        <a class="mdl-navigation__link" href="/user/login.html">login</a>
-        <a class="mdl-navigation__link" href="/user/join.html">join</a>
+        <a class="mdl-navigation__link" href="/milestones">Milestones</a>
+        <a class="mdl-navigation__link" href="/users/login">login</a>
+        <a class="mdl-navigation__link" href="/users/form">join</a>
       </nav>
     </div>
   </header>
@@ -41,10 +41,10 @@
     <div class="issues__posts mdl-grid">
       <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
         <div class="mdl-card__menu">
-          <a href="/updateIssue/1" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+          <a href="/issues/{{issue.id}}/form" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
             <i class="material-icons">edit</i>
           </a>
-          <a href="/deleteIssue/1" id="issues-menu-lower-right" class="mdl-button mdl-js-button mdl-button--icon">
+          <a href="/issues/{{issue.id}}" id="issues-menu-lower-right" class="mdl-button mdl-js-button mdl-button--icon">
             <i class="material-icons">delete</i>
           </a>
         </div>
@@ -64,7 +64,7 @@
             </div>
             <span>2017-01-14</span>
           </div>
-          <a href="/issue/1/setOpen" class="mdl-button mdl-button--colored mdl-js-button">
+          <a href="/issues/{{issue.id}}/setOpen" class="mdl-button mdl-button--colored mdl-js-button">
             Close issue
           </a>
 

@@ -43,7 +43,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> responseEntity = template.postForEntity("/issues", request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(issueRepository.findById(id));
-        assertThat(responseEntity.getHeaders().getLocation().getPath(), is("/issues"));
+        assertThat(responseEntity.getHeaders().getLocation().getPath(), is("/issues/" + id));
     }
 
     @Test
@@ -87,8 +87,6 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void show() {
-        Long id = 1L;
-
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("subject", "test subject")
                 .addParameter("comment", "test comment")
@@ -102,7 +100,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
         // TODO Issue 객체를 받아서 테스트 하고 싶었지만 계속 실패해서 일단 String
 
-        ResponseEntity<String> response = template.getForEntity(String.format(path + "/%d", id), String.class);
+        ResponseEntity<String> response = template.getForEntity(String.format(path), String.class);
 
         log.debug("response : {}", response.getBody());
 
