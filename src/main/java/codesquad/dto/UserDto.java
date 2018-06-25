@@ -1,8 +1,8 @@
 package codesquad.dto;
 
-import javax.validation.constraints.Size;
-
 import codesquad.domain.User;
+
+import javax.validation.constraints.Size;
 
 public class UserDto {
     @Size(min = 3, max = 20)

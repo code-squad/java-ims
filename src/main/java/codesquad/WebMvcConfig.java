@@ -1,7 +1,7 @@
 package codesquad;
 
-import java.util.List;
-
+import codesquad.security.BasicAuthInterceptor;
+import codesquad.security.LoginUserHandlerMethodArgumentResolver;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,11 +11,10 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import codesquad.security.BasicAuthInterceptor;
-import codesquad.security.LoginUserHandlerMethodArgumentResolver;
 import support.converter.LocalDateConverter;
 import support.converter.LocalDateTimeConverter;
+
+import java.util.List;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {

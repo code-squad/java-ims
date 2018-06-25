@@ -1,14 +1,11 @@
 package codesquad.domain;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
+import codesquad.UnAuthorizedException;
 import org.junit.Test;
 
-import codesquad.UnAuthorizedException;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.*;
 
 public class UserTest {
     public static final User JAVAJIGI = new User(1L, "javajigi", "password", "name");
@@ -58,13 +55,13 @@ public class UserTest {
         origin.update(origin, target);
         assertThat(origin.getName(), is(not(target.getName())));
     }
-    
+
     @Test
     public void match_password() throws Exception {
         User user = newUser("sanjigi");
         assertTrue(user.matchPassword(user.getPassword()));
     }
-    
+
     @Test
     public void mismatch_password() throws Exception {
         User user = newUser("sanjigi");
