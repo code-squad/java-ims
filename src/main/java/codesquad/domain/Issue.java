@@ -26,6 +26,10 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private MileStone mileStone;
+
     public Issue(long id, String subject, String comment, User writer) {
         super(id);
         this.subject = subject;
@@ -47,6 +51,10 @@ public class Issue extends AbstractEntity {
         this.subject = target.subject;
         this.comment = target.comment;
         log.info("after update issue : {}", this.toString());
+    }
+
+    public MileStone getMileStone() {
+        return mileStone;
     }
 
     public boolean isOwner(User loginUser) {

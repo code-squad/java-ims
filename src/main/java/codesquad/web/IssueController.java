@@ -7,6 +7,7 @@ import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MileStoneService;
 import codesquad.service.UserService;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
@@ -29,6 +30,9 @@ public class IssueController {
     @Resource(name = "userService")
     UserService userService;
 
+    @Resource(name = "mileStoneService")
+    MileStoneService mileStoneService;
+
     @GetMapping("form")
     public String form() {
         return "/issue/form";
@@ -45,6 +49,7 @@ public class IssueController {
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
         model.addAttribute("user", userService.findAll());
+        model.addAttribute("milestones", mileStoneService.findAll());
         return "/issue/show";
     }
 
@@ -64,5 +69,12 @@ public class IssueController {
     public String setAssignee(@PathVariable long id, @PathVariable long userId) {
         log.info("id : {}, userId : {}", id, userId);
         return "redirect:/";
+    }
+
+    @PutMapping("/{issueId}/setMilestone/{id}")
+    public String update(@PathVariable long issueId, @PathVariable long id) {
+        
+        return "redirect:/";
+    // /issue/{{issue.id}}/setMilestone/{{id}}
     }
 }

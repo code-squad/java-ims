@@ -5,10 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class MileStone extends AbstractEntity {
@@ -24,6 +24,9 @@ public class MileStone extends AbstractEntity {
     @Column
     private LocalDateTime endDate;
 
+    @OneToMany(mappedBy = "mileStone")
+    private List<Issue> issues;
+
     public MileStone() {}
 
     public MileStone(@Size(min = 3, max = 50) String subject, LocalDateTime startDate, LocalDateTime endDate) {
@@ -32,8 +35,20 @@ public class MileStone extends AbstractEntity {
         this.endDate = endDate;
     }
 
+
+    public MileStone(long id, String subject, LocalDateTime startDate, LocalDateTime endDate) {
+        super(id);
+        this.subject = subject;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     public MileStoneDto _toMileStoneDto() {
         return new MileStoneDto(this.subject, this.startDate, this.endDate);
+    }
+
+    public List<Issue> getIssues() {
+        return issues;
     }
 
     public String getSubject() {
