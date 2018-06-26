@@ -1,10 +1,7 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
-import codesquad.domain.User;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import support.test.AcceptanceTest;
@@ -15,7 +12,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class ApiIssueControllerTest extends AcceptanceTest {
-    private static final Logger log = LoggerFactory.getLogger(ApiIssueControllerTest.class);
 
     @Test
     public void setMilestone() {
@@ -61,14 +57,23 @@ public class ApiIssueControllerTest extends AcceptanceTest {
 
     @Test
     public void setAssignee() {
+        String path = getIssuePath() + getAssigneePath(true);
+        ResponseEntity<Issue> response = requestGet(basicAuthTemplate(), path, Issue.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
     @Test
     public void setAssignee_fail_unAuthentication() {
+        String path = getIssuePath() + getAssigneePath(true);
+        ResponseEntity<Void> response = requestGet(template(), path, Void.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
     @Test
     public void setAssignee_fail_invalidAssigneeId() {
+        String path = getIssuePath() + getAssigneePath(false);
+        ResponseEntity<Void> response = requestGet(basicAuthTemplate(), path, Void.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
     private String getIssuePath() {
