@@ -1,7 +1,6 @@
 package codesquad.web;
 
 import codesquad.domain.UserRepository;
-import codesquad.security.SecurityControllerAdvice;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +22,18 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     @Autowired
     private UserRepository userRepository;
 
+    static HttpEntity<MultiValueMap<String, Object>> requestCreateUser() {
+        return requestCreateUser("colin");
+    }
+
+    static HttpEntity<MultiValueMap<String, Object>> requestCreateUser(String userId) {
+        HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
+        builder.addParameter("userId", userId);
+        builder.addParameter("password", "1234");
+        builder.addParameter("name", "colin");
+        return builder.build();
+    }
+
     @Test
     public void createForm() throws Exception {
         ResponseEntity<String> response = template.getForEntity("/users/form", String.class);
@@ -43,7 +54,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(userRepository.findByUserId(userId));
-        assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
+        assertThat(response.getHeaders().getLocation().getPath(), is("/users/3"));
     }
 
     private HttpEntity<MultiValueMap<String, Object>> getCreateUserParams() {

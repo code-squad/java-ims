@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import support.domain.AbstractEntity;
+import support.domain.UriGeneratable;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -9,21 +10,23 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static support.domain.Entity.MILESTONE;
+import static support.domain.Entity.getMultipleEntityName;
 import static support.web.TimeFormat.NORMAL;
 import static support.web.TimeFormat.getFormat;
 
 @Entity
-public class Milestone extends AbstractEntity {
+public class Milestone extends AbstractEntity implements UriGeneratable {
 
     @Size(min = 3, max = 20)
     @Column(nullable = false)
     private String subject;
 
     @Column(nullable = false)
-    private LocalDateTime startDate;
+    private String startDate;
 
     @Column(nullable = false)
-    private LocalDateTime endDate;
+    private String endDate;
 
     @Embedded
     private Issues issues = new Issues();
@@ -33,8 +36,8 @@ public class Milestone extends AbstractEntity {
 
     public Milestone(String subject, LocalDateTime startDate, LocalDateTime endDate) {
         this.subject = subject;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startDate = startDate.format(DateTimeFormatter.ofPattern(getFormat(NORMAL)));
+        this.endDate = endDate.format(DateTimeFormatter.ofPattern(getFormat(NORMAL)));
     }
 
     public long getId() {
@@ -46,11 +49,11 @@ public class Milestone extends AbstractEntity {
     }
 
     public String getStartDate() {
-        return startDate.format(DateTimeFormatter.ofPattern(getFormat(NORMAL)));
+        return startDate;
     }
 
     public String getEndDate() {
-        return endDate.format(DateTimeFormatter.ofPattern(getFormat(NORMAL)));
+        return endDate;
     }
 
     public int getOpenIssueCount() {
@@ -64,5 +67,10 @@ public class Milestone extends AbstractEntity {
     public Milestone addIssue(Issue issue) {
         issues.add(issue);
         return this;
+    }
+
+    @Override
+    public String generateUri() {
+        return String.format("/%s/%d", getMultipleEntityName(MILESTONE), getId());
     }
 }
