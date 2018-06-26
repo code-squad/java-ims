@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.dto.AnswerDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import support.domain.AbstractEntity;
 
@@ -38,6 +39,10 @@ public class Answer extends AbstractEntity {
         this.contents = contents;
     }
 
+    public AnswerDto toAnswerDto() {
+        return new AnswerDto(this.writer, this.issue, this.contents);
+    }
+
     public boolean isSameWriter(User loginUser) {
         return loginUser.equals(this.writer);
     }
@@ -52,5 +57,14 @@ public class Answer extends AbstractEntity {
 
     public String getContents() {
         return contents;
+    }
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "writer=" + writer +
+                ", issue=" + issue +
+                ", contents='" + contents + '\'' +
+                '}';
     }
 }
