@@ -1,10 +1,13 @@
 package codesquad.web;
 
+import codesquad.UnAuthenticationException;
 import codesquad.domain.Answer;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.AnswerService;
 import codesquad.service.IssueService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,8 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api/issues/{issueId}/answers")
 public class ApiAnswerController {
+
+    private final Logger log = LoggerFactory.getLogger(ApiAnswerController.class);
 
     @Resource(name = "issueService")
     private IssueService issueService;
@@ -32,7 +37,22 @@ public class ApiAnswerController {
     }
 
     @GetMapping("/{answerId}")
-    public Answer read(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long answerId) {
-        return answerService.findAnswerById(answerId);
+    public ResponseEntity<Answer> read(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long answerId) {
+        return ResponseEntity.ok(answerService.findAnswerById(answerId));
     }
+
+    @PutMapping("{answerId}")
+    public ResponseEntity<Answer> update(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long answerId, @RequestBody String content) throws UnAuthenticationException {
+        Answer updateAnswer = answerService.update(loginUser, answerId, content);
+        log.debug("updated answer : {}", updateAnswer);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(updateAnswer);
+    }
+
+    @DeleteMapping("{answerId}")
+    public ResponseEntity<Void> delete(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long answerId) throws UnAuthenticationException {
+        answerService.delete(loginUser, answerId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

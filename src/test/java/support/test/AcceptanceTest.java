@@ -53,6 +53,12 @@ public abstract class AcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         return response.getHeaders().getLocation().getPath();
     }
+
+    protected String loginCreateResource(String path, Object bodyPayload) {
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity(path, bodyPayload, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+        return response.getHeaders().getLocation().getPath();
+    }
     
     protected <T> T getResource(String location, Class<T> responseType, User loginUser) {
         return basicAuthTemplate(loginUser).getForObject(location, responseType);

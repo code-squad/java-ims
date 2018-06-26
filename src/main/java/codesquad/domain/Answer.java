@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
 import support.domain.AbstractEntity;
 import support.domain.UriGeneratable;
 
@@ -24,10 +25,15 @@ public class Answer extends AbstractEntity implements UriGeneratable {
     @JoinColumn(name = "issue_id")
     private Issue issue;
 
-    public Answer() {}
+    public Answer() {
+
+    }
 
     public Answer(String content) {
         this.content = content;
+    }
+
+    public Answer(User loginUser, String content) {
     }
 
     public Answer writtenBy(User writer) {
@@ -82,7 +88,16 @@ public class Answer extends AbstractEntity implements UriGeneratable {
         return "Answer{" +
                 "content='" + content + '\'' +
                 ", writer=" + writer.getName() +
-                ", id=" + getId() +
+                ", issue=" + issue.getSubject() +
                 '}';
+    }
+
+    public boolean isWriter(User loginUser) {
+        return this.writer.equals(loginUser);
+    }
+
+    public Answer update(String content) {
+        this.content = content;
+        return this;
     }
 }
