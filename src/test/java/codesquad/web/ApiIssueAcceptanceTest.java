@@ -2,15 +2,9 @@ package codesquad.web;
 
 import codesquad.domain.Issue;
 import codesquad.domain.Label;
-import codesquad.domain.Milestone;
-import codesquad.domain.User;
-import codesquad.dto.IssueDto;
-import codesquad.dto.MilestoneDto;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import support.test.AcceptanceTest;
 
@@ -23,17 +17,7 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
     private static final String DEFAULT_MILESTONE_SUBJECT = "Test Subject";
     private static final String SET_ASSIGNEE_PATH = "/api/issues/1/setAssignee/1";
     private static final String DEFAULT_ASSIGNEE = "javajigi";
-    private static final String SET_LABLE_PATH = "/api/issues/1/setLabel/1";
-
-    private String setAttribute(TestRestTemplate template, String path) {
-        ResponseEntity<String> response = template.getForEntity(path, String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        return response.getHeaders().getLocation().getPath();
-    }
-
-    private <T> T getResource(String location, Class<T> responseType, TestRestTemplate template) {
-        return template.getForObject(location, responseType);
-    }
+    private static final String SET_LABEL_PATH = "/api/issues/1/setLabel/1";
 
     @Test
     public void setMilestone() {
@@ -61,18 +45,13 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void setLabel() {
-        Issue response = getResource(SET_LABLE_PATH, Issue.class, basicAuthTemplate());
+        Issue response = getResource(SET_LABEL_PATH, Issue.class, basicAuthTemplate());
         assertThat(response.getLabel(), is(Label.JAVA));
     }
 
     @Test
     public void setLabel_NOT_Logged_In() {
-        Issue response = getResource(SET_LABLE_PATH, Issue.class, template());
+        Issue response = getResource(SET_LABEL_PATH, Issue.class, template());
         assertNull(response);
-    }
-
-    @Test
-    public void addComment() {
-
     }
 }

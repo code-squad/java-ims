@@ -7,6 +7,8 @@ import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import codesquad.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,18 +25,21 @@ public class ApiIssueController {
     private UserService userService;
 
     @GetMapping("/setMilestone/{milestoneId}")
-    public Issue setMilestone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long milestoneId) {
-        return issueService.setMilestone(loginUser, id, milestoneId);
+    public ResponseEntity<Issue> setMilestone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long milestoneId) {
+        Issue issue = issueService.setMilestone(loginUser, id, milestoneId);
+        return new ResponseEntity<>(issue, HttpStatus.CREATED);
     }
 
     @GetMapping("/setAssignee/{assigneeId}")
-    public Issue setAssignee(@LoginUser User loginUser, @PathVariable long id, @PathVariable long assigneeId) {
+    public ResponseEntity<Issue> setAssignee(@LoginUser User loginUser, @PathVariable long id, @PathVariable long assigneeId) {
         User assignee = userService.findById(assigneeId);
-        return issueService.setAssignee(loginUser, id, assignee);
+        Issue issue = issueService.setAssignee(loginUser, id, assignee);
+        return new ResponseEntity<>(issue, HttpStatus.CREATED);
     }
 
     @GetMapping("/setLabel/{labelId}")
-    public Issue setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
-        return issueService.setLabel(loginUser, id, labelId);
+    public ResponseEntity<Issue> setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
+        Issue issue = issueService.setLabel(loginUser, id, labelId);
+        return new ResponseEntity<>(issue, HttpStatus.CREATED);
     }
 }

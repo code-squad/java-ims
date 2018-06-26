@@ -6,6 +6,7 @@ import support.domain.AbstractEntity;
 import support.domain.UriGeneratable;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -29,11 +30,14 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     @Enumerated(EnumType.STRING)
     private Label label;
 
-    @ManyToOne
+    @OneToOne
     private Milestone milestone;
 
     @OneToOne
     private User assignee;
+
+    @OneToMany(mappedBy = "issue")
+    private List<Comment> comments;
 
     private boolean deleted;
 
@@ -95,7 +99,7 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         if (!loginUser.equals(writer)) {
             throw new UnAuthorizedException();
         }
-        this.milestone = milestone;
+        this.milestone = milestone.addIssue(this);;
 
         return this;
     }
@@ -187,5 +191,11 @@ public class Issue extends AbstractEntity implements UriGeneratable {
 
     public boolean isLabel(Label label) {
         return this.label == label;
+    }
+
+    public Comment addComment(User loginUser, Comment comment) {
+        comment.setWriter(loginUser);
+        comments.add(comment);
+        return comment;
     }
 }

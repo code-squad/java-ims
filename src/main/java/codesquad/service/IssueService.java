@@ -63,7 +63,6 @@ public class IssueService {
     public Issue setMilestone(User loginUser, long id, long milestoneId) {
         Issue target = findById(id);
         Milestone milestone = milestoneService.findById(milestoneId);
-        milestone.addIssue(target);
         return target.setMilestone(loginUser, milestone);
     }
 }
