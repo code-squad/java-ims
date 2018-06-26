@@ -15,10 +15,6 @@ public enum Label {
         this.name = name;
     }
 
-    Label(int id) {
-        this.id = id;
-    }
-
     public int getId() {
         return id;
     }

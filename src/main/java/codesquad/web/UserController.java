@@ -86,9 +86,4 @@ public class UserController {
         return "redirect:/";
     }
 
-//    @GetMapping("/{id}/join")
-//    public String join(@LoginUser User loginUser, @PathVariable long id, Model model) {
-//        model.addAttribute("user", userService.findById(loginUser, id));
-//        return "/user/join";
-//    }
 }

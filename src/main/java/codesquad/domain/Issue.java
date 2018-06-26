@@ -80,22 +80,6 @@ public class Issue extends AbstractEntity {
         return new IssueDto(this.subject, this.comment, this.writer, this.mileStone);
     }
 
-    public String getSubject() {
-        return subject;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public User getWriter() {
-        return writer;
-    }
-
-    public User getAssignee() {
-        return assignee;
-    }
-
     public Issue writeBy(User loginUser) {
         log.info("writeBy : " + loginUser);
         this.writer = loginUser;
@@ -121,6 +105,26 @@ public class Issue extends AbstractEntity {
             throw new CannotDeleteException("자신이 쓴 글만 라벨을 설정 수 있습니다.");
         this.label = label;
         return this;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public User getWriter() {
+        return writer;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public Label getLabel() {
+        return label;
     }
 
     @Override
