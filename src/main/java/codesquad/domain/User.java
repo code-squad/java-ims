@@ -80,7 +80,7 @@ public class User extends AbstractEntity {
             return;
         }
 
-        this.name = target.name;
+        name = target.name;
     }
 
     public boolean matchPassword(String password) {
@@ -88,7 +88,7 @@ public class User extends AbstractEntity {
     }
 
     public UserDto _toUserDto() {
-        return new UserDto(this.userId, this.password, this.name);
+        return new UserDto(userId, password, name);
     }
 
     @JsonIgnore

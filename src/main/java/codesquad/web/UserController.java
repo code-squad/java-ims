@@ -1,7 +1,9 @@
 package codesquad.web;
 
+import codesquad.UnAuthenticationException;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
+import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/users")
@@ -41,6 +44,32 @@ public class UserController {
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
         userService.update(loginUser, id, target);
-        return "redirect:/users";
+        return "redirect:/";
+    }
+
+    @GetMapping("/login")
+    public String loginForm() {
+        return "/user/login";
+    }
+
+    @PostMapping("/login")
+    public String login(UserDto userDto, HttpSession httpSession) {
+        User loginUser = null;
+        try {
+            loginUser = userService.login(userDto.getUserId(), userDto.getPassword());
+        } catch (UnAuthenticationException e) {
+            log.debug(e.getMessage());
+            return "/user/loginFail";
+        }
+
+        httpSession.setAttribute(HttpSessionUtils.USER_SESSION_KEY, loginUser);
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(@LoginUser User loginUser, HttpSession httpSession) {
+        httpSession.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+
+        return "redirect:/";
     }
 }

@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
+
+import java.util.Objects;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -80,6 +83,26 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void update() throws Exception {
         ResponseEntity<String> response = update(basicAuthTemplate);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
+        assertTrue(Objects.requireNonNull(response.getHeaders().getLocation()).getPath().startsWith("/"));
+    }
+
+    @Test
+    public void login() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", "javajigi")
+                .addParameter("password", "test")
+                .build();
+
+        ResponseEntity<User> response = template.postForEntity("/users/login", request, User.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+
+        log.debug("path : {}", response.getHeaders().getLocation().getPath());
+        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/"));
+    }
+
+    @Test
+    public void logout() {
+        ResponseEntity<String> response = basicAuthTemplate(findDefaultUser()).getForEntity("/users/logout", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 }
