@@ -40,33 +40,31 @@ public class ApiIssueControllerTest extends AcceptanceTest {
 
     @Test
     public void setLabel() {
-
+        String path = getIssuePath() + getLabelPath(true);
+        ResponseEntity<Issue> response = requestGet(basicAuthTemplate(), path, Issue.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
     @Test
     public void setLabel_fail_unAuthentication() {
-    }
-
-    @Test
-    public void setLabel_fail_unAuthorization() { //writer and assignee
+        String path = getIssuePath() + getLabelPath(true);
+        ResponseEntity<Void> response = requestGet(template(), path, Void.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
     @Test
     public void setLabel_fail_invalidLabelId() {
+        String path = getIssuePath() + getLabelPath(false);
+        ResponseEntity<Void> response = requestGet(basicAuthTemplate(), path, Void.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
     @Test
     public void setAssignee() {
-        String path = getIssuePath();
-
     }
 
     @Test
     public void setAssignee_fail_unAuthentication() {
-    }
-
-    @Test
-    public void setAssignee_fail_unAuthorization() { //writer
     }
 
     @Test

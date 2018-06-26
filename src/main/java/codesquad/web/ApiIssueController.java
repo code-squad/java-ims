@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.Label;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
@@ -27,6 +28,12 @@ public class ApiIssueController {
     @GetMapping("/setMilestone/{milestoneId}")
     public ResponseEntity<Issue> setMilestone(@LoginUser User user, @PathVariable Long id, @PathVariable Long milestoneId) {
         Issue issue = issueService.selectMilestone(id, milestoneService.findById(milestoneId));
+        return RestResponseEntityMaker.of(issue, HttpStatus.OK);
+    }
+
+    @GetMapping("/setLabel/{labelId}")
+    public ResponseEntity<Issue> setLabel(@LoginUser User user, @PathVariable Long id, @PathVariable Long labelId) {
+        Issue issue = issueService.selectLabel(id, Label.find(labelId));
         return RestResponseEntityMaker.of(issue, HttpStatus.OK);
     }
 }
