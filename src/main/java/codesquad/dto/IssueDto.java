@@ -1,7 +1,10 @@
 package codesquad.dto;
 
 import codesquad.domain.Issue;
+import codesquad.domain.MileStone;
 import codesquad.domain.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.Column;
 import javax.persistence.Lob;
@@ -9,7 +12,10 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class IssueDto {
+    private static final Logger log =  LoggerFactory.getLogger(IssueDto.class);
+
     private User writer;
+    private MileStone mileStone;
 
     @Size(min = 3, max = 50)
     @Column
@@ -21,21 +27,23 @@ public class IssueDto {
 
     public IssueDto() {};
 
-    public IssueDto(String subject, String comment, User writer) {
+    public IssueDto(String subject, String comment, User writer, MileStone mileStone) {
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
+        this.mileStone = mileStone;
     }
 
-    public IssueDto(long id, String subject, String comment, User writer) {
+    public IssueDto(long id, String subject, String comment, User writer, MileStone mileStone) {
         super();
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
+        this.mileStone = mileStone;
     }
 
     public Issue toIssue() {
-        return new Issue(this.subject, this.comment, this.writer);
+        return new Issue(this.subject, this.comment, this.writer, this.mileStone);
     }
 
     public String getSubject() {
@@ -65,6 +73,15 @@ public class IssueDto {
         return this;
     }
 
+    public MileStone getMileStone() {
+        return mileStone;
+    }
+
+    public IssueDto setMileStone(MileStone mileStone) {
+        this.mileStone = mileStone;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,6 +100,7 @@ public class IssueDto {
     public String toString() {
         return "IssueDto{" +
                 "writer=" + writer +
+                ", mileStone=" + mileStone +
                 ", subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';

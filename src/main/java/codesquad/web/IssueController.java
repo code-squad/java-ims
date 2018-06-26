@@ -1,12 +1,12 @@
 package codesquad.web;
 
 import codesquad.CannotDeleteException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MileStoneService;
+import codesquad.service.UserService;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +25,12 @@ public class IssueController {
     @Resource(name = "issueService")
     IssueService issueService;
 
+    @Resource(name = "userService")
+    UserService userService;
+
+    @Resource(name = "mileStoneService")
+    MileStoneService mileStoneService;
+
     @GetMapping("form")
     public String form() {
         return "/issue/form";
@@ -39,8 +45,10 @@ public class IssueController {
 
     @GetMapping("{id}")
     public String show(@PathVariable long id, Model model) {
-        log.info("issue : {} on show method ", issueService.findById(id));
         model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("user", userService.findAll());
+        model.addAttribute("milestones", mileStoneService.findAll());
+        model.addAttribute("labels", Label.values());
         return "/issue/show";
     }
 
@@ -54,5 +62,31 @@ public class IssueController {
     public String delete(@LoginUser User loginUser, @PathVariable long id) throws CannotDeleteException {
         issueService.delete(loginUser, id);
         return "redirect:/";
+    }
+
+    @GetMapping("{id}/setAssignee/{userId}")
+    public String setAssignee(@PathVariable long id, @PathVariable long userId) {
+        log.info("id : {}, userId : {}", id, userId);
+        return "redirect:/";
+    }
+
+    @PutMapping("/{issueId}/setMilestone/{id}")
+    public String update(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id) throws CannotDeleteException {
+        MileStone mileStone = mileStoneService.findById(id);
+        log.info("milestone on controller : {}", mileStone.toString());
+        issueService.setMileStone(loginUser, issueId, mileStone);
+        return "redirect:/issue/{issueId}";
+    }
+
+    @PutMapping("/{issueId}/setAssignee/{id}")
+    public String assignee(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id) throws CannotDeleteException {
+        issueService.setAssginee(loginUser, issueId, id);
+        return "redirect:/issue/{issueId}";
+    }
+
+    @PutMapping("/{issueId}/setLabel/{id}")
+    public String labeling(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id) throws CannotDeleteException {
+        issueService.setLabel(loginUser, issueId, id);
+        return "redirect:/issue/{issueId}";
     }
 }

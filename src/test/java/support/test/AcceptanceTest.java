@@ -19,6 +19,7 @@ import codesquad.domain.UserRepository;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class AcceptanceTest {
     private static final String DEFAULT_LOGIN_USER = "javajigi";
+    private static final String JIMMY_USER = "jimmy";
 
     @Autowired
     protected TestRestTemplate template;
@@ -40,6 +41,10 @@ public abstract class AcceptanceTest {
     
     protected User findDefaultUser() {
         return findByUserId(DEFAULT_LOGIN_USER);
+    }
+
+    protected User jimmyUser() {
+        return findByUserId(JIMMY_USER);
     }
     
     protected User findByUserId(String userId) {

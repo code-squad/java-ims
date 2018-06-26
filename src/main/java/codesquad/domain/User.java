@@ -34,7 +34,9 @@ public class User extends AbstractEntity {
     }
 
     public User(String userId, String password, String name) {
-        this(0L, userId, password, name);
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
     }
 
     public User(long id, String userId, String password, String name) {

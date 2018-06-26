@@ -75,4 +75,28 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/2", request, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
     }
+
+    @Test
+    public void setMileStone() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "PUT").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/1/setMilestone/1", request, String.class);
+        assertThat(response.getHeaders().getLocation().getPath(), is("/issue/1"));
+    }
+
+    @Test
+    public void setAssignee() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "PUT").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/1/setAssignee/1", request, String.class);
+        assertThat(response.getHeaders().getLocation().getPath(), is("/issue/1"));
+    }
+
+    @Test
+    public void setLabel() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "PUT").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/1/setLabel/1", request, String.class);
+        assertThat(response.getHeaders().getLocation().getPath(), is("/issue/1"));
+    }
 }

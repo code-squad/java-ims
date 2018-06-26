@@ -1,9 +1,7 @@
 package codesquad.service;
 
 import codesquad.CannotDeleteException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import org.slf4j.Logger;
@@ -20,6 +18,9 @@ public class IssueService {
 
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
+
+    @Resource(name = "userRepository")
+    private UserRepository userRepository;
 
     public List<Issue> findAll() {
         return issueRepository.findAll();
@@ -49,5 +50,30 @@ public class IssueService {
             throw new CannotDeleteException("자신이 쓴 글만 삭제할 수 있습니다.");
         log.info("delete success");
         issueRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void setMileStone(User loginUser, long issueId, MileStone mileStone) throws CannotDeleteException {
+        Issue issue = issueRepository.findById(issueId).get();
+        if (!issue.isOwner(loginUser))
+            throw new CannotDeleteException("자신이 쓴 글만 설정할 수 있습니다.");
+        issue.updateMileStone(loginUser, mileStone);
+    }
+
+    @Transactional
+    public void setAssginee(User loginUser, long issueId, long id) throws CannotDeleteException {
+        Issue issue = issueRepository.findById(issueId).get();
+        if (!issue.isOwner(loginUser))
+            throw new CannotDeleteException("자신이 쓴 글만 담당자를 설정할 수 있습니다.");
+        log.info("setAssginee called");
+        issue.updateAssignee(loginUser, userRepository.findById(id).get());
+    }
+
+    @Transactional
+    public void setLabel(User loginUser, long issueId, long id) throws CannotDeleteException {
+        Issue issue = issueRepository.findById(issueId).get();
+        if (!issue.isOwner(loginUser))
+            throw new CannotDeleteException("자신이 쓴 글만 라벨을 설정할 수 있습니다.");
+        issue.updateLabel(loginUser, Label.values()[(int)id]);
     }
 }
