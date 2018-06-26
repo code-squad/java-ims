@@ -3,7 +3,6 @@ package codesquad.service;
 import codesquad.domain.Issue;
 import codesquad.domain.Milestone;
 import codesquad.domain.MilestoneRepository;
-import codesquad.dto.IssueDto;
 import codesquad.dto.MilestoneDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
