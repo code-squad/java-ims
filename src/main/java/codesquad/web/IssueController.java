@@ -38,8 +38,7 @@ public class IssueController {
     public String show(@PathVariable Long id, Model model) {
         Issue issue = issueService.get(id);
         model.addAttribute("issue", issue);
-        log.debug("get : {}", id);
-        log.debug("issue : {}", issue.toString());
+        log.debug("id : {}, issue : {}", id, issue);
 
         return "/issue/show";
     }

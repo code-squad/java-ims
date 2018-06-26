@@ -35,7 +35,6 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         Long id = 1L;
 
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("id", id)
                 .addParameter("subject", "test subject")
                 .addParameter("comment", "test comment")
                 .build();
@@ -48,10 +47,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void create_fail() {
-        Long id = 1L;
-
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("id", id)
                 .addParameter("comment", "test comment")
                 .build();
 
@@ -62,8 +58,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void list() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "test subject")
-                .addParameter("comment", "test comment")
+                .addParameter("subject", "test subject1")
+                .addParameter("comment", "test comment1")
                 .build();
 
         ResponseEntity<String> responseEntity = template.postForEntity("/issues", request, String.class);
@@ -81,7 +77,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
 
         log.debug("body : {}", responseEntity.getBody());
-        assertTrue(responseEntity.getBody().contains("test subject"));
+        assertTrue(responseEntity.getBody().contains("test subject1"));
         assertTrue(responseEntity.getBody().contains("test subject2"));
     }
 
