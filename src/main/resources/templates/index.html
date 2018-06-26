@@ -1,56 +1,20 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <title>Issue Tracking System</title>
+{{>include/header}}
 
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.3/dialog-polyfill.css">
-  <link rel="stylesheet"
-        href="https://code.getmdl.io/1.1.3/material.blue_grey-orange.min.css">
-  <link rel="stylesheet" href="/css/styles.css">
-  <link rel="stylesheet" href="/css/tinymce.css">
-</head>
-<body>
-<div class="issues issues--wrap mdl-layout mdl-js-layout is-upgraded">
+<main class="mdl-layout__content">
 
-  <header class="mdl-layout__header mdl-layout__header--waterfall">
-    <div class="mdl-layout__header-row">
-      <!-- Title -->
-      <span class="mdl-layout-title">Issue Tracking System</span>
-      <div class="mdl-layout-spacer"></div>
-      <!-- Tabs -->
-      <nav class="mdl-navigation">
-        <a class="mdl-navigation__link" href="/">Issues</a>
-        <a class="mdl-navigation__link" href="/milestones">Milestones</a>
-        <a class="mdl-navigation__link" href="/users/login">login</a>
-        <a class="mdl-navigation__link" href="/users/form">join</a>
-      </nav>
-    </div>
-  </header>
-
-  <main class="mdl-layout__content">
-
-    <div class="issues__posts mdl-grid">
-      <div class="issues-card-wide mdl-card mdl-shadow--2dp">
-        <div class="mdl-card__title" style="height:80px;">
-          <h2 class="mdl-card__title-text mdl-color-text--grey-800">Issues</h2>
-        </div>
-        <a href="/issues/form"
-           class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored show-modal">
-          <i class="material-icons">add</i>
-        </a>
-        <div class="mdl-card__supporting-text">
-          <ul class="issue-list mdl-list">
-            {{#issues}}
-            <li class="mdl-list__item mdl-list__item--two-line">
+  <div class="issues__posts mdl-grid">
+    <div class="issues-card-wide mdl-card mdl-shadow--2dp">
+      <div class="mdl-card__title" style="height:80px;">
+        <h2 class="mdl-card__title-text mdl-color-text--grey-800">Issues</h2>
+      </div>
+      <a href="/issues/form"
+         class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored show-modal">
+        <i class="material-icons">add</i>
+      </a>
+      <div class="mdl-card__supporting-text">
+        <ul class="issue-list mdl-list">
+          {{#issues}}
+          <li class="mdl-list__item mdl-list__item--two-line">
 								<span class="mdl-list__item-primary-content">
 								    <a> 
 								         <img class="mdl-list__item-avatar" height="48" width="48"
@@ -66,24 +30,24 @@
                             class="tooltipped tooltipped-s muted-link">javajigi</a>
 									</span>
 								</span>
-              <span class="mdl-list__item-secondary-content">
+            <span class="mdl-list__item-secondary-content">
 									<span class="material-icons mdl-badge mdl-badge--overlap" data-badge="1">comment</span>
 								</span>
-            </li>
-            {{/issues}}
-          </ul>
-        </div>
+          </li>
+          {{/issues}}
+        </ul>
       </div>
     </div>
-    <footer class="mdl-mini-footer">
-      <div class="mdl-mini-footer--left-section">
-        <div class="mdl-logo mdl-color-text--grey-600">
-          Proudly powered by <a href="https://github.com/Byeol">Byeol</a>
-        </div>
+  </div>
+  <footer class="mdl-mini-footer">
+    <div class="mdl-mini-footer--left-section">
+      <div class="mdl-logo mdl-color-text--grey-600">
+        Proudly powered by <a href="https://github.com/Byeol">Byeol</a>
       </div>
-    </footer>
-  </main>
-  <div class="mdl-layout__obfuscator"></div>
+    </div>
+  </footer>
+</main>
+<div class="mdl-layout__obfuscator"></div>
 </div>
 <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
 <script
