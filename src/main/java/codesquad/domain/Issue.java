@@ -1,7 +1,6 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 import support.domain.UriGeneratable;
 
