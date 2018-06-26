@@ -33,7 +33,7 @@ public class AnswerController {
         return String.format("redirect:/issue/%d", issueId);
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/{answerId}")
     public String delete(@PathVariable long issueId, @LoginUser User loginUser, @PathVariable long answerId) throws CannotDeleteException {
         log.info("answer delete method called");
         issueService.deleteAnswer(issueId, loginUser, answerId);

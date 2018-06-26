@@ -29,4 +29,12 @@ public class AnswerAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = template.getForEntity("/issue/1/answers", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
+
+    @Test
+    public void delete() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "DELETE").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/1/answers/1", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+    }
 }

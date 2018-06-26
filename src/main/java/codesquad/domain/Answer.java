@@ -47,10 +47,9 @@ public class Answer extends AbstractEntity {
     }
 
     public DeleteHistory delete(User loginUser) throws CannotDeleteException {
-        if (getIssue().isDeleted() == false)
-            throw new CannotDeleteException("댓글을 삭제할 수 없습니다.");
         deleted = true;
-        log.info("삭제 성공 : {}", toString());
+        log.info("삭제 성" +
+                "공 : {}", toString());
         return new DeleteHistory(ContentType.ANSWER, getId(), loginUser, LocalDateTime.now());
     }
 
