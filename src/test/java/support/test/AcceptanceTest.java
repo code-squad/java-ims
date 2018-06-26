@@ -20,7 +20,7 @@ import org.springframework.util.MultiValueMap;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class AcceptanceTest {
-    private static final String DEFAULT_LOGIN_USER = "javajigi";
+    static final String DEFAULT_LOGIN_USER = "javajigi";
 
     @Autowired
     protected TestRestTemplate template;

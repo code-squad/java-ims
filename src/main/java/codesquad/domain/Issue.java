@@ -2,13 +2,15 @@ package codesquad.domain;
 
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
+import support.domain.UriGeneratable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Issue extends AbstractEntity implements UriGeneratable{
+public class Issue extends AbstractEntity implements UriGeneratable {
 
     @Size(min = 3, max = 50)
     @Column(unique = true, nullable = false, length = 50)
@@ -39,6 +41,9 @@ public class Issue extends AbstractEntity implements UriGeneratable{
 
     @Enumerated(EnumType.STRING)
     private Label currentLabel;
+
+    @OneToMany(mappedBy = "issue")
+    private List<Answer> answers;
 
     public Issue () {}
 
@@ -137,6 +142,30 @@ public class Issue extends AbstractEntity implements UriGeneratable{
         return this;
     }
 
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void removeAnswer(Answer answer) {
+        answers.remove(answer);
+    }
+
+    public Issue addAnswer(Answer answer) {
+        answer.toIssue(this);
+        if(!answers.contains(answer)) {
+            answers.add(answer);
+        }
+        return this;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public Boolean getOpenState() {
+        return openState;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -150,13 +179,14 @@ public class Issue extends AbstractEntity implements UriGeneratable{
                 Objects.equals(writer, issue.writer) &&
                 Objects.equals(milestone, issue.milestone) &&
                 Objects.equals(assignee, issue.assignee) &&
-                currentLabel == issue.currentLabel;
+                currentLabel == issue.currentLabel &&
+                Objects.equals(answers, issue.answers);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), subject, comment, deleted, openState, writer, milestone, assignee, currentLabel);
+        return Objects.hash(super.hashCode(), subject, comment, deleted, openState, writer, milestone, assignee, currentLabel, answers);
     }
 
     @Override
@@ -170,6 +200,7 @@ public class Issue extends AbstractEntity implements UriGeneratable{
                 ", milestone=" + milestone +
                 ", assignee=" + assignee +
                 ", currentLabel=" + currentLabel +
+                ", answers=" + answers +
                 '}';
     }
 }
