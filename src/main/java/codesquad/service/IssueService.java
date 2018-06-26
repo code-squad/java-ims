@@ -22,6 +22,9 @@ public class IssueService {
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
+    @Resource(name = "answerRepository")
+    private AnswerRepository answerRepository;
+
     public List<Issue> findAll() {
         return issueRepository.findAll();
     }
@@ -75,5 +78,17 @@ public class IssueService {
         if (!issue.isOwner(loginUser))
             throw new CannotDeleteException("자신이 쓴 글만 라벨을 설정할 수 있습니다.");
         issue.updateLabel(loginUser, Label.values()[(int)id]);
+    }
+
+    public Answer addAnswer(long issueId, User answerWriter, String contents) {
+        Issue issue = issueRepository.findById(issueId).get();
+//        Answer answer = new Answer(answerWriter, issue, contents);
+//        return answerRepository.save(answer);
+        return answerRepository.save(new Answer(answerWriter, issue, contents));
+    }
+
+    public List<Answer> list() {
+        log.info("list method called");
+        return answerRepository.findAll();
     }
 }

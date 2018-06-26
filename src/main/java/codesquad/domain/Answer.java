@@ -4,11 +4,10 @@ import codesquad.dto.AnswerDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import support.domain.AbstractEntity;
 
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
+@Entity
+@Table
 public class Answer extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
@@ -37,6 +36,10 @@ public class Answer extends AbstractEntity {
         this.writer = writer;
         this.issue = issue;
         this.contents = contents;
+    }
+
+    public void toIssue(Issue issue) {
+        this.issue = issue;
     }
 
     public AnswerDto toAnswerDto() {

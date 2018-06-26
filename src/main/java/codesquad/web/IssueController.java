@@ -7,7 +7,6 @@ import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import codesquad.service.MileStoneService;
 import codesquad.service.UserService;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @Controller
 @RequestMapping("issue")
@@ -43,7 +41,7 @@ public class IssueController {
         return "redirect:/";
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
         model.addAttribute("user", userService.findAll());
@@ -52,19 +50,19 @@ public class IssueController {
         return "/issue/show";
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, IssueDto target) throws CannotDeleteException {
         issueService.update(loginUser, id, target);
         return "redirect:/";
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public String delete(@LoginUser User loginUser, @PathVariable long id) throws CannotDeleteException {
         issueService.delete(loginUser, id);
         return "redirect:/";
     }
 
-    @GetMapping("{id}/setAssignee/{userId}")
+    @GetMapping("/{id}/setAssignee/{userId}")
     public String setAssignee(@PathVariable long id, @PathVariable long userId) {
         log.info("id : {}, userId : {}", id, userId);
         return "redirect:/";
