@@ -1,14 +1,20 @@
 package codesquad.domain;
 
+import codesquad.CannotDeleteException;
 import codesquad.dto.AnswerDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table
 public class Answer extends AbstractEntity {
+    private static final Logger log =  LoggerFactory.getLogger(Answer.class);
+
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
     @JsonProperty
@@ -23,6 +29,8 @@ public class Answer extends AbstractEntity {
     @JsonProperty
     private String contents;
 
+    private boolean deleted = false;
+
     public Answer() {}
 
     public Answer(User writer, Issue issue, String contents) {
@@ -31,11 +39,19 @@ public class Answer extends AbstractEntity {
         this.contents = contents;
     }
 
-    public Answer(long id,User writer, Issue issue, String contents) {
+    public Answer(long id, User writer, Issue issue, String contents) {
         super(id);
         this.writer = writer;
         this.issue = issue;
         this.contents = contents;
+    }
+
+    public DeleteHistory delete(User loginUser) throws CannotDeleteException {
+        if (getIssue().isDeleted() == false)
+            throw new CannotDeleteException("댓글을 삭제할 수 없습니다.");
+        deleted = true;
+        log.info("삭제 성공 : {}", toString());
+        return new DeleteHistory(ContentType.ANSWER, getId(), loginUser, LocalDateTime.now());
     }
 
     public void toIssue(Issue issue) {
@@ -60,6 +76,10 @@ public class Answer extends AbstractEntity {
 
     public String getContents() {
         return contents;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
     @Override

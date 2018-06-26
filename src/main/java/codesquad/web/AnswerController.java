@@ -1,15 +1,13 @@
 package codesquad.web;
 
+import codesquad.CannotDeleteException;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -32,6 +30,13 @@ public class AnswerController {
     public String list(@PathVariable long issueId) {
         log.info("answer list method called");
         issueService.list();
+        return String.format("redirect:/issue/%d", issueId);
+    }
+
+    @DeleteMapping("")
+    public String delete(@PathVariable long issueId, @LoginUser User loginUser, @PathVariable long answerId) throws CannotDeleteException {
+        log.info("answer delete method called");
+        issueService.deleteAnswer(issueId, loginUser, answerId);
         return String.format("redirect:/issue/%d", issueId);
     }
 }

@@ -46,6 +46,8 @@ public class Issue extends AbstractEntity {
     @JsonIgnore
     private List<Answer> answers = new ArrayList<>();
 
+    private boolean deleted = false;
+
     public Issue(long id, String subject, String comment, User writer) {
         super(id);
         this.subject = subject;
@@ -142,6 +144,10 @@ public class Issue extends AbstractEntity {
 
     public List<Answer> getAnswers() {
         return answers;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
     @Override

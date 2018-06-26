@@ -25,6 +25,9 @@ public class IssueService {
     @Resource(name = "answerRepository")
     private AnswerRepository answerRepository;
 
+    @Resource(name = "deleteHistoryRepository")
+    private DeleteHistoryRepository deleteHistoryRepository;
+
     public List<Issue> findAll() {
         return issueRepository.findAll();
     }
@@ -82,13 +85,19 @@ public class IssueService {
 
     public Answer addAnswer(long issueId, User answerWriter, String contents) {
         Issue issue = issueRepository.findById(issueId).get();
-//        Answer answer = new Answer(answerWriter, issue, contents);
-//        return answerRepository.save(answer);
         return answerRepository.save(new Answer(answerWriter, issue, contents));
     }
 
     public List<Answer> list() {
         log.info("list method called");
         return answerRepository.findAll();
+    }
+
+    @Transactional
+    public void deleteAnswer(long issueId, User loginUser, long answerId) throws CannotDeleteException {
+        Answer answer = answerRepository.findById(answerId).get();
+        if (!answer.isSameWriter(loginUser))
+            throw new CannotDeleteException("자신이 쓴 댓글만 삭제할 수 있습니다.");
+        deleteHistoryRepository.save(answer.delete(loginUser));
     }
 }
