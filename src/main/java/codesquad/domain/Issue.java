@@ -1,10 +1,12 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 import support.domain.UriGeneratable;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -28,11 +30,14 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     @Enumerated(EnumType.STRING)
     private Label label;
 
-    @ManyToOne
+    @OneToOne
     private Milestone milestone;
 
     @OneToOne
     private User assignee;
+
+    @OneToMany(mappedBy = "issue")
+    private List<Comment> comments;
 
     private boolean deleted;
 
@@ -70,10 +75,8 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         this.content = content;
     }
 
-    public String getStatus() {
-        return "#" + super.getId()
-                + " "
-                + status.toString();
+    public IssueStatus getStatus() {
+        return status;
     }
 
     public void setStatus(IssueStatus status) {
@@ -92,15 +95,26 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         return milestone;
     }
 
-    public void setMilestone(Milestone milestone) {
-        this.milestone = milestone;
+    public Issue setMilestone(User loginUser, Milestone milestone) {
+        if (!loginUser.equals(writer)) {
+            throw new UnAuthorizedException();
+        }
+        this.milestone = milestone.addIssue(this);;
+
+        return this;
     }
 
     @Override
     public String toString() {
         return "Issue{" +
-                "title='" + title + '\'' +
+                "writer=" + writer +
+                ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
+                ", status=" + status +
+                ", label=" + label +
+                ", milestone=" + milestone +
+                ", assignee=" + assignee +
+                ", deleted=" + deleted +
                 '}';
     }
 
@@ -147,6 +161,10 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         return status.isOpen();
     }
 
+    public User getAssignee() {
+        return assignee;
+    }
+
     public Issue setAssignee(User loginUser, User assignee) {
         if (!loginUser.equals(writer)) {
             throw new UnAuthorizedException();
@@ -167,7 +185,17 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         return this;
     }
 
+    public Label getLabel() {
+        return label;
+    }
+
     public boolean isLabel(Label label) {
         return this.label == label;
+    }
+
+    public Comment addComment(User loginUser, Comment comment) {
+        comment.setWriter(loginUser);
+        comments.add(comment);
+        return comment;
     }
 }

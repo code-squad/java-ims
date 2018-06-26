@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.text.SimpleDateFormat;
@@ -25,6 +27,7 @@ public class Milestone {
     private String subject;
 
     @Embedded
+    @JsonIgnore
     private Issues issues;
 
     private boolean deleted;
@@ -122,7 +125,8 @@ public class Milestone {
         return deleted;
     }
 
-    public void addIssue(Issue issue) {
+    public Milestone addIssue(Issue issue) {
         issues.addIssue(issue);
+        return this;
     }
 }

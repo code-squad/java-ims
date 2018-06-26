@@ -22,16 +22,16 @@ public class IssueTest {
         issue.setWriter(writer);
     }
 
-    @Test
-    public void getStatus_Open() {
-        assertEquals("#1 Open", issue.getStatus());
-    }
-
-    @Test
-    public void getStatus_Closed() {
-        issue.setStatus(IssueStatus.CLOSED);
-        assertEquals("#1 Closed", issue.getStatus());
-    }
+//    @Test
+//    public void getStatus_Open() {
+//        assertEquals("#1 Open", issue.getStatus());
+//    }
+//
+//    @Test
+//    public void getStatus_Closed() {
+//        issue.setStatus(IssueStatus.CLOSED);
+//        assertEquals("#1 Closed", issue.getStatus());
+//    }
 
     @Test
     public void update_Success() {

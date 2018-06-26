@@ -83,7 +83,7 @@
 
                         {{# milestones }}
                         <li class="mdl-menu__item">
-                            <a href="/milestones/{{id}}">Milestone3</a>
+                            <a href="/issues/{{& issue.id}}/setMilestone/{{id}}">Milestone3</a>
                         </li>
                         {{/ milestones }}
 
@@ -110,6 +110,13 @@
                         <li class="mdl-menu__item">
                             <a href="/issue/1/setLabel/5">label5</a>
                         </li>
+
+                        {{# labels }}
+                        <li class="mdl-menu__item">
+                            <a href="/issues/{{& issue.id}}/setLabel/{{id}}">{{label}}</a>
+                        </li>
+                        {{/ labels }}
+
                     </ul>
 
                     <button id="assignee-menu" class="mdl-button mdl-js-button">
@@ -219,8 +226,9 @@
                         <button class="mdl-button" type="submit">upload file</button>
                     </div>
                 </form>
+
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-                    <form action="/issue/1/addComment" method="POST">
+                    <form action="/api/issues/{{issue.id}}/comments" method="POST">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                             <label for="comment" class="mdl-textfield__label">Leave a comment</label>

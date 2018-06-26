@@ -1,10 +1,19 @@
 package codesquad.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
 
 public enum Label {
-    JAVA(1L), PYTHON(2L), CODESQUAD(3L);
+    @JsonProperty("Java")
+    JAVA(1L),
+
+    @JsonProperty("Python")
+    PYTHON(2L),
+
+    @JsonProperty("Codesquad")
+    CODESQUAD(3L);
 
     private long id;
 

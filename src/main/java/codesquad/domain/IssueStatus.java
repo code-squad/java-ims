@@ -1,7 +1,13 @@
 package codesquad.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum IssueStatus {
-    OPEN, CLOSED;
+    @JsonProperty("Open")
+    OPEN,
+
+    @JsonProperty("Closed")
+    CLOSED;
 
     @Override
     public String toString() {
