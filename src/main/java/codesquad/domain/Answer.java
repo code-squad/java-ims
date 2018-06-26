@@ -46,10 +46,18 @@ public class Answer extends AbstractEntity {
         this.contents = contents;
     }
 
+    public void update(User loginUser, AnswerDto answerDto) throws CannotDeleteException {
+        if (!isSameWriter(loginUser))
+            throw new CannotDeleteException("자신이 쓴 댓글만 수정할 수 있습니다.");
+        this.contents = answerDto.getContents();
+        log.info("updated is {}", contents);
+    }
+
     public DeleteHistory delete(User loginUser) throws CannotDeleteException {
+        if (!isSameWriter(loginUser))
+            throw new CannotDeleteException("자신이 쓴 댓글만 삭제할 수 있습니다.");
         deleted = true;
-        log.info("삭제 성" +
-                "공 : {}", toString());
+        log.info("삭제 성공 : {}", toString());
         return new DeleteHistory(ContentType.ANSWER, getId(), loginUser, LocalDateTime.now());
     }
 
@@ -89,4 +97,6 @@ public class Answer extends AbstractEntity {
                 ", contents='" + contents + '\'' +
                 '}';
     }
+
+
 }

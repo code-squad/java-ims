@@ -2,6 +2,7 @@ package codesquad.service;
 
 import codesquad.CannotDeleteException;
 import codesquad.domain.*;
+import codesquad.dto.AnswerDto;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import org.slf4j.Logger;
@@ -94,10 +95,15 @@ public class IssueService {
     }
 
     @Transactional
-    public void deleteAnswer(long issueId, User loginUser, long answerId) throws CannotDeleteException {
+    public void deleteAnswer(User loginUser, long answerId) throws CannotDeleteException {
         Answer answer = answerRepository.findById(answerId).get();
-        if (!answer.isSameWriter(loginUser))
-            throw new CannotDeleteException("자신이 쓴 댓글만 삭제할 수 있습니다.");
         deleteHistoryRepository.save(answer.delete(loginUser));
+    }
+
+    @Transactional
+    public void editAnswer(User loginUser, long answerId, AnswerDto answerDto) throws CannotDeleteException {
+        log.info("editAnswer called");
+        Answer answer = answerRepository.findById(answerId).get();
+        answer.update(loginUser, answerDto);
     }
 }

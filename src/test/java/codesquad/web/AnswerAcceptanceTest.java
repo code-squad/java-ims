@@ -37,4 +37,13 @@ public class AnswerAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/1/answers/1", request, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
+
+    @Test
+    public void update() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "PUT")
+                .addParameter("contents", "수정된 댓글").build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/1/answers/1", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+    }
 }
