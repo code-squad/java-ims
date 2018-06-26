@@ -2,7 +2,6 @@ package codesquad.web;
 
 import codesquad.domain.Issue;
 import codesquad.domain.Label;
-import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
@@ -17,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import support.domain.UriGeneratable;
 
-import java.util.List;
 
 @Controller
 @RequestMapping("/issues")
