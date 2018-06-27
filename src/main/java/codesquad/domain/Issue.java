@@ -2,13 +2,20 @@ package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Where;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Issue extends AbstractEntity {
+    private static final Logger log = LoggerFactory.getLogger(Issue.class);
 
     @Size(min = 3)
     @Column(nullable = false, length = 30)
@@ -32,6 +39,11 @@ public class Issue extends AbstractEntity {
 
     @Enumerated(value = EnumType.STRING)
     private Label label;
+
+    @Embedded
+    private Comments comments;
+
+    private boolean deleted = false;
 
     private boolean closed = false;
 
@@ -88,6 +100,17 @@ public class Issue extends AbstractEntity {
         this.closed = closed;
     }
 
+    public List<DeleteHistory> delete(User loginUser){
+        if(!isOwner(loginUser)){
+            throw new UnAuthorizedException();
+        }
+        List<DeleteHistory> deleteHistories = comments.delete(loginUser);
+        deleteHistories.add(new DeleteHistory(getId(), ContentType.ISSUE, loginUser));
+        this.deleted = true;
+        log.debug("Delete Issue : {}", deleteHistories.size());
+        return deleteHistories;
+    }
+
     public User getAssignee() {
         return assignee;
     }
@@ -118,6 +141,10 @@ public class Issue extends AbstractEntity {
 
     public IssueDto toIssueDto() {
         return new IssueDto(title, contents);
+    }
+
+    public List<Comment> getComments() {
+        return comments.getComments();
     }
 
     @Override

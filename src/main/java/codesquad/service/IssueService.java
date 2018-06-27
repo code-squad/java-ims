@@ -2,6 +2,7 @@ package codesquad.service;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.*;
+import codesquad.dto.CommentDto;
 import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,12 @@ public class IssueService {
 
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
+
+    @Resource(name = "commentRepository")
+    private CommentRepository commentRepository;
+
+    @Resource(name = "deleteRepository")
+    private DeleteHistoryRepository deleteHistoryRepository;
 
     public Issue addIssue(User writer, Issue issue) {
         issue.writeBy(writer);
@@ -43,10 +50,8 @@ public class IssueService {
 
     public void delete(long id, User loginUser) {
         Issue issue = findById(id);
-        if (!issue.isOwner(loginUser)){
-            throw new UnAuthorizedException();
-        }
-        issueRepository.deleteById(id);
+        List<DeleteHistory> deleteHistories = issue.delete(loginUser);
+        deleteHistoryRepository.saveAll(deleteHistories);
     }
 
     public void setMilestone(long id, User loginUser, Milestone milestone){
@@ -67,5 +72,26 @@ public class IssueService {
     public void close(User loginUser, long id) {
         Issue issue = findById(id);
         issue.setClosed(loginUser, true);
+    }
+
+    public Comment addComment(User loginUser, long id, Comment comment) {
+        Issue issue = findById(id);
+        comment.writeBy(loginUser);
+        comment.setIssue(issue);
+        return commentRepository.save(comment);
+    }
+
+    public Comment findComment(long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    public Comment updateComment(User loginUser, long commentId, Comment target) {
+        Comment origin = findComment(commentId);
+        return origin.update(loginUser, target);
+    }
+
+    public void deleteComment(User loginUser, long commentId){
+        Comment comment = findComment(commentId);
+        deleteHistoryRepository.save(comment.delete(loginUser));
     }
 }
