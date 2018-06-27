@@ -1,5 +1,6 @@
 package codesquad.security;
 
+import codesquad.InvalidRequestException;
 import codesquad.UnAuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,4 +31,9 @@ public class SecurityRestControllerAdvice {
         return ResponseEntity.badRequest().build();
     }
 
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<Void> handleInvalidRequest() {
+        log.debug("Rest Controller InvalidRequestException is happened!");
+        return ResponseEntity.badRequest().build();
+    }
 }

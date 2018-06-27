@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import support.web.RestResponseEntityMaker;
 
 @RestControllerAdvice
 public class ValidationRestControllerAdvice {
@@ -16,6 +15,6 @@ public class ValidationRestControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Void> handleInvalidMethodArgument() {
         log.debug("RestController MethodArgumentNotValidException is happened!!");
-        return RestResponseEntityMaker.of(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }

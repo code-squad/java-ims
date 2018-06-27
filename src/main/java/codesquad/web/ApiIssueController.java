@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import support.web.RestResponseEntityMaker;
 
 @RestController
 @RequestMapping("/api/issues/{id}")
@@ -32,18 +31,18 @@ public class ApiIssueController {
     @GetMapping("/setMilestone/{milestoneId}")
     public ResponseEntity<Issue> setMilestone(@LoginUser User user, @PathVariable Long id, @PathVariable Long milestoneId) {
         Issue issue = issueService.selectMilestone(id, milestoneService.findById(milestoneId));
-        return RestResponseEntityMaker.of(issue, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(issue);
     }
 
     @GetMapping("/setLabel/{labelId}")
     public ResponseEntity<Issue> setLabel(@LoginUser User user, @PathVariable Long id, @PathVariable Long labelId) {
         Issue issue = issueService.selectLabel(id, Label.find(labelId));
-        return RestResponseEntityMaker.of(issue, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(issue);
     }
 
     @GetMapping("/setAssignee/{userId}")
     public ResponseEntity<Issue> setAssignee(@LoginUser User user, @PathVariable Long id, @PathVariable Long userId) {
         Issue issue = issueService.selectAssignee(id, userService.findById(userId));
-        return RestResponseEntityMaker.of(issue, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(issue);
     }
 }

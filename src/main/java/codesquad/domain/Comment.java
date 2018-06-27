@@ -1,5 +1,8 @@
 package codesquad.domain;
 
+import codesquad.InvalidRequestException;
+import codesquad.UnAuthorizedException;
+import codesquad.dto.CommentDto;
 import support.domain.AbstractEntity;
 import support.domain.UriGeneratable;
 
@@ -42,6 +45,7 @@ public class Comment extends AbstractEntity implements UriGeneratable {
     public Comment toIssue(Issue issue) {
         if (this.issue == null) {
             this.issue = issue;
+            issue.addComment(this);
         }
         return this;
     }
@@ -74,5 +78,17 @@ public class Comment extends AbstractEntity implements UriGeneratable {
                 ", writer=" + writer.getName() +
                 ", issue=" + issue.getSubject() +
                 '}';
+    }
+
+    public Comment update(User loginUser, Issue issue, CommentDto updateCommentDto) {
+        if (!writer.equals(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        if (!this.issue.equals(issue)) {
+            throw new InvalidRequestException();
+        }
+        comment = updateCommentDto.getComment();
+        return this;
     }
 }

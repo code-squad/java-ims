@@ -47,6 +47,9 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
     private User assignee;
 
+    @Embedded
+    private Comments comments = new Comments();
+
     public Issue() {
     }
 
@@ -140,6 +143,15 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     public Issue selectLabel(Label label) {
         this.label = label;
         return this;
+    }
+
+    public Issue addComment(Comment comment) {
+        comments.add(comment);
+        return this;
+    }
+
+    public Comments getComments() {
+        return comments;
     }
 
     @Override
