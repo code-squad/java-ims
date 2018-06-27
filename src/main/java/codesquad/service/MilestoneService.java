@@ -26,7 +26,7 @@ public class MilestoneService {
         return milestoneRepo.findAll();
     }
 
-    public Milestone findAll(Long milestoneId) {
+    public Milestone findById(Long milestoneId) {
         return milestoneRepo.findById(milestoneId).orElseThrow(EntityNotFoundException::new);
     }
 

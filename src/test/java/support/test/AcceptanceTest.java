@@ -17,6 +17,8 @@ import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import org.springframework.util.MultiValueMap;
 
+import java.net.URI;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class AcceptanceTest {
@@ -61,7 +63,7 @@ public abstract class AcceptanceTest {
     protected <T> T getResource(String location, Class<T> responseType, User loginUser) {
         return basicAuthTemplate(loginUser).getForObject(location, responseType);
     }
-    
+
     protected ResponseEntity<String> getResource(String location, User loginUser) {
         return basicAuthTemplate(loginUser).getForEntity(location, String.class);
     }
@@ -78,11 +80,19 @@ public abstract class AcceptanceTest {
         return requestPost(template(), uri, request);
     }
 
+    protected <T, R> ResponseEntity<T> requestPost(TestRestTemplate template, String uri, R bodyPayload, Class<T> responseType) {
+        return template.postForEntity(URI.create(uri), bodyPayload, responseType);
+    }
+
     protected ResponseEntity<String> requestGet(String uri) {
         return requestGet(template(), uri);
     }
 
     protected ResponseEntity<String> requestGet(TestRestTemplate template, String uri) {
         return template.getForEntity(uri, String.class);
+    }
+
+    protected <T> ResponseEntity<T> requestGet(TestRestTemplate template, String path, Class<T> responseType) {
+        return template.getForEntity(path, responseType);
     }
 }

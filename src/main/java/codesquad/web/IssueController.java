@@ -48,7 +48,7 @@ public class IssueController {
         model.addAttribute(getEntityName(ISSUE), issueService.findById(id));
         model.addAttribute(getMultipleEntityName(MILESTONE), milestoneService.findAll());
         model.addAttribute(getMultipleEntityName(USER), userService.findAll());
-        model.addAttribute("labels", Label.getAll());
+        model.addAttribute("labels", Label.findAll());
         return String.format("/%s/show", getEntityName(ISSUE));
     }
 
@@ -72,7 +72,7 @@ public class IssueController {
 
     @GetMapping("/{id}/setMilestone/{milestoneId}")
     public String selectMilestone(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long milestoneId) {
-        Issue issue = issueService.selectMilestone(id, milestoneService.findAll(milestoneId));
+        Issue issue = issueService.selectMilestone(id, milestoneService.findById(milestoneId));
         milestoneService.addIssue(milestoneId, issue);
         return issue.generateRedirectUri();
     }
@@ -85,7 +85,7 @@ public class IssueController {
 
     @GetMapping("/{id}/setLabel/{labelId}")
     public String selectLabel(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long labelId) {
-        Issue issue = issueService.selectLabel(id, Label.get(labelId));
+        Issue issue = issueService.selectLabel(id, Label.find(labelId));
         return issue.generateRedirectUri();
     }
 }

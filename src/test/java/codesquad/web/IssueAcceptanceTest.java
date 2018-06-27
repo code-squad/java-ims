@@ -21,7 +21,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     private static final String CREATE_PATH = "/issues";
 
-    private static HttpEntity<MultiValueMap<String, Object>> requestCreateIssue(String subject, String comment) {
+    static HttpEntity<MultiValueMap<String, Object>> requestCreateIssue(String subject, String comment) {
         HtmlFormDataBuilder builder = HtmlFormDataBuilder.urlEncodedForm();
         builder.addParameter("subject", subject);
         builder.addParameter("comment", comment);

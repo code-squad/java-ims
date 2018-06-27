@@ -3,6 +3,8 @@ package codesquad.domain;
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
 import support.domain.UriGeneratable;
 
@@ -15,6 +17,7 @@ import static javax.persistence.EnumType.STRING;
 
 @Entity
 public class Issue extends AbstractEntity implements UriGeneratable {
+    private static final Logger log = LoggerFactory.getLogger(Issue.class);
 
     @Size(min = 3, max = 100)
     @Column(nullable = false, length = 100)
@@ -44,6 +47,9 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
     private User assignee;
 
+    @Embedded
+    private Comments comments = new Comments();
+
     public Issue() {
     }
 
@@ -67,10 +73,6 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         return this;
     }
 
-    public String getStatus() {
-        return status.toString();
-    }
-
     public String getSubject() {
         return subject;
     }
@@ -89,6 +91,26 @@ public class Issue extends AbstractEntity implements UriGeneratable {
 
     public String getFormattedModifiedDate() {
         return super.getFormattedModifiedDate();
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public IssueStatus getStatus() {
+        return status;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public boolean isClosed() {
+        return IssueStatus.isClosed(status);
     }
 
     public Issue update(User loginUser, IssueDto updateIssueDto) {
@@ -113,17 +135,9 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         return this;
     }
 
-    public Milestone getMilestone() {
-        return milestone;
-    }
-
     public Issue selectAssignee(User assignee) {
         this.assignee = assignee;
         return this;
-    }
-
-    public User getAssignee() {
-        return assignee;
     }
 
     public Issue selectLabel(Label label) {
@@ -131,12 +145,13 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         return this;
     }
 
-    public String getLabel() {
-        return label.name();
+    public Issue addComment(Comment comment) {
+        comments.add(comment);
+        return this;
     }
 
-    public boolean isClosed() {
-        return IssueStatus.isClosed(status);
+    public Comments getComments() {
+        return comments;
     }
 
     @Override
@@ -144,9 +159,12 @@ public class Issue extends AbstractEntity implements UriGeneratable {
         return "Issue{" +
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
-                ", writer=" + writer.getName() +
-                ", status=" + status.name() +
+                ", writer=" + writer +
+                ", status=" + status +
+                ", label=" + label +
                 ", deleted=" + deleted +
+                ", milestone=" + milestone +
+                ", assignee=" + assignee +
                 '}';
     }
 

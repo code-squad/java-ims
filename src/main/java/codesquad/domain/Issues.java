@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import org.hibernate.annotations.Where;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
@@ -10,6 +12,7 @@ import java.util.List;
 public class Issues {
 
     @OneToMany(mappedBy = "milestone", cascade = CascadeType.PERSIST)
+    @Where(clause = "deleted = false")
     private List<Issue> issues = new ArrayList<>();
 
     public Issues add(Issue issue) {
