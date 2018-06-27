@@ -38,6 +38,9 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     @OneToMany(mappedBy = "issue")
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "issue")
+    private List<Attachment> attachments;
+
     private boolean deleted;
 
     public Issue() {

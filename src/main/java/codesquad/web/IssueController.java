@@ -40,6 +40,7 @@ public class IssueController {
     @PostMapping("")
     public String create(@LoginUser User loginUser, Issue newIssue) {
         logger.debug("Created NEW: {}", newIssue);
+        logger.debug("IDID: {}", newIssue.getId());
         newIssue.setWriter(loginUser);
         UriGeneratable issue = issueService.addIssue(newIssue);
         return "redirect:" + issue.generateUri();
