@@ -27,30 +27,30 @@ public class Answer extends AbstractEntity {
 
     @Lob
     @JsonProperty
-    private String contents;
+    private String comment;
 
     private boolean deleted = false;
 
     public Answer() {}
 
-    public Answer(User writer, Issue issue, String contents) {
+    public Answer(User writer, Issue issue, String comment) {
         this.writer = writer;
         this.issue = issue;
-        this.contents = contents;
+        this.comment = comment;
     }
 
-    public Answer(long id, User writer, Issue issue, String contents) {
+    public Answer(long id, User writer, Issue issue, String comment) {
         super(id);
         this.writer = writer;
         this.issue = issue;
-        this.contents = contents;
+        this.comment = comment;
     }
 
     public void update(User loginUser, AnswerDto answerDto) throws CannotDeleteException {
         if (!isSameWriter(loginUser))
             throw new CannotDeleteException("자신이 쓴 댓글만 수정할 수 있습니다.");
-        this.contents = answerDto.getContents();
-        log.info("updated is {}", contents);
+        this.comment = answerDto.getContents();
+        log.info("updated is {}", comment);
     }
 
     public DeleteHistory delete(User loginUser) throws CannotDeleteException {
@@ -66,7 +66,7 @@ public class Answer extends AbstractEntity {
     }
 
     public AnswerDto toAnswerDto() {
-        return new AnswerDto(this.writer, this.issue, this.contents);
+        return new AnswerDto(this.writer, this.issue, this.comment);
     }
 
     public boolean isSameWriter(User loginUser) {
@@ -81,8 +81,8 @@ public class Answer extends AbstractEntity {
         return issue;
     }
 
-    public String getContents() {
-        return contents;
+    public String getComment() {
+        return comment;
     }
 
     public boolean isDeleted() {
@@ -94,7 +94,7 @@ public class Answer extends AbstractEntity {
         return "Answer{" +
                 "writer=" + writer +
                 ", issue=" + issue +
-                ", contents='" + contents + '\'' +
+                ", comment='" + comment + '\'' +
                 '}';
     }
 

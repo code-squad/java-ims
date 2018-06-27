@@ -21,9 +21,9 @@ public class AnswerController {
     private IssueService issueService;
 
     @PostMapping("")
-    public String create(@PathVariable long issueId, @LoginUser User loginUser, String contents) {
-        log.info("controller parameter : {}, {}, {}", issueId, loginUser.getName(), contents);
-        issueService.addAnswer(issueId, loginUser, contents);
+    public String create(@PathVariable long issueId, @LoginUser User loginUser, String comment) {
+        log.info("controller parameter : {}, {}, {}", issueId, loginUser.getName(), comment);
+        issueService.addAnswer(issueId, loginUser, comment);
         return String.format("redirect:/issue/%d", issueId);
     }
 

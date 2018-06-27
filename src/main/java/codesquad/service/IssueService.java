@@ -84,9 +84,10 @@ public class IssueService {
         issue.updateLabel(loginUser, Label.values()[(int)id]);
     }
 
-    public Answer addAnswer(long issueId, User answerWriter, String contents) {
+    public Answer addAnswer(long issueId, User answerWriter, String comment) {
         Issue issue = issueRepository.findById(issueId).get();
-        return answerRepository.save(new Answer(answerWriter, issue, contents));
+        log.info("issue answer : {}", issue.getAnswers().toString());
+        return answerRepository.save(new Answer(answerWriter, issue, comment));
     }
 
     public List<Answer> list() {
