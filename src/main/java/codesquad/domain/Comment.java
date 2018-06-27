@@ -8,6 +8,8 @@ import support.domain.UriGeneratable;
 
 import javax.persistence.*;
 
+import static codesquad.domain.ContentType.COMMENT;
+
 @Entity
 public class Comment extends AbstractEntity implements UriGeneratable {
 
@@ -21,6 +23,8 @@ public class Comment extends AbstractEntity implements UriGeneratable {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_issue"))
     private Issue issue;
+
+    private boolean deleted = false;
 
     public Comment() {
     }
@@ -71,12 +75,17 @@ public class Comment extends AbstractEntity implements UriGeneratable {
         return String.format("/api/issues/%d/comments/%d", issue.getId(), getId());
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
     @Override
     public String toString() {
         return "Comment{" +
                 "comment='" + comment + '\'' +
                 ", writer=" + writer.getName() +
                 ", issue=" + issue.getSubject() +
+                ", deleted=" + deleted +
                 '}';
     }
 
@@ -90,5 +99,17 @@ public class Comment extends AbstractEntity implements UriGeneratable {
         }
         comment = updateCommentDto.getComment();
         return this;
+    }
+
+    public DeleteHistory delete(User loginUser) {
+        if (!writer.equals(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        if (deleted) {
+            throw new InvalidRequestException();
+        }
+        deleted = true;
+        return DeleteHistory.convert(COMMENT, loginUser, this);
     }
 }

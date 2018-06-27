@@ -1,10 +1,8 @@
 package codesquad.service;
 
+import codesquad.InvalidRequestException;
 import codesquad.UnAuthorizedException;
-import codesquad.domain.Comment;
-import codesquad.domain.CommentRepository;
-import codesquad.domain.Issue;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.CommentDto;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +26,9 @@ public class CommentServiceTest {
 
     @Mock
     private CommentRepository commentRepo;
+
+    @Mock
+    private DeleteHistoryRepository deleteHistoryRepo;
 
     @InjectMocks
     private CommentService commentService;
@@ -75,5 +76,30 @@ public class CommentServiceTest {
     public void update_fail_invalidId() {
         when(commentRepo.findById(anyLong())).thenReturn(Optional.empty());
         commentService.update(writer, issue, anyLong(), updateCommentInfo);
+    }
+
+    @Test
+    public void delete() {
+        when(commentRepo.findById(anyLong())).thenReturn(Optional.of(comment._toComment().writeBy(writer).toIssue(issue)));
+        commentService.delete(writer, anyLong());
+    }
+
+    @Test(expected = UnAuthorizedException.class)
+    public void delete_fail_unAuthorization() {
+        when(commentRepo.findById(anyLong())).thenReturn(Optional.of(comment._toComment().writeBy(writer).toIssue(issue)));
+        commentService.delete(other, anyLong());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void delete_fail_invalidId() {
+        when(commentRepo.findById(anyLong())).thenReturn(Optional.empty());
+        commentService.delete(writer, anyLong());
+    }
+
+    @Test(expected = InvalidRequestException.class)
+    public void delete_fail_already_deleted() {
+        when(commentRepo.findById(anyLong())).thenReturn(Optional.of(comment._toComment().writeBy(writer).toIssue(issue)));
+        commentService.delete(writer, anyLong());
+        commentService.delete(writer, anyLong());
     }
 }

@@ -1,8 +1,7 @@
 package codesquad.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
@@ -12,9 +11,9 @@ import java.util.List;
 
 @Embeddable
 public class Comments {
-    private static final Logger log = LoggerFactory.getLogger(Comments.class);
 
     @OneToMany(mappedBy = "issue", cascade = CascadeType.PERSIST)
+    @Where(clause = "deleted = false")
     private List<Comment> comments;
 
     public Comments() {

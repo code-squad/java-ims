@@ -3,19 +3,14 @@ package codesquad.web;
 import codesquad.domain.Comment;
 import codesquad.dto.CommentDto;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import support.test.AcceptanceTest;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ApiCommentAcceptanceTest extends AcceptanceTest {
-    private static final Logger log = LoggerFactory.getLogger(ApiCommentAcceptanceTest.class);
 
     @Test
     public void create() {
@@ -46,7 +41,7 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
     public void update() {
         Comment createdComment = requestPost(basicAuthTemplate(), "/api/issues/1/comments", getComment(true), Comment.class).getBody();
 
-        basicAuthTemplate( ).put("/api/issues/1/comments/" + createdComment.getId(), getUpdateComment());
+        basicAuthTemplate().put("/api/issues/1/comments/" + createdComment.getId(), getUpdateComment());
         ResponseEntity<String> response = requestGet(basicAuthTemplate(), "/issues/1");
         assertTrue(response.getBody().contains("modified comment"));
     }
@@ -55,9 +50,9 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
     public void update_fail_unAuthentication() {
         Comment createdComment = requestPost(basicAuthTemplate(), "/api/issues/1/comments", getComment(true), Comment.class).getBody();
 
-        template( ).put("/api/issues/1/comments/" + createdComment.getId(), getUpdateComment());
+        template().put("/api/issues/1/comments/" + createdComment.getId(), getUpdateComment());
         ResponseEntity<String> response = requestGet(basicAuthTemplate(), "/issues/1");
-        assertTrue(response.getBody().contains("test comment"));
+        assertTrue(response.getBody().contains("test comment data"));
     }
 
     @Test
@@ -66,12 +61,39 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
 
         basicAuthTemplate(findByUserId("sanjigi")).put("/api/issues/1/comments/" + createdComment.getId(), getUpdateComment());
         ResponseEntity<String> response = requestGet(basicAuthTemplate(), "/issues/1");
-        assertTrue(response.getBody().contains("test comment"));
+        assertTrue(response.getBody().contains("test comment data"));
+    }
+
+    @Test
+    public void delete() {
+        Comment createdComment = requestPost(basicAuthTemplate(), "/api/issues/1/comments", getComment(true), Comment.class).getBody();
+        basicAuthTemplate().delete("/api/issues/1/comments/" + createdComment.getId());
+
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), "/issues/1");
+        assertFalse(response.getBody().contains("test comment data"));
+    }
+
+    @Test
+    public void delete_fail_unAuthentication() {
+        Comment createdComment = requestPost(basicAuthTemplate(), "/api/issues/1/comments", getComment(true), Comment.class).getBody();
+        template().delete("/api/issues/1/comments/" + createdComment.getId());
+
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), "/issues/1");
+        assertTrue(response.getBody().contains("test comment data"));
+    }
+
+    @Test
+    public void delete_fail_unAuthorization() {
+        Comment createdComment = requestPost(basicAuthTemplate(), "/api/issues/1/comments", getComment(true), Comment.class).getBody();
+        basicAuthTemplate(findByUserId("sanjigi")).delete("/api/issues/1/comments/" + createdComment.getId());
+
+        ResponseEntity<String> response = requestGet(basicAuthTemplate(), "/issues/1");
+        assertTrue(response.getBody().contains("test comment data"));
     }
 
     private CommentDto getComment(boolean isValid) {
         if (isValid) {
-            return new CommentDto("test comment");
+            return new CommentDto("test comment data");
         }
         return new CommentDto("aa");
     }
