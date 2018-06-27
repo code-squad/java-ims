@@ -35,4 +35,10 @@ public class IssueService {
         Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         issue.update(loginUser, target.toIssue());
     }
+
+    @Transactional
+    public void delete(User loginUser, Long id) {
+        Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        issueRepository.delete(issue);
+    }
 }

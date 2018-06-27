@@ -1,12 +1,12 @@
 package codesquad.web;
 
 import codesquad.domain.IssueRepository;
-import codesquad.dto.IssueDto;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -131,7 +131,9 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity("/issues", request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
 
-        ResponseEntity<String> response = template.getForEntity("/issues/1/form", String.class);
+        String url = getResponseLocation(responseEntity);
+
+        ResponseEntity<String> response = template.getForEntity(url + "/form", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         log.debug("{}", response.getBody());
     }
@@ -143,7 +145,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("comment", "test comment")
                 .build();
 
-        ResponseEntity<IssueDto> responseEntity = basicAuthTemplate().postForEntity("/issues", request, IssueDto.class);
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity("/issues", request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
 
         request = HtmlFormDataBuilder.urlEncodedForm()
@@ -152,7 +154,28 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("comment", "modified comment")
                 .build();
 
-        responseEntity = basicAuthTemplate().postForEntity("/issues/1", request, IssueDto.class);
+        String url = getResponseLocation(responseEntity);
+
+        responseEntity = basicAuthTemplate().postForEntity(url, request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+    }
+
+    @Test
+    public void delete() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "test subject")
+                .addParameter("comment", "test comment")
+                .build();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity("/issues", request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+
+        String url = getResponseLocation(responseEntity);
+        HttpEntity httpEntity = makeHttpEntity();
+
+        responseEntity = basicAuthTemplate().exchange(url,
+                HttpMethod.DELETE, httpEntity, String.class);
+
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
     }
 }

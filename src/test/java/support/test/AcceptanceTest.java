@@ -7,9 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Objects;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -57,5 +61,14 @@ public abstract class AcceptanceTest {
 
     protected ResponseEntity<String> getResource(String location, User loginUser) {
         return basicAuthTemplate(loginUser).getForEntity(location, String.class);
+    }
+
+    protected HttpEntity makeHttpEntity() {
+        HttpHeaders headers = new HttpHeaders();
+        return new HttpEntity(headers);
+    }
+
+    protected String getResponseLocation(ResponseEntity<String> response) {
+        return Objects.requireNonNull(response.getHeaders().getLocation()).getPath();
     }
 }
