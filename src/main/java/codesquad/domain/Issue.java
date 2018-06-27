@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.UnAuthorizedException;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -44,7 +45,7 @@ public class Issue extends AbstractEntity {
     }
 
     public void writeBy(User loginUser) {
-        this.writer = loginUser;
+        writer = loginUser;
     }
 
     public boolean isOwner(User loginUser) {
@@ -71,5 +72,15 @@ public class Issue extends AbstractEntity {
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';
+    }
+
+    public void update(User loginUser, Issue target) {
+        // target의 owner와 비교하는게 아니라 현재 Issue의 owner인지 확인
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        subject = target.subject;
+        comment = target.comment;
     }
 }

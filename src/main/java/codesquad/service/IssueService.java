@@ -3,7 +3,9 @@ package codesquad.service;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
+import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
@@ -26,5 +28,11 @@ public class IssueService {
     public Issue get(Long id) {
         // TODO id가 중복될 경우?
         return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional
+    public void update(User loginUser, Long id, IssueDto target) {
+        Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        issue.update(loginUser, target.toIssue());
     }
 }

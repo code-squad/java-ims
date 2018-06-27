@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import codesquad.domain.IssueRepository;
+import codesquad.dto.IssueDto;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,5 +119,40 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         assertTrue(response.getBody().contains("test subject"));
         assertTrue(response.getBody().contains("test comment"));
         assertTrue(response.getBody().contains("javajigi"));
+    }
+
+    @Test
+    public void updateForm() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "test subject")
+                .addParameter("comment", "test comment")
+                .build();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity("/issues", request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+
+        ResponseEntity<String> response = template.getForEntity("/issues/1/form", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        log.debug("{}", response.getBody());
+    }
+
+    @Test
+    public void update() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "test subject")
+                .addParameter("comment", "test comment")
+                .build();
+
+        ResponseEntity<IssueDto> responseEntity = basicAuthTemplate().postForEntity("/issues", request, IssueDto.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+
+        request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put")
+                .addParameter("subject", "modified subject")
+                .addParameter("comment", "modified comment")
+                .build();
+
+        responseEntity = basicAuthTemplate().postForEntity("/issues/1", request, IssueDto.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
     }
 }
