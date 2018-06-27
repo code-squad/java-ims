@@ -13,9 +13,14 @@
         <a href="/issues/{{issue.id}}/form" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
           <i class="material-icons">edit</i>
         </a>
-        <a href="/issues/{{issue.id}}" id="issues-menu-lower-right" class="mdl-button mdl-js-button mdl-button--icon">
-          <i class="material-icons">delete</i>
-        </a>
+        <form action="/issues/{{issue.id}}" method="post">
+          <input type="hidden" name="_method" value="delete"/>
+          <input type="submit" name="delete-buttton" value="delete"/>
+        </form>
+        </form>
+        <!--<a href="/issues/{{issue.id}}" id="issues-menu-lower-right" class="mdl-button mdl-js-button mdl-button&#45;&#45;icon">-->
+        <!--<i class="material-icons">delete</i>-->
+        <!--</a>-->
       </div>
       <div class="mdl-card__title mdl-color-text--grey-50">
         <i class="material-icons">check_circle</i>

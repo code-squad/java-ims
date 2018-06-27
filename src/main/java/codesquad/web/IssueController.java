@@ -53,7 +53,7 @@ public class IssueController {
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable Long id, IssueDto target) {
         issueService.update(loginUser, id, target);
-        return String.format("redirect:/issue/%d", id);
+        return String.format("redirect:/issues/%d", id);
     }
 
     @DeleteMapping("/{id}")
