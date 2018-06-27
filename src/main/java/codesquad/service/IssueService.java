@@ -2,7 +2,7 @@ package codesquad.service;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
-import codesquad.dto.IssueDto;
+import codesquad.domain.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -14,8 +14,9 @@ public class IssueService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
-    public Issue add(IssueDto issue) {
-        return issueRepository.save(issue.toIssue());
+    public Issue add(Issue issue, User loginUser) {
+        issue.writeBy(loginUser);
+        return issueRepository.save(issue);
     }
 
     public List<Issue> getList() {

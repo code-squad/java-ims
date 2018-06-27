@@ -90,7 +90,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void login() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("userId", "javajigi")
-                .addParameter("password", "test")
+                .addParameter("password", "testtest")
                 .build();
 
         ResponseEntity<User> response = template.postForEntity("/users/login", request, User.class);

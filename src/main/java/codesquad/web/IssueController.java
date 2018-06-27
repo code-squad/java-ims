@@ -1,7 +1,9 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +30,8 @@ public class IssueController {
     }
 
     @PostMapping
-    public String create(IssueDto issue) {
-        Issue returnedIssue = issueService.add(issue);
+    public String create(@LoginUser User loginUser, IssueDto issue) {
+        Issue returnedIssue = issueService.add(issue.toIssue(), loginUser);
 
         return "redirect:/issues/" + returnedIssue.getId();
     }

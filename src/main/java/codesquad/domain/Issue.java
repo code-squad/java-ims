@@ -2,9 +2,7 @@ package codesquad.domain;
 
 import support.domain.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -15,6 +13,10 @@ public class Issue extends AbstractEntity {
     @Column(nullable = false)
     @Lob
     private String comment;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
+    private User writer;
 
     public Issue() {
     }
@@ -35,6 +37,18 @@ public class Issue extends AbstractEntity {
 
     public String getComment() {
         return comment;
+    }
+
+    public User getWriter() {
+        return writer;
+    }
+
+    public void writeBy(User loginUser) {
+        this.writer = loginUser;
+    }
+
+    public boolean isOwner(User loginUser) {
+        return writer.equals(loginUser);
     }
 
     @Override
