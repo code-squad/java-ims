@@ -80,6 +80,10 @@ public abstract class AcceptanceTest {
         return requestPost(template(), uri, request);
     }
 
+    protected <T, R> ResponseEntity<T> requestPost(TestRestTemplate template, String uri, R bodyPayload, Class<T> responseType) {
+        return template.postForEntity(URI.create(uri), bodyPayload, responseType);
+    }
+
     protected ResponseEntity<String> requestGet(String uri) {
         return requestGet(template(), uri);
     }

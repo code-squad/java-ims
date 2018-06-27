@@ -11,7 +11,7 @@ import static codesquad.web.MilestoneAcceptanceTest.requestCreateMilestone;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class ApiIssueControllerTest extends AcceptanceTest {
+public class ApiIssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void setMilestone() {

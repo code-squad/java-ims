@@ -114,7 +114,7 @@
               </div>
             </form>
             <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-              <form action="/issue/1/addComment" method="POST">
+              <form action="/api/issues/{{id}}/comments" method="POST">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                   <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                   <label for="comment" class="mdl-textfield__label">Leave a comment</label>
@@ -122,7 +122,7 @@
                 <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
                   <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">add comment</span>
                 </button>
-            </form>
+              </form>
             </div>
           </div>
         </div>
