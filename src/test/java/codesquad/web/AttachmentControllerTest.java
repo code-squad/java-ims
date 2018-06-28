@@ -1,32 +1,19 @@
 package codesquad.web;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.MultiValueMap;
 import support.HtmlFormDataBuilder;
+import support.test.AcceptanceTest;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AttachmentControllerTest {
-
-    @Autowired
-    private TestRestTemplate template;
-
-    public TestRestTemplate template() {
-        return template;
-    }
+public class AttachmentControllerTest extends AcceptanceTest{
 
     private static final Logger log = LoggerFactory.getLogger(AttachmentControllerTest.class);
 //
@@ -38,12 +25,22 @@ public class AttachmentControllerTest {
 //    }
 
     @Test
-    public void upload() throws Exception {
+    public void upload_success() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
                 .multipartFormData()
                 .addParameter("file", new ClassPathResource("logback.xml"))
                 .build();
-        ResponseEntity<String> result = template.postForEntity("/issues/1/attachments", request, String.class);
+        ResponseEntity<String> result = basicAuthTemplate().postForEntity("/issues/1/attachments", request, String.class);
         assertEquals(HttpStatus.FOUND, result.getStatusCode());
+    }
+
+    @Test
+    public void upload_fail_no_login() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
+                .multipartFormData()
+                .addParameter("file", new ClassPathResource("logback.xml"))
+                .build();
+        ResponseEntity<String> result = template().postForEntity("/issues/1/attachments", request, String.class);
+        assertEquals(HttpStatus.FORBIDDEN, result.getStatusCode());
     }
 }
