@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -38,9 +39,9 @@ public class AttachmentController {
     public ResponseEntity<PathResource> download(@LoginUser User loginUser, @PathVariable long attachmentId) {
         try {
             Attachment attachment = attachmentService.findById(attachmentId);
-            Path path = Paths.get(attachment.getPath());
+            Path path = Paths.get(attachment.getFilePath());
             PathResource resource = new PathResource(path);
-
+            logger.debug("ATTACHMENT: {} ",attachment.getFilePath());
             HttpHeaders header = new HttpHeaders();
             header.setContentType(MediaType.TEXT_XML);
             header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + attachment.getOriginalFileName());
@@ -54,8 +55,8 @@ public class AttachmentController {
 
 
     @PostMapping("")
-    public String upload(@LoginUser User loginUser, @PathVariable long id, Attachment attachment) {
-        Attachment added = attachmentService.add(attachment, loginUser, issueService.findById(id));
+    public String upload(@LoginUser User loginUser, @PathVariable long id, MultipartFile file) {
+        Attachment added = attachmentService.add(file, loginUser, issueService.findById(id));
         logger.debug("Attachment ID: {}", added.getId());
         return "redirect:/";
     }
