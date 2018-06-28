@@ -6,7 +6,6 @@ import javax.servlet.http.HttpSession;
 import codesquad.UnAuthenticationException;
 import codesquad.domain.Valid;
 import codesquad.security.HttpSessionUtils;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

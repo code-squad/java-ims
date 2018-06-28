@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
+import org.springframework.web.client.RestTemplate;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -48,6 +49,12 @@ public abstract class AcceptanceTest {
     
     protected String createResource(String path, Object bodyPayload) {
         ResponseEntity<String> response = template().postForEntity(path, bodyPayload, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+        return response.getHeaders().getLocation().getPath();
+    }
+
+    protected String createResourceOfIssue(String path, Object bodyPayload, TestRestTemplate template){
+        ResponseEntity<String> response = template.postForEntity(path, bodyPayload, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         return response.getHeaders().getLocation().getPath();
     }

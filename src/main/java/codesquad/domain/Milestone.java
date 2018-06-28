@@ -1,6 +1,8 @@
 package codesquad.domain;
 
 import codesquad.dto.MilestoneDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Column;
@@ -10,6 +12,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Milestone extends AbstractEntity {
@@ -18,9 +21,11 @@ public class Milestone extends AbstractEntity {
     @Column(nullable = false, length = 40)
     private String subject;
 
+    @JsonIgnore
     @Column(nullable = false, length = 20)
     private LocalDateTime startDate;
 
+    @JsonIgnore
     @Column(nullable = false, length = 20)
     private LocalDateTime endDate;
 
@@ -52,11 +57,36 @@ public class Milestone extends AbstractEntity {
         return endDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
-    public int getOpen() {
+    public long getOpen() {
         return issues.numberOfOpen();
     }
 
-    public int getClosed() {
+    public long getClosed() {
         return issues.sizeOfIssues() - getOpen();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Milestone milestone = (Milestone) o;
+        return Objects.equals(subject, milestone.subject) &&
+                Objects.equals(startDate, milestone.startDate) &&
+                Objects.equals(endDate, milestone.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), subject, startDate, endDate);
+    }
+
+    @Override
+    public String toString() {
+        return "Milestone{" +
+                "subject='" + subject + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
     }
 }
