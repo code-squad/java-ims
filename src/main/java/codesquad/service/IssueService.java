@@ -21,7 +21,7 @@ public class IssueService {
     @Resource(name = "commentRepository")
     private CommentRepository commentRepository;
 
-    @Resource(name = "deleteRepository")
+    @Resource(name = "deleteHistoryRepository")
     private DeleteHistoryRepository deleteHistoryRepository;
 
     public Issue addIssue(User writer, Issue issue) {
@@ -34,7 +34,7 @@ public class IssueService {
     }
 
     public Issue findById(long id) {
-        return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return issueRepository.findById(id).filter(i -> !i.isClosed()).orElseThrow(EntityNotFoundException::new);
     }
 
     public Issue checkOwner(long id, User loginUser){
@@ -82,7 +82,7 @@ public class IssueService {
     }
 
     public Comment findComment(long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
+        return commentRepository.findById(commentId).filter(c -> !c.isDeleted()).orElseThrow(EntityNotFoundException::new);
     }
 
     public Comment updateComment(User loginUser, long commentId, Comment target) {

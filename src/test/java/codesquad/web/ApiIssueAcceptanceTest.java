@@ -21,8 +21,7 @@ import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class ApiIssueAcceptanceTest extends AcceptanceTest {
     
@@ -121,7 +120,6 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 
         CommentDto update = new CommentDto("update");
         basicAuthTemplate().put(location, update);
-
         Comment dbComment = getResource(location, Comment.class, findDefaultUser());
 
         assertThat(dbComment.getComment(), is(update.getComment()));
@@ -134,9 +132,28 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
 
         CommentDto update = new CommentDto("update");
         basicAuthTemplate(findByUserId("riverway")).put(location, update);
-
         Comment dbComment = getResource(location, Comment.class, findDefaultUser());
 
         assertThat(dbComment.getComment(), is(comment.getComment()));
+    }
+
+    @Test
+    public void deleteComment() {
+        CommentDto comment = new CommentDto("comments");
+        String location = createResourceOfIssue("/api/issues/1/comments", comment, basicAuthTemplate());
+
+        basicAuthTemplate().delete(location);
+        assertNull(getResource(location, Comment.class, findDefaultUser()));
+    }
+
+    @Test
+    public void deleteComment_no_owner() {
+        CommentDto comment = new CommentDto("comments");
+        String location = createResourceOfIssue("/api/issues/1/comments", comment, basicAuthTemplate());
+
+        basicAuthTemplate(findByUserId("riverway")).delete(location);
+        Comment dbComment = getResource(location, Comment.class, findDefaultUser());
+
+        assertFalse(dbComment.isDeleted());
     }
 }

@@ -2,6 +2,7 @@ $(".milestone-Choice").on("click", setMilestone);
 $(".label-Choice").on("click", setLabel);
 $(".assignee-Choice").on("click", setAssignee);
 $(".add-comment").on("click", addComment);
+$(".delete-comment").on("click", addComment);
 
 function setMilestone(e){
 e.preventDefault();
@@ -85,6 +86,25 @@ $(".add-comment textarea").val("");
 }
 })
 }
+}
+
+function deleteComment(e){
+e.preventDefault();
+var url = $(this).attr("action");
+console.log("url :" + url);
+var deleteBtn = $("comment mdl-color-text--grey-700");
+
+$.ajax({
+type : 'delete',
+url : url,
+error : function(){
+alert("fail");
+},
+success : function(data, status){
+console.log(data);
+$(deleteBtn).closest("div").remove;
+}
+})
 }
 
 String.prototype.format = function() {

@@ -29,6 +29,7 @@ public class Comment extends AbstractEntity{
     }
 
     public Comment(String comment) {
+        super(0L);
         this.comment = comment;
     }
 
@@ -54,6 +55,10 @@ public class Comment extends AbstractEntity{
         }
         deleted = true;
         return new DeleteHistory(getId(), ContentType.COMMENT, loginUser);
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
     public String getComment() {

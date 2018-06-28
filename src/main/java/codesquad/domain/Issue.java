@@ -139,10 +139,15 @@ public class Issue extends AbstractEntity {
         return closed;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
     public IssueDto toIssueDto() {
         return new IssueDto(title, contents);
     }
 
+    @JsonIgnore
     public List<Comment> getComments() {
         return comments.getComments();
     }
