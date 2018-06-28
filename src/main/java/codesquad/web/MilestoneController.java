@@ -45,4 +45,11 @@ public class MilestoneController {
         milestoneService.create(milestoneDto);
         return "redirect:/milestones";
     }
+
+    @PostMapping("/{milestoneId}")
+    public String add(@LoginUser User loginUser, IssueDto issueDto, @PathVariable long milestoneId) {
+        Issue issue = issueService.findById(issueDto.getId());
+        milestoneService.add(milestoneId, issue);
+        return "redirect:/issues/" + issueDto.getId();
+    }
 }

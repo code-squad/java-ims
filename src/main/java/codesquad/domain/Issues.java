@@ -1,7 +1,6 @@
 package codesquad.domain;
 
 import codesquad.EntityAlreadyExistsException;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Embeddable;
