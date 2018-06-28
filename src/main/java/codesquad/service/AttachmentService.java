@@ -3,6 +3,7 @@ package codesquad.service;
 import codesquad.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +19,9 @@ public class AttachmentService {
     private AttachmentInfoRepository attachmentInfoRepository;
 
     private final Logger log = LoggerFactory.getLogger(AttachmentService.class);
-    private final String STORAGE_PATH = "src/main/resources/storage";
+
+    @Value("${attachment.storage.directory}")
+    private String STORAGE_PATH;
 
     public void store(MultipartFile file, Issue issue, User loginUser) throws IOException {
         if (file.isEmpty()) {
@@ -31,10 +34,10 @@ public class AttachmentService {
 
         String fileUuid = convertToUUID(file, dir);
         File serverFile = new File(dir.getAbsolutePath() + File.separator + fileUuid);
-        BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-        stream.write(bytes);
-        stream.close();
-
+//        BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+//        stream.write(bytes);
+//        stream.close();
+        file.transferTo(serverFile);
         AttachmentInfo attachmentInfo = new AttachmentInfo()
                 .setContentType(file.getContentType())
                 .setFileName(file.getOriginalFilename())

@@ -22,7 +22,7 @@ public class AttachmentControllerTest extends AcceptanceTest{
         HttpEntity<MultiValueMap<String, Object>> request = makeUploadRequest();
         String path = loginCreateResource("/issues/1/attachments", request);
         log.info("resource save path : {}", path);
-        ResponseEntity<String> result = basicAuthTemplate().getForEntity(path, String.class);
+        ResponseEntity<String> result = basicAuthTemplate().getForEntity("/issues/1/attachments/1", String.class);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         log.info("body : {}", result.getBody());
     }
@@ -32,7 +32,9 @@ public class AttachmentControllerTest extends AcceptanceTest{
         HttpEntity<MultiValueMap<String, Object>> request = makeUploadRequest();
         String path = loginCreateResource("/issues/1/attachments", request);
         log.info("resource save path : {}", path);
-        ResponseEntity<String> result = basicAuthTemplate().getForEntity(path, String.class);
+        template.getForEntity("/users/logout", String.class);
+        ResponseEntity<String> result = template.getForEntity("/issues/1/attachments/1", String.class);
+        log.info("body : {}", result.getBody());
         assertEquals(HttpStatus.FORBIDDEN, result.getStatusCode());
     }
 
