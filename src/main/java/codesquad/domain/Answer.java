@@ -37,6 +37,7 @@ public class Answer extends AbstractEntity {
         this.writer = writer;
         this.issue = issue;
         this.comment = comment;
+        getFormattedCreateDate();
     }
 
     public Answer(long id, User writer, Issue issue, String comment) {

@@ -9,12 +9,9 @@ String.prototype.format = function() {
 };
 
 //답변기능
-
 $("#checkButton").on('click', addAnswer);
 
 function addAnswer(e) {
-    console.log("add answer button click");
-
     // 페이지 넘어가는 이벤트 방지
     e.preventDefault();
 
@@ -30,7 +27,7 @@ function addAnswer(e) {
         data : queryString,
         dataType : 'json',
         error : onError,
-        succuess : onSuccess});
+        success : onSuccess});
 }
 
 function onError() {
@@ -41,8 +38,8 @@ function onSuccess(data, status) {
     // data는 answer데이터
     console.log("success");
     console.log(data);
-    var answerTemplate = $("#commentTemplate").html();
-    var template = commentTemplate.format(data.writer.userId, data.formattedCreateDate, data.contents);
+    var commentTemplate = $("#commentTemplate").html();
+    var template = commentTemplate.format(data.writer.userId, data.formattedDate, data.comment);
     $(".comment.mdl-color-text--grey-700").prepend(template);
     //comment mdl-color-text--grey-700
     $("textarea[name=comment]").val("");
