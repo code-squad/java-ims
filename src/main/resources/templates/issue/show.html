@@ -101,10 +101,9 @@
               <p>{{comment}}</p>
             </div>
             <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
-
               <!-- comments start -->
+              {{#issue.answers}}
               <div class="comment mdl-color-text--grey-700">
-                {{#issue.answers}}
                 <header class="comment__header">
                   <img class="comment__avatar2" height="48" width="48" src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
                   <div class="comment__author">
@@ -130,12 +129,12 @@
             </form>
 
             <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-              <form action="/issue/{{id}}/answers" method="POST">
+              <form id="answerForm" action="/issue/{{id}}/answers" method="POST">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                   <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                   <label for="comment" class="mdl-textfield__label">Leave a comment</label>
                 </div>
-                <button type="submit" id="checkButton" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                <button type="button" id="checkButton" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
                   <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">add comment</span>
                 </button>
             </form>
@@ -150,6 +149,25 @@
       </main>
       <div class="mdl-layout__obfuscator"></div>
     </div>
+
+    <!--Ajax template-->
+    <script type="text/template" id="commentTemplate">
+      <div class="comment mdl-color-text--grey-700">
+        <header class="comment__header">
+          <img class="comment__avatar2" height="48" width="48"
+               src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
+          <div class="comment__author">
+            <strong>
+              <a>{0}</a>
+              <span>changed milestone 1 on {1}</span>
+              {2}
+            </strong>
+          </div>
+        </header>
+      </div>
+      <hr>
+    </script>
+    <!-- Ajax Template end-->
     {{/issue}}
     {{> include/footer}}
   </body>
