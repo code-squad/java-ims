@@ -1,16 +1,20 @@
 package codesquad.web;
 
 import codesquad.domain.IssueRepository;
+import codesquad.domain.User;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
+
+import java.util.Objects;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -19,6 +23,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
+    private static final String ISSUES_URL = "/issues";
 
     @Autowired
     private IssueRepository issueRepository;
@@ -34,15 +39,14 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void create() {
         Long id = 1L;
 
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "test subject")
-                .addParameter("comment", "test comment")
-                .build();
-
-        ResponseEntity<String> responseEntity = template.postForEntity("/issues", request, String.class);
+        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(issueRepository.findById(id));
-        assertThat(responseEntity.getHeaders().getLocation().getPath(), is("/issues/" + id));
+
+        String path = getResponseLocation(responseEntity);
+
+        assertTrue(Objects.requireNonNull(responseEntity.getHeaders().getLocation()).getPath().startsWith(path));
     }
 
     @Test
@@ -51,8 +55,17 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("comment", "test comment")
                 .build();
 
-        ResponseEntity<String> responseEntity = template.postForEntity("/issues", request, String.class);
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    @Test
+    public void create_no_login() {
+        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+
+        ResponseEntity<String> responseEntity = template.postForEntity(ISSUES_URL, request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FORBIDDEN));
+
     }
 
     @Test
@@ -62,7 +75,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("comment", "test comment1")
                 .build();
 
-        ResponseEntity<String> responseEntity = template.postForEntity("/issues", request, String.class);
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
 
         request = HtmlFormDataBuilder.urlEncodedForm()
@@ -70,25 +83,23 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("comment", "test comment2")
                 .build();
 
-        responseEntity = template.postForEntity("/issues", request, String.class);
+        responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
 
-        responseEntity = template.getForEntity("/", String.class);
+        responseEntity = basicAuthTemplate().getForEntity("/", String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
 
         log.debug("body : {}", responseEntity.getBody());
         assertTrue(responseEntity.getBody().contains("test subject1"));
         assertTrue(responseEntity.getBody().contains("test subject2"));
+        assertTrue(responseEntity.getBody().contains("javajigi"));
     }
 
     @Test
     public void show() {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "test subject")
-                .addParameter("comment", "test comment")
-                .build();
+        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
 
-        ResponseEntity<String> responseEntity = template.postForEntity("/issues", request, String.class);
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
 
         String path = responseEntity.getHeaders().getLocation().getPath();
@@ -96,11 +107,135 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
         // TODO Issue 객체를 받아서 테스트 하고 싶었지만 계속 실패해서 일단 String
 
-        ResponseEntity<String> response = template.getForEntity(String.format(path), String.class);
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format(path), String.class);
 
         log.debug("response : {}", response.getBody());
 
         assertTrue(response.getBody().contains("test subject"));
         assertTrue(response.getBody().contains("test comment"));
+        assertTrue(response.getBody().contains("javajigi"));
+    }
+
+    @Test
+    public void updateForm() {
+        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+
+        String url = getResponseLocation(responseEntity);
+
+        ResponseEntity<String> response = template.getForEntity(url + "/form", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        log.debug("{}", response.getBody());
+    }
+
+    @Test
+    public void update() {
+        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+
+        request = makePutFormData();
+
+        String url = getResponseLocation(responseEntity);
+
+        responseEntity = basicAuthTemplate().postForEntity(url, request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+    }
+
+    @Test
+    public void update_no_login() {
+        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+
+        String url = getResponseLocation(responseEntity);
+        request = makePutFormData();
+
+        responseEntity = template.postForEntity(url, request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void update_other_user() {
+        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+
+        String url = getResponseLocation(responseEntity);
+        request = makePutFormData();
+
+        User otherUser = new User("testid", "testpassword", "testname");
+        responseEntity = basicAuthTemplate(otherUser).postForEntity(url, request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void delete() {
+        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+
+        String url = getResponseLocation(responseEntity);
+        HttpEntity httpEntity = makeHttpEntity();
+
+        responseEntity = basicAuthTemplate().exchange(url,
+                HttpMethod.DELETE, httpEntity, String.class);
+
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+    }
+
+    @Test
+    public void delete_other_user() {
+        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+
+        String url = getResponseLocation(responseEntity);
+        HttpEntity httpEntity = makeHttpEntity();
+
+        User otherUser = new User("testid", "testpassword", "testname");
+
+        responseEntity = basicAuthTemplate(otherUser).exchange(url,
+                HttpMethod.DELETE, httpEntity, String.class);
+
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
+    public void delete_no_login() {
+        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+
+        String url = getResponseLocation(responseEntity);
+        HttpEntity httpEntity = makeHttpEntity();
+
+        User otherUser = new User("testid", "testpassword", "testname");
+
+        responseEntity = template.exchange(url,
+                HttpMethod.DELETE, httpEntity, String.class);
+
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    private HttpEntity<MultiValueMap<String, Object>> makeFormData() {
+        return HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "test subject")
+                .addParameter("comment", "test comment")
+                .build();
+    }
+
+    private HttpEntity<MultiValueMap<String, Object>> makePutFormData() {
+        return HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put")
+                .addParameter("subject", "modified subject")
+                .addParameter("comment", "modified comment")
+                .build();
     }
 }
