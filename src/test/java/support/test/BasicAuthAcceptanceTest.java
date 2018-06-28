@@ -6,6 +6,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import codesquad.domain.User;
 import org.springframework.http.HttpEntity;
 import org.springframework.util.MultiValueMap;
+import support.HtmlFormDataBuilder;
 
 public abstract class BasicAuthAcceptanceTest extends AcceptanceTest {
     protected TestRestTemplate basicAuthTemplate;
@@ -24,7 +25,5 @@ public abstract class BasicAuthAcceptanceTest extends AcceptanceTest {
                 .addParameter("comment", comment).build();
         return basicAuthTemplate.postForEntity("/issues", request, String.class).getHeaders().getLocation().toString().split(";")[0];
     }
-
-
 
 }

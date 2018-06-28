@@ -2,10 +2,8 @@ package codesquad.web;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
-import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
-import codesquad.dto.MilestoneDto;
 import org.junit.After;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -16,11 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
-import support.test.HtmlFormDataBuilder;
+import support.HtmlFormDataBuilder;
 
 import java.text.ParseException;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;

@@ -1,4 +1,4 @@
-package support.test;
+package support;
 
 import java.util.Arrays;
 
