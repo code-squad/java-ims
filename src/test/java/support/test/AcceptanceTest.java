@@ -20,7 +20,7 @@ import org.springframework.util.MultiValueMap;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class AcceptanceTest {
-    private static final String DEFAULT_LOGIN_USER = "javajigi";
+    static final String DEFAULT_LOGIN_USER = "javajigi";
 
     @Autowired
     protected TestRestTemplate template;
@@ -50,6 +50,12 @@ public abstract class AcceptanceTest {
     
     protected String createResource(String path, Object bodyPayload) {
         ResponseEntity<String> response = template().postForEntity(path, bodyPayload, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+        return response.getHeaders().getLocation().getPath();
+    }
+
+    protected String loginCreateResource(String path, Object bodyPayload) {
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity(path, bodyPayload, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         return response.getHeaders().getLocation().getPath();
     }

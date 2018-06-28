@@ -3,16 +3,16 @@ package codesquad.domain;
 import codesquad.exception.AlreadyAssignException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
+import support.domain.UriGeneratable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Entity
-public class Milestone extends AbstractEntity implements UriGeneratable{
+public class Milestone extends AbstractEntity implements UriGeneratable {
 
     @Column
     private LocalDateTime startDate;

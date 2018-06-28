@@ -3,10 +3,10 @@ package codesquad.service;
 import codesquad.UnAuthenticationException;
 import codesquad.domain.*;
 import codesquad.dto.IssueDto;
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimaps;
-import org.springframework.lang.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +17,16 @@ import java.util.List;
 @Service("issueService")
 public class IssueService {
 
+    private final Logger log = LoggerFactory.getLogger(IssueService.class);
+
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
     @Resource(name = "milestoneRepository")
     private MilestoneRepository milestoneRepository;
+
+    @Resource(name = "answerService")
+    private AnswerService answerService;
 
     public Issue save(User loginUser, IssueDto issueDto) {
         Issue newIssue = issueDto._toIssue();
@@ -69,5 +74,16 @@ public class IssueService {
     public ImmutableListMultimap<Label, Issue> findByLabel() {
         List<Issue> issues = (List<Issue>) findAll();
         return Multimaps.index(issues, input -> input.getCurrentLabel());
+    }
+
+    @Transactional
+    public Answer addAnswer(User loginUser, Long issueId, String content) {
+        Answer answer = new Answer(content);
+        answer.writtenBy(loginUser);
+        findById(issueId).addAnswer(answer);
+        answer.toIssue(findById(issueId));
+        log.debug("made answer : {}", answer);
+        log.debug("updated issue : {}", findById(issueId));
+        return answerService.save(answer);
     }
 }

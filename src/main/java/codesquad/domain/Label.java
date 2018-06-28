@@ -32,4 +32,12 @@ public enum Label {
     public static Label of(Long id) {
         return Arrays.stream(values()).filter(l -> l.id == id).findFirst().orElseThrow(EntityNotFoundException::new);
     }
+
+    @Override
+    public String toString() {
+        return "Label{" +
+                "status='" + status + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }
