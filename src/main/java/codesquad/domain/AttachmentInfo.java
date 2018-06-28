@@ -20,6 +20,9 @@ public class AttachmentInfo extends AbstractEntity{
     @Column
     private String fileUuid;
 
+    @Column
+    private String fileDirectory;
+
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_attachmentInfo_issue"))
     private Issue issue;
@@ -30,6 +33,36 @@ public class AttachmentInfo extends AbstractEntity{
 
     public AttachmentInfo() {
 
+    }
+
+    public AttachmentInfo(String contentType, Long fileSize, String fileName, String fileUuid, String fileDirectory, Issue issue, User owner) {
+        this.contentType = contentType;
+        this.fileSize = fileSize;
+        this.fileName = fileName;
+        this.fileUuid = fileUuid;
+        this.fileDirectory = fileDirectory;
+        this.issue = issue;
+        Owner = owner;
+    }
+
+    public AttachmentInfo(long id, String contentType, Long fileSize, String fileName, String fileUuid, String fileDirectory, Issue issue, User owner) {
+        super(id);
+        this.contentType = contentType;
+        this.fileSize = fileSize;
+        this.fileName = fileName;
+        this.fileUuid = fileUuid;
+        this.fileDirectory = fileDirectory;
+        this.issue = issue;
+        Owner = owner;
+    }
+
+    public String getFileDirectory() {
+        return fileDirectory;
+    }
+
+    public AttachmentInfo setFileDirectory(String fileDirectory) {
+        this.fileDirectory = fileDirectory;
+        return this;
     }
 
     public User getOwner() {
@@ -96,6 +129,7 @@ public class AttachmentInfo extends AbstractEntity{
                 Objects.equals(fileSize, that.fileSize) &&
                 Objects.equals(fileName, that.fileName) &&
                 Objects.equals(fileUuid, that.fileUuid) &&
+                Objects.equals(fileDirectory, that.fileDirectory) &&
                 Objects.equals(issue, that.issue) &&
                 Objects.equals(Owner, that.Owner);
     }
@@ -103,6 +137,19 @@ public class AttachmentInfo extends AbstractEntity{
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), contentType, fileSize, fileName, fileUuid, issue, Owner);
+        return Objects.hash(super.hashCode(), contentType, fileSize, fileName, fileUuid, fileDirectory, issue, Owner);
+    }
+
+    @Override
+    public String toString() {
+        return "AttachmentInfo{" +
+                "contentType='" + contentType + '\'' +
+                ", fileSize=" + fileSize +
+                ", fileName='" + fileName + '\'' +
+                ", fileUuid='" + fileUuid + '\'' +
+                ", fileDirectory='" + fileDirectory + '\'' +
+                ", issue=" + issue +
+                ", Owner=" + Owner +
+                '}';
     }
 }

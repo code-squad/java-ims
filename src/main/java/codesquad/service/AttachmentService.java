@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityNotFoundException;
 import java.io.*;
 import java.util.UUID;
 
@@ -39,6 +40,7 @@ public class AttachmentService {
                 .setFileName(file.getOriginalFilename())
                 .setFileUuid(fileUuid)
                 .setFileSize(file.getSize())
+                .setFileDirectory(dir.getAbsolutePath() + File.separator)
                 .setIssue(issue)
                 .setOwner(loginUser);
 
@@ -64,4 +66,7 @@ public class AttachmentService {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
+    public AttachmentInfo findById(long attachmentId) {
+        return attachmentInfoRepository.findById(attachmentId).orElseThrow(EntityNotFoundException::new);
+    }
 }

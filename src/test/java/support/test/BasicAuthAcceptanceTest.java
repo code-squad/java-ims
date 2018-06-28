@@ -26,6 +26,4 @@ public abstract class BasicAuthAcceptanceTest extends AcceptanceTest {
         return basicAuthTemplate.postForEntity("/issues", request, String.class).getHeaders().getLocation().toString().split(";")[0];
     }
 
-
-
 }

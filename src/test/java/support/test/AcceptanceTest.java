@@ -56,7 +56,6 @@ public abstract class AcceptanceTest {
 
     protected String loginCreateResource(String path, Object bodyPayload) {
         ResponseEntity<String> response = basicAuthTemplate().postForEntity(path, bodyPayload, String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         return response.getHeaders().getLocation().getPath();
     }
     
