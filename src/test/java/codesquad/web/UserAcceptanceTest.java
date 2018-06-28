@@ -1,11 +1,9 @@
 package codesquad.web;
 
-import static codesquad.util.Result.LOGIN_NOT_MATCH_WARNING;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
 import codesquad.domain.UserRepository;
-import org.springframework.web.client.ResourceAccessException;
 import support.test.BasicAuthAcceptanceTest;
-import support.test.HtmlFormDataBuilder;
+import support.HtmlFormDataBuilder;
 
 public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(UserAcceptanceTest.class);
