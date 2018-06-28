@@ -22,16 +22,12 @@ function addAnswer(e) {
     console.log("url : " + url);
 
     $.ajax({
-        type: 'post',
+        type : 'post',
         url : url,
         data : queryString,
         dataType : 'json',
         error : onError,
         success : onSuccess});
-}
-
-function onError() {
-    console.log("error");
 }
 
 function onSuccess(data, status) {
@@ -43,4 +39,8 @@ function onSuccess(data, status) {
     $(".comment.mdl-color-text--grey-700").prepend(template);
     //comment mdl-color-text--grey-700
     $("textarea[name=comment]").val("");
+}
+
+function onError() {
+    console.log("error");
 }

@@ -1,16 +1,21 @@
 package codesquad.web;
 
 import codesquad.CannotDeleteException;
+import codesquad.domain.Answer;
 import codesquad.domain.User;
 import codesquad.dto.AnswerDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.net.URI;
 
 @Controller
 @RequestMapping("issue/{issueId}/answers")
