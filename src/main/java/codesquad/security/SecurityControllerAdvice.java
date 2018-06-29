@@ -2,6 +2,7 @@ package codesquad.security;
 
 import javax.persistence.EntityNotFoundException;
 
+import codesquad.CannotDeleteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,4 +34,8 @@ public class SecurityControllerAdvice {
     public void unAuthentication() {
         log.debug("UnAuthenticationException is happened!");
     }
+
+    @ExceptionHandler(CannotDeleteException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public void cannotDelete() { log.debug("CannotDeleteException is happened!");}
 }

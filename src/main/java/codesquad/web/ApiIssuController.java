@@ -67,29 +67,4 @@ public class ApiIssuController {
         issueService.setLabel(loginUser, id, labelId);
         log.debug("End label");
     }
-
-    @PostMapping("/{id}/comments")
-    public ResponseEntity<Comment> addComment(@LoginUser User loginUser, @PathVariable long id, @Valid@RequestBody CommentDto commentDto) {
-        log.debug("Comment : {}", commentDto.getComment());
-        Comment comment = issueService.addComment(loginUser, id, commentDto.toComment());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(String.format("/api/issues/%d/comments/%d", id, comment.getId())));
-        return new ResponseEntity<Comment>(comment, headers, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/{id}/comments/{commentId}")
-    public Comment showComment(@PathVariable long id, @PathVariable long commentId){
-        return issueService.findComment(commentId);
-    }
-
-    @PutMapping("/{id}/comments/{commentId}")
-    public Comment update(@LoginUser User loginUser, @PathVariable long commentId, @Valid@RequestBody CommentDto target){
-        return issueService.updateComment(loginUser, commentId, target.toComment());
-    }
-
-    @DeleteMapping("/{id}/comments/{commentId}")
-    public void delete(@LoginUser User loginUser, @PathVariable long commentId){
-        issueService.deleteComment(loginUser, commentId);
-    }
 }

@@ -79,20 +79,20 @@ public class IssueController {
     }
 
     @PutMapping("/{id}/assignees/{assigneeId}")
-    public String assign(@LoginUser User loginUser, @PathVariable long id, @PathVariable long assigneeId){
+    public String assign(@LoginUser User loginUser, @PathVariable long id, @PathVariable long assigneeId) {
         User assignee = userService.findAssignee(assigneeId);
         issueService.assign(loginUser, assignee, id);
         return String.format("redirect:/issues/%d", id);
     }
 
     @PutMapping("/{id}/labels/{labelId}")
-    public String setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId){
+    public String setLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
         issueService.setLabel(loginUser, id, labelId);
         return String.format("redirect:/issues/%d", id);
     }
 
     @PutMapping("/{id}/close")
-    public String close(@LoginUser User loginUser, @PathVariable long id){
+    public String close(@LoginUser User loginUser, @PathVariable long id) {
         issueService.close(loginUser, id);
         return String.format("redirect:/issues/%d", id);
     }

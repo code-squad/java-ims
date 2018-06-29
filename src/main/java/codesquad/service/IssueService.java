@@ -6,9 +6,12 @@ import codesquad.dto.CommentDto;
 import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Service("issueService")
@@ -24,6 +27,9 @@ public class IssueService {
     @Resource(name = "deleteHistoryRepository")
     private DeleteHistoryRepository deleteHistoryRepository;
 
+    @Resource(name = "attachmentRepository")
+    private AttachmentRepository attachmentRepository;
+
     public Issue addIssue(User writer, Issue issue) {
         issue.writeBy(writer);
         return issueRepository.save(issue);
@@ -37,7 +43,7 @@ public class IssueService {
         return issueRepository.findById(id).filter(i -> !i.isClosed()).orElseThrow(EntityNotFoundException::new);
     }
 
-    public Issue checkOwner(long id, User loginUser){
+    public Issue checkOwner(long id, User loginUser) {
         return issueRepository.findById(id)
                 .filter(issue -> issue.isOwner(loginUser))
                 .orElseThrow(UnAuthorizedException::new);
@@ -54,7 +60,7 @@ public class IssueService {
         deleteHistoryRepository.saveAll(deleteHistories);
     }
 
-    public void setMilestone(long id, User loginUser, Milestone milestone){
+    public void setMilestone(long id, User loginUser, Milestone milestone) {
         Issue issue = findById(id);
         issue.setMilestone(loginUser, milestone);
     }
@@ -90,8 +96,16 @@ public class IssueService {
         return origin.update(loginUser, target);
     }
 
-    public void deleteComment(User loginUser, long commentId){
+    public void deleteComment(User loginUser, long commentId) {
         Comment comment = findComment(commentId);
         deleteHistoryRepository.save(comment.delete(loginUser));
+    }
+
+    @Transactional(rollbackFor = IOException.class)
+    public Attachment upload(MultipartFile file, User loginUser, long issueId) throws IOException {
+        //TODO Attachment에 이슈 or 코맨트 추가
+        Attachment attachment = new Attachment(file.getOriginalFilename(), file.getSize(), loginUser);
+        file.transferTo(attachment.save());
+        return attachmentRepository.save(attachment);
     }
 }
