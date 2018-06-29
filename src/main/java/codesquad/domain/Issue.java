@@ -50,6 +50,9 @@ public class Issue extends AbstractEntity implements UriGeneratable {
     @Embedded
     private Comments comments = new Comments();
 
+    @Embedded
+    private Attachments attachments = new Attachments();
+
     public Issue() {
     }
 
@@ -152,6 +155,15 @@ public class Issue extends AbstractEntity implements UriGeneratable {
 
     public Comments getComments() {
         return comments;
+    }
+
+    public Attachments getAttachments() {
+        return attachments;
+    }
+
+    public Issue addAttachment(Attachment attachment) {
+        attachments.add(attachment);
+        return this;
     }
 
     @Override
