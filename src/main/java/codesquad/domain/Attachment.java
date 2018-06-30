@@ -1,8 +1,11 @@
 package codesquad.domain;
 
+import codesquad.UnAuthorizedException;
+import org.springframework.core.io.PathResource;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+import java.nio.file.Path;
 
 @Entity
 public class Attachment extends AbstractEntity {
@@ -50,7 +53,31 @@ public class Attachment extends AbstractEntity {
         return this;
     }
 
+    public User getUploader() {
+        return uploader;
+    }
+
+    public Issue getIssue() {
+        return issue;
+    }
+
+    public String getOriginName() {
+        return originName;
+    }
+
+    public String getManageName() {
+        return manageName;
+    }
+
     private boolean isNull(Object target) {
         return target == null;
+    }
+
+    public PathResource findPathResource(User user, Issue target, FileSaver fileSaver) {
+        if (!uploader.equals(user) || !issue.equals(target)) {
+            throw new UnAuthorizedException();
+        }
+        Path path = fileSaver.getPath(manageName);
+        return new PathResource(path);
     }
 }
