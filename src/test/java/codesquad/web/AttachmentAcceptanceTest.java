@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.PathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +12,7 @@ import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class AttachmentAcceptanceTest extends AcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(AttachmentAcceptanceTest.class);
@@ -44,13 +42,12 @@ public class AttachmentAcceptanceTest extends AcceptanceTest {
         requestPost(basicAuthTemplate(), UPLOAD_PATH, getFileUploadRequest());
         ResponseEntity<String> response = requestGet(basicAuthTemplate(), DOWNLOAD_PATH);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        log.debug("response : {}", response.getBody());
     }
 
     @Test
     public void download_fail_unAuthentication() {
         requestPost(basicAuthTemplate(), UPLOAD_PATH, getFileUploadRequest());
         ResponseEntity<String> response = requestGet(template(), DOWNLOAD_PATH);
-        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+        assertTrue(response.getBody().contains("Login Member"));
     }
 }

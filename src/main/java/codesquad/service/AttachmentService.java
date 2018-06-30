@@ -17,8 +17,13 @@ public class AttachmentService {
     @Autowired
     private AttachmentRepository attachmentRepo;
 
-    @Resource(name = "localFileSaver")
     private FileSaver fileSaver;
+
+    @Resource(name = "localFileSaver")
+    public AttachmentService setFileSaver(FileSaver fileSaver) {
+        this.fileSaver = fileSaver;
+        return this;
+    }
 
     public Issue upload(User loginUser, Issue issue, MultipartFile file) throws IOException {
         String savedFileName = fileSaver.save(file, AttachmentNameConverter.convertName(file.getOriginalFilename()));

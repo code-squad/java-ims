@@ -12,15 +12,15 @@ import java.nio.file.Paths;
 public class LocalFileSaver implements FileSaver {
 
     @Override
-    public String save(MultipartFile file, String fileName) throws IOException {
-        File saveFile = new File(getSavePath() + fileName);
+    public String save(MultipartFile file, String fileManageName) throws IOException {
+        File saveFile = new File(getSavePath() + fileManageName);
         file.transferTo(saveFile);
-        return fileName;
+        return fileManageName;
     }
 
     @Override
-    public Path getPath(String manageName) {
-        return Paths.get(getSavePath() + manageName);
+    public Path getPath(String fileManageName) {
+        return Paths.get(getSavePath() + fileManageName);
     }
 
     @Override
