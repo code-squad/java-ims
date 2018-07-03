@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 
+import java.io.IOException;
+
 @ControllerAdvice
 public class SecurityControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(SecurityControllerAdvice.class);
@@ -28,7 +30,7 @@ public class SecurityControllerAdvice {
     public void unAuthorized() {
         log.debug("UnAuthorizedException is happened!");
     }
-    
+
     @ExceptionHandler(UnAuthenticationException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public void unAuthentication() {
@@ -37,5 +39,13 @@ public class SecurityControllerAdvice {
 
     @ExceptionHandler(CannotDeleteException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public void cannotDelete() { log.debug("CannotDeleteException is happened!");}
+    public void cannotDelete() {
+        log.debug("CannotDeleteException is happened!");
+    }
+
+    @ExceptionHandler(IOException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public void uploadOrDownloadInvalid() {
+        log.debug("IOException is happend!");
+    }
 }

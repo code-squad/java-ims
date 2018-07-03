@@ -4,10 +4,12 @@ import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Entity
-public class Attachment extends AbstractEntity{
+public class Attachment extends AbstractEntity {
 
     private static final String path = "C:\\Users\\Kang\\java-ims\\src\\main\\resources\\uploadFile";
 
@@ -24,10 +26,10 @@ public class Attachment extends AbstractEntity{
     private User saver;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_attachment_to_comment"))
-    private Comment comment;
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_attachment_to_issue"))
+    private Issue issue;
 
-    public Attachment(){
+    public Attachment() {
     }
 
     public Attachment(String originalName, long size, User saver) {
@@ -37,15 +39,27 @@ public class Attachment extends AbstractEntity{
         this.saver = saver;
     }
 
-    public File save(){
+    public File save() {
         return new File(path + File.separator + savedName);
     }
 
-    private String randomName(String originalName) {
-       return UUID.randomUUID().toString().replace("-", "") + parseExtension(originalName);
+    public Path getPath() {
+        return Paths.get(path + File.separator + savedName);
     }
 
-    private String parseExtension(String file){
+    public String randomName(String originalName) {
+        return UUID.randomUUID().toString().replace("-", "") + parseExtension(originalName);
+    }
+
+    public String parseExtension(String file) {
         return file.substring(file.lastIndexOf("."));
+    }
+
+    public String getOriginalName() {
+        return originalName;
+    }
+
+    public void setIssue(Issue issue) {
+        this.issue = issue;
     }
 }

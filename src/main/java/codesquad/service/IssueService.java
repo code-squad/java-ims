@@ -4,6 +4,7 @@ import codesquad.UnAuthorizedException;
 import codesquad.domain.*;
 import codesquad.dto.CommentDto;
 import codesquad.dto.IssueDto;
+import org.springframework.core.io.PathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -103,9 +104,13 @@ public class IssueService {
 
     @Transactional(rollbackFor = IOException.class)
     public Attachment upload(MultipartFile file, User loginUser, long issueId) throws IOException {
-        //TODO Attachment에 이슈 or 코맨트 추가
         Attachment attachment = new Attachment(file.getOriginalFilename(), file.getSize(), loginUser);
+        attachment.setIssue(findById(issueId));
         file.transferTo(attachment.save());
         return attachmentRepository.save(attachment);
+    }
+
+    public Attachment download(long attachmentId) {
+        return attachmentRepository.findById(attachmentId).orElseThrow(EntityNotFoundException::new);
     }
 }

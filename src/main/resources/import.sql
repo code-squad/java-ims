@@ -10,3 +10,5 @@ INSERT INTO issue (id, contents, title, writer_id, closed, deleted) VALUES (5, '
 
 INSERT INTO milestone (id, start_date, end_date, subject) VALUES (1, '2018-06-07 14:02:00', '2018-06-09 15:02:00', 'testMilestone');
 INSERT INTO milestone (id, start_date, end_date, subject) VALUES (2, '2018-06-08 12:03:00', '2018-06-24 18:55:00', 'testMilestone2');
+
+INSERT INTO attachment (id, ORIGINAL_NAME, SAVED_NAME, size, issue_id, saver_id) VALUES (1, 'logback.xml', '0a0434e0de3847718060adf188448006.xml', 20, 1, 1);

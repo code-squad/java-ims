@@ -43,6 +43,9 @@ public class Issue extends AbstractEntity {
     @Embedded
     private Comments comments;
 
+    @Embedded
+    private Attachments  attachments;
+
     private boolean deleted = false;
 
     private boolean closed = false;
@@ -133,6 +136,10 @@ public class Issue extends AbstractEntity {
 
     public Label getLabel() {
         return label;
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments.getAttachments();
     }
 
     public boolean isClosed() {

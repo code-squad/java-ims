@@ -62,7 +62,7 @@
                     <form action="/issues/{{issue.id}}/close" method="post">
                         <input type="hidden" name="_method" value="put">
                         <button type="submit" class="mdl-button mdl-button--colored mdl-js-button">
-                        Close issue
+                            Close issue
                         </button>
                     </form>
 
@@ -75,13 +75,14 @@
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="milestone-menu">
                         {{#milestones}}
-                        <form class="milestone-Choice" action="/api/issues/{{issue.id}}/milestones/{{id}}" method="post">
+                        <form class="milestone-Choice" action="/api/issues/{{issue.id}}/milestones/{{id}}"
+                              method="post">
                             <input type="hidden" name="_method" value="put">
-                        <li class="mdl-menu__item">
-                            <button class="mdl-menu__item" type="submit">
-                            {{subject}}
-                            </button>
-                        </li>
+                            <li class="mdl-menu__item">
+                                <button class="mdl-menu__item" type="submit">
+                                    {{subject}}
+                                </button>
+                            </li>
                         </form>
                         {{/milestones}}
                     </ul>
@@ -111,7 +112,7 @@
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="assignee-menu">
                         <!--<li class="mdl-menu__item">-->
-                            <!--<a href="/issue/1/setAssignee/1">javajigi</a>-->
+                        <!--<a href="/issue/1/setAssignee/1">javajigi</a>-->
                         <!--</li>-->
                         {{#assignees}}
                         <form class="assignee-Choice" action="/api/issues/{{issue.id}}/assignees/{{id}}" method="post">
@@ -143,18 +144,17 @@
                                     <span>{{comment}} on 2017-01-14</span>
 
 
-
                                 </strong>
                                 <!--<form class="update-comment"-->
-                                      <!--action="/api/issues/{{issue.id}}/comments/{{id}}" method="POST">-->
-                                    <!--<input type="hidden" name="_method" value="put">-->
-                                    <!--<button type="submit" class="update-comment-button"-->
-                                            <!--value="/api/issues/{{issue.id}}/comments/{{id}}">수정-->
-                                    <!--</button>-->
+                                <!--action="/api/issues/{{issue.id}}/comments/{{id}}" method="POST">-->
+                                <!--<input type="hidden" name="_method" value="put">-->
+                                <!--<button type="submit" class="update-comment-button"-->
+                                <!--value="/api/issues/{{issue.id}}/comments/{{id}}">수정-->
+                                <!--</button>-->
                                 <!--</form>-->
 
-                                    <a class="update-comment-form"
-                                       href="/api/issues/{{issue.id}}/comments/{{id}}">수정</a>
+                                <a class="update-comment-form"
+                                   href="/api/issues/{{issue.id}}/comments/{{id}}">수정</a>
 
                                 <form class="delete-comment"
                                       action="/api/issues/{{issue.id}}/comments/{{id}}" method="POST">
@@ -187,17 +187,17 @@
                     </div>
                     <hr>
 
-
+                    {{#attachments}}
                     <div class="comment mdl-color-text--grey-700">
                         <header class="comment__header">
                             <img class="comment__avatar2" height="48" width="48"
                                  src="https://avatars3.githubusercontent.com/u/14341811?v=3&s=400" alt="진저애비">
                             <div class="comment__author">
                                 <strong>
-                                    <a>진저애비</a>
+                                    <a>{{saver.userId}}</a>
 
 
-                                    upload file <a href="upload file" target="_blank">[view]</a>
+                                    upload file {{originalName}}<a href="/issues/{{issue.id}}/attachments/{{id}}" target="_blank">[view]</a>
 
 
                                 </strong>
@@ -206,7 +206,7 @@
                         </header>
                     </div>
                     <hr>
-
+                    {{/attachments}}
 
                     <!-- comments end -->
                 </div>
