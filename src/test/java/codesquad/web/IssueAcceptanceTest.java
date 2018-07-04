@@ -225,13 +225,6 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 
-    private HttpEntity<MultiValueMap<String, Object>> makeFormData() {
-        return HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "test subject")
-                .addParameter("comment", "test comment")
-                .build();
-    }
-
     private HttpEntity<MultiValueMap<String, Object>> makePutFormData() {
         return HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("_method", "put")

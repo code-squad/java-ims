@@ -50,4 +50,11 @@ public class IssueService {
         issue.milestoneTo(milestone);
         return issue;
     }
+
+    @Transactional
+    public Issue setAssignee(Long id, User user) {
+        Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        issue.assignTo(user);
+        return issue;
+    }
 }

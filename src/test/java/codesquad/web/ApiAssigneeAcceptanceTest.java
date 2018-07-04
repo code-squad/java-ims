@@ -1,6 +1,6 @@
 package codesquad.web;
 
-import codesquad.dto.MilestonesDto;
+import codesquad.dto.AssigneesDto;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -15,16 +15,12 @@ import support.test.AcceptanceTest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class ApiMilestoneAcceptanceTest extends AcceptanceTest {
-    private static final Logger log = LoggerFactory.getLogger(ApiMilestoneAcceptanceTest.class);
+public class ApiAssigneeAcceptanceTest extends AcceptanceTest {
+    private static final Logger log = LoggerFactory.getLogger(ApiAssigneeAcceptanceTest.class);
 
     @Test
     public void list() {
-        makeMilestone("test subject1");
-        makeMilestone("test subject2");
-        makeMilestone("test subject3");
-
-        ResponseEntity<MilestonesDto> response = template.getForEntity("/api/milestones", MilestonesDto.class);
+        ResponseEntity<AssigneesDto> response = template.getForEntity("/api/users", AssigneesDto.class);
 
         log.debug("body : {}", response.getBody());
 
@@ -40,10 +36,7 @@ public class ApiMilestoneAcceptanceTest extends AcceptanceTest {
 
         log.debug("path : {}", issuePath);
 
-        ResponseEntity<String> milestoneResponse = makeMilestone("test subject1");
-        String milestoneId = milestoneResponse.getHeaders().getLocation().getQuery().substring(10);
-
-        String requestPath = issuePath + "/setMilestone/" + milestoneId;
+        String requestPath = issuePath + "/setAssignee/1";
 
         log.debug("path : {}", requestPath);
 

@@ -90,4 +90,11 @@ public abstract class AcceptanceTest {
         MatcherAssert.assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
         return responseEntity;
     }
+
+    protected HttpEntity<MultiValueMap<String, Object>> makeFormData() {
+        return HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "test subject")
+                .addParameter("comment", "test comment")
+                .build();
+    }
 }

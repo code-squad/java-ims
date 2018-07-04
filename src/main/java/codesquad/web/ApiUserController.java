@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import codesquad.domain.User;
+import codesquad.dto.AssigneesDto;
 import codesquad.dto.UserDto;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -37,5 +39,17 @@ public class ApiUserController {
     @PutMapping("{id}")
     public void update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody UserDto updatedUser) {
         userService.update(loginUser, id, updatedUser);
+    }
+
+    @GetMapping("")
+    public AssigneesDto list() {
+        AssigneesDto assigneesDto = new AssigneesDto();
+
+        List<User> users = userService.getUsers();
+        for (User user: users) {
+            assigneesDto.addUsers(user.getId(), user.getName());
+        }
+
+        return assigneesDto;
     }
 }

@@ -7,6 +7,7 @@ import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,9 @@ public class IssueController {
 
     @Resource(name = "milestoneService")
     MilestoneService milestoneService;
+
+    @Resource(name = "userService")
+    UserService userService;
 
     @GetMapping("/form")
     public String createForm(@LoginUser User loginUser) {
@@ -68,9 +72,19 @@ public class IssueController {
     }
 
     @PostMapping("/{issueId}/setMilestone/{milestoneId}")
-    public String setMilestone(@PathVariable Long issueId, @PathVariable Long milestoneId, Model model) {
+    public String setMilestone(@PathVariable Long issueId, @PathVariable Long milestoneId) {
         Milestone milestone = milestoneService.getMilestone(milestoneId);
         Issue issue = issueService.setMilestone(issueId, milestone);
+
+        log.debug("issue : {}", issue);
+
+        return String.format("redirect:/issues/%d", issueId);
+    }
+
+    @PostMapping("/{issueId}/setAssignee/{userId}")
+    public String setAssignee(@PathVariable Long issueId, @PathVariable Long userId) {
+        User user = userService.getUser(userId);
+        Issue issue = issueService.setAssignee(issueId, user);
 
         log.debug("issue : {}", issue);
 
