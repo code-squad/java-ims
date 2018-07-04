@@ -2,6 +2,7 @@ package codesquad.service;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class IssueService {
         return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
+    // TODO toIssue 대체?
     @Transactional
     public void update(User loginUser, Long id, IssueDto target) {
         Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -40,5 +42,12 @@ public class IssueService {
     public void delete(User loginUser, Long id) {
         Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         issueRepository.delete(issue);
+    }
+
+    @Transactional
+    public Issue setMilestone(Long id, Milestone milestone) {
+        Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        issue.milestoneTo(milestone);
+        return issue;
     }
 }

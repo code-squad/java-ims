@@ -19,6 +19,10 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
+
     public Issue() {
     }
 
@@ -50,6 +54,10 @@ public class Issue extends AbstractEntity {
 
     public boolean isOwner(User loginUser) {
         return writer.equals(loginUser);
+    }
+
+    public void milestoneTo(Milestone milestone) {
+        this.milestone = milestone;
     }
 
     @Override

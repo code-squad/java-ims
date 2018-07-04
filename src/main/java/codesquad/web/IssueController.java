@@ -1,10 +1,12 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -21,8 +23,11 @@ public class IssueController {
     @Resource(name = "issueService")
     IssueService issueService;
 
+    @Resource(name = "milestoneService")
+    MilestoneService milestoneService;
+
     @GetMapping("/form")
-    public String createForm() {
+    public String createForm(@LoginUser User loginUser) {
         return "/issue/form";
     }
 
@@ -60,5 +65,15 @@ public class IssueController {
     public String delete(@LoginUser User loginUser, @PathVariable Long id) {
         issueService.delete(loginUser, id);
         return "redirect:/";
+    }
+
+    @PostMapping("/{issueId}/setMilestone/{milestoneId}")
+    public String setMilestone(@PathVariable Long issueId, @PathVariable Long milestoneId, Model model) {
+        Milestone milestone = milestoneService.getMilestone(milestoneId);
+        Issue issue = issueService.setMilestone(issueId, milestone);
+
+        log.debug("issue : {}", issue);
+
+        return String.format("redirect:/issues/%d", issueId);
     }
 }
