@@ -11,7 +11,7 @@ import java.util.UUID;
 @Entity
 public class Attachment extends AbstractEntity {
 
-    private static final String path = "C:\\Users\\Kang\\java-ims\\src\\main\\resources\\uploadFile";
+    private String path;
 
     @Column(nullable = false)
     private String originalName;
@@ -32,11 +32,12 @@ public class Attachment extends AbstractEntity {
     public Attachment() {
     }
 
-    public Attachment(String originalName, long size, User saver) {
+    public Attachment(String originalName, long size, User saver, String path) {
         this.originalName = originalName;
         this.savedName = randomName(originalName);
         this.size = size;
         this.saver = saver;
+        this.path = path;
     }
 
     public File save() {

@@ -28,9 +28,6 @@ public class IssueService {
     @Resource(name = "deleteHistoryRepository")
     private DeleteHistoryRepository deleteHistoryRepository;
 
-    @Resource(name = "attachmentRepository")
-    private AttachmentRepository attachmentRepository;
-
     public Issue addIssue(User writer, Issue issue) {
         issue.writeBy(writer);
         return issueRepository.save(issue);
@@ -100,17 +97,5 @@ public class IssueService {
     public void deleteComment(User loginUser, long commentId) {
         Comment comment = findComment(commentId);
         deleteHistoryRepository.save(comment.delete(loginUser));
-    }
-
-    @Transactional(rollbackFor = IOException.class)
-    public Attachment upload(MultipartFile file, User loginUser, long issueId) throws IOException {
-        Attachment attachment = new Attachment(file.getOriginalFilename(), file.getSize(), loginUser);
-        attachment.setIssue(findById(issueId));
-        file.transferTo(attachment.save());
-        return attachmentRepository.save(attachment);
-    }
-
-    public Attachment download(long attachmentId) {
-        return attachmentRepository.findById(attachmentId).orElseThrow(EntityNotFoundException::new);
     }
 }

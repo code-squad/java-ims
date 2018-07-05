@@ -18,7 +18,7 @@ public class AttachmentTest {
     @Before
     public void setup() {
         fileName = "test.txt";
-        attachment = new Attachment(fileName, 2L, UserTest.JAVAJIGI);
+        attachment = new Attachment(fileName, 2L, UserTest.JAVAJIGI, "/C");
     }
 
     @Test
