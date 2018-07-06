@@ -36,8 +36,9 @@ public class AttachmentService {
         return issue;
     }
 
-    public WritableResource download(User loginUser, Issue issue, Long id) {
-        return attachmentRepo.findById(id).map(attachment -> attachment.download(loginUser, issue, fileManager)).orElseThrow(EntityNotFoundException::new);
+    public WritableResource download(User loginUser, Issue issue, Long id) throws IOException {
+        Attachment attachment = attachmentRepo.findById(id).orElseThrow(EntityNotFoundException::new);
+        return attachment.download(loginUser, issue, fileManager);
     }
 
     public Attachment findById(Long id) {

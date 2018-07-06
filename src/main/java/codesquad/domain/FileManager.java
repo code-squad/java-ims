@@ -14,7 +14,7 @@ public abstract class FileManager {
 
     public abstract String upload(MultipartFile file, String fileManageName) throws IOException;
 
-    public abstract WritableResource download(String fileManageName);
+    public abstract WritableResource download(String fileManageName) throws IOException;
 
     protected String getSavePath() {
         return uploadPath;

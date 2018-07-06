@@ -5,6 +5,7 @@ import org.springframework.core.io.WritableResource;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+import java.io.IOException;
 
 @Entity
 public class Attachment extends AbstractEntity {
@@ -72,7 +73,7 @@ public class Attachment extends AbstractEntity {
         return target == null;
     }
 
-    public WritableResource download(User user, Issue target, FileManager fileManager) {
+    public WritableResource download(User user, Issue target, FileManager fileManager) throws IOException {
         if (!uploader.equals(user) || !issue.equals(target)) {
             throw new UnAuthorizedException();
         }
