@@ -43,6 +43,9 @@ public class Issue extends AbstractEntity {
     @Embedded
     private Comments comments;
 
+    @Embedded
+    private Attachments  attachments;
+
     private boolean deleted = false;
 
     private boolean closed = false;
@@ -94,14 +97,14 @@ public class Issue extends AbstractEntity {
     }
 
     public void setClosed(User loginUser, boolean closed) {
-        if (!isOwner(loginUser)){
+        if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }
         this.closed = closed;
     }
 
-    public List<DeleteHistory> delete(User loginUser){
-        if(!isOwner(loginUser)){
+    public List<DeleteHistory> delete(User loginUser) {
+        if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }
         List<DeleteHistory> deleteHistories = comments.delete(loginUser);
@@ -135,7 +138,11 @@ public class Issue extends AbstractEntity {
         return label;
     }
 
-    public boolean isClosed(){
+    public List<Attachment> getAttachments() {
+        return attachments.getAttachments();
+    }
+
+    public boolean isClosed() {
         return closed;
     }
 

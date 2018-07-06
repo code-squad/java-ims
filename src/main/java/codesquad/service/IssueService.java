@@ -4,11 +4,15 @@ import codesquad.UnAuthorizedException;
 import codesquad.domain.*;
 import codesquad.dto.CommentDto;
 import codesquad.dto.IssueDto;
+import org.springframework.core.io.PathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Service("issueService")
@@ -37,7 +41,7 @@ public class IssueService {
         return issueRepository.findById(id).filter(i -> !i.isClosed()).orElseThrow(EntityNotFoundException::new);
     }
 
-    public Issue checkOwner(long id, User loginUser){
+    public Issue checkOwner(long id, User loginUser) {
         return issueRepository.findById(id)
                 .filter(issue -> issue.isOwner(loginUser))
                 .orElseThrow(UnAuthorizedException::new);
@@ -54,7 +58,7 @@ public class IssueService {
         deleteHistoryRepository.saveAll(deleteHistories);
     }
 
-    public void setMilestone(long id, User loginUser, Milestone milestone){
+    public void setMilestone(long id, User loginUser, Milestone milestone) {
         Issue issue = findById(id);
         issue.setMilestone(loginUser, milestone);
     }
@@ -90,7 +94,7 @@ public class IssueService {
         return origin.update(loginUser, target);
     }
 
-    public void deleteComment(User loginUser, long commentId){
+    public void deleteComment(User loginUser, long commentId) {
         Comment comment = findComment(commentId);
         deleteHistoryRepository.save(comment.delete(loginUser));
     }
