@@ -1,11 +1,10 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
-import org.springframework.core.io.PathResource;
+import org.springframework.core.io.WritableResource;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
-import java.nio.file.Path;
 
 @Entity
 public class Attachment extends AbstractEntity {
@@ -73,11 +72,10 @@ public class Attachment extends AbstractEntity {
         return target == null;
     }
 
-    public PathResource findPathResource(User user, Issue target, FileSaver fileSaver) {
+    public WritableResource download(User user, Issue target, FileManager fileManager) {
         if (!uploader.equals(user) || !issue.equals(target)) {
             throw new UnAuthorizedException();
         }
-        Path path = fileSaver.getPath(manageName);
-        return new PathResource(path);
+        return fileManager.download(manageName);
     }
 }

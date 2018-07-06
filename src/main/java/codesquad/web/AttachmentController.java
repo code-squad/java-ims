@@ -8,6 +8,7 @@ import codesquad.service.AttachmentService;
 import codesquad.service.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.PathResource;
+import org.springframework.core.io.WritableResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,15 +39,15 @@ public class AttachmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PathResource> download(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long id) throws IOException {
+    public ResponseEntity<WritableResource> download(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long id) throws IOException {
         Attachment attachment = attachmentService.findById(id);
-        PathResource pathResource = attachmentService.download(loginUser, issueService.findById(issueId), id);
+        WritableResource resource = attachmentService.download(loginUser, issueService.findById(issueId), id);
 
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.MULTIPART_FORM_DATA);
-        header.setContentLength(pathResource.contentLength());
+        header.setContentLength(resource.contentLength());
         header.set(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s", attachment.getOriginName()));
 
-        return new ResponseEntity<>(pathResource, header, HttpStatus.OK);
+        return new ResponseEntity<>(resource, header, HttpStatus.OK);
     }
 }

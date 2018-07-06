@@ -2,10 +2,10 @@ package codesquad.service;
 
 import codesquad.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.PathResource;
+import org.springframework.core.io.WritableResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import support.service.AttachmentNameConverter;
+import support.converter.AttachmentNameConverter;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
@@ -17,16 +17,16 @@ public class AttachmentService {
     @Autowired
     private AttachmentRepository attachmentRepo;
 
-    private FileSaver fileSaver;
+    private FileManager fileManager;
 
-    @Resource(name = "localFileSaver")
-    public AttachmentService setFileSaver(FileSaver fileSaver) {
-        this.fileSaver = fileSaver;
+    @Resource(name = "localFileManager")
+    public AttachmentService setFileManager(FileManager fileManager) {
+        this.fileManager = fileManager;
         return this;
     }
 
     public Issue upload(User loginUser, Issue issue, MultipartFile file) throws IOException {
-        String savedFileName = fileSaver.save(file, AttachmentNameConverter.convertName(file.getOriginalFilename()));
+        String savedFileName = fileManager.upload(file, AttachmentNameConverter.convertName(file.getOriginalFilename()));
         Attachment attachment = new Attachment()
                 .uploadBy(loginUser)
                 .toIssue(issue)
@@ -36,8 +36,8 @@ public class AttachmentService {
         return issue;
     }
 
-    public PathResource download(User loginUser, Issue issue, Long id) {
-        return attachmentRepo.findById(id).map(attachment -> attachment.findPathResource(loginUser, issue, fileSaver)).orElseThrow(EntityNotFoundException::new);
+    public WritableResource download(User loginUser, Issue issue, Long id) {
+        return attachmentRepo.findById(id).map(attachment -> attachment.download(loginUser, issue, fileManager)).orElseThrow(EntityNotFoundException::new);
     }
 
     public Attachment findById(Long id) {
