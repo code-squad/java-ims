@@ -42,8 +42,6 @@ public class Milestone extends AbstractEntity {
 
     public Milestone(MilestoneDto milestoneDto) {
         subject = milestoneDto.getSubject();
-
-
         startDate = LocalDateTime.parse(milestoneDto.getStartDate());
         endDate = LocalDateTime.parse(milestoneDto.getEndDate());
     }

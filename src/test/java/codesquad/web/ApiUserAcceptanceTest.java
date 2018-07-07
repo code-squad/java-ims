@@ -11,7 +11,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class ApiUserAcceptanceTest extends AcceptanceTest {
-
     @Test
     public void create() throws Exception {
         UserDto newUser = createUserDto("testuser1");

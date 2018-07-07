@@ -1,6 +1,6 @@
 package codesquad.web;
 
-import codesquad.dto.AssigneesDto;
+import codesquad.dto.LabelsDto;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -15,12 +15,16 @@ import support.test.AcceptanceTest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class ApiAssigneeAcceptanceTest extends AcceptanceTest {
-    private static final Logger log = LoggerFactory.getLogger(ApiAssigneeAcceptanceTest.class);
+public class ApiLabelAcceptanceTest extends AcceptanceTest {
+    private static final Logger log = LoggerFactory.getLogger(ApiLabelAcceptanceTest.class);
 
     @Test
     public void list() {
-        ResponseEntity<AssigneesDto> response = template.getForEntity("/api/users", AssigneesDto.class);
+        makeLabel("test subject1");
+        makeLabel("test subject2");
+        makeLabel("test subject3");
+
+        ResponseEntity<LabelsDto> response = template.getForEntity("/api/labels", LabelsDto.class);
 
         log.debug("body : {}", response.getBody());
 
@@ -36,7 +40,10 @@ public class ApiAssigneeAcceptanceTest extends AcceptanceTest {
 
         log.debug("path : {}", issuePath);
 
-        String requestPath = issuePath + "/setAssignee/1";
+        ResponseEntity<String> labelResponse = makeLabel("test subject1");
+        String labelId = labelResponse.getHeaders().getLocation().getQuery().substring(10);
+
+        String requestPath = issuePath + "/setLabel/" + labelId;
 
         log.debug("path : {}", requestPath);
 
@@ -54,7 +61,10 @@ public class ApiAssigneeAcceptanceTest extends AcceptanceTest {
 
         log.debug("path : {}", issuePath);
 
-        String requestPath = issuePath + "/setAssignee/1";
+        ResponseEntity<String> labelResponse = makeLabel("test subject1");
+        String labelId = labelResponse.getHeaders().getLocation().getQuery().substring(10);
+
+        String requestPath = issuePath + "/setLabel/" + labelId;
 
         log.debug("path : {}", requestPath);
 

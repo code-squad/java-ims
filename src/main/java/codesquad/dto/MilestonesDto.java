@@ -23,7 +23,7 @@ public class MilestonesDto {
         this.milestones = milestones;
     }
 
-    public void addMilestones(long id, String subject) {
+    public void addMilestone(long id, String subject) {
         milestones.add(new Pair(id, subject));
     }
 

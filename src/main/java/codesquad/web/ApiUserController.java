@@ -46,7 +46,7 @@ public class ApiUserController {
         AssigneesDto assigneesDto = new AssigneesDto();
 
         List<User> users = userService.getUsers();
-        for (User user: users) {
+        for (User user : users) {
             assigneesDto.addUsers(user.getId(), user.getName());
         }
 

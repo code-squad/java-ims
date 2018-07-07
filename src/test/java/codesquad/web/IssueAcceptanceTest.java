@@ -43,7 +43,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void create() {
         Long id = 1L;
 
-        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        HttpEntity<MultiValueMap<String, Object>> request = makeIssueFormData();
         ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
         assertNotNull(issueRepository.findById(id));
@@ -62,7 +62,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void create_no_login() {
-        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        HttpEntity<MultiValueMap<String, Object>> request = makeIssueFormData();
 
         ResponseEntity<String> responseEntity = template.postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FORBIDDEN));
@@ -98,7 +98,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void show() {
-        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        HttpEntity<MultiValueMap<String, Object>> request = makeIssueFormData();
 
         ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
@@ -119,7 +119,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void updateForm() {
-        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        HttpEntity<MultiValueMap<String, Object>> request = makeIssueFormData();
 
         ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
@@ -133,7 +133,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void update() {
-        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        HttpEntity<MultiValueMap<String, Object>> request = makeIssueFormData();
 
         ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
@@ -148,7 +148,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void update_no_login() {
-        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        HttpEntity<MultiValueMap<String, Object>> request = makeIssueFormData();
         ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
 
@@ -161,7 +161,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void update_other_user() {
-        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        HttpEntity<MultiValueMap<String, Object>> request = makeIssueFormData();
         ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
 
@@ -175,7 +175,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void delete() {
-        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        HttpEntity<MultiValueMap<String, Object>> request = makeIssueFormData();
 
         ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
@@ -191,7 +191,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void delete_other_user() {
-        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        HttpEntity<MultiValueMap<String, Object>> request = makeIssueFormData();
 
         ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
@@ -209,7 +209,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void delete_no_login() {
-        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        HttpEntity<MultiValueMap<String, Object>> request = makeIssueFormData();
 
         ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity(ISSUES_URL, request, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));

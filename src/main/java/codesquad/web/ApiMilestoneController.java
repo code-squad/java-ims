@@ -21,8 +21,8 @@ public class ApiMilestoneController {
         MilestonesDto milestonesDto = new MilestonesDto();
 
         List<Milestone> milestones = milestoneService.getMilestones();
-        for (Milestone milestone: milestones) {
-            milestonesDto.addMilestones(milestone.getId(), milestone.getSubject());
+        for (Milestone milestone : milestones) {
+            milestonesDto.addMilestone(milestone.getId(), milestone.getSubject());
         }
 
         return milestonesDto;

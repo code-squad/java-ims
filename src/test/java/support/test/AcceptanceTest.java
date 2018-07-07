@@ -91,10 +91,21 @@ public abstract class AcceptanceTest {
         return responseEntity;
     }
 
-    protected HttpEntity<MultiValueMap<String, Object>> makeFormData() {
+    protected HttpEntity<MultiValueMap<String, Object>> makeIssueFormData() {
         return HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("subject", "test subject")
                 .addParameter("comment", "test comment")
                 .build();
+    }
+
+    protected ResponseEntity<String> makeLabel(String subject) {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", subject)
+                .build();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity("/labels", request, String.class);
+
+        MatcherAssert.assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+        return responseEntity;
     }
 }

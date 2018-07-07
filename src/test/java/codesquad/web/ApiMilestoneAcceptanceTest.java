@@ -33,7 +33,28 @@ public class ApiMilestoneAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void apply() {
-        HttpEntity<MultiValueMap<String, Object>> request = makeFormData();
+        HttpEntity<MultiValueMap<String, Object>> request = makeIssueFormData();
+        ResponseEntity<String> issueResponse = basicAuthTemplate().postForEntity("/issues", request, String.class);
+        MatcherAssert.assertThat(issueResponse.getStatusCode(), Matchers.is(HttpStatus.FOUND));
+        String issuePath = getResponseLocation(issueResponse);
+
+        log.debug("path : {}", issuePath);
+
+        ResponseEntity<String> milestoneResponse = makeMilestone("test subject1");
+        String milestoneId = milestoneResponse.getHeaders().getLocation().getQuery().substring(10);
+
+        String requestPath = issuePath + "/setMilestone/" + milestoneId;
+
+        log.debug("path : {}", requestPath);
+
+        ResponseEntity<String> postResponse = basicAuthTemplate().postForEntity(requestPath, null, String.class);
+
+        assertThat(postResponse.getStatusCode(), is(HttpStatus.FOUND));
+    }
+
+    @Test
+    public void apply_no_login() {
+        HttpEntity<MultiValueMap<String, Object>> request = makeIssueFormData();
         ResponseEntity<String> issueResponse = basicAuthTemplate().postForEntity("/issues", request, String.class);
         MatcherAssert.assertThat(issueResponse.getStatusCode(), Matchers.is(HttpStatus.FOUND));
         String issuePath = getResponseLocation(issueResponse);
@@ -49,6 +70,6 @@ public class ApiMilestoneAcceptanceTest extends AcceptanceTest {
 
         ResponseEntity<String> postResponse = template.postForEntity(requestPath, null, String.class);
 
-        assertThat(postResponse.getStatusCode(), is(HttpStatus.FOUND));
+        assertThat(postResponse.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 }

@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -23,13 +24,17 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
 
-//    @JsonIgnore
-//    @Embedded
-//    private Assignees assignees;
-
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
     private User assignee;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
+    private Label label;
+
+    @JsonIgnore
+    @Embedded
+    private Answers answers = new Answers();
 
     public Issue() {
     }
@@ -64,7 +69,7 @@ public class Issue extends AbstractEntity {
         return writer.equals(loginUser);
     }
 
-    public void milestoneTo(Milestone milestone) {
+    public void milestoneBy(Milestone milestone) {
         this.milestone = milestone;
     }
 
@@ -72,16 +77,20 @@ public class Issue extends AbstractEntity {
         return milestone;
     }
 
-//    public Assignees getAssignees() {
-//        return assignees;
-//    }
-
     public void assignTo(User user) {
         assignee = user;
     }
 
     public User getAsignee() {
         return assignee;
+    }
+
+    public void labelBy(Label label) {
+        this.label = label;
+    }
+
+    public Label getLabel() {
+        return label;
     }
 
     public void update(User loginUser, Issue target) {
@@ -92,6 +101,25 @@ public class Issue extends AbstractEntity {
 
         subject = target.subject;
         comment = target.comment;
+    }
+
+    public void addAnswer(Answer answer) {
+        answer.applyToIssue(this);
+        answers.add(answer);
+    }
+
+    public boolean checkAnswerExist() {
+        return !answers.isEmpty();
+    }
+
+    public boolean checkAllAnswerWriterIsSameWithWriter() {
+        return answers.checkAllWriterSameWith(writer);
+    }
+
+    public void checkLoginUser(User loginUser) {
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
     }
 
     @Override

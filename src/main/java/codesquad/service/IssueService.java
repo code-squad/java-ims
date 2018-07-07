@@ -1,9 +1,7 @@
 package codesquad.service;
 
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.Milestone;
-import codesquad.domain.User;
+import codesquad.UnAuthorizedException;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +29,7 @@ public class IssueService {
         return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    // TODO toIssue 대체?
+    // TODO applyToIssue 대체?
     @Transactional
     public void update(User loginUser, Long id, IssueDto target) {
         Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -41,13 +39,24 @@ public class IssueService {
     @Transactional
     public void delete(User loginUser, Long id) {
         Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+
+        // TODO 삭제시 이슈 유저가 로그인 유저와 같은지..
+        if (!issue.isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        // TODO 그냥 리턴?
+        if (issue.checkAnswerExist() && !issue.checkAllAnswerWriterIsSameWithWriter()) {
+            return;
+        }
+
         issueRepository.delete(issue);
     }
 
     @Transactional
     public Issue setMilestone(Long id, Milestone milestone) {
         Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        issue.milestoneTo(milestone);
+        issue.milestoneBy(milestone);
         return issue;
     }
 
@@ -55,6 +64,13 @@ public class IssueService {
     public Issue setAssignee(Long id, User user) {
         Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         issue.assignTo(user);
+        return issue;
+    }
+
+    @Transactional
+    public Issue setLabel(Long id, Label label) {
+        Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        issue.labelBy(label);
         return issue;
     }
 }

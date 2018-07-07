@@ -1,11 +1,13 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.Label;
 import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.LabelService;
 import codesquad.service.MilestoneService;
 import codesquad.service.UserService;
 import org.slf4j.Logger;
@@ -29,6 +31,9 @@ public class IssueController {
 
     @Resource(name = "userService")
     UserService userService;
+
+    @Resource(name = "labelService")
+    LabelService labelService;
 
     @GetMapping("/form")
     public String createForm(@LoginUser User loginUser) {
@@ -72,7 +77,7 @@ public class IssueController {
     }
 
     @PostMapping("/{issueId}/setMilestone/{milestoneId}")
-    public String setMilestone(@PathVariable Long issueId, @PathVariable Long milestoneId) {
+    public String setMilestone(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long milestoneId) {
         Milestone milestone = milestoneService.getMilestone(milestoneId);
         Issue issue = issueService.setMilestone(issueId, milestone);
 
@@ -82,9 +87,19 @@ public class IssueController {
     }
 
     @PostMapping("/{issueId}/setAssignee/{userId}")
-    public String setAssignee(@PathVariable Long issueId, @PathVariable Long userId) {
+    public String setAssignee(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long userId) {
         User user = userService.getUser(userId);
         Issue issue = issueService.setAssignee(issueId, user);
+
+        log.debug("issue : {}", issue);
+
+        return String.format("redirect:/issues/%d", issueId);
+    }
+
+    @PostMapping("/{issueId}/setLabel/{labelId}")
+    public String setLabel(@LoginUser User loginUser, @PathVariable Long issueId, @PathVariable Long labelId) {
+        Label label = labelService.getLabel(labelId);
+        Issue issue = issueService.setLabel(issueId, label);
 
         log.debug("issue : {}", issue);
 
