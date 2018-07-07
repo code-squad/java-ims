@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 
 @ControllerAdvice(annotations = Controller.class)
 @Order(Ordered.LOWEST_PRECEDENCE)
@@ -55,5 +56,11 @@ public class SecurityControllerAdvice {
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public void cannotDelete() {
         log.debug("CannotDeleteException is happened!");
+    }
+
+    @ExceptionHandler(IOException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public void handleIOException(IOException e) {
+        log.debug("IOException is happened! : {}", e.getMessage());
     }
 }
