@@ -15,6 +15,7 @@ public class IssueService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
+    // TODO issue 대신 issueDto로 전달해야 할 것 같다
     public Issue add(Issue issue, User loginUser) {
         issue.writeBy(loginUser);
         return issueRepository.save(issue);
