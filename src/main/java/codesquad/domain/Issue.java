@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -18,6 +19,22 @@ public class Issue extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
+    private Label label;
+
+    @JsonIgnore
+    @Embedded
+    private Answers answers = new Answers();
 
     public Issue() {
     }
@@ -52,6 +69,59 @@ public class Issue extends AbstractEntity {
         return writer.equals(loginUser);
     }
 
+    public void milestoneBy(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void assignTo(User user) {
+        assignee = user;
+    }
+
+    public User getAsignee() {
+        return assignee;
+    }
+
+    public void labelBy(Label label) {
+        this.label = label;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void update(User loginUser, Issue target) {
+        // target의 owner와 비교하는게 아니라 현재 Issue의 owner인지 확인
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        subject = target.subject;
+        comment = target.comment;
+    }
+
+    public void addAnswer(Answer answer) {
+        answer.applyToIssue(this);
+        answers.add(answer);
+    }
+
+    public boolean checkAnswerExist() {
+        return !answers.isEmpty();
+    }
+
+    public boolean checkAllAnswerWriterIsSameWithWriter() {
+        return answers.checkAllWriterSameWith(writer);
+    }
+
+    public void checkLoginUser(User loginUser) {
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,15 +142,5 @@ public class Issue extends AbstractEntity {
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';
-    }
-
-    public void update(User loginUser, Issue target) {
-        // target의 owner와 비교하는게 아니라 현재 Issue의 owner인지 확인
-        if (!isOwner(loginUser)) {
-            throw new UnAuthorizedException();
-        }
-
-        subject = target.subject;
-        comment = target.comment;
     }
 }

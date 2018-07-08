@@ -2,7 +2,10 @@ package support.test;
 
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
+import org.hamcrest.MatcherAssert;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -12,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.MultiValueMap;
 
 import java.util.Objects;
 
@@ -21,6 +25,8 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class AcceptanceTest {
+    private static final Logger log = LoggerFactory.getLogger(AcceptanceTest.class);
+
     private static final String DEFAULT_LOGIN_USER = "javajigi";
 
     @Autowired
@@ -70,5 +76,36 @@ public abstract class AcceptanceTest {
 
     protected String getResponseLocation(ResponseEntity<String> response) {
         return Objects.requireNonNull(response.getHeaders().getLocation()).getPath();
+    }
+
+    protected ResponseEntity<String> makeMilestone(String subject) {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", subject)
+                .addParameter("startDate", "2018-07-21T01:59")
+                .addParameter("endDate", "2018-10-24T11:58")
+                .build();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity("/milestones", request, String.class);
+
+        MatcherAssert.assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+        return responseEntity;
+    }
+
+    protected HttpEntity<MultiValueMap<String, Object>> makeIssueFormData() {
+        return HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "test subject")
+                .addParameter("comment", "test comment")
+                .build();
+    }
+
+    protected ResponseEntity<String> makeLabel(String subject) {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", subject)
+                .build();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity("/labels", request, String.class);
+
+        MatcherAssert.assertThat(responseEntity.getStatusCode(), is(HttpStatus.FOUND));
+        return responseEntity;
     }
 }

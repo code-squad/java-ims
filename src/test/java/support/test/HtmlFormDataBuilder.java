@@ -14,12 +14,12 @@ public class HtmlFormDataBuilder {
 
     private HtmlFormDataBuilder(HttpHeaders headers) {
         this.headers = headers;
-        this.params = new LinkedMultiValueMap<>();
+        params = new LinkedMultiValueMap<>();
     }
 
     public static HtmlFormDataBuilder urlEncodedForm() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+//        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         return new HtmlFormDataBuilder(headers);
     }
@@ -32,12 +32,12 @@ public class HtmlFormDataBuilder {
     }
 
     public HtmlFormDataBuilder addParameter(String key, Long value) {
-        this.params.add(key, value + "");
+        params.add(key, value + "");
         return this;
     }
 
     public HtmlFormDataBuilder addParameter(String key, Object value) {
-        this.params.add(key, value);
+        params.add(key, value);
         return this;
     }
 
@@ -52,6 +52,6 @@ public class HtmlFormDataBuilder {
     }
 
     public HttpEntity<MultiValueMap<String, Object>> build() {
-        return new HttpEntity<MultiValueMap<String, Object>>(params, headers);
+        return new HttpEntity<>(params, headers);
     }
 }

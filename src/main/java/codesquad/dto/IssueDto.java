@@ -1,7 +1,9 @@
 package codesquad.dto;
 
 import codesquad.domain.Issue;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
 import java.util.Objects;
@@ -15,6 +17,9 @@ public class IssueDto {
 
     private User writer;
 
+    @JsonIgnore
+    private Milestone milestone;
+
     public IssueDto() {
     }
 
@@ -22,6 +27,14 @@ public class IssueDto {
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
+        milestone = null;
+    }
+
+    public IssueDto(String subject, String comment, User writer, Milestone milestone) {
+        this.subject = subject;
+        this.comment = comment;
+        this.writer = writer;
+        this.milestone = milestone;
     }
 
     public String getSubject() {
@@ -50,6 +63,14 @@ public class IssueDto {
 
     public Issue toIssue() {
         return new Issue(subject, comment);
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
     }
 
     @Override
