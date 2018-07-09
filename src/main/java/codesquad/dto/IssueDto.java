@@ -61,7 +61,7 @@ public class IssueDto {
         this.writer = writer;
     }
 
-    public Issue toIssue() {
+    public Issue applyToIssue() {
         return new Issue(subject, comment);
     }
 

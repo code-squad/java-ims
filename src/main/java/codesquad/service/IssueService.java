@@ -26,22 +26,20 @@ public class IssueService {
     }
 
     public Issue get(Long id) {
-        // TODO id가 중복될 경우?
         return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    // TODO applyToIssue 대체?
     @Transactional
     public void update(User loginUser, Long id, IssueDto target) {
         Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        issue.update(loginUser, target.toIssue());
+        issue.update(loginUser, target.applyToIssue());
     }
 
     @Transactional
     public void delete(User loginUser, Long id) {
         Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
-        // TODO 삭제시 이슈 유저가 로그인 유저와 같은지..
+        // 삭제시 이슈 유저가 로그인 유저와 같은지..
         if (!issue.isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }

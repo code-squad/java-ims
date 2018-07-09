@@ -11,10 +11,9 @@ import org.springframework.util.MultiValueMap;
 import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-
-//서버에 파일을 첨부할 때 사용자가 같은 이름의 파일을 첨부할 때 어떻게 처리할 것인지 고려해야 한다.
-//파일 이름에 한글 이름이 포함되는 경우 깨지는 경우가 종종 발생한다. 한글 이름의 파일 처리도 고려해야 한다.
+import static org.junit.Assert.assertThat;
 
 public class AttachmentControllerTest extends AcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(AttachmentControllerTest.class);
@@ -33,6 +32,7 @@ public class AttachmentControllerTest extends AcceptanceTest {
                 .addParameter("file", new ClassPathResource("logback.xml"))
                 .build();
         ResponseEntity<String> result = template.postForEntity("/attachments", request, String.class);
-        assertEquals(HttpStatus.FOUND, result.getStatusCode());
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertThat(result.getHeaders().getLocation().getPath(), is("/attachments/1"));
     }
 }
