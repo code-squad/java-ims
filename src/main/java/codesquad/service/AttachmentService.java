@@ -63,8 +63,8 @@ public class AttachmentService {
     }
 
     // Attachment 객체 생성해서 repo에 저장하고 리턴
-    public Attachment saveFile(File madeFile, String type) {
-        Attachment attachment = new Attachment(madeFile.getName(), type);
+    public Attachment saveFile(File madeFile, String type, Long issueId) {
+        Attachment attachment = new Attachment(madeFile.getName(), type, issueId);
         return attachmentRepository.save(attachment);
     }
 

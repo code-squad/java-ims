@@ -72,4 +72,10 @@ public class IssueService {
         issue.labelBy(label);
         return issue;
     }
+
+    @Transactional
+    public void setFile(Long id, Attachment file) {
+        Issue issue = issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        issue.attach(file);
+    }
 }

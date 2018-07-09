@@ -60,8 +60,8 @@ public class AttachmentServiceTest {
         Attachment testAttachment = new Attachment(fileName, fileType);
 
         // 파일 정보 생성후 디비 저장
-        when(attachmentService.saveFile(madeFile, fileType)).thenReturn(testAttachment);
-        Attachment attachment = attachmentService.saveFile(madeFile, fileType);
+        when(attachmentService.saveFile(madeFile, fileType, 0L)).thenReturn(testAttachment);
+        Attachment attachment = attachmentService.saveFile(madeFile, fileType, 0L);
         assertThat(attachment, is(testAttachment));
     }
 }

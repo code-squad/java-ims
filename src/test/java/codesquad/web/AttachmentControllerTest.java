@@ -1,5 +1,7 @@
 package codesquad.web;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,19 +22,50 @@ public class AttachmentControllerTest extends AcceptanceTest {
 
     @Test
     public void download() throws Exception {
-        ResponseEntity<String> result = template.getForEntity("/attachments/1", String.class);
+        HttpEntity<MultiValueMap<String, Object>> request = makeIssueFormData();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity("/issues", request, String.class);
+        MatcherAssert.assertThat(responseEntity.getStatusCode(), Matchers.is(HttpStatus.FOUND));
+
+        String path = responseEntity.getHeaders().getLocation().getPath();
+
+        ResponseEntity<String> result = template.getForEntity(path + "/attachments/1", String.class);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         log.debug("body : {}", result.getBody());
     }
 
     @Test
     public void upload() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> formRequest = makeIssueFormData();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity("/issues", formRequest, String.class);
+        MatcherAssert.assertThat(responseEntity.getStatusCode(), Matchers.is(HttpStatus.FOUND));
+
+        String path = responseEntity.getHeaders().getLocation().getPath();
+
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
                 .multipartFormData()
                 .addParameter("file", new ClassPathResource("logback.xml"))
                 .build();
-        ResponseEntity<String> result = template.postForEntity("/attachments", request, String.class);
-        assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertThat(result.getHeaders().getLocation().getPath(), is("/attachments/1"));
+        ResponseEntity<String> result = basicAuthTemplate().postForEntity(path + "/attachments", request, String.class);
+        assertEquals(HttpStatus.FOUND, result.getStatusCode());
+        assertThat(result.getHeaders().getLocation().getPath(), is(path));
+    }
+
+    @Test
+    public void upload_no_login() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> formRequest = makeIssueFormData();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity("/issues", formRequest, String.class);
+        MatcherAssert.assertThat(responseEntity.getStatusCode(), Matchers.is(HttpStatus.FOUND));
+
+        String path = responseEntity.getHeaders().getLocation().getPath();
+
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
+                .multipartFormData()
+                .addParameter("file", new ClassPathResource("logback.xml"))
+                .build();
+        ResponseEntity<String> result = template.postForEntity(path + "/attachments", request, String.class);
+        assertEquals(HttpStatus.FORBIDDEN, result.getStatusCode());
     }
 }

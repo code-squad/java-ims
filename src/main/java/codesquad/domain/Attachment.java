@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Attachment extends AbstractEntity {
     private String name;
     private String type;
+    private Long issueId;
 
     public Attachment() {
     }
@@ -16,6 +17,19 @@ public class Attachment extends AbstractEntity {
     public Attachment(String name, String type) {
         this.name = name;
         this.type = type;
+    }
+
+    public Attachment(String name, String type, Long issueId) {
+        this.name = name;
+        this.type = type;
+        this.issueId = issueId;
+    }
+
+    public Attachment(long id, String name, String type, Long issueId) {
+        super(id);
+        this.name = name;
+        this.type = type;
+        this.issueId = issueId;
     }
 
     public String getName() {
@@ -32,6 +46,14 @@ public class Attachment extends AbstractEntity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Long getIssueId() {
+        return issueId;
+    }
+
+    public void setIssueId(Long issueId) {
+        this.issueId = issueId;
     }
 
     @Override
@@ -54,6 +76,7 @@ public class Attachment extends AbstractEntity {
         return "Attachment{" +
                 "name='" + name + '\'' +
                 ", type='" + type + '\'' +
+                ", issueId=" + issueId +
                 '}';
     }
 }
