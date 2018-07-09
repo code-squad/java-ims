@@ -27,3 +27,4 @@ nbdist/
 .nb-gradle/
 /target/
 files/
+test-name
