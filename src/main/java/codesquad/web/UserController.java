@@ -1,7 +1,10 @@
 package codesquad.web;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
+import codesquad.UnAuthenticationException;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,6 +23,7 @@ import codesquad.service.UserService;
 @Controller
 @RequestMapping("/users")
 public class UserController {
+    private static final String USER_SESSION_KEY = "loginedUser";
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Resource(name = "userService")
@@ -49,4 +53,14 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @PostMapping("/login")
+    public String login(String userId, String password, Model model, HttpSession session) {
+        try {
+            session.setAttribute(USER_SESSION_KEY, userService.login(userId, password));
+        } catch (UnAuthenticationException e) {
+            model.addAttribute("message", "아이디 또는 비밀번호가 맞지 않습니다.");
+            return "users/form";
+        }
+        return "redirect:/";
+    }
 }
