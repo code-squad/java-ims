@@ -1,35 +1,31 @@
 package codesquad.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.util.Objects;
 
 @Entity
 public class Attachment extends AbstractEntity {
     private String name;
     private String type;
-    private Long issueId;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_attachment_to_issue"))
+    @JsonProperty
+    private Issue issue;
 
     public Attachment() {
     }
 
-    public Attachment(String name, String type) {
+    public Attachment(String name, String type, Issue issue) {
         this.name = name;
         this.type = type;
-    }
-
-    public Attachment(String name, String type, Long issueId) {
-        this.name = name;
-        this.type = type;
-        this.issueId = issueId;
-    }
-
-    public Attachment(long id, String name, String type, Long issueId) {
-        super(id);
-        this.name = name;
-        this.type = type;
-        this.issueId = issueId;
+        this.issue = issue;
     }
 
     public String getName() {
@@ -48,12 +44,12 @@ public class Attachment extends AbstractEntity {
         this.type = type;
     }
 
-    public Long getIssueId() {
-        return issueId;
+    public Issue getIssue() {
+        return issue;
     }
 
-    public void setIssueId(Long issueId) {
-        this.issueId = issueId;
+    public void setIssue(Issue issue) {
+        this.issue = issue;
     }
 
     @Override
@@ -69,14 +65,5 @@ public class Attachment extends AbstractEntity {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), name, type);
-    }
-
-    @Override
-    public String toString() {
-        return "Attachment{" +
-                "name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", issueId=" + issueId +
-                '}';
     }
 }

@@ -34,11 +34,11 @@ public class Issue extends AbstractEntity {
 
     @JsonIgnore
     @Embedded
-    private Answers answers = new Answers();
+    private Answers answers;
 
-    @OneToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_file"))
-    private Attachment file;
+    @JsonIgnore
+    @Embedded
+    private Attachments attachments;
 
     public Issue() {
     }
@@ -97,8 +97,8 @@ public class Issue extends AbstractEntity {
         return label;
     }
 
-    public Attachment getFile() {
-        return file;
+    public Attachments getAttachments() {
+        return attachments;
     }
 
     public void update(User loginUser, Issue target) {
@@ -131,7 +131,7 @@ public class Issue extends AbstractEntity {
     }
 
     public void attach(Attachment file) {
-        this.file = file;
+        attachments.add(file);
     }
 
     @Override
@@ -158,7 +158,7 @@ public class Issue extends AbstractEntity {
                 ", assignee=" + assignee +
                 ", label=" + label +
                 ", answers=" + answers +
-                ", file=" + file +
+                ", files=" + attachments +
                 '}';
     }
 }

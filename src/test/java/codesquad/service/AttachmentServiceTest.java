@@ -2,6 +2,8 @@ package codesquad.service;
 
 import codesquad.domain.Attachment;
 import codesquad.domain.AttachmentRepository;
+import codesquad.domain.Issue;
+import codesquad.domain.IssueRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,6 +25,9 @@ public class AttachmentServiceTest {
 
     @Mock
     AttachmentRepository attachmentRepository;
+
+    @Mock
+    IssueRepository issueRepository;
 
     @InjectMocks
     AttachmentService attachmentService = new AttachmentService();
@@ -57,9 +62,11 @@ public class AttachmentServiceTest {
 
         String fileName = "test-name";
         String fileType = "type";
-        Attachment testAttachment = new Attachment(fileName, fileType);
+        Issue testIssue = new Issue("test subject", "test comment");
+        Attachment testAttachment = new Attachment(fileName, fileType, testIssue);
 
         // 파일 정보 생성후 디비 저장
+        when(issueRepository.findById(0L)).thenReturn(java.util.Optional.ofNullable(testIssue));
         when(attachmentService.saveFile(madeFile, fileType, 0L)).thenReturn(testAttachment);
         Attachment attachment = attachmentService.saveFile(madeFile, fileType, 0L);
         assertThat(attachment, is(testAttachment));

@@ -73,15 +73,18 @@
         <p>{{issue.comment}}</p>
       </div>
       <!-- answer start -->
-      <div id="answer-list" class="mdl-color-text--primary-contrast mdl-card__supporting-text comments"></div>
-      {{#issue.file}}
-      <div class="comment mdl-color-text--grey-700">
-        <header class="comment__header">
-          <div class="comment__author">
+      <div id="answer-list" class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
+      </div>
+      {{#issue.attachments.files}}
+      <div class="file mdl-color-text--grey-700">
+        <header class="file__header">
+          <div class="file__author">
             <strong>
 
+
               <br/>
-              upload file <a href="/issues/{{issue.id}}/attachments/{{id}}" target="_blank">[view]</a>
+              upload file name : {{name}}<a href="/issues/{{issue.id}}/attachments/{{id}}"
+                                            target="_blank">[view]</a>
 
 
             </strong>
@@ -89,7 +92,7 @@
         </header>
       </div>
       <hr>
-      {{/issue.file}}
+      {{/issue.attachments.files}}
       <form action="/issues/{{issue.id}}/attachments" enctype="multipart/form-data" method="POST">
         <div style="margin:10px;">
           <input type="file" name="file" id="file"/>

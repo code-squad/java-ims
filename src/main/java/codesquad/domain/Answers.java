@@ -39,4 +39,11 @@ public class Answers {
 
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Answers{" +
+                "answers=" + answers +
+                '}';
+    }
 }

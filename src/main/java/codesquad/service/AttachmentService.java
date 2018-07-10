@@ -2,13 +2,13 @@ package codesquad.service;
 
 import codesquad.domain.Attachment;
 import codesquad.domain.AttachmentRepository;
+import codesquad.domain.Issue;
+import codesquad.domain.IssueRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.PathResource;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -28,14 +29,16 @@ import java.util.UUID;
 // TODO 해당 댓글의 요청인 경우도 구분?
 // TODO 원래 제목 저장하지 않는다?
 
-@Configuration
-@PropertySource(value = "classpath:filepath.properties")
 @Service
 public class AttachmentService {
     private static final Logger log = LoggerFactory.getLogger(AttachmentService.class);
 
     @Autowired
     AttachmentRepository attachmentRepository;
+
+    @Autowired
+    IssueRepository issueRepository;
+
     @Value("${file.path}")
     private String filePath;
 
@@ -64,7 +67,8 @@ public class AttachmentService {
 
     // Attachment 객체 생성해서 repo에 저장하고 리턴
     public Attachment saveFile(File madeFile, String type, Long issueId) {
-        Attachment attachment = new Attachment(madeFile.getName(), type, issueId);
+        Issue foundIssue = issueRepository.findById(issueId).orElseThrow(EntityNotFoundException::new);
+        Attachment attachment = new Attachment(madeFile.getName(), type, foundIssue);
         return attachmentRepository.save(attachment);
     }
 

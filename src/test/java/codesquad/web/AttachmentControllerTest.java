@@ -53,6 +53,24 @@ public class AttachmentControllerTest extends AcceptanceTest {
     }
 
     @Test
+    public void upload_blank() {
+        HttpEntity<MultiValueMap<String, Object>> formRequest = makeIssueFormData();
+
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity("/issues", formRequest, String.class);
+        MatcherAssert.assertThat(responseEntity.getStatusCode(), Matchers.is(HttpStatus.FOUND));
+
+        String path = responseEntity.getHeaders().getLocation().getPath();
+
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
+                .multipartFormData()
+                .addParameter("file", new ClassPathResource("/testResource/blank"))
+                .build();
+        ResponseEntity<String> result = basicAuthTemplate().postForEntity(path + "/attachments", request, String.class);
+        assertEquals(HttpStatus.NOT_ACCEPTABLE, result.getStatusCode());
+    }
+
+
+    @Test
     public void upload_no_login() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> formRequest = makeIssueFormData();
 
