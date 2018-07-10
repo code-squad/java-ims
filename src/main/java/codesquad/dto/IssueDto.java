@@ -1,5 +1,6 @@
 package codesquad.dto;
 
+import codesquad.domain.Attachment;
 import codesquad.domain.Issue;
 import codesquad.domain.Milestone;
 import codesquad.domain.User;
@@ -20,6 +21,8 @@ public class IssueDto {
     @JsonIgnore
     private Milestone milestone;
 
+    private Attachment file;
+
     public IssueDto() {
     }
 
@@ -35,6 +38,14 @@ public class IssueDto {
         this.comment = comment;
         this.writer = writer;
         this.milestone = milestone;
+    }
+
+    public IssueDto(String subject, String comment, User writer, Milestone milestone, Attachment file) {
+        this.subject = subject;
+        this.comment = comment;
+        this.writer = writer;
+        this.milestone = milestone;
+        this.file = file;
     }
 
     public String getSubject() {
@@ -61,7 +72,7 @@ public class IssueDto {
         this.writer = writer;
     }
 
-    public Issue toIssue() {
+    public Issue applyToIssue() {
         return new Issue(subject, comment);
     }
 
@@ -71,6 +82,14 @@ public class IssueDto {
 
     public void setMilestone(Milestone milestone) {
         this.milestone = milestone;
+    }
+
+    public Attachment getFile() {
+        return file;
+    }
+
+    public void setFile(Attachment file) {
+        this.file = file;
     }
 
     @Override
@@ -94,6 +113,8 @@ public class IssueDto {
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 ", writer=" + writer +
+                ", milestone=" + milestone +
+                ", file=" + file +
                 '}';
     }
 }

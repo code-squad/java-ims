@@ -34,7 +34,11 @@ public class Issue extends AbstractEntity {
 
     @JsonIgnore
     @Embedded
-    private Answers answers = new Answers();
+    private Answers answers;
+
+    @JsonIgnore
+    @Embedded
+    private Attachments attachments;
 
     public Issue() {
     }
@@ -93,6 +97,10 @@ public class Issue extends AbstractEntity {
         return label;
     }
 
+    public Attachments getAttachments() {
+        return attachments;
+    }
+
     public void update(User loginUser, Issue target) {
         // target의 owner와 비교하는게 아니라 현재 Issue의 owner인지 확인
         if (!isOwner(loginUser)) {
@@ -122,6 +130,10 @@ public class Issue extends AbstractEntity {
         }
     }
 
+    public void attach(Attachment file) {
+        attachments.add(file);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -141,6 +153,12 @@ public class Issue extends AbstractEntity {
         return "Issue{" +
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
+                ", writer=" + writer +
+                ", milestone=" + milestone +
+                ", assignee=" + assignee +
+                ", label=" + label +
+                ", answers=" + answers +
+                ", files=" + attachments +
                 '}';
     }
 }

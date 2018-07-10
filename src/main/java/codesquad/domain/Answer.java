@@ -28,11 +28,6 @@ public class Answer extends AbstractEntity {
     public Answer() {
     }
 
-    public Answer(User writer, String contents) {
-        this.writer = writer;
-        this.contents = contents;
-    }
-
     public Answer(User writer, Issue issue, String contents) {
         this.writer = writer;
         this.issue = issue;

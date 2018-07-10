@@ -72,33 +72,28 @@
       <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
         <p>{{issue.comment}}</p>
       </div>
+      <!-- answer start -->
       <div id="answer-list" class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
-
-        <!-- answer start -->
-
-
-        <!--<div class="comment mdl-color-text&#45;&#45;grey-700">-->
-        <!--<header class="comment__header">-->
-        <!--<img class="comment__avatar2" height="48" width="48"-->
-        <!--src="https://avatars3.githubusercontent.com/u/14341811?v=3&s=400" alt="진저애비">-->
-        <!--<div class="comment__author">-->
-        <!--<strong>-->
-        <!--<a>진저애비</a>-->
-
-
-        <!--upload file <a href="upload file" target="_blank">[view]</a>-->
-
-
-        <!--</strong>-->
-        <!--</div>-->
-        <!--</header>-->
-        <!--</div>-->
-        <!--<hr>-->
-
-
-        <!-- comments end -->
       </div>
-      <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
+      {{#issue.attachments.files}}
+      <div class="file mdl-color-text--grey-700">
+        <header class="file__header">
+          <div class="file__author">
+            <strong>
+
+
+              <br/>
+              upload file name : {{name}}<a href="/issues/{{issue.id}}/attachments/{{id}}"
+                                            target="_blank">[view]</a>
+
+
+            </strong>
+          </div>
+        </header>
+      </div>
+      <hr>
+      {{/issue.attachments.files}}
+      <form action="/issues/{{issue.id}}/attachments" enctype="multipart/form-data" method="POST">
         <div style="margin:10px;">
           <input type="file" name="file" id="file"/>
           <button class="mdl-button" type="submit">upload file</button>

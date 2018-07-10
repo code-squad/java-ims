@@ -42,7 +42,7 @@ public class IssueController {
 
     @PostMapping
     public String create(@LoginUser User loginUser, IssueDto issue) {
-        Issue returnedIssue = issueService.add(issue.toIssue(), loginUser);
+        Issue returnedIssue = issueService.add(issue.applyToIssue(), loginUser);
         return "redirect:/issues/" + returnedIssue.getId();
     }
 
