@@ -86,7 +86,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
     }
 
-    private ResponseEntity<String> login(TestRestTemplate testRestTemplate) {
+    private ResponseEntity<String> login() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("userId", "javajigi")
                 .addParameter("password", "test").build();
@@ -95,10 +95,11 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
-    public void login() {
-        ResponseEntity<String> response = login(template());
-
+    public void login_defaultUser() {
+        ResponseEntity<String> response = login();
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertThat(response.getBody().contains("로그아웃"), is(true));
+
+        response = basicAuthTemplate(findDefaultUser()).getForEntity("/", String.class);
+        assertThat(response.getBody().contains("logout"), is(true));
     }
 }
