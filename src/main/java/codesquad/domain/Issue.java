@@ -2,12 +2,15 @@ package codesquad.domain;
 
 import codesquad.CannotDeleteException;
 import codesquad.dto.IssueDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
@@ -37,6 +40,13 @@ public class Issue extends AbstractEntity {
     @Column
     @Enumerated
     private Label label;
+
+    @OneToMany(mappedBy = "issue",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OrderBy("id ASC")
+    @JsonIgnore
+    private List<Answer> answers = new ArrayList<>();
+
+    private boolean deleted = false;
 
     public Issue(long id, String subject, String comment, User writer) {
         super(id);
@@ -107,6 +117,11 @@ public class Issue extends AbstractEntity {
         return this;
     }
 
+    public void addAnswer(Answer answer) {
+        answer.toIssue(this);
+        answers.add(answer);
+    }
+
     public String getSubject() {
         return subject;
     }
@@ -127,6 +142,14 @@ public class Issue extends AbstractEntity {
         return label;
     }
 
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
@@ -138,4 +161,6 @@ public class Issue extends AbstractEntity {
                 ", label=" + label +
                 '}';
     }
+
+
 }

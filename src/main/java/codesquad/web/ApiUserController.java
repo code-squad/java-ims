@@ -30,7 +30,6 @@ public class ApiUserController {
     @PostMapping("")
     public ResponseEntity<Void> create(@Valid @RequestBody UserDto user) {
         User savedUser = userService.add(user);
-
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/api/users/" + savedUser.getId()));
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);

@@ -2,6 +2,7 @@ package codesquad.service;
 
 import codesquad.CannotDeleteException;
 import codesquad.domain.*;
+import codesquad.dto.AnswerDto;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import org.slf4j.Logger;
@@ -21,6 +22,12 @@ public class IssueService {
 
     @Resource(name = "userRepository")
     private UserRepository userRepository;
+
+    @Resource(name = "answerRepository")
+    private AnswerRepository answerRepository;
+
+    @Resource(name = "deleteHistoryRepository")
+    private DeleteHistoryRepository deleteHistoryRepository;
 
     public List<Issue> findAll() {
         return issueRepository.findAll();
@@ -75,5 +82,29 @@ public class IssueService {
         if (!issue.isOwner(loginUser))
             throw new CannotDeleteException("자신이 쓴 글만 라벨을 설정할 수 있습니다.");
         issue.updateLabel(loginUser, Label.values()[(int)id]);
+    }
+
+    public Answer addAnswer(long issueId, User answerWriter, String comment) {
+        Issue issue = issueRepository.findById(issueId).get();
+        log.info("issue answer : {}", issue.getAnswers().toString());
+        return answerRepository.save(new Answer(answerWriter, issue, comment));
+    }
+
+    public List<Answer> list() {
+        log.info("list method called");
+        return answerRepository.findAll();
+    }
+
+    @Transactional
+    public void deleteAnswer(User loginUser, long answerId) throws CannotDeleteException {
+        Answer answer = answerRepository.findById(answerId).get();
+        deleteHistoryRepository.save(answer.delete(loginUser));
+    }
+
+    @Transactional
+    public void editAnswer(User loginUser, long answerId, AnswerDto answerDto) throws CannotDeleteException {
+        log.info("editAnswer called");
+        Answer answer = answerRepository.findById(answerId).get();
+        answer.update(loginUser, answerDto);
     }
 }
