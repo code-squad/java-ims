@@ -9,6 +9,6 @@ insert into mile_stone (id, end_date, start_date, subject) values (1, '2018-06-2
 insert into mile_stone (id, end_date, start_date, subject) values (2, '2018-05-21 12:00:00', '2018-07-28 12:00:00', 'milestone import sql2');
 insert into mile_stone (id, end_date, start_date, subject) values (3, '2018-04-21 12:00:00', '2018-08-28 12:00:00', 'milestone import sql3');
 
-insert into answer (id, writer_id, issue_id , comment, deleted) values (1, 1, 1, 'answer in db', false );
-insert into answer (id, writer_id, issue_id , comment, deleted) values (2, 3, 1, 'answer writed by jimmy', false );
-insert into answer (id, writer_id, issue_id , comment, deleted) values (3, 3, 3, 'answer writed by jimmy2', false );
+insert into answer (id, writer_id, issue_id , comment, deleted) values (1, 1, 1, 'issue1 answer in db', false );
+insert into answer (id, writer_id, issue_id , comment, deleted) values (2, 3, 1, 'issue3 answer writed by jimmy', false );
+insert into answer (id, writer_id, issue_id , comment, deleted) values (3, 3, 3, 'issue3 answer writed by jimmy2', false );

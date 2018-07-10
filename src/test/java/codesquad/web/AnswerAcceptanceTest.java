@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.domain.User;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ public class AnswerAcceptanceTest extends AcceptanceTest {
     @Test
     public void addAnswer() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("contents", "test contents").build();
+                .addParameter("contents", "댓글 달기").build();
         ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/1/answers", request, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
@@ -39,11 +40,28 @@ public class AnswerAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    public void deleteFail() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "DELETE").build();
+        ResponseEntity<String> response = basicAuthTemplate(jimmyUser()).postForEntity("/issue/1/answers/1", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    @Test
     public void update() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("_method", "PUT")
                 .addParameter("contents", "수정된 댓글").build();
         ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issue/1/answers/1", request, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+    }
+
+    @Test
+    public void updateFail() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "PUT")
+                .addParameter("contents", "댓글수정실패").build();
+        ResponseEntity<String> response = basicAuthTemplate(jimmyUser()).postForEntity("/issue/1/answers/1", request, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 }
