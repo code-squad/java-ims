@@ -27,7 +27,9 @@ public class IssueAcceptanceTest extends AcceptanceTest {
                 .addParameter("comment", "이슈 내용").build();
 
         ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
-
         assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+
+        response = template.getForEntity("/", String.class);
+        assertThat(response.getBody().contains("이슈 제목"), is(true));
     }
 }
