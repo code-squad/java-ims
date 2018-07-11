@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.domain.Issue;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -31,5 +32,19 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
         response = template.getForEntity("/", String.class);
         assertThat(response.getBody().contains("이슈 제목"), is(true));
+    }
+
+    @Test
+    public void show() {
+        //create issue
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "이슈 제목")
+                .addParameter("comment", "이슈 내용").build();
+        template.postForEntity("/issues", request, String.class);
+
+        // show issue
+        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d", 1), String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 }

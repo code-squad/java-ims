@@ -20,6 +20,11 @@ public class Issue {
     }
 
     public Issue(String subject, String comment) {
+        this(null, subject, comment);
+    }
+
+    public Issue(Long id, String subject, String comment) {
+        this.id = id;
         this.subject = subject;
         this.comment = comment;
     }
@@ -38,6 +43,14 @@ public class Issue {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

@@ -5,6 +5,8 @@ import codesquad.domain.IssueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class IssueService {
 
@@ -15,4 +17,11 @@ public class IssueService {
         return issueRepository.save(issue);
     }
 
+    public Issue findById(long id) {
+        Optional<Issue> maybeIssue = issueRepository.findById(id);
+        if (!maybeIssue.isPresent()) {
+            throw new NullPointerException("Cannot find issue !");
+        }
+        return maybeIssue.get();
+    }
 }
