@@ -34,6 +34,11 @@ public class UserController {
         return "/user/form";
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "/users/login";
+    }
+
     @PostMapping("")
     public String create(UserDto userDto) {
         userService.add(userDto);
@@ -58,8 +63,10 @@ public class UserController {
         try {
             session.setAttribute(USER_SESSION_KEY, userService.login(userId, password));
         } catch (UnAuthenticationException e) {
-            model.addAttribute("message", "아이디 또는 비밀번호가 맞지 않습니다.");
-            return "users/form";
+            log.debug("login failed");
+            model.addAttribute("errorMessage", "아이디 또는 비밀번호가 맞지 않습니다.");
+            // context switching memory : login폼에 에러메세지 뿌려주는 것 만드는 중
+            return "redirect:/users/login";
         }
         return "redirect:/";
     }
