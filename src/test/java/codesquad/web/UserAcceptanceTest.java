@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -109,7 +110,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = basicAuthTemplate.getForEntity("/", String.class);
         assertThat(response.getBody().contains("logout"), is(true));
 
-        response = basicAuthTemplate.getForEntity("/users/logout", String.class);
-        assertThat(response.getBody().contains("login"), is(true));
+        response = basicAuthTemplate.exchange("/users/logout", HttpMethod.PUT, null, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
     }
 }

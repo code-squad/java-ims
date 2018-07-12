@@ -36,7 +36,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
-        return "/users/login";
+        return "/user/login";
     }
 
     @PostMapping("")
@@ -65,13 +65,12 @@ public class UserController {
         } catch (UnAuthenticationException e) {
             log.debug("login failed");
             model.addAttribute("errorMessage", "아이디 또는 비밀번호가 맞지 않습니다.");
-            // context switching memory : login폼에 에러메세지 뿌려주는 것 만드는 중
-            return "redirect:/users/login";
+            return "/user/login";
         }
         return "redirect:/";
     }
 
-    @GetMapping("/logout")
+    @PutMapping("/logout")
     public String logout(HttpSession session) {
         session.removeAttribute(USER_SESSION_KEY);
         return "redirect:/";
