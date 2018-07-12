@@ -55,7 +55,7 @@ public class UserController {
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
         userService.update(loginUser, id, target);
-        return "redirect:/users";
+        return "redirect:"+String.format("/users/%d/form", id);
     }
 
     @PostMapping("/login")
