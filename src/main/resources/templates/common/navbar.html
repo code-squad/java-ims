@@ -6,17 +6,14 @@
         <!-- Tabs -->
         <nav class="mdl-navigation">
             <a class="mdl-navigation__link" href="/">Issues</a>
-            <a class="mdl-navigation__link" href="/milestones">Milestones</a>
-            <a class="mdl-navigation__link" href="/labels">Label</a>
+            <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
+
             {{^loginedUser}}
-            <a class="mdl-navigation__link" href="/users/login">login</a>
+            <a class="mdl-navigation__link" href="/user/login.html">login</a>
             <a class="mdl-navigation__link" href="/users/form">join</a>
             {{/loginedUser}}
             {{#loginedUser}}
-            <form id="logout" action="/users/logout" method="post">
-                <input type="hidden" name="_method" value="put">
-                <a class="mdl-navigation__link" href="#" onclick="document.getElementById('logout').submit();">logout</a>
-            </form>
+            <a class="mdl-navigation__link" href="/user/login.html">logout</a>
             <a class="mdl-navigation__link" href="/users/{{loginedUser.id}}/form">my</a>
             {{/loginedUser}}
 
