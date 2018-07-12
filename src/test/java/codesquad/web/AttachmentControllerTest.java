@@ -20,7 +20,16 @@ public class AttachmentControllerTest extends AcceptanceTest {
 
     @Test
     public void download() throws Exception {
-        ResponseEntity<String> result = template.getForEntity("/attachments/1", String.class);
+        // upload
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
+                .multipartFormData()
+                .addParameter("file", new ClassPathResource("import.sql"))
+                .build();
+        ResponseEntity<String> result = template.postForEntity("/attachments", request, String.class);
+        assertEquals(HttpStatus.FOUND, result.getStatusCode());
+
+        // download
+        result = template.getForEntity("/attachments/1", String.class);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         log.debug("body : {}", result.getBody());
     }
