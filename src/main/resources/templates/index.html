@@ -30,11 +30,13 @@
             <nav class="mdl-navigation">
                 <a class="mdl-navigation__link" href="/">Issues</a>
                 <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-                {{#if isLogined}}
-                <a class="mdl-navigation__link" href="/user/login.html">logout</a>
-                {{else}}
+
+                {{^loginedUser}}
                 <a class="mdl-navigation__link" href="/user/login.html">login</a>
-                {{/if}}
+                {{/loginedUser}}
+                {{#loginedUser}}
+                <a class="mdl-navigation__link" href="/user/login.html">logout</a>
+                {{/loginedUser}}
                 <a class="mdl-navigation__link" href="/users/form">join</a>
             </nav>
         </div>

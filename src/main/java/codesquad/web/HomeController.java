@@ -4,6 +4,7 @@ import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
 import codesquad.security.HttpSessionUtils;
+import codesquad.security.LoginUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -25,16 +26,9 @@ public class HomeController {
     IssueRepository issueRepository;
 
     @GetMapping("/")
-    public String home(HttpSession session, Model model) {
+    public String home(Model model) {
         List<Issue> issues = issueRepository.findAll();
         model.addAttribute("issues", issues);
-
-        User loginedUser = (User) session.getAttribute(USER_SESSION_KEY);
-        if (loginedUser == null) {
-            model.addAttribute("isLogined", false);
-            return "index";
-        }
-        model.addAttribute("isLogined", true);
         return "index";
     }
 }

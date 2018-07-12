@@ -11,17 +11,13 @@ import java.util.Optional;
 public class IssueService {
 
     @Autowired
-    IssueRepository issueRepository;
+    private IssueRepository issueRepository;
 
     public Issue save(Issue issue) {
         return issueRepository.save(issue);
     }
 
     public Issue findById(long id) {
-        Optional<Issue> maybeIssue = issueRepository.findById(id);
-        if (!maybeIssue.isPresent()) {
-            throw new NullPointerException("Cannot find issue !");
-        }
-        return maybeIssue.get();
+        return issueRepository.findById(id).orElseThrow(NullPointerException::new);
     }
 }
