@@ -20,12 +20,7 @@ public class Attchment extends AbstractEntity {
     private String path;
 
     public Attchment() {}
-
-    public Attchment(String fileName, String contentType) {
-        this.fileName = fileName;
-        this.contentType = contentType;
-    }
-
+    
     public Attchment(String fileName, String contentType, String path) {
         this.fileName = fileName;
         this.contentType = contentType;
@@ -49,18 +44,6 @@ public class Attchment extends AbstractEntity {
 
     public String getPath() {
         return path;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     @Override
