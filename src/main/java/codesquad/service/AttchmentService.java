@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,13 +36,10 @@ public class AttchmentService {
         if (!file.isEmpty()) {
             byte [] bytes = file.getBytes();
             Path path = Paths.get(file.getOriginalFilename());
-            log.info("path1 : {}", path.toString());
+            log.info("uploading directory : {}", path.toString());
             Files.write(path, bytes);
-            File target = new File(getPath(), file.getOriginalFilename());
-            log.info("target info : {}", target.toString());
-//            FileCopyUtils.copy(file.getBytes(), target);
-//            File target = new File(getPath(), file.getOriginalFilename());
-            file.transferTo(target);
+            File target = new File(getPath() + file.getOriginalFilename());
+            FileCopyUtils.copy(file.getBytes(), target);
             return attchmentRepository.save(new Attchment(file.getOriginalFilename(), file.getContentType(), target.getPath()));
         }
         throw new FileUploadBase.IOFileUploadException("파일을 업로드 할 수 없습니다.");
