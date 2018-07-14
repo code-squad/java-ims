@@ -9,12 +9,12 @@ import javax.validation.constraints.Size;
 public class Issue extends AbstractEntity {
 
     @Size(min = 3, max = 100)
-    @Column(length = 100, nullable = false)
-    private String title;
+    @Column(nullable = false, length = 25)
+    private String subject;
 
     @Size(min = 3)
-    @Lob
-    private String contents;
+    @Column(nullable = false, length = 25)
+    private String comment;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
@@ -22,17 +22,18 @@ public class Issue extends AbstractEntity {
 
     public Issue() {}
 
-    public Issue(String title, String contents) {
-        this.title = title;
-        this.contents = contents;
+    public Issue(String subject, String comment) {
+        super();
+        this.subject = subject;
+        this.comment = comment;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSubject() {
+        return subject;
     }
 
-    public String getContents() {
-        return contents;
+    public String getComment() {
+        return comment;
     }
 
     public User getWriter() {
@@ -42,8 +43,8 @@ public class Issue extends AbstractEntity {
     @Override
     public String toString() {
         return "Issue{" +
-                "title='" + title + '\'' +
-                ", contents='" + contents + '\'' +
+                "subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
                 ", writer=" + writer +
                 '}';
     }

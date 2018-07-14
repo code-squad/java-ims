@@ -2,6 +2,7 @@ package codesquad.dto;
 
 import codesquad.domain.Issue;
 
+import javax.persistence.Lob;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -10,22 +11,24 @@ public class IssueDto {
     private long id;
 
     @Size (min = 3, max = 100)
-    private String title;
+    private String subject;
 
     @Size (min = 3)
-    private String contents;
+    @Lob
+    private String comment;
 
     public IssueDto() {
     }
 
-    public IssueDto(String title, String contents) {
-        this(0, title, contents);
+    public IssueDto(String subject, String comment) {
+        this.subject = subject;
+        this.comment = comment;
     }
 
-    public IssueDto(long id, String title, String contents) {
+    public IssueDto(long id, String subject, String comment) {
         this.id = id;
-        this.title = title;
-        this.contents = contents;
+        this.subject = subject;
+        this.comment = comment;
     }
 
     public long getId() {
@@ -36,32 +39,32 @@ public class IssueDto {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public String getContents() {
-        return contents;
+    public String getComment() {
+        return comment;
     }
 
-    public void setContents(String contents) {
-        this.contents = contents;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public Issue toIssue() {
-        return new Issue(this.title, this.contents);
+        return new Issue(subject, comment);
     }
 
     @Override
     public String toString() {
         return "IssueDto{" +
                 "id=" + id +
-                ", title='" + title + '\'' +
-                ", contents='" + contents + '\'' +
+                ", subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
                 '}';
     }
 
@@ -70,13 +73,12 @@ public class IssueDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IssueDto issueDto = (IssueDto) o;
-        return Objects.equals(title, issueDto.title) &&
-                Objects.equals(contents, issueDto.contents);
+        return Objects.equals(subject, issueDto.subject) &&
+                Objects.equals(comment, issueDto.comment);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(title, contents);
+        return Objects.hash(subject, comment);
     }
 }
