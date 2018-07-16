@@ -7,18 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Service
 public class AttchmentService {
@@ -32,14 +23,11 @@ public class AttchmentService {
 
     public Attchment add(MultipartFile file) throws Exception {
         log.debug("original file name on service : {}", file.getOriginalFilename());
-        log.debug("contenttype on service : {}", file.getContentType());
+        log.debug("content-type on service : {}", file.getContentType());
         if (!file.isEmpty()) {
-            byte [] bytes = file.getBytes();
-            Path path = Paths.get(file.getOriginalFilename());
-            log.info("uploading directory : {}", path.toString());
-            Files.write(path, bytes);
-            File target = new File(getPath() + file.getOriginalFilename());
-            FileCopyUtils.copy(file.getBytes(), target);
+            File target = new File(getPath(), file.getOriginalFilename());
+            log.info("target : {}", target.toString());
+            file.transferTo(target);
             return attchmentRepository.save(new Attchment(file.getOriginalFilename(), file.getContentType(), target.getPath()));
         }
         throw new FileUploadBase.IOFileUploadException("파일을 업로드 할 수 없습니다.");
