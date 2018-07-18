@@ -1,12 +1,9 @@
 package codesquad.web;
 
-import codesquad.CannotShowException;
-import codesquad.domain.Comment;
-import codesquad.domain.Milestone;
+import codesquad.domain.Issue;
 import codesquad.domain.User;
-import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
-import codesquad.service.*;
+import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -42,9 +39,9 @@ public class IssueController {
     }
 
     @PostMapping()
-    public String create(@LoginUser User user, IssueDto issueDto) {
-        log.debug("issue : {}", issueDto.toString());
-        issueService.create(user, issueDto);
+    public String create(@LoginUser User user, Issue issue) {
+        log.debug("issue : {}", issue.toString());
+        issueService.save(issue);
         return "redirect:/";
     }
 
@@ -58,39 +55,15 @@ public class IssueController {
         return "/issue/show";
     }
 
-    @PostMapping("/{id}/form")
-    String updateForm(@LoginUser User user, @PathVariable long id, Model model) throws CannotShowException {
+    @GetMapping("/{id}/form")
+    String updateForm(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
         return "/issue/updateForm";
     }
 
-    @PutMapping("/{id}")
-    public String update(@LoginUser User user, @PathVariable long id, IssueDto updateIssueDto) {
-        issueService.update(id, user, updateIssueDto);
-        return String.format("redirect:/issues/%d", id);
-    }
-
-    @DeleteMapping("/{id}")
-    public String delete(@LoginUser User user, @PathVariable long id) {
-        issueService.delete(id);
-        return "redirect:/";
-    }
-
-    @GetMapping("/{issueId}/milestones/{milestoneId}")
-    public String setMilestone(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long milestoneId) {
-        issueService.setMilestone(issueId, milestoneId);
-        return "redirect:/";
-    }
-
-    @GetMapping("/{issueId}/users/{userId}")
-    public String setAssignee(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long userId) {
-        issueService.setAssignee(issueId, userId);
-        return "redirect:/";
-    }
-
-    @GetMapping("/{issueId}/labels/{labelId}")
-    public String setLabel(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long labelId) {
-        issueService.setLabel(issueId, labelId);
-        return "redirect:/";
+    @PostMapping("/{id}/form")
+    public String update(@PathVariable long id, Issue updateIssue) {
+        issueService.update(id, updateIssue);
+        return String.format("/issues/%d", id);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
@@ -16,42 +17,35 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class IssueAcceptanceTest extends AcceptanceTest {
-    private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
-
-    private TestRestTemplate template;
-    private Long issueId = 1L;
-
-    @Before
-    public void setUp() {
-        template = basicAuthTemplate(findDefaultUser());
-        createDummyIssue();
-    }
-
-    private void createDummyIssue() {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "생성된 첫 번째 이슈 제목")
-                .addParameter("comment", "생성된 첫 번째 이슈 내용").build();
-        template.postForEntity("/issues", request, String.class);
-
-        request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "수정될 두 번째 이슈 제목")
-                .addParameter("comment", "수정될 두 번째 이슈 내용").build();
-        template.postForEntity("/issues", request, String.class);
-
-        request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "수정 후 삭제될 세 번째 이슈 제목")
-                .addParameter("comment", "수정 후 삭제될 세 번째 이슈 내용").build();
-        template.postForEntity("/issues", request, String.class);
-    }
+    private static final Logger log =  LoggerFactory.getLogger(IssueAcceptanceTest.class);
 
     @Test
     public void issueCreateForm_login() {
-        ResponseEntity<String> response = template.getForEntity("/issues/form", String.class);
+        ResponseEntity<String> response = basicAuthTemplate(findDefaultUser()).getForEntity("/issues/form", String.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
-    @Test
+//    @Test
+//    public void issueCreateForm_no_login() {
+//        ResponseEntity<String> response = template.getForEntity("/issues/form", String.class);
+//
+//        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+//    }
+
+//    @Test
+//    public void create_no_login() {
+//        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+//                .addParameter("subject", "이슈 제목")
+//                .addParameter("comment", "이슈 내용").build();
+//
+//        ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+//        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+//
+//        response = template.getForEntity("/", String.class);
+//        assertThat(response.getBody().contains("이슈 제목"), is(true));
+//    }
+
     public void create_login() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("subject", "생성된 네 번째 이슈 제목")
@@ -82,31 +76,9 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         issueId = 2L;
 
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "수정된 이슈 제목")
-                .addParameter("comment", "수정된 이슈 내용").build();
-        template.put("/issues/" + issueId, request, String.class);
-
-        ResponseEntity<String> response = template.getForEntity("/issues/" + issueId, String.class);
-        log.debug(response.getBody());
-        assertThat(response.getBody().contains("수정된 이슈 제목"), is(true));
-    }
-
-    @Test
-    public void delete() {
-        issueId = 3L;
-
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "수정된 세 번째 이슈 제목")
-                .addParameter("comment", "수정된 세 번째 이슈 내용").build();
-        template.put("/issues/" + issueId, request, String.class);
-
-        ResponseEntity<String> response = template.getForEntity("/", String.class);
-        assertThat(response.getBody().contains("수정된 세 번째 이슈 제목"), is(true));
-
-        template.delete("/issues/" + issueId);
-        response = template.getForEntity("/", String.class);
-        assertThat(response.getBody().contains("수정된 세 번째 이슈 제목"), is(false));
-    }
+                .addParameter("subject", "이슈 제목")
+                .addParameter("comment", "이슈 내용").build();
+         basicAuthTemplate(findDefaultUser()).postForEntity("/issues", request, String.class);
 
     @Test
     public void setMilestoneToIssue_Pass() {
@@ -127,5 +99,21 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         Long userId = 2L; // 만들어져있는 유저
         ResponseEntity<String> response = template.getForEntity("/issues/" + issueId + "/users/" + userId, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void updateForm() {
+        //create issue
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "이슈 제목")
+                .addParameter("comment", "이슈 내용").build();
+
+        TestRestTemplate template = basicAuthTemplate(findDefaultUser());
+        template.postForEntity("/issues", request, String.class);
+
+        //update issue
+        long issueId = 1;
+        ResponseEntity<String> response = template.getForEntity("/issues/"+issueId+"/form", String.class);
+        assertThat(response.getBody().contains("Update"), is(true));
     }
 }

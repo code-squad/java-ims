@@ -1,8 +1,6 @@
 package codesquad.domain;
 
-import codesquad.dto.IssueDto;
-import support.domain.AbstractEntity;
-
+import javax.naming.AuthenticationException;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -80,6 +78,10 @@ public class Issue extends AbstractEntity {
         this.comments = comments;
     }
 
+    public void writeBy(User loginedUser) {
+        writer = loginedUser;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
@@ -97,45 +99,7 @@ public class Issue extends AbstractEntity {
             throw new IllegalArgumentException("Cannot match user");
         }
         this.subject = updateIssue.subject;
-        this.contents = updateIssue.contents;
+        this.comment = updateIssue.comment;
         return this;
-    }
-
-    public Issue update(IssueDto updateIssueDto, User updateWriter) {
-        if (!this.writer.equals(updateWriter)) {
-            throw new IllegalArgumentException("Cannot match user");
-        }
-        this.subject = updateIssueDto.getSubject();
-        this.contents = updateIssueDto.getComment();
-        return this;
-    }
-
-    public void deleted() {
-        deleted = true;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public boolean matchWriter(User writer) {
-        return this.writer.equals(writer);
-    }
-
-    public void registerMilestone(Milestone milestone) {
-        this.milestone = milestone;
-    }
-
-    public void registerAssignee(User user) {
-        assignees.addAssignee(user);
-    }
-
-    public void registerLabel(Label label) {
-        labels.addLabel(label);
-    }
-
-    public List<Comment> addComment(Comment comment) {
-        comments.add(comment);
-        return comments;
     }
 }

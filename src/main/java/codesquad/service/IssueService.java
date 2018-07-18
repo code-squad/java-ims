@@ -84,4 +84,8 @@ public class IssueService {
         Label label = labelRepository.findById(labelId).orElseThrow(() -> new NullPointerException("not exist label."));
         findById(issueId).registerLabel(label);
     }
+
+    public Issue update(long id, Issue updateIssue) {
+        return issueRepository.findById(id).get().update(updateIssue);
+    }
 }
