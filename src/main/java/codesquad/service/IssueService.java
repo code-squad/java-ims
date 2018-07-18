@@ -20,4 +20,8 @@ public class IssueService {
     public Issue findById(long id) {
         return issueRepository.findById(id).orElseThrow(NullPointerException::new);
     }
+
+    public Issue update(long id, Issue updateIssue) {
+        return issueRepository.findById(id).get().update(updateIssue);
+    }
 }

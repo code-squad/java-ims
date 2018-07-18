@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import javax.naming.AuthenticationException;
 import javax.persistence.*;
 
 @Entity
@@ -53,11 +54,24 @@ public class Issue {
         this.id = id;
     }
 
+    public void writeBy(User loginedUser) {
+        writer = loginedUser;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';
+    }
+
+    public Issue update(Issue updateIssue) {
+        if (!this.writer.equals(updateIssue.writer)) {
+            throw new IllegalArgumentException("Cannot match user");
+        }
+        this.subject = updateIssue.subject;
+        this.comment = updateIssue.comment;
+        return this;
     }
 }

@@ -1,6 +1,8 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.User;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +24,13 @@ public class IssueController {
     private IssueService issueService;
 
     @GetMapping("/form")
-    public String createForm() {
-        return "/issue/form.html";
+    public String createForm(@LoginUser User user) {
+        log.debug("issue form");
+        return "/issue/form";
     }
 
     @PostMapping()
-    public String create(Issue issue) {
+    public String create(@LoginUser User user, Issue issue) {
         log.debug("issue : {}", issue.toString());
         issueService.save(issue);
         return "redirect:/";
@@ -37,5 +40,17 @@ public class IssueController {
     public String show(@PathVariable long id, Model model) {
          model.addAttribute("issue", issueService.findById(id));
         return "/issue/show";
+    }
+
+    @GetMapping("/{id}/form")
+    String updateForm(@PathVariable long id, Model model) {
+        model.addAttribute("issue", issueService.findById(id));
+        return "/issue/updateForm";
+    }
+
+    @PostMapping("/{id}/form")
+    public String update(@PathVariable long id, Issue updateIssue) {
+        issueService.update(id, updateIssue);
+        return String.format("/issues/%d", id);
     }
 }

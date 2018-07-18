@@ -13,4 +13,18 @@ public class IssueTest {
         assertThat(issue.toString().contains("subject")
                 &&issue.toString().contains("comment"),is(true));
     }
+
+    @Test
+    public void update() {
+        User user = new User("learner", "test1234", "taewon");
+        Issue issue = new Issue("subject", "comment");
+        issue.writeBy(user);
+
+        Issue newIssue = new Issue("updateSubject", "updateComment");
+        newIssue.writeBy(user);
+
+        issue.update(newIssue);
+        assertThat(issue.toString().contains("updateSubject"), is(true));
+
+    }
 }
