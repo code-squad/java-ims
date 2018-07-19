@@ -1,6 +1,5 @@
 package codesquad.domain;
 
-import javax.naming.AuthenticationException;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -44,9 +43,14 @@ public class Issue extends AbstractEntity {
         this(subject, contents, null);
     }
 
-    public Issue(String subject, String contents, User writer) {
+    public Issue(Long id, String subject, String comment) {
+        this(id, subject, comment, null);
+    }
+
+    public Issue(Long id, String subject, String comment, User writer) {
+        this.id = id;
         this.subject = subject;
-        this.contents = contents;
+        this.comment = comment;
         this.writer = writer;
     }
 
@@ -78,6 +82,14 @@ public class Issue extends AbstractEntity {
         this.comments = comments;
     }
 
+    public User getWriter() {
+        return writer;
+    }
+
+    public void setWriter(User writer) {
+        this.writer = writer;
+    }
+
     public void writeBy(User loginedUser) {
         writer = loginedUser;
     }
@@ -85,12 +97,10 @@ public class Issue extends AbstractEntity {
     @Override
     public String toString() {
         return "Issue{" +
-                "id=" + getId() +
+                "id=" + id +
                 ", writer=" + writer +
                 ", subject='" + subject + '\'' +
-                ", contents='" + contents + '\'' +
-                ", milestone='" + milestone + '\'' +
-                ", assignee='" + assignees + '\'' +
+                ", comment='" + comment + '\'' +
                 '}';
     }
 

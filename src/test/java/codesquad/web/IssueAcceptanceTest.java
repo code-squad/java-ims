@@ -116,4 +116,18 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = template.getForEntity("/issues/"+issueId+"/form", String.class);
         assertThat(response.getBody().contains("Update"), is(true));
     }
+
+    @Test
+    public void update() {
+        Issue issue = new Issue( "이슈 제목", "이슈 내용");
+        TestRestTemplate template = basicAuthTemplate(findDefaultUser());
+        template.postForEntity("/issues", issue, String.class);
+
+        Issue updateIssue = new Issue(1L, "수정된 이슈 제목", "수정된 이슈 내용", findDefaultUser());
+        template.postForEntity("/issues/1", updateIssue, String.class);
+
+        ResponseEntity<String> response = template.getForEntity("/issues/1", String.class);
+        log.debug(response.getBody());
+        assertThat(response.getBody().contains("수정된 이슈 제목") ,is(true));
+    }
 }

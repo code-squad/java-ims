@@ -1,11 +1,9 @@
 package codesquad.service;
 
-import codesquad.CannotShowException;
-import codesquad.domain.*;
-import codesquad.dto.IssueDto;
-import codesquad.security.LoginUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import codesquad.domain.Issue;
+import codesquad.domain.IssueRepository;
+import codesquad.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,19 +17,8 @@ public class IssueService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
-    @Resource(name = "milestoneRepository")
-    private MilestoneRepository milestoneRepository;
-
-    @Resource(name = "userRepository")
-    private UserRepository userRepository;
-
-    @Resource(name = "labelRepository")
-    private LabelRepository labelRepository;
-
-    public Issue create(@LoginUser User user, IssueDto issueDto) {
-        log.debug("create01");
-        Issue issue = issueDto.toIssue(user);
-        log.debug("create02");
+    public Issue save(User loginedUser, Issue issue) {
+        issue.writeBy(loginedUser);
         return issueRepository.save(issue);
     }
 
@@ -86,6 +73,8 @@ public class IssueService {
     }
 
     public Issue update(long id, Issue updateIssue) {
-        return issueRepository.findById(id).get().update(updateIssue);
+        Issue dbIssue = issueRepository.findById(id).orElseThrow(() -> new NullPointerException("Not exist issue."));
+        dbIssue.update(updateIssue);
+        return issueRepository.save(dbIssue);
     }
 }
