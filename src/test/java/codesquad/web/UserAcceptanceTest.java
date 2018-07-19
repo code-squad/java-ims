@@ -98,7 +98,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void login_defaultUser() {
         ResponseEntity<String> response = login();
-        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
 
         response = basicAuthTemplate(findDefaultUser()).getForEntity("/", String.class);
         assertThat(response.getBody().contains("logout"), is(true));

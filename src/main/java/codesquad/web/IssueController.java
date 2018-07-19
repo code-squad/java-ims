@@ -28,7 +28,7 @@ public class IssueController {
     }
 
     @PostMapping()
-    public String create(@LoginUser User user, @RequestBody Issue issue) {
+    public String create(@LoginUser User user, Issue issue) {
         log.debug("issue : {}", issue.toString());
         issueService.save(user, issue);
         return "redirect:/";
@@ -36,20 +36,20 @@ public class IssueController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
-         model.addAttribute("issue", issueService.findById(id));
+        // TODO 지워진 것은 사용자가 볼 수 없어야 한다.
+        model.addAttribute("issue", issueService.findById(id));
         return "/issue/show";
     }
 
-    @GetMapping("/{id}/form")
+    @PostMapping("/{id}/form")
     String updateForm(@LoginUser User user, @PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
         return "/issue/updateForm";
     }
 
     @PutMapping("/{id}")
-    public String update(@LoginUser User user, @PathVariable long id, @RequestBody Issue updateIssue) {
-        log.debug("issue update : {}", updateIssue);
-        issueService.update(id, updateIssue);
+    public String update(@LoginUser User user, @PathVariable long id, Issue updateIssue) {
+        issueService.update(id, user, updateIssue);
         return String.format("redirect:/issues/%d", id);
     }
 

@@ -27,8 +27,9 @@ public class IssueService {
         return issueRepository.findById(id).orElseThrow(NullPointerException::new);
     }
 
-    public Issue update(long id, Issue updateIssue) {
+    public Issue update(long id, User writer, Issue updateIssue) {
         Issue dbIssue = issueRepository.findById(id).orElseThrow(() -> new NullPointerException("Not exist issue."));
+        updateIssue.writeBy(writer);
         dbIssue.update(updateIssue);
         return issueRepository.save(dbIssue);
     }
@@ -37,8 +38,6 @@ public class IssueService {
         Optional<Issue> dbIssue = issueRepository.findById(id);
         dbIssue.ifPresent(Issue::deleted);
         dbIssue.ifPresent( x -> issueRepository.save(x));
-//        Issue issue = issueRepository.findById(id).get();
-//        log.debug("issue deleted : {}", issue.isDeleted());
     }
 
     public Iterable<Issue> findAll() {
