@@ -16,6 +16,8 @@ public class Issue {
 
     String comment;
 
+    Boolean deleted = false;
+
     public Issue() {
     }
 
@@ -70,6 +72,14 @@ public class Issue {
         writer = loginedUser;
     }
 
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
@@ -87,5 +97,13 @@ public class Issue {
         this.subject = updateIssue.subject;
         this.comment = updateIssue.comment;
         return this;
+    }
+
+    public void deleted() {
+        deleted = true;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 }

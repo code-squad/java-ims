@@ -101,4 +101,18 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         log.debug(response.getBody());
         assertThat(response.getBody().contains("수정된 이슈 제목") ,is(true));
     }
+
+    @Test
+    public void delete() {
+        Issue issue = new Issue(1L, "이슈 제목", "이슈 내용");
+        TestRestTemplate template = basicAuthTemplate(findDefaultUser());
+        template.postForEntity("/issues", issue, String.class);
+
+        ResponseEntity<String> response = template.getForEntity("/", String.class);
+        assertThat(response.getBody().contains("이슈 제목"), is(true));
+
+        template.delete("/issues/"+issue.getId());
+        response = template.getForEntity("/", String.class);
+        assertThat(response.getBody().contains("이슈 제목"), is(false));
+    }
 }
