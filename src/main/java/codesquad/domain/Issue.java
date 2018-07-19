@@ -36,6 +36,8 @@ public class Issue extends AbstractEntity {
     @JoinColumn(name = "issueId")
     private List<Comment> comments = new ArrayList<>();
 
+    Boolean deleted = false;
+
     public Issue() {
     }
 
@@ -94,6 +96,14 @@ public class Issue extends AbstractEntity {
         writer = loginedUser;
     }
 
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
@@ -111,5 +121,13 @@ public class Issue extends AbstractEntity {
         this.subject = updateIssue.subject;
         this.comment = updateIssue.comment;
         return this;
+    }
+
+    public void deleted() {
+        deleted = true;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 }
