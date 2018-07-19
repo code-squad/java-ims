@@ -2,6 +2,7 @@ package codesquad.service;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,8 @@ public class IssueService {
     @Autowired
     private IssueRepository issueRepository;
 
-    public Issue save(Issue issue) {
+    public Issue save(User loginedUser, Issue issue) {
+        issue.writeBy(loginedUser);
         return issueRepository.save(issue);
     }
 
@@ -22,6 +24,8 @@ public class IssueService {
     }
 
     public Issue update(long id, Issue updateIssue) {
-        return issueRepository.findById(id).get().update(updateIssue);
+        Issue dbIssue = issueRepository.findById(id).orElseThrow(() -> new NullPointerException("Not exist issue."));
+        dbIssue.update(updateIssue);
+        return issueRepository.save(dbIssue);
     }
 }

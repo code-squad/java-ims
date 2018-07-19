@@ -1,6 +1,5 @@
 package codesquad.domain;
 
-import javax.naming.AuthenticationException;
 import javax.persistence.*;
 
 @Entity
@@ -25,9 +24,14 @@ public class Issue {
     }
 
     public Issue(Long id, String subject, String comment) {
+        this(id, subject, comment, null);
+    }
+
+    public Issue(Long id, String subject, String comment, User writer) {
         this.id = id;
         this.subject = subject;
         this.comment = comment;
+        this.writer = writer;
     }
 
     public String getSubject() {
@@ -54,6 +58,14 @@ public class Issue {
         this.id = id;
     }
 
+    public User getWriter() {
+        return writer;
+    }
+
+    public void setWriter(User writer) {
+        this.writer = writer;
+    }
+
     public void writeBy(User loginedUser) {
         writer = loginedUser;
     }
@@ -61,7 +73,9 @@ public class Issue {
     @Override
     public String toString() {
         return "Issue{" +
-                "subject='" + subject + '\'' +
+                "id=" + id +
+                ", writer=" + writer +
+                ", subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';
     }

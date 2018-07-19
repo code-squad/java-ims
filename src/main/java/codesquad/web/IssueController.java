@@ -8,12 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/issues")
@@ -30,9 +28,9 @@ public class IssueController {
     }
 
     @PostMapping()
-    public String create(@LoginUser User user, Issue issue) {
+    public String create(@LoginUser User user, @RequestBody Issue issue) {
         log.debug("issue : {}", issue.toString());
-        issueService.save(issue);
+        issueService.save(user, issue);
         return "redirect:/";
     }
 
@@ -48,9 +46,10 @@ public class IssueController {
         return "/issue/updateForm";
     }
 
-    @PostMapping("/{id}/form")
-    public String update(@PathVariable long id, Issue updateIssue) {
+    @PostMapping("/{id}")
+    public String update(@PathVariable long id, @RequestBody Issue updateIssue) {
+        log.debug("issue update : {}", updateIssue);
         issueService.update(id, updateIssue);
-        return String.format("/issues/%d", id);
+        return String.format("redirect:/issues/%d", id);
     }
 }
