@@ -41,15 +41,21 @@ public class IssueController {
     }
 
     @GetMapping("/{id}/form")
-    String updateForm(@PathVariable long id, Model model) {
+    String updateForm(@LoginUser User user, @PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
         return "/issue/updateForm";
     }
 
-    @PostMapping("/{id}")
-    public String update(@PathVariable long id, @RequestBody Issue updateIssue) {
+    @PutMapping("/{id}")
+    public String update(@LoginUser User user, @PathVariable long id, @RequestBody Issue updateIssue) {
         log.debug("issue update : {}", updateIssue);
         issueService.update(id, updateIssue);
         return String.format("redirect:/issues/%d", id);
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User user, @PathVariable long id) {
+        issueService.delete(id);
+        return "redirect:/";
     }
 }
