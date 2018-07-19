@@ -3,16 +3,18 @@ package codesquad.service;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
 public class IssueService {
-    private static final Logger log = LoggerFactory.getLogger(IssueService.class);
+    private static final Logger log =  LoggerFactory.getLogger(IssueService.class);
 
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
@@ -76,5 +78,17 @@ public class IssueService {
         Issue dbIssue = issueRepository.findById(id).orElseThrow(() -> new NullPointerException("Not exist issue."));
         dbIssue.update(updateIssue);
         return issueRepository.save(dbIssue);
+    }
+
+    public void delete(long id) {
+        Optional<Issue> dbIssue = issueRepository.findById(id);
+        dbIssue.ifPresent(Issue::deleted);
+        dbIssue.ifPresent( x -> issueRepository.save(x));
+//        Issue issue = issueRepository.findById(id).get();
+//        log.debug("issue deleted : {}", issue.isDeleted());
+    }
+
+    public Iterable<Issue> findAll() {
+        return issueRepository.findByDeleted(false);
     }
 }

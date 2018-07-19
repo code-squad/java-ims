@@ -24,8 +24,10 @@ public class HomeController {
     private static final Logger log =  LoggerFactory.getLogger(HomeController.class);
     private static final String USER_SESSION_KEY = "loginedUser";
 
+    //    @Resource(name = "issueRepository")
+//    IssueRepository issueRepository;
     @Resource(name = "issueService")
-    private IssueService issueService;
+    IssueService issueService;
 
     @GetMapping("/")
     public String home(Model model) {
