@@ -21,7 +21,7 @@ public class IssueService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
-    public Issue save(User loginedUser, IssueDto issueDto) {
+    public Issue create(User loginedUser, IssueDto issueDto) {
         Issue issue = issueDto.toIssue();
         issue.writeBy(loginedUser);
         return issueRepository.save(issue);
