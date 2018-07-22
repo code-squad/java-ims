@@ -30,29 +30,19 @@ public class IssueController {
     @PostMapping()
     public String create(@LoginUser User user, IssueDto issueDto) {
         log.debug("issue : {}", issueDto.toString());
-        issueService.save(user, issueDto);
+        issueService.create(user, issueDto);
         return "redirect:/";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) throws CannotShowException {
-        // TODO 지워진 issue를 url 조작을 통해 사용자가 볼 수 없어야 한다.
-        // issueService에서 issue를 찾고 deleted 여부를 판단하여 exception을 발생시킨다?
-//        try {
-            model.addAttribute("issue", issueService.findById(id));
-//        } catch (CannotShowException e) {
-//
-//        }
+        model.addAttribute("issue", issueService.findById(id));
         return "/issue/show";
     }
 
     @PostMapping("/{id}/form")
-    String updateForm(@LoginUser User user, @PathVariable long id, Model model) {
-        try {
-            model.addAttribute("issue", issueService.findById(id));
-        } catch (CannotShowException e) {
-            log.debug("CannotShowException message : {}", e.getMessage());
-        }
+    String updateForm(@LoginUser User user, @PathVariable long id, Model model) throws CannotShowException {
+        model.addAttribute("issue", issueService.findById(id));
         return "/issue/updateForm";
     }
 

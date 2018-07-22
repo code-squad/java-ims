@@ -1,6 +1,9 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.dto.IssueDto;
+import codesquad.service.IssueService;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +16,27 @@ import org.springframework.web.client.RestTemplate;
 import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import javax.annotation.Resource;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class IssueAcceptanceTest extends AcceptanceTest {
     private static final Logger log =  LoggerFactory.getLogger(IssueAcceptanceTest.class);
+
+    @Resource(name = "issueService")
+    private IssueService issueService;
+
+    private IssueDto issueDto;
+    private Issue issue;
+    long issueId;
+
+    @Before
+    public void setUp() {
+        issueDto = new IssueDto("이슈 제목", "이슈 내용");
+        issue = issueService.create(findDefaultUser(), issueDto);
+        issueId = issue.getId();
+    }
 
     @Test
     public void issueCreateForm_login() {
@@ -40,46 +59,35 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void show() {
-        //create issue
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "이슈 제목")
-                .addParameter("comment", "이슈 내용").build();
-         basicAuthTemplate(findDefaultUser()).postForEntity("/issues", request, String.class);
-
         // show issue
-        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d", 1), String.class);
+        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d", issueId), String.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
     @Test
     public void updateForm() {
-        //create issue
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "이슈 제목")
-                .addParameter("comment", "이슈 내용").build();
-
-        TestRestTemplate template = basicAuthTemplate(findDefaultUser());
-        template.postForEntity("/issues", request, String.class);
+//        //create issue
+//        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+//                .addParameter("subject", "이슈 제목")
+//                .addParameter("comment", "이슈 내용").build();
+//
+//        TestRestTemplate template = basicAuthTemplate(findDefaultUser());
+//        template.postForEntity("/issues", request, String.class);
 
         //update issue
-        long issueId = 1;
+//        long issueId = 1;
+
+        TestRestTemplate template = basicAuthTemplate(findDefaultUser());
         ResponseEntity<String> response = template.postForEntity("/issues/"+issueId+"/form", null, String.class);
         assertThat(response.getBody().contains("Update"), is(true));
     }
 
     @Test
     public void update() {
-        //create issue
-        long issueId = 1L;
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "이슈 제목")
-                .addParameter("comment", "이슈 내용").build();
-
         TestRestTemplate template = basicAuthTemplate(findDefaultUser());
-        template.postForEntity("/issues", request, String.class);
 
-        request = HtmlFormDataBuilder.urlEncodedForm()
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("subject", "수정된 이슈 제목")
                 .addParameter("comment", "수정된 이슈 내용").build();
         template.put("/issues/"+issueId, request, String.class);
@@ -91,21 +99,17 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void delete() {
-        //create issue
-        long issueId = 1L;
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "이슈 제목")
-                .addParameter("comment", "이슈 내용").build();
-
+        issueDto = new IssueDto("삭제될 이슈 제목", "삭제될 이슈 내용");
+        issue = issueService.create(findDefaultUser(), issueDto);
+        issueId = issue.getId();
 
         TestRestTemplate template = basicAuthTemplate(findDefaultUser());
-        template.postForEntity("/issues", request, String.class);
 
         ResponseEntity<String> response = template.getForEntity("/", String.class);
-        assertThat(response.getBody().contains("이슈 제목"), is(true));
+        assertThat(response.getBody().contains("삭제될 이슈 제목"), is(true));
 
         template.delete("/issues/"+issueId);
         response = template.getForEntity("/", String.class);
-        assertThat(response.getBody().contains("이슈 제목"), is(false));
+        assertThat(response.getBody().contains("삭제될 이슈 제목"), is(false));
     }
 }

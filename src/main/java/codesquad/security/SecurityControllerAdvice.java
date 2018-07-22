@@ -42,10 +42,6 @@ public class SecurityControllerAdvice {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public String cannotShow() {
         log.debug("CannotShowException is happened!");
-//        ModelAndView mv = new ModelAndView();
-//        mv.setViewName("/issues/2");
-
-//        return "redirect:/issues/2";
         return "400.html";
     }
 }
