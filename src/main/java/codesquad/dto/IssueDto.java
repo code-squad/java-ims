@@ -1,7 +1,6 @@
 package codesquad.dto;
 
 import codesquad.domain.Issue;
-import codesquad.domain.User;
 
 public class IssueDto {
     private String subject;
@@ -32,8 +31,8 @@ public class IssueDto {
         this.comment = comment;
     }
 
-    public Issue toIssue(User writer) {
-        return new Issue(subject, comment, writer);
+    public Issue toIssue() {
+        return new Issue(subject, comment);
     }
 
     @Override
