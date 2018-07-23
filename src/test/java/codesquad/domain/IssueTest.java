@@ -76,14 +76,13 @@ public class IssueTest {
 
     @Test
     public void update() {
-        User user = new User("learner", "test1234", "taewon");
-        Issue issue = new Issue("subject", "comment");
-        issue.writeBy(user);
+        User writer = new User("learner", "test1234", "taewon");
+        IssueDto issueDto = new IssueDto("subject", "comment");
+        Issue issue = issueDto.toIssue(writer);
 
-        Issue newIssue = new Issue("updateSubject", "updateComment");
-        newIssue.writeBy(user);
+        IssueDto updateIssueDto = new IssueDto("updateSubject", "updateComment");
+        issue.update(updateIssueDto, writer);
 
-        issue.update(newIssue);
         assertThat(issue.toString().contains("updateSubject"), is(true));
 
     }

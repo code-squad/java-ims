@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import codesquad.dto.IssueDto;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -41,12 +43,12 @@ public class Issue extends AbstractEntity {
     public Issue() {
     }
 
-    public Issue(String subject, String contents) {
-        this(subject, contents, null);
+    public Issue(String subject, String comment) {
+        this(null, subject, comment, null);
     }
 
-    public Issue(Long id, String subject, String comment) {
-        this(id, subject, comment, null);
+    public Issue(String subject, String comment, User writer) {
+        this(null, subject, comment, writer);
     }
 
     public Issue(Long id, String subject, String comment, User writer) {
@@ -60,20 +62,12 @@ public class Issue extends AbstractEntity {
         return subject;
     }
 
-    public String getContents() {
-        return contents;
+    public String getComment() {
+        return comment;
     }
 
-    public User getWriter() {
-        return writer;
-    }
-
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public Milestone getMilestone() {
-        return milestone;
+    public Long getId() {
+        return id;
     }
 
     public List<Comment> getComments() {
@@ -88,20 +82,8 @@ public class Issue extends AbstractEntity {
         return writer;
     }
 
-    public void setWriter(User writer) {
-        this.writer = writer;
-    }
-
-    public void writeBy(User loginedUser) {
-        writer = loginedUser;
-    }
-
     public Boolean getDeleted() {
         return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
     }
 
     @Override
@@ -120,6 +102,15 @@ public class Issue extends AbstractEntity {
         }
         this.subject = updateIssue.subject;
         this.comment = updateIssue.comment;
+        return this;
+    }
+
+    public Issue update(IssueDto updateIssueDto, User updateWriter) {
+        if (!this.writer.equals(updateWriter)) {
+            throw new IllegalArgumentException("Cannot match user");
+        }
+        this.subject = updateIssueDto.getSubject();
+        this.comment = updateIssueDto.getComment();
         return this;
     }
 

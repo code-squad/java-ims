@@ -22,8 +22,7 @@ public class IssueService {
     private IssueRepository issueRepository;
 
     public Issue create(User loginedUser, IssueDto issueDto) {
-        Issue issue = issueDto.toIssue();
-        issue.writeBy(loginedUser);
+        Issue issue = issueDto.toIssue(loginedUser);
         return issueRepository.save(issue);
     }
 
@@ -35,11 +34,10 @@ public class IssueService {
         return issue;
     }
 
-    public Issue update(long id, User writer, IssueDto updateIssueDto) {
+    public Issue update(long id, User updateWriter, IssueDto updateIssueDto) {
         Issue dbIssue = issueRepository.findById(id).orElseThrow(() -> new NullPointerException("Not exist issue."));
-        Issue updateIssue = updateIssueDto.toIssue();
-        updateIssue.writeBy(writer);
-        dbIssue.update(updateIssue);
+//        Issue updateIssue = updateIssueDto.toIssue(writer);
+        dbIssue.update(updateIssueDto, updateWriter);
         return issueRepository.save(dbIssue);
     }
 
