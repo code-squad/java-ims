@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import codesquad.dto.IssueDto;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,33 +18,32 @@ public class Issue {
 
     String comment;
 
+    Boolean deleted = false;
+
     public Issue() {
     }
 
     public Issue(String subject, String comment) {
-        this(null, subject, comment);
+        this(null, subject, comment, null);
     }
 
-    public Issue(Long id, String subject, String comment) {
+    public Issue(String subject, String comment, User writer) {
+        this(null, subject, comment, writer);
+    }
+
+    public Issue(Long id, String subject, String comment, User writer) {
         this.id = id;
         this.subject = subject;
         this.comment = comment;
+        this.writer = writer;
     }
 
     public String getSubject() {
         return subject;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
     public String getComment() {
         return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
     }
 
     public Long getId() {
@@ -53,11 +54,47 @@ public class Issue {
         this.id = id;
     }
 
+    public User getWriter() {
+        return writer;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
-                "subject='" + subject + '\'' +
+                "id=" + id +
+                ", writer=" + writer +
+                ", subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';
+    }
+
+    public Issue update(Issue updateIssue) {
+        if (!this.writer.equals(updateIssue.writer)) {
+            throw new IllegalArgumentException("Cannot match user");
+        }
+        this.subject = updateIssue.subject;
+        this.comment = updateIssue.comment;
+        return this;
+    }
+
+    public Issue update(IssueDto updateIssueDto, User updateWriter) {
+        if (!this.writer.equals(updateWriter)) {
+            throw new IllegalArgumentException("Cannot match user");
+        }
+        this.subject = updateIssueDto.getSubject();
+        this.comment = updateIssueDto.getComment();
+        return this;
+    }
+
+    public void deleted() {
+        deleted = true;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 }

@@ -56,10 +56,14 @@
                 <label class="mdl-textfield__label" for="password">Password</label>
               </div>
             </div>
+
+          {{#errorMessage}}
+          <div style="text-align : center">{{this}}</div>
+          {{/errorMessage}}
+
             <div class="mdl-card__supporting-text">
               <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit" style="margin:10px auto; width:200px;">Submit</button>
             </div>
-
           </form>
           </div>
         </div>

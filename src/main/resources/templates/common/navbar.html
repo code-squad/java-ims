@@ -1,0 +1,25 @@
+<header class="mdl-layout__header mdl-layout__header--waterfall">
+    <div class="mdl-layout__header-row">
+        <!-- Title -->
+        <span class="mdl-layout-title">Issue Tracking System</span>
+        <div class="mdl-layout-spacer"></div>
+        <!-- Tabs -->
+        <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="/">Issues</a>
+            <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
+
+            {{^loginedUser}}
+            <a class="mdl-navigation__link" href="/users/login">login</a>
+            <a class="mdl-navigation__link" href="/users/form">join</a>
+            {{/loginedUser}}
+            {{#loginedUser}}
+            <form id="logout" action="/users/logout" method="post">
+                <input type="hidden" name="_method" value="put">
+                <a class="mdl-navigation__link" href="#" onclick="document.getElementById('logout').submit();">logout</a>
+            </form>
+            <a class="mdl-navigation__link" href="/users/{{loginedUser.id}}/form">my</a>
+            {{/loginedUser}}
+
+        </nav>
+    </div>
+</header>
