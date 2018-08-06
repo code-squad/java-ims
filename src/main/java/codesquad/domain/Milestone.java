@@ -66,4 +66,9 @@ public class Milestone extends AbstractEntity {
     private LocalDateTime stringToLocalDateTime(String date) {
         return LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
     }
+
+    public String getDueDate() {
+        return endDate.format(DateTimeFormatter.ofPattern("'Due by' MMM dd, yyyy"));
+    }
+
 }

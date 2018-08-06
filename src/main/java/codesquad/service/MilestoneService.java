@@ -15,4 +15,8 @@ public class MilestoneService {
     public void save(Milestone milestone) {
         milestoneRepository.save(milestone);
     }
+
+    public Iterable<Milestone> findAll() {
+        return milestoneRepository.findAll();
+    }
 }
