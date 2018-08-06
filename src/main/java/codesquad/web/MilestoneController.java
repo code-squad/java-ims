@@ -25,7 +25,8 @@ public class MilestoneController {
     private MilestoneService milestoneService;
 
     @GetMapping()
-    public String list() {
+    public String list(Model model) {
+        model.addAttribute("milestones", milestoneService.findAll());
         return "/milestone/list";
     }
 
@@ -35,9 +36,8 @@ public class MilestoneController {
     }
 
     @PostMapping()
-    public String create(Milestone milestone) {
+    public String create(@LoginUser User user, Milestone milestone) {
         milestoneService.save(milestone);
-        log.debug("milestone create : {}", milestone.toString());
-        return "redirect:/";
+        return "redirect:/milestones";
     }
 }
