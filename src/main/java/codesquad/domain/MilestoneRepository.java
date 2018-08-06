@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface MilestoneRepository extends CrudRepository<Milestone, Long> {
     @Override
-    Optional<Milestone> findById(Long id);
+    Optional<Milestone> findById(Long aLong);
 }
