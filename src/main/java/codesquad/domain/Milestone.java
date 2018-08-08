@@ -31,6 +31,10 @@ public class Milestone extends AbstractEntity {
     public Milestone() {
     }
 
+    public Milestone(String subject) {
+        this.subject = subject;
+    }
+
     public String getSubject() {
         return subject;
     }
@@ -71,4 +75,11 @@ public class Milestone extends AbstractEntity {
         return endDate.format(DateTimeFormatter.ofPattern("'Due by' MMM dd, yyyy"));
     }
 
+    @Override
+    public String toString() {
+        return "Milestone{" +
+                "subject='" + subject + '\'' +
+                ", endDate=" + endDate +
+                '}';
+    }
 }

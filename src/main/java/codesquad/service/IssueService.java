@@ -1,9 +1,7 @@
 package codesquad.service;
 
 import codesquad.CannotShowException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +17,9 @@ public class IssueService {
 
     @Autowired
     private IssueRepository issueRepository;
+
+    @Autowired
+    private MilestoneRepository milestoneRepository;
 
     public Issue create(User loginedUser, IssueDto issueDto) {
         Issue issue = issueDto.toIssue(loginedUser);
@@ -48,5 +49,11 @@ public class IssueService {
 
     public Iterable<Issue> findAll() {
         return issueRepository.findByDeleted(false);
+    }
+
+    public Issue setMilestone(User user, Long issueId, Long milestoneId) {
+        Issue issue = findById(issueId);
+        milestoneRepository.findById(milestoneId).ifPresent(m -> issue.registerMilestone(m));
+        return issue;
     }
 }

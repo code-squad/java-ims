@@ -41,4 +41,11 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = template.postForEntity("/milestones", request, String.class);
         assertThat(response.getStatusCode(),is(HttpStatus.OK));
     }
+
+    @Test
+    public void show() {
+        Long id = 1L;
+        ResponseEntity<String> response = template.getForEntity("/milestones/" + id, String.class);
+        assertThat(response.getStatusCode() ,is(HttpStatus.OK));
+    }
 }
