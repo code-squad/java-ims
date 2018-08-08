@@ -40,6 +40,10 @@ public class Issue extends AbstractEntity {
 
     Boolean deleted = false;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    Milestone milestone;
+
     public Issue() {
     }
 
@@ -93,6 +97,7 @@ public class Issue extends AbstractEntity {
                 ", writer=" + writer +
                 ", subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
+                ", milestone='" + milestone + '\'' +
                 '}';
     }
 
@@ -120,5 +125,13 @@ public class Issue extends AbstractEntity {
 
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public boolean matchWriter(User writer) {
+        return this.writer.equals(writer);
+    }
+
+    public void registerMilestone(Milestone milestone) {
+        this.milestone = milestone;
     }
 }

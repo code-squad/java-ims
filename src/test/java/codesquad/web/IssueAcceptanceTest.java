@@ -19,7 +19,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
 
     private TestRestTemplate template;
-    private long issueId = 1;
+    private Long issueId = 1L;
 
     @Before
     public void setUp() {
@@ -106,5 +106,12 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         template.delete("/issues/" + issueId);
         response = template.getForEntity("/", String.class);
         assertThat(response.getBody().contains("수정된 세 번째 이슈 제목"), is(false));
+    }
+
+    @Test
+    public void setMilestoneToIssue() {
+        Long milestoneId = 1L;
+        ResponseEntity<String> response = template.getForEntity("/issues/" + issueId + "/milestones/" + milestoneId, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 }
