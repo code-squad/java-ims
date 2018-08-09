@@ -3,6 +3,7 @@ package codesquad.service;
 import codesquad.CannotShowException;
 import codesquad.domain.*;
 import codesquad.dto.IssueDto;
+import codesquad.security.LoginUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,10 @@ public class IssueService {
     @Autowired
     private MilestoneRepository milestoneRepository;
 
-    public Issue create(User loginedUser, IssueDto issueDto) {
-        Issue issue = issueDto.toIssue(loginedUser);
+    public Issue create(@LoginUser User user, IssueDto issueDto) {
+        log.debug("create01");
+        Issue issue = issueDto.toIssue(user);
+        log.debug("create02");
         return issueRepository.save(issue);
     }
 
@@ -52,9 +55,14 @@ public class IssueService {
         return issueRepository.findByDeleted(false);
     }
 
+    @Transactional
     public Issue setMilestone(User user, Long issueId, Long milestoneId) {
         Issue issue = findById(issueId);
-        milestoneRepository.findById(milestoneId).ifPresent(m -> issue.registerMilestone(m));
+//        milestoneRepository.findById(milestoneId).ifPresent(m -> issue.registerMilestone(m));
+        Optional<Milestone> milestone = milestoneRepository.findById(milestoneId);
+        if (milestone.isPresent()) {
+            issue.registerMilestone(milestone.get());
+        }
         return issue;
     }
 }

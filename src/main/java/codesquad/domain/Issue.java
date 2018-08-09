@@ -41,7 +41,7 @@ public class Issue extends AbstractEntity {
     Boolean deleted = false;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    @JoinColumn(name="milestone_id")
     Milestone milestone;
 
     public Issue() {
@@ -90,6 +90,14 @@ public class Issue extends AbstractEntity {
         return deleted;
     }
 
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
@@ -131,6 +139,7 @@ public class Issue extends AbstractEntity {
         return this.writer.equals(writer);
     }
 
+    // TODO setMilestone의 중복임, 제거하기
     public void registerMilestone(Milestone milestone) {
         this.milestone = milestone;
     }
