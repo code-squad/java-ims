@@ -1,6 +1,5 @@
 package codesquad.domain;
 
-import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
@@ -13,7 +12,7 @@ import java.util.List;
 
 @Entity
 public class Milestone extends AbstractEntity {
-    private static final Logger log =  LoggerFactory.getLogger(Milestone.class);
+    private static final Logger log = LoggerFactory.getLogger(Milestone.class);
 
     @Column(length = 50)
     private String subject;

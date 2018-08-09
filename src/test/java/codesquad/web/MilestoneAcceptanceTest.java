@@ -32,6 +32,7 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
         assertThat(response.getStatusCode(),is(HttpStatus.OK));
     }
 
+    @Test
     public void create() {
         TestRestTemplate template = basicAuthTemplate(findDefaultUser());
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
@@ -40,12 +41,5 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
                 .addParameter("endDate", "생성된 첫 번째 이슈 내용").build();
         ResponseEntity<String> response = template.postForEntity("/milestones", request, String.class);
         assertThat(response.getStatusCode(),is(HttpStatus.OK));
-    }
-
-    @Test
-    public void show() {
-        Long id = 1L;
-        ResponseEntity<String> response = template.getForEntity("/milestones/" + id, String.class);
-        assertThat(response.getStatusCode() ,is(HttpStatus.OK));
     }
 }

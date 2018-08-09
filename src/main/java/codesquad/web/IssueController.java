@@ -1,10 +1,12 @@
 package codesquad.web;
 
 import codesquad.CannotShowException;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,9 @@ public class IssueController {
 
     @Resource(name = "issueService")
     private IssueService issueService;
+
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
 
     @GetMapping("/form")
     public String createForm(@LoginUser User user) {
@@ -37,6 +42,7 @@ public class IssueController {
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) throws CannotShowException {
         model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("milestones", milestoneService.findAll());
         return "/issue/show";
     }
 
