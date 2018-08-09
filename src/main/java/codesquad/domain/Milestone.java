@@ -8,6 +8,8 @@ import support.domain.AbstractEntity;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Milestone extends AbstractEntity {
@@ -18,6 +20,9 @@ public class Milestone extends AbstractEntity {
 
     @Column
     private LocalDateTime startDate;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "milestone")
+    private List<Issue> issues = new ArrayList<>();
 
     @Column
     private LocalDateTime endDate;
@@ -73,6 +78,17 @@ public class Milestone extends AbstractEntity {
 
     public String getDueDate() {
         return endDate.format(DateTimeFormatter.ofPattern("'Due by' MMM dd, yyyy"));
+    }
+
+    public List<Issue> getIssues() {
+        if (issues == null) {
+            issues = new ArrayList<>();
+        }
+        return issues;
+    }
+
+    public void setIssues(List<Issue> issues) {
+        this.issues = issues;
     }
 
     @Override
