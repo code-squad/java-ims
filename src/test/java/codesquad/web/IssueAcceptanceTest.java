@@ -114,4 +114,11 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = template.getForEntity("/issues/" + issueId + "/milestones/" + milestoneId, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
+
+    @Test
+    public void setAssigneeToIssue() {
+        Long userId = 2L; // 만들어져있는 유저
+        ResponseEntity<String> response = template.getForEntity("/issues/" + issueId + "/users/" + userId, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
 }

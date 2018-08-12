@@ -3,6 +3,8 @@ package codesquad.domain;
 import codesquad.dto.IssueDto;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Issue {
@@ -12,17 +14,21 @@ public class Issue {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
-    User writer;
+    private User writer;
 
-    String subject;
+    private String subject;
 
-    String comment;
+    private String comment;
 
-    Boolean deleted = false;
+    private Boolean deleted = false;
 
     @ManyToOne
-    @JoinColumn(name="milestone_id")
-    Milestone milestone;
+    @JoinColumn(name = "milestone_id")
+    private Milestone milestone;
+
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "issue_id")
+    private List<User> assignees = new ArrayList<>();
 
     public Issue() {
     }
@@ -82,6 +88,7 @@ public class Issue {
                 ", subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 ", milestone='" + milestone + '\'' +
+                ", assignee='" + assignees + '\'' +
                 '}';
     }
 
@@ -111,6 +118,14 @@ public class Issue {
         return deleted;
     }
 
+    public List<User> getAssignees() {
+        return assignees;
+    }
+
+    public void setAssignees(List<User> assignees) {
+        this.assignees = assignees;
+    }
+
     public boolean matchWriter(User writer) {
         return this.writer.equals(writer);
     }
@@ -118,5 +133,9 @@ public class Issue {
     // TODO setMilestone의 중복임, 제거하기
     public void registerMilestone(Milestone milestone) {
         this.milestone = milestone;
+    }
+
+    public void registerAssignee(User user) {
+        assignees.add(user);
     }
 }

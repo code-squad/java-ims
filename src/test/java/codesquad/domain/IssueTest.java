@@ -12,7 +12,7 @@ public class IssueTest {
     public void create() {
         Issue issue = new Issue("subject", "comment");
         assertThat(issue.toString().contains("subject")
-                &&issue.toString().contains("comment"),is(true));
+                && issue.toString().contains("comment"), is(true));
     }
 
     @Test
@@ -33,7 +33,7 @@ public class IssueTest {
         User writer = new User(1L, "learner", "test1234", "taewon");
         Issue issue = new Issue("사용자 일치 이슈", "코멘트 내용", writer);
 
-        assertThat(issue.matchWriter(writer),is(true));
+        assertThat(issue.matchWriter(writer), is(true));
     }
 
     @Test
@@ -41,7 +41,16 @@ public class IssueTest {
         Milestone milestone = new Milestone("사용자 일치 기능");
         Issue issue = new Issue("사용자 일치 이슈", "코멘트 내용");
 
-        issue.registerMilestone(milestone);
-        assertThat(issue.toString().contains("사용자 일치 기능"),is(true));
+        issue.setMilestone(milestone);
+        assertThat(issue.toString().contains("사용자 일치 기능"), is(true));
+    }
+
+    @Test
+    public void setAssignee() {
+        User user = new User(1L, "learner", "test1234", "taewon");
+        Issue issue = new Issue("사용자 일치 이슈", "코멘트 내용");
+
+        issue.registerAssignee(user);
+        assertThat(issue.toString().contains("learner"), is(true));
     }
 }
