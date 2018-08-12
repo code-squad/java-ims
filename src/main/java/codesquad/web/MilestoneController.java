@@ -41,11 +41,4 @@ public class MilestoneController {
         milestoneService.save(milestone);
         return "redirect:/milestones";
     }
-
-    // TODO milestone show 추가
-//    @GetMapping("/{id}")
-//    public String show(@PathVariable Long id, Model model) {
-//        model.addAttribute("milestone", milestoneService.show(id));
-//        return "milestone/show";
-//    }
 }
