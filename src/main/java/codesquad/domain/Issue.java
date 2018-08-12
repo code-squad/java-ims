@@ -26,9 +26,11 @@ public class Issue {
     @JoinColumn(name = "milestone_id")
     private Milestone milestone;
 
-    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "issue_id")
-    private List<User> assignees = new ArrayList<>();
+    //    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "issue_id")
+//    private List<User> assignees = new ArrayList<>();
+    @Embedded
+    private Assignees assignees = new Assignees();
 
     public Issue() {
     }
@@ -118,13 +120,13 @@ public class Issue {
         return deleted;
     }
 
-    public List<User> getAssignees() {
-        return assignees;
-    }
-
-    public void setAssignees(List<User> assignees) {
-        this.assignees = assignees;
-    }
+//    public List<User> getAssignees() {
+//        return assignees;
+//    }
+//
+//    public void setAssignees(List<User> assignees) {
+//        this.assignees = assignees;
+//    }
 
     public boolean matchWriter(User writer) {
         return this.writer.equals(writer);
@@ -135,7 +137,10 @@ public class Issue {
         this.milestone = milestone;
     }
 
-    public void registerAssignee(User user) {
-        assignees.add(user);
+//    public void registerAssignee(User user) {
+//        assignees.add(user);
+//    }
+    public void registerAssignee(Long userId) {
+        assignees.addAssignee(userId, id);
     }
 }
