@@ -3,7 +3,6 @@ package codesquad.domain;
 import codesquad.dto.IssueDto;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +13,9 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
-    @Size(min = 1, max = 50)
-    @Column(length = 50)
     private String subject;
 
-    @Size(min = 1, max = 200)
-    @Column(length = 200)
-    private String contents;
+    private String comment;
 
     private Boolean deleted = false;
 
@@ -28,21 +23,9 @@ public class Issue extends AbstractEntity {
     @JoinColumn(name = "milestone_id")
     private Milestone milestone;
 
-    @Embedded
-    private Assignees assignees = new Assignees();
-
-    @Embedded
-    private Labels labels = new Labels();
-
-    @OneToMany
-    @JoinColumn(name = "issueId")
-    private List<Comment> comments = new ArrayList<>();
-
-    Boolean deleted = false;
-
-    @ManyToOne
-    @JoinColumn(name="milestone_id")
-    Milestone milestone;
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "issue_id")
+    private List<User> assignees = new ArrayList<>();
 
     public Issue() {
     }
@@ -106,6 +89,7 @@ public class Issue extends AbstractEntity {
                 ", subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 ", milestone='" + milestone + '\'' +
+                ", assignee='" + assignees + '\'' +
                 '}';
     }
 
@@ -135,6 +119,14 @@ public class Issue extends AbstractEntity {
         return deleted;
     }
 
+    public List<User> getAssignees() {
+        return assignees;
+    }
+
+    public void setAssignees(List<User> assignees) {
+        this.assignees = assignees;
+    }
+
     public boolean matchWriter(User writer) {
         return this.writer.equals(writer);
     }
@@ -142,5 +134,9 @@ public class Issue extends AbstractEntity {
     // TODO setMilestone의 중복임, 제거하기
     public void registerMilestone(Milestone milestone) {
         this.milestone = milestone;
+    }
+
+    public void registerAssignee(User user) {
+        assignees.add(user);
     }
 }

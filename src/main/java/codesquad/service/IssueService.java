@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import javax.swing.text.html.Option;
 import java.util.Optional;
 
@@ -20,8 +21,11 @@ public class IssueService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
-    @Autowired
+    @Resource(name = "milestoneRepository")
     private MilestoneRepository milestoneRepository;
+
+    @Resource(name = "userRepository")
+    private UserRepository userRepository;
 
     public Issue create(@LoginUser User user, IssueDto issueDto) {
         log.debug("create01");
@@ -58,11 +62,23 @@ public class IssueService {
     @Transactional
     public Issue setMilestone(User user, Long issueId, Long milestoneId) {
         Issue issue = findById(issueId);
-//        milestoneRepository.findById(milestoneId).ifPresent(m -> issue.registerMilestone(m));
-        Optional<Milestone> milestone = milestoneRepository.findById(milestoneId);
-        if (milestone.isPresent()) {
-            issue.registerMilestone(milestone.get());
+        // TODO Java8 문법 사용하여 줄이기
+        Optional<Milestone> maybeMilestone = milestoneRepository.findById(milestoneId);
+        if (maybeMilestone.isPresent()) {
+            issue.registerMilestone(maybeMilestone.get());
         }
+        return issue;
+    }
+
+    @Transactional
+    public Issue setAssignee(Long issueId, Long userId) {
+        Issue issue = findById(issueId);
+        Optional<User> maybeUser = userRepository.findById(userId);
+        System.out.println("assignee : " + maybeUser.toString());
+        if (maybeUser.isPresent()) {
+            issue.registerAssignee(maybeUser.get());
+        }
+        log.info("setAssignee 4");
         return issue;
     }
 }

@@ -21,61 +21,6 @@ public class IssueTest {
 
     @Test
     public void update() {
-        IssueDto issueDto = new IssueDto("subject", "comment");
-        Issue issue = issueDto.toIssue(writer);
-
-        IssueDto updateIssueDto = new IssueDto("updateSubject", "updateComment");
-        issue.update(updateIssueDto, writer);
-
-        assertThat(issue.toString().contains("updateSubject"), is(true));
-    }
-
-    @Test
-    public void matchWriter() {
-        Issue issue = new Issue("사용자 일치 이슈", "코멘트 내용", writer);
-
-        assertThat(issue.matchWriter(writer), is(true));
-    }
-
-    @Test
-    public void setMilestone() {
-        Milestone milestone = new Milestone("사용자 일치 기능");
-        Issue issue = new Issue("사용자 일치 이슈", "코멘트 내용");
-
-        issue.registerMilestone(milestone);
-        assertThat(issue.toString().contains("사용자 일치 기능"), is(true));
-    }
-
-    @Test
-    public void setAssignee() {
-        Issue issue = new Issue("사용자 일치 이슈", "이슈 내용", writer);
-
-        issue.registerAssignee(writer);
-        System.out.println(issue.toString());
-        assertThat(issue.toString().contains("3"), is(true));
-    }
-
-    @Test
-    public void setLabel() {
-        Label label = new Label("라벨");
-        Issue issue = new Issue("라벨 일치 이슈", "코멘트 내용");
-
-        issue.registerLabel(label);
-        assertThat(issue.toString().contains("라벨"),is(true));
-    }
-
-    @Test
-    public void setComments() {
-        Issue issue = new Issue("댓글 등록 이슈", "댓글 등록 내용");
-        Comment comment = new Comment("댓글에는 문제가 없는데요?");
-        comment.writtenby(writer);
-        List<Comment> comments =  issue.addComment(comment);
-
-        assertThat(comments.size()>0, is(true));
-    }
-
-    @Test
-    public void update() {
         User writer = new User("learner", "test1234", "taewon");
         IssueDto issueDto = new IssueDto("subject", "comment");
         Issue issue = issueDto.toIssue(writer);
@@ -92,7 +37,7 @@ public class IssueTest {
         User writer = new User(1L, "learner", "test1234", "taewon");
         Issue issue = new Issue("사용자 일치 이슈", "코멘트 내용", writer);
 
-        assertThat(issue.matchWriter(writer),is(true));
+        assertThat(issue.matchWriter(writer), is(true));
     }
 
     @Test
@@ -100,7 +45,16 @@ public class IssueTest {
         Milestone milestone = new Milestone("사용자 일치 기능");
         Issue issue = new Issue("사용자 일치 이슈", "코멘트 내용");
 
-        issue.registerMilestone(milestone);
-        assertThat(issue.toString().contains("사용자 일치 기능"),is(true));
+        issue.setMilestone(milestone);
+        assertThat(issue.toString().contains("사용자 일치 기능"), is(true));
+    }
+
+    @Test
+    public void setAssignee() {
+        User user = new User(1L, "learner", "test1234", "taewon");
+        Issue issue = new Issue("사용자 일치 이슈", "코멘트 내용");
+
+        issue.registerAssignee(user);
+        assertThat(issue.toString().contains("learner"), is(true));
     }
 }
