@@ -7,9 +7,9 @@ public class Assignee {
     private Long userId;
     private Long issueId;
 
-    public Assignee(User user, Issue issue) {
-        userId = user.getId();
-        issueId = issue.getId();
+    public Assignee(Long userId, Long issueId) {
+        this.userId = userId;
+        this.issueId = issueId;
     }
 
     @Override
