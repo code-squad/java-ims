@@ -74,11 +74,10 @@ public class IssueService {
     public Issue setAssignee(Long issueId, Long userId) {
         Issue issue = findById(issueId);
         Optional<User> maybeUser = userRepository.findById(userId);
-        System.out.println("assignee : " + maybeUser.toString());
         if (maybeUser.isPresent()) {
-            issue.registerAssignee(maybeUser.get());
+//            issue.registerAssignee(maybeUser.get());
+            issue.registerAssignee(userId);
         }
-        log.info("setAssignee 4");
         return issue;
     }
 }

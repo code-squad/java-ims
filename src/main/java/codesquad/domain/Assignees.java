@@ -7,14 +7,12 @@ import java.util.List;
 
 @Embeddable
 public class Assignees {
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "ISSUE_USER",
-            joinColumns = @JoinColumn(name = "ISSUE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "USER_ID"))
-    private List<User> assignees = new ArrayList<>();
 
-    public Assignees addAssignee(User user) {
-        assignees.add(user);
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Assignee> assignees = new ArrayList<>();
+
+    public Assignees addAssignee(Long userId, Long issueId) {
+        assignees.add(new Assignee(userId, issueId));
         return this;
     }
 
