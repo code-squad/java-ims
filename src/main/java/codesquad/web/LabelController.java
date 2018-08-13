@@ -6,6 +6,7 @@ import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.LabelService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,8 @@ public class LabelController {
     LabelService labelService;
 
     @GetMapping
-    public String list() {
+    public String list(Model model) {
+        model.addAttribute("labels", labelService.findAll());
         return "/label/list";
     }
 

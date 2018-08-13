@@ -27,6 +27,9 @@ public class IssueService {
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
+    @Resource(name = "labelRepository")
+    private LabelRepository labelRepository;
+
     public Issue create(@LoginUser User user, IssueDto issueDto) {
         log.debug("create01");
         Issue issue = issueDto.toIssue(user);
@@ -77,6 +80,16 @@ public class IssueService {
         if (maybeUser.isPresent()) {
 //            issue.registerAssignee(maybeUser.get());
             issue.registerAssignee(userId);
+        }
+        return issue;
+    }
+
+    @Transactional
+    public Issue setLabel(Long issueId, Long labelId) {
+        Issue issue = findById(issueId);
+        Optional<Label> maybeLabel = labelRepository.findById(labelId);
+        if (maybeLabel.isPresent()) {
+            issue.registerLabel(maybeLabel.get());
         }
         return issue;
     }

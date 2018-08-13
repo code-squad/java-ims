@@ -8,7 +8,7 @@ import java.util.List;
 @Embeddable
 public class Assignees {
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Assignee> assignees = new ArrayList<>();
 
     public Assignees addAssignee(Long userId, Long issueId) {

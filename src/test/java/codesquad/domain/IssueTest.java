@@ -53,4 +53,13 @@ public class IssueTest {
 //        issue.registerAssignee(user);
 //        assertThat(issue.toString().contains("learner"), is(true));
     }
+
+    @Test
+    public void setLabel() {
+        Label label = new Label("라벨");
+        Issue issue = new Issue("라벨 일치 이슈", "코멘트 내용");
+
+        issue.registerLabel(label);
+        assertThat(issue.toString().contains("라벨"),is(true));
+    }
 }
