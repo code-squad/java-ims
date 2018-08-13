@@ -15,4 +15,8 @@ public class LabelService {
     public void save(Label label) {
         labelRepository.save(label);
     }
+
+    public Iterable<Label> findAll() {
+        return labelRepository.findAll();
+    }
 }

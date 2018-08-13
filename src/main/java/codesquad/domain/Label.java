@@ -11,6 +11,14 @@ public class Label extends AbstractEntity {
     @Column
     private String title;
 
+    public Label() {
+
+    }
+
+    public Label(String title) {
+        this.title = title;
+    }
+
 
     public String getTitle() {
         return title;
