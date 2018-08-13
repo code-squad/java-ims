@@ -109,10 +109,17 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    public void setMilestoneToIssue() {
-        Long milestoneId = 1L; // 만들어져있는 마일스톤
+    public void setMilestoneToIssue_Pass() {
+        Long milestoneId = 1L; // 존재하는 마일스톤
         ResponseEntity<String> response = template.getForEntity("/issues/" + issueId + "/milestones/" + milestoneId, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void setMilestoneToIssue_Fail() {
+        Long milestoneId = 5L; // 존재하지 않는 마일스톤
+        ResponseEntity<String> response = template.getForEntity("/issues/" + issueId + "/milestones/" + milestoneId, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Test
