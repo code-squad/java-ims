@@ -6,17 +6,15 @@ import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
 public class IssueService {
-    private static final Logger log =  LoggerFactory.getLogger(IssueService.class);
+    private static final Logger log = LoggerFactory.getLogger(IssueService.class);
 
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
@@ -37,7 +35,7 @@ public class IssueService {
         return issueRepository.save(issue);
     }
 
-    public Issue findById(long id) throws CannotShowException {
+    public Issue findById(Long id) throws CannotShowException {
         Issue issue = issueRepository.findById(id).orElseThrow(NullPointerException::new);
         if (issue.isDeleted()) {
             throw new CannotShowException();
@@ -55,7 +53,7 @@ public class IssueService {
     public void delete(long id) {
         Optional<Issue> dbIssue = issueRepository.findById(id);
         dbIssue.ifPresent(Issue::deleted);
-        dbIssue.ifPresent( x -> issueRepository.save(x));
+        dbIssue.ifPresent(x -> issueRepository.save(x));
     }
 
     public Iterable<Issue> findAll() {
@@ -65,11 +63,16 @@ public class IssueService {
     @Transactional
     public Issue setMilestone(User user, Long issueId, Long milestoneId) {
         Issue issue = findById(issueId);
-        // TODO Java8 문법 사용하여 줄이기
+        // Java8에서는 ifPresentOrElse를 지원하지 않는다. (Java9이상)
+        // 아래와 같이 작성하면 milestone이 존재하지 않을 때 로직처리를 할 수 없다.
+//        milestoneRepository.findById(milestoneId).ifPresent(issue::registerMilestone);
+
         Optional<Milestone> maybeMilestone = milestoneRepository.findById(milestoneId);
-        if (maybeMilestone.isPresent()) {
-            issue.registerMilestone(maybeMilestone.get());
+        if (!maybeMilestone.isPresent()) {
+            throw new NullPointerException("Milestone is not exist!");
         }
+        issue.registerMilestone(maybeMilestone.get());
+
         return issue;
     }
 
@@ -78,7 +81,6 @@ public class IssueService {
         Issue issue = findById(issueId);
         Optional<User> maybeUser = userRepository.findById(userId);
         if (maybeUser.isPresent()) {
-//            issue.registerAssignee(maybeUser.get());
             issue.registerAssignee(userId);
         }
         return issue;
