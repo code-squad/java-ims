@@ -117,8 +117,8 @@ public class Issue extends AbstractEntity {
         this.milestone = milestone;
     }
 
-    public void registerAssignee(Long userId) {
-        assignees.addAssignee(userId, getId());
+    public void registerAssignee(User user) {
+        assignees.addAssignee(user);
     }
 
     public void registerLabel(Label label) {

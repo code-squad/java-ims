@@ -74,7 +74,8 @@ public class IssueService {
     @Transactional
     public void setAssignee(Long issueId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("not exist user."));
-        findById(issueId).registerAssignee(userId);
+//        findById(issueId).registerAssignee(userId);
+        findById(issueId).registerAssignee(user);
     }
 
     @Transactional

@@ -51,12 +51,12 @@ public class IssueTest {
 
     @Test
     public void setAssignee() {
-        User writer = new User(3L, "learner", "test1234", "taewon");
+        User writer = new User(3L, "learner", "password", "taewon");
         Issue issue = new Issue(4L, "사용자 일치 이슈", "이슈 내용", writer);
 
-        issue.registerAssignee(writer.getId());
-        assertThat(issue.toString().contains("userId=3"), is(true));
-        assertThat(issue.toString().contains("issueId=4"), is(true));
+        issue.registerAssignee(writer);
+        System.out.println(issue.toString());
+        assertThat(issue.toString().contains("3"), is(true));
     }
 
     @Test
