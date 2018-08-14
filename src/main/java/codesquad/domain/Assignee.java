@@ -1,16 +1,12 @@
 package codesquad.domain;
 
+import support.domain.AbstractEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 @Entity
-public class Assignee {
-
-    @Id
-    @GeneratedValue
-    Long id;
+public class Assignee extends AbstractEntity {
 
     @Column
     private Long userId;
@@ -24,14 +20,6 @@ public class Assignee {
     public Assignee(Long userId, Long issueId) {
         this.userId = userId;
         this.issueId = issueId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @Override

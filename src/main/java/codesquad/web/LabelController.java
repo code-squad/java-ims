@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 public class LabelController {
 
     @Resource(name = "labelService")
-    LabelService labelService;
+    private LabelService labelService;
 
     @GetMapping
     public String list(Model model) {

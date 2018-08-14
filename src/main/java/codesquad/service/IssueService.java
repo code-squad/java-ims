@@ -36,7 +36,7 @@ public class IssueService {
     }
 
     public Issue findById(Long id) throws CannotShowException {
-        Issue issue = issueRepository.findById(id).orElseThrow(NullPointerException::new);
+        Issue issue = issueRepository.findById(id).orElseThrow(() -> new NullPointerException("Not exist issue."));
         if (issue.isDeleted()) {
             throw new CannotShowException();
         }
@@ -45,7 +45,6 @@ public class IssueService {
 
     public Issue update(long id, User updateWriter, IssueDto updateIssueDto) {
         Issue dbIssue = issueRepository.findById(id).orElseThrow(() -> new NullPointerException("Not exist issue."));
-//        Issue updateIssue = updateIssueDto.toIssue(writer);
         dbIssue.update(updateIssueDto, updateWriter);
         return issueRepository.save(dbIssue);
     }
@@ -61,38 +60,26 @@ public class IssueService {
     }
 
     @Transactional
-    public Issue setMilestone(User user, Long issueId, Long milestoneId) {
+    public void setMilestone(User user, Long issueId, Long milestoneId) {
+        // exception이 발생할 수 있는 것을 먼저 위에 올릴 수 있다.
+        Milestone maybeMilestone = milestoneRepository.findById(milestoneId).orElseThrow( () -> new NullPointerException("not exist milestone."));
+
         Issue issue = findById(issueId);
         // Java8에서는 ifPresentOrElse를 지원하지 않는다. (Java9이상)
         // 아래와 같이 작성하면 milestone이 존재하지 않을 때 로직처리를 할 수 없다.
 //        milestoneRepository.findById(milestoneId).ifPresent(issue::registerMilestone);
-
-        Optional<Milestone> maybeMilestone = milestoneRepository.findById(milestoneId);
-        if (!maybeMilestone.isPresent()) {
-            throw new NullPointerException("Milestone is not exist!");
-        }
-        issue.registerMilestone(maybeMilestone.get());
-
-        return issue;
+        issue.registerMilestone(maybeMilestone);
     }
 
     @Transactional
-    public Issue setAssignee(Long issueId, Long userId) {
-        Issue issue = findById(issueId);
-        Optional<User> maybeUser = userRepository.findById(userId);
-        if (maybeUser.isPresent()) {
-            issue.registerAssignee(userId);
-        }
-        return issue;
+    public void setAssignee(Long issueId, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("not exist user."));
+        findById(issueId).registerAssignee(userId);
     }
 
     @Transactional
-    public Issue setLabel(Long issueId, Long labelId) {
-        Issue issue = findById(issueId);
-        Optional<Label> maybeLabel = labelRepository.findById(labelId);
-        if (maybeLabel.isPresent()) {
-            issue.registerLabel(maybeLabel.get());
-        }
-        return issue;
+    public void setLabel(Long issueId, Long labelId) {
+        Label label = labelRepository.findById(labelId).orElseThrow(() -> new NullPointerException("not exist label."));
+        findById(issueId).registerLabel(label);
     }
 }
