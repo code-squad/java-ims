@@ -63,17 +63,4 @@ public class IssueTest {
         issue.registerLabel(label);
         assertThat(issue.toString().contains("라벨"),is(true));
     }
-
-    @Test
-    public void update() {
-        User writer = new User("learner", "test1234", "taewon");
-        IssueDto issueDto = new IssueDto("subject", "comment");
-        Issue issue = issueDto.toIssue(writer);
-
-        IssueDto updateIssueDto = new IssueDto("updateSubject", "updateComment");
-        issue.update(updateIssueDto, writer);
-
-        assertThat(issue.toString().contains("updateSubject"), is(true));
-
-    }
 }
