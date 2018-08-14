@@ -1,23 +1,24 @@
 package codesquad.domain;
 
 import codesquad.dto.IssueDto;
+import support.domain.AbstractEntity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.Size;
 
 @Entity
-public class Issue {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+public class Issue extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    @Size(min = 1, max = 50)
+    @Column(length = 50)
     private String subject;
 
+    @Size(min = 1, max = 200)
+    @Column(length = 200)
     private String comment;
 
     private Boolean deleted = false;
@@ -36,15 +37,15 @@ public class Issue {
     }
 
     public Issue(String subject, String comment) {
-        this(null, subject, comment, null);
+        this(0L, subject, comment, null);
     }
 
     public Issue(String subject, String comment, User writer) {
-        this(null, subject, comment, writer);
+        this(0L, subject, comment, writer);
     }
 
     public Issue(Long id, String subject, String comment, User writer) {
-        this.id = id;
+        super(id);
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
@@ -56,14 +57,6 @@ public class Issue {
 
     public String getComment() {
         return comment;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public User getWriter() {
@@ -78,14 +71,10 @@ public class Issue {
         return milestone;
     }
 
-    public void setMilestone(Milestone milestone) {
-        this.milestone = milestone;
-    }
-
     @Override
     public String toString() {
         return "Issue{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", writer=" + writer +
                 ", subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
@@ -124,13 +113,12 @@ public class Issue {
         return this.writer.equals(writer);
     }
 
-    // TODO setMilestone의 중복임, 제거하기
     public void registerMilestone(Milestone milestone) {
         this.milestone = milestone;
     }
 
     public void registerAssignee(Long userId) {
-        assignees.addAssignee(userId, id);
+        assignees.addAssignee(userId, getId());
     }
 
     public void registerLabel(Label label) {

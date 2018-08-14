@@ -41,7 +41,7 @@ public class IssueTest {
         Milestone milestone = new Milestone("사용자 일치 기능");
         Issue issue = new Issue("사용자 일치 이슈", "코멘트 내용");
 
-        issue.setMilestone(milestone);
+        issue.registerMilestone(milestone);
         assertThat(issue.toString().contains("사용자 일치 기능"), is(true));
     }
 
