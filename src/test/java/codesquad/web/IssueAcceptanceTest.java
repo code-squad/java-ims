@@ -19,7 +19,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
 
     private TestRestTemplate template;
-    private long issueId = 1;
+    private Long issueId = 1L;
 
     @Before
     public void setUp() {
@@ -106,5 +106,26 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         template.delete("/issues/" + issueId);
         response = template.getForEntity("/", String.class);
         assertThat(response.getBody().contains("수정된 세 번째 이슈 제목"), is(false));
+    }
+
+    @Test
+    public void setMilestoneToIssue_Pass() {
+        Long milestoneId = 1L; // 존재하는 마일스톤
+        ResponseEntity<String> response = template.getForEntity("/issues/" + issueId + "/milestones/" + milestoneId, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void setMilestoneToIssue_Fail() {
+        Long milestoneId = 5L; // 존재하지 않는 마일스톤
+        ResponseEntity<String> response = template.getForEntity("/issues/" + issueId + "/milestones/" + milestoneId, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    @Test
+    public void setAssigneeToIssue() {
+        Long userId = 2L; // 만들어져있는 유저
+        ResponseEntity<String> response = template.getForEntity("/issues/" + issueId + "/users/" + userId, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 }

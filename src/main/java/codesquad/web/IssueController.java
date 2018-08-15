@@ -1,10 +1,14 @@
 package codesquad.web;
 
 import codesquad.CannotShowException;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.LabelService;
+import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,6 +24,15 @@ public class IssueController {
 
     @Resource(name = "issueService")
     private IssueService issueService;
+
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
+
+    @Resource(name = "userService")
+    private UserService userService;
+
+    @Resource(name = "labelService")
+    private LabelService labelService;
 
     @GetMapping("/form")
     public String createForm(@LoginUser User user) {
@@ -37,6 +50,9 @@ public class IssueController {
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) throws CannotShowException {
         model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("milestones", milestoneService.findAll());
+        model.addAttribute("users", userService.findAll());
+        model.addAttribute("labels", labelService.findAll());
         return "/issue/show";
     }
 
@@ -55,6 +71,24 @@ public class IssueController {
     @DeleteMapping("/{id}")
     public String delete(@LoginUser User user, @PathVariable long id) {
         issueService.delete(id);
+        return "redirect:/";
+    }
+
+    @GetMapping("/{issueId}/milestones/{milestoneId}")
+    public String setMilestone(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long milestoneId) {
+        issueService.setMilestone(user, issueId, milestoneId);
+        return "redirect:/";
+    }
+
+    @GetMapping("/{issueId}/users/{userId}")
+    public String setAssignee(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long userId) {
+        issueService.setAssignee(issueId, userId);
+        return "redirect:/";
+    }
+
+    @GetMapping("/{issueId}/labels/{labelId}")
+    public String setLabel(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long labelId) {
+        issueService.setLabel(issueId, labelId);
         return "redirect:/";
     }
 }

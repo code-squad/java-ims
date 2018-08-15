@@ -1,38 +1,51 @@
 package codesquad.domain;
 
 import codesquad.dto.IssueDto;
+import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
-public class Issue {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+public class Issue extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
-    User writer;
+    private User writer;
 
-    String subject;
+    @Size(min = 1, max = 50)
+    @Column(length = 50)
+    private String subject;
 
-    String comment;
+    @Size(min = 1, max = 200)
+    @Column(length = 200)
+    private String comment;
 
-    Boolean deleted = false;
+    private Boolean deleted = false;
+
+    @ManyToOne
+    @JoinColumn(name = "milestone_id")
+    private Milestone milestone;
+
+    @Embedded
+    private Assignees assignees = new Assignees();
+
+    @Embedded
+    private Labels labels = new Labels();
 
     public Issue() {
     }
 
     public Issue(String subject, String comment) {
-        this(null, subject, comment, null);
+        this(0L, subject, comment, null);
     }
 
     public Issue(String subject, String comment, User writer) {
-        this(null, subject, comment, writer);
+        this(0L, subject, comment, writer);
     }
 
     public Issue(Long id, String subject, String comment, User writer) {
-        this.id = id;
+        super(id);
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
@@ -46,14 +59,6 @@ public class Issue {
         return comment;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public User getWriter() {
         return writer;
     }
@@ -62,13 +67,19 @@ public class Issue {
         return deleted;
     }
 
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", writer=" + writer +
                 ", subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
+                ", milestone='" + milestone + '\'' +
+                ", assignee='" + assignees + '\'' +
                 '}';
     }
 
@@ -96,5 +107,21 @@ public class Issue {
 
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public boolean matchWriter(User writer) {
+        return this.writer.equals(writer);
+    }
+
+    public void registerMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public void registerAssignee(User user) {
+        assignees.addAssignee(user);
+    }
+
+    public void registerLabel(Label label) {
+        labels.addLabel(label);
     }
 }
