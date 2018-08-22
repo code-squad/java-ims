@@ -29,7 +29,7 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
     public void setAsignee() {
         Long issueId = 1L;
         Long assigneeId = 1L; // equal to userId
-        ResponseEntity<String> response = basicAuthTemplate().getForEntity("/api/issues/" + issueId + "/assignees/" + assigneeId, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity("/api/issues/" + issueId + "/users/" + assigneeId, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 }

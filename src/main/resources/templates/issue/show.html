@@ -76,7 +76,6 @@
                         for="label-menu">
                         {{#labels}}
                         <li class="mdl-menu__item">
-                            <!--<a href="/issues/{{issue.id}}/labels/{{this.id}}">{{this.title}}</a>-->
                             <a data-message="/api/issues/{{issue.id}}/labels/{{this.id}}" onclick={assign(event)}>{{this.title}}</a>
                         </li>
                         {{/labels}}
@@ -89,7 +88,7 @@
                         for="assignee-menu">
                         {{#users}}
                         <li class="mdl-menu__item">
-                            <a href="/issues/{{issue.id}}/users/{{this.id}}">{{this.userId}}</a>
+                            <a data-message="/api/issues/{{issue.id}}/users/{{this.id}}" onclick={assign(event)}>{{this.userId}}</a>
                         </li>
                         {{/users}}
                     </ul>

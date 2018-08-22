@@ -40,7 +40,7 @@ public class ApiIssueController {
         return new ResponseEntity<Void>(headers, HttpStatus.OK);
     }
 
-    @GetMapping("/{issueId}/assignees/{assigneeId}")
+    @GetMapping("/{issueId}/users/{assigneeId}")
     public ResponseEntity<Void> setAssignee(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long assigneeId) {
         issueService.setAssignee(issueId, assigneeId);
 
