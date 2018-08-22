@@ -76,7 +76,7 @@ public class IssueController {
 
     @GetMapping("/{issueId}/milestones/{milestoneId}")
     public String setMilestone(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long milestoneId) {
-        issueService.setMilestone(user, issueId, milestoneId);
+        issueService.setMilestone(issueId, milestoneId);
         return "redirect:/";
     }
 

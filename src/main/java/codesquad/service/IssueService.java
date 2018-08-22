@@ -60,7 +60,7 @@ public class IssueService {
     }
 
     @Transactional
-    public void setMilestone(User user, Long issueId, Long milestoneId) {
+    public void setMilestone(Long issueId, Long milestoneId) {
         // exception이 발생할 수 있는 것을 먼저 위에 올릴 수 있다.
         Milestone maybeMilestone = milestoneRepository.findById(milestoneId).orElseThrow( () -> new NullPointerException("not exist milestone."));
 
@@ -78,6 +78,7 @@ public class IssueService {
         findById(issueId).registerAssignee(user);
     }
 
+    // TODO 중복저장되지 않게 하기
     @Transactional
     public void setLabel(Long issueId, Long labelId) {
         Label label = labelRepository.findById(labelId).orElseThrow(() -> new NullPointerException("not exist label."));

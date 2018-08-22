@@ -25,13 +25,13 @@
                     </form>
 
 
-                    <!--<form id="deleteIssue" action="/issues/{{issue.id}}" method="post" style="display:inline">-->
-                        <!--<input type="hidden" name="_method" value="delete">-->
-                        <!--<a href="#" onclick="document.getElementById('deleteIssue').submit();"-->
-                           <!--id="issues-menu-lower-right" class="mdl-button mdl-js-button mdl-button&#45;&#45;icon">-->
-                            <!--<i class="material-icons">delete</i>-->
-                        <!--</a>-->
-                    <!--</form>-->
+                    <form id="deleteIssue" action="/issues/{{issue.id}}" method="post" style="display:inline">
+                        <input type="hidden" name="_method" value="delete">
+                        <a href="#" onclick="document.getElementById('deleteIssue').submit();"
+                           id="issues-menu-lower-right" class="mdl-button mdl-js-button mdl-button--icon">
+                            <i class="material-icons">delete</i>
+                        </a>
+                    </form>
                 </div>
                 <div class="mdl-card__title mdl-color-text--grey-50">
                     <i class="material-icons">check_circle</i>
@@ -63,13 +63,9 @@
                         <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="milestone-menu">
 
                         {{#milestones}}
-                        <!--<form method="get" action="/api/issues/{{issue.id}}/milestones/{{this.id}}">-->
                             <li class="mdl-menu__item">
-                                <!--<a class="set_milestone_submit">{{this.subject}}</a><br>-->
-                                <a data-message="/api/issues/{{issue.id}}/milestones/{{this.id}}" onclick={setMilestone(event)}>{{this.subject}}</a><br>
-                                <!--<a href="javascript:setMilestone('click', '/api/issues/{{issue.id}}/milestones/{{this.id}}')">a</a>-->
+                                <a data-message="/api/issues/{{issue.id}}/milestones/{{this.id}}" onclick={assign(event)}>{{this.subject}}</a>
                             </li>
-                        <!--</form>-->
                         {{/milestones}}
                     </ul>
                     <button id="label-menu" class="mdl-button mdl-js-button">
@@ -80,7 +76,8 @@
                         for="label-menu">
                         {{#labels}}
                         <li class="mdl-menu__item">
-                            <a href="/issues/{{issue.id}}/labels/{{this.id}}">{{this.title}}</a>
+                            <!--<a href="/issues/{{issue.id}}/labels/{{this.id}}">{{this.title}}</a>-->
+                            <a data-message="/api/issues/{{issue.id}}/labels/{{this.id}}" onclick={assign(event)}>{{this.title}}</a>
                         </li>
                         {{/labels}}
                     </ul>
