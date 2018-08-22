@@ -1,167 +1,49 @@
-$("#addCommentSubmit").on("click", addComment);
+// $(".set_milestone_submit").on("click", setMilestone);
+// $(document).on("click", "set_milestone_submit", setMilestone);
 
-$(document).on("click", ".buttons .update_comment", updateFormSetting);
-$(document).on("click", ".buttons .delete_comment", deleteComment);
+// function setMilestone(e, url) {
+//     e.preventDefault();
+//     console.log("event : " + e + ", url : " + e.target.dataset.message);
+//
+//     $.ajax({
+//         type : 'get',
+//         url : url,
+//         // data : , // Do not send any data.
+//         dataType : 'text',
+//         error : onError,
+//         success : function(){
+//             alert("마일스톤이 지정되었습니다");
+//         }
+//     });
+// }
 
-function assign(e) {
+function setMilestone(e, url) {
     e.preventDefault();
     console.log("event : " + e + ", url : " + e.target.dataset.message);
-
-    $.ajax({
-        type: 'get',
-        url: e.target.dataset.message,
-        dataType: 'text',
-        error: onError,
-        success: function () {
-            alert("지정되었습니다");
-        }
-    });
-}
-
-function addComment(e) {
-    e.preventDefault();
-    console.log("addComment is called");
-
-    // var queryString = $("#contents-form").serialize();
-    // json 형태로 데이터를 구성해줘야 Controller메소드의 @RequestBody를 타고 들어갈 수 있다
-    // json 형태가 아니거나 MessageConverter에서 알 수 없는 데이터 형태이면 415 error를 뱉는다
-    var formdata = {
-        contents : $("#contents").val()
-    };
-    console.log("formdata : " + formdata);
-
-    var url = $("#contents-form").attr("action");
     console.log("url : " + url);
-
-    $.ajax({
-        type: 'POST',
-        contentType: "application/json",
-        data: JSON.stringify(formdata),
-        url: url,
-        dataType: 'json',
-        error: onError,
-        success: function (data, status) {
-            console.log(data);
-            console.log(status);
-
-            // template 불러오기
-            var commentTemplate = $("#commentTemplate").html();
-
-            // ajax를 통해 응답으로 넘어온 json에서 필요한 데이터를 template으로 넘김
-            var template = commentTemplate.format(data.writer.userId, data.contents, data.id);
-
-            $("#comment-bottom").before(template);
-            $("#contents").val("");
-        }
+    var request = e.target.dataset.message;
+    $.get(request, function (data) {
+        alert(data);
     });
 }
 
-function updateFormSetting(e) {
-    e.preventDefault();
-    // commentAddForm 제거
-    $("#contents-form").remove();
-
-    // commentUpdateForm 추가
-    $("#comment-form-parent").append($("#commentUpdateForm").html());
-
-    // 이전에 추가된 update_contents 클래스 제거
-    $(".update_contents").removeClass("update_contents");
-
-    // 수정 버튼을 누른 댓글에 update_contents 클래스 추가
-    $(e.target).closest(".comment_area").find(".contents").addClass("update_contents");
-
-    var comment_contents = $(e.target).closest(".comment_area").find(".contents").text();
-    console.log("contents : " + comment_contents);
-
-    var id = $(e.target).closest(".comment_area").find(".id").attr("value");
-    console.log("commentId : " + id);
-
-    // TODO bug : toggle로만 동작하면 수정버튼을 연속 2번 누를 경우 updateCommentSubmit이 아닌 addCommentSubmit으로 다시 바뀐다
-    $("#addCommentSubmit").toggle();
-    $("#updateCommentSubmit").toggle();
-
-    var path = window.location.pathname; // path : /issue/1
-    var index = path.lastIndexOf('/');
-    var issueId = path.substring(index+1); // issueId : 1
-    console.log("issueId : " + issueId);
-
-    var updateRequestUrl = "/api/issues/"+ issueId +"/comments/"+id;
-    console.log("update request url : " + updateRequestUrl);
-
-    $("#updateCommentSubmit").attr("data-message", updateRequestUrl);
-    $("#contents-form").attr("action", updateRequestUrl);
-
-    // 동적으로 코멘트를 추가하고 수정 버튼을 눌렀을 떄, textarea에 수정할 코멘트 내용을 세팅하기 위해 .text를 사용하면 세팅이 안 된다. val을 사용했을 때에는 된다.
-    // $("#contents").text(comment_contents);
-    $("#contents").val(comment_contents);
-}
-
-// 자바스크립트에서도 Interceptor와 같은 게 있는가? 사용자 인증 로직 처리를 위해
-function updateComment(e) {
-    e.preventDefault();
-    console.log("updateComment is called");
-
-    var url = $("#updateCommentSubmit").data("message");
-    console.log("update url : " + url);
-
-    // var queryString = $("#contents-form").serialize();
-    var formdata = {
-      contents : $("#contents").val()
-    };
-    console.log("form data : {}", formdata);
-
-    $.ajax({
-        type: 'PUT',
-        data: JSON.stringify(formdata),
-        contentType: "application/json",
-        url: url,
-        dataType: 'json',
-        error: function () {
-            alert("본인이 쓴 댓글만 수정할 수 있습니다");
-        },
-        success: function (data, status) {
-            console.log(data);
-            console.log(status);
-            $(".update_contents").text(data.contents);
-            console.log(data.contents);
-            $("#contents").val("");
-        }
-    });
-}
-
-function deleteComment(e) {
-    var id = $(e.target).closest(".comment_area").find(".id").attr("value");
-    console.log("commentId : " + id);
-
-    var path = window.location.pathname; // path : /issue/1
-    var index = path.lastIndexOf('/');
-    var issueId = path.substring(index+1); // issueId : 1
-    console.log("issueId : " + issueId);
-
-    var deleteUrl = "/api/issues/"+ issueId +"/comments/"+id;
-    console.log("delete url : " + deleteUrl);
-
-    $.ajax({
-        type: 'DELETE',
-        url: deleteUrl,
-        error: function () {
-            alert("본인이 쓴 댓글만 삭제할  있습니다");
-        },
-        success: function (data, status) {
-            console.log(data);
-            console.log(status);
-            $(e.target).closest(".contents").remove();
-        }
-    });
-}
 
 function onError() {
     console.log("error detected");
 }
 
-String.prototype.format = function () {
+function onSuccess(data, status) {
+    console.log(data);
+    console.log(status);
+    // var answerTemplate = $("#answerTemplate").html();
+    // var template = answerTemplate.format(data.writer.userId, data.formattedCreateDate, data.comment, data.question.id, data.id);
+    // $(".answer-write").before(template);
+    // $(".answer-write textarea").val("");
+}
+
+String.prototype.format = function() {
     var args = arguments;
-    return this.replace(/{(\d+)}/g, function (match, number) {
+    return this.replace(/{(\d+)}/g, function(match, number) {
         return typeof args[number] != 'undefined'
             ? args[number]
             : match
