@@ -1,32 +1,20 @@
 // $(".set_milestone_submit").on("click", setMilestone);
 // $(document).on("click", "set_milestone_submit", setMilestone);
 
-// function setMilestone(e, url) {
-//     e.preventDefault();
-//     console.log("event : " + e + ", url : " + e.target.dataset.message);
-//
-//     $.ajax({
-//         type : 'get',
-//         url : url,
-//         // data : , // Do not send any data.
-//         dataType : 'text',
-//         error : onError,
-//         success : function(){
-//             alert("마일스톤이 지정되었습니다");
-//         }
-//     });
-// }
-
-function setMilestone(e, url) {
+function assign(e) {
     e.preventDefault();
     console.log("event : " + e + ", url : " + e.target.dataset.message);
-    console.log("url : " + url);
-    var request = e.target.dataset.message;
-    $.get(request, function (data) {
-        alert(data);
+
+    $.ajax({
+        type : 'get',
+        url : e.target.dataset.message,
+        dataType : 'text',
+        error : onError,
+        success : function(){
+            alert("지정되었습니다");
+        }
     });
 }
-
 
 function onError() {
     console.log("error detected");

@@ -16,4 +16,20 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = basicAuthTemplate().getForEntity("/api/issues/" + issueId + "/milestones/" + milestoneId, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
+
+    @Test
+    public void setLabel() {
+        Long issueId = 1L;
+        Long labelId = 1L;
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity("/api/issues/" + issueId + "/labels/" + labelId, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void setAsignee() {
+        Long issueId = 1L;
+        Long assigneeId = 1L; // equal to userId
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity("/api/issues/" + issueId + "/assignees/" + assigneeId, String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
 }

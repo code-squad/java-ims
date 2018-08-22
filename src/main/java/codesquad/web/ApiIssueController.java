@@ -26,7 +26,23 @@ public class ApiIssueController {
     @GetMapping("/{issueId}/milestones/{milestoneId}")
     public ResponseEntity<Void> setMilestone(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long milestoneId) {
         log.debug("This is ApiIssueController");
-        issueService.setMilestone(user, issueId, milestoneId);
+        issueService.setMilestone(issueId, milestoneId);
+
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<Void>(headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/{issueId}/labels/{labelId}")
+    public ResponseEntity<Void> setLabel(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long labelId) {
+        issueService.setLabel(issueId, labelId);
+
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<Void>(headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/{issueId}/assignees/{assigneeId}")
+    public ResponseEntity<Void> setAssignee(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long assigneeId) {
+        issueService.setAssignee(issueId, assigneeId);
 
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<Void>(headers, HttpStatus.OK);
