@@ -1,14 +1,12 @@
 package codesquad.web;
 
 import codesquad.CannotShowException;
+import codesquad.domain.Comment;
 import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
-import codesquad.service.IssueService;
-import codesquad.service.LabelService;
-import codesquad.service.MilestoneService;
-import codesquad.service.UserService;
+import codesquad.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -34,6 +32,9 @@ public class IssueController {
     @Resource(name = "labelService")
     private LabelService labelService;
 
+    @Resource(name = "commentService")
+    private CommentService commentService;
+
     @GetMapping("/form")
     public String createForm(@LoginUser User user) {
         log.debug("issue form");
@@ -53,6 +54,7 @@ public class IssueController {
         model.addAttribute("milestones", milestoneService.findAll());
         model.addAttribute("users", userService.findAll());
         model.addAttribute("labels", labelService.findAll());
+        model.addAttribute("comments", commentService.findAllByIssueId(id));
         return "/issue/show";
     }
 
@@ -90,5 +92,11 @@ public class IssueController {
     public String setLabel(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long labelId) {
         issueService.setLabel(issueId, labelId);
         return "redirect:/";
+    }
+
+    @PostMapping("/{issueId}/comments")
+    public String createComment(@LoginUser User writer, @PathVariable Long issueId, Comment comment) {
+        commentService.create(writer, comment);
+        return "redirect:/issues/"+issueId;
     }
 }

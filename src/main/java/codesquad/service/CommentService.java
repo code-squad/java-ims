@@ -4,7 +4,6 @@ import codesquad.domain.Comment;
 import codesquad.domain.CommentRepository;
 import codesquad.domain.User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -14,28 +13,12 @@ public class CommentService {
     @Resource(name = "commentRepository")
     private CommentRepository commentRepository;
 
-    public Comment create(User writer, Comment comment, Long issueId) {
+    public void create(User writer, Comment comment) {
         comment.writtenby(writer);
-        comment.setIssueId(issueId);
-        return commentRepository.save(comment);
-    }
-
-    public Comment getOne(Long issueId, Long commentId) {
-        return commentRepository.findByIssueIdAndId(issueId, commentId);
+        commentRepository.save(comment);
     }
 
     public Iterable<Comment> findAllByIssueId(Long issueId) {
         return commentRepository.findAllByIssueId(issueId);
-    }
-
-    public Comment update(Long issueId, Long commentId, Comment updateComment) {
-        Comment savedComment = commentRepository.findByIssueIdAndId(issueId, commentId);
-        return commentRepository.save(savedComment.update(updateComment));
-    }
-
-    public void delete(User user, Long issueId, Long commentId) {
-        Comment savedComment = commentRepository.findByIssueIdAndId(issueId, commentId);
-        savedComment.delete(user);
-        commentRepository.save(savedComment);
     }
 }

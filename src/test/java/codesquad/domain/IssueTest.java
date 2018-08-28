@@ -67,4 +67,14 @@ public class IssueTest {
         issue.registerLabel(label);
         assertThat(issue.toString().contains("라벨"),is(true));
     }
+
+    @Test
+    public void setComments() {
+        Issue issue = new Issue("댓글 등록 이슈", "댓글 등록 내용");
+        User writer = new User("learner", "test1234", "taewon");
+        Comment comment = new Comment(writer, "댓글에는 문제가 없는데요?");
+        List<Comment> comments =  issue.addComment(comment);
+
+        assertThat(comments.size()>0, is(true));
+    }
 }
