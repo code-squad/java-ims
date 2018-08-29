@@ -18,6 +18,10 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
+    public Comment getOne(Long commentId) {
+        return commentRepository.getOne(commentId);
+    }
+
     public Iterable<Comment> findAllByIssueId(Long issueId) {
         return commentRepository.findAllByIssueId(issueId);
     }
