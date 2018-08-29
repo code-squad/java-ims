@@ -32,23 +32,35 @@ function addComment(e) {
         url : url,
         dataType : 'json',
         error : onError,
-        success : onSuccess
+        success : function (data, status) {
+            console.log(data);
+            console.log(status);
+            var commentTemplate = $("#commentTemplate").html();
+            console.log(commentTemplate);
+            var template = commentTemplate.format(data.writer.userId, data.contents);
+            $("#comment-bottom").before(template);
+            $("#contents").val("");
+        }
     });
+}
+
+function updateComment() {
+    
 }
 
 function onError() {
     console.log("error detected");
 }
 
-function onSuccess(data, status) {
-    console.log(data);
-    console.log(status);
-    var commentTemplate = $("#commentTemplate").html();
-    console.log(commentTemplate);
-    var template = commentTemplate.format(data.writer.userId, data.contents);
-    $("#comment-bottom").before(template);
-    $("#contents").val("");
-}
+// function onSuccess(data, status) {
+//     console.log(data);
+//     console.log(status);
+//     var commentTemplate = $("#commentTemplate").html();
+//     console.log(commentTemplate);
+//     var template = commentTemplate.format(data.writer.userId, data.contents);
+//     $("#comment-bottom").before(template);
+//     $("#contents").val("");
+// }
 
 String.prototype.format = function() {
     var args = arguments;

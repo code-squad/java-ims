@@ -50,8 +50,5 @@ public class ApiIssueController {
         return new ResponseEntity<Void>(headers, HttpStatus.OK);
     }
 
-    @PostMapping("/{issueId}/comments")
-    public Comment createComment(@LoginUser User writer, @PathVariable Long issueId, Comment comment) {
-        return commentService.create(writer, comment);
-    }
+
 }

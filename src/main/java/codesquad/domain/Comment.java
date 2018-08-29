@@ -15,18 +15,22 @@ public class Comment extends AbstractEntity {
 
     private Long issueId;
 
-
-    public Comment(User writer, String contents) {
-        this.writer = writer;
-        this.contents = contents;
+    public Comment() {
+        this(null, null, null);
     }
 
     public Comment(String contents) {
-        this(null, contents);
+        this(null, null, contents);
     }
 
-    public Comment() {
-        this(null, null);
+    public Comment(User writer, String contents) {
+        this(null, writer, contents);
+    }
+
+    public Comment(Long id, User writer, String contents) {
+        super(id);
+        this.writer = writer;
+        this.contents = contents;
     }
 
     public User getWriter() {
@@ -63,5 +67,9 @@ public class Comment extends AbstractEntity {
     public Comment writtenby(User writer) {
         this.writer = writer;
         return this;
+    }
+
+    public String generatedUri(Long issueId) {
+        return "/api/issues/" + issueId + "/comments/" + getId();
     }
 }
