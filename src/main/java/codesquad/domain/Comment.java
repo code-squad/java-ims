@@ -49,6 +49,10 @@ public class Comment extends AbstractEntity {
         this.issueId = issueId;
     }
 
+    public void setWriter(User writer) {
+        this.writer = writer;
+    }
+
     @Override
     public String toString() {
         return "Comment{" +

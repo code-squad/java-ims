@@ -13,9 +13,9 @@ public class CommentService {
     @Resource(name = "commentRepository")
     private CommentRepository commentRepository;
 
-    public void create(User writer, Comment comment) {
+    public Comment create(User writer, Comment comment) {
         comment.writtenby(writer);
-        commentRepository.save(comment);
+        return commentRepository.save(comment);
     }
 
     public Iterable<Comment> findAllByIssueId(Long issueId) {

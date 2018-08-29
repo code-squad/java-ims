@@ -1,17 +1,16 @@
 package codesquad.web;
 
+import codesquad.domain.Comment;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
+import codesquad.service.CommentService;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -22,6 +21,9 @@ public class ApiIssueController {
 
     @Resource(name = "issueService")
     private IssueService issueService;
+
+    @Resource(name = "commentService")
+    private CommentService commentService;
 
     @GetMapping("/{issueId}/milestones/{milestoneId}")
     public ResponseEntity<Void> setMilestone(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long milestoneId) {
@@ -46,5 +48,10 @@ public class ApiIssueController {
 
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<Void>(headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/{issueId}/comments")
+    public Comment createComment(@LoginUser User writer, @PathVariable Long issueId, Comment comment) {
+        return commentService.create(writer, comment);
     }
 }

@@ -19,7 +19,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("contents", "댓글 문제가 아닌데요?")
                 .build();
-        ResponseEntity<String> response = basicAuthTemplate(findDefaultUser()).postForEntity("/issues/" + issueId + "/comments", request, String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+        ResponseEntity<String> response = basicAuthTemplate(findDefaultUser()).getForEntity("/issues/" + issueId + "/comments", String.class, request);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 }
