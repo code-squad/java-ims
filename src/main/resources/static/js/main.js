@@ -1,5 +1,6 @@
 // $(".set_milestone_submit").on("click", setMilestone);
 // $(document).on("click", "set_milestone_submit", setMilestone);
+$("#addCommentSubmit").on("click", addComment);
 
 function assign(e) {
     e.preventDefault();
@@ -10,9 +11,28 @@ function assign(e) {
         url : e.target.dataset.message,
         dataType : 'text',
         error : onError,
-        success : function(){
+        success : function () {
             alert("지정되었습니다");
         }
+    });
+}
+
+function addComment(e) {
+    e.preventDefault();
+    console.log("This is addComment");
+    var queryString = $("#contents-form").serialize();
+    console.log("queryString : " + queryString);
+
+    var url = $("#contents-form").attr("action");
+    console.log("url : " + url);
+
+    $.ajax({
+        type : 'post',
+        data : queryString,
+        url : url,
+        dataType : 'json',
+        error : onError,
+        success : onSuccess
     });
 }
 
@@ -23,10 +43,11 @@ function onError() {
 function onSuccess(data, status) {
     console.log(data);
     console.log(status);
-    // var answerTemplate = $("#answerTemplate").html();
-    // var template = answerTemplate.format(data.writer.userId, data.formattedCreateDate, data.comment, data.question.id, data.id);
-    // $(".answer-write").before(template);
-    // $(".answer-write textarea").val("");
+    var commentTemplate = $("#commentTemplate").html();
+    console.log(commentTemplate);
+    var template = commentTemplate.format(data.writer.userId, data.contents);
+    $("#comment-bottom").before(template);
+    $("#contents").val("");
 }
 
 String.prototype.format = function() {

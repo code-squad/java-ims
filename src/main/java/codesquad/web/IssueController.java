@@ -93,10 +93,4 @@ public class IssueController {
         issueService.setLabel(issueId, labelId);
         return "redirect:/";
     }
-
-    @PostMapping("/{issueId}/comments")
-    public String createComment(@LoginUser User writer, @PathVariable Long issueId, Comment comment) {
-        commentService.create(writer, comment);
-        return "redirect:/issues/"+issueId;
-    }
 }
