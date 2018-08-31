@@ -16,15 +16,15 @@ public class Comment extends AbstractEntity {
     private Long issueId;
 
     public Comment() {
-        this(null, null, null);
+
     }
 
     public Comment(String contents) {
-        this(null, null, contents);
+        this(0L, null, contents);
     }
 
     public Comment(User writer, String contents) {
-        this(null, writer, contents);
+        this(0L, writer, contents);
     }
 
     public Comment(Long id, User writer, String contents) {
@@ -71,5 +71,13 @@ public class Comment extends AbstractEntity {
 
     public String generatedUri(Long issueId) {
         return "/api/issues/" + issueId + "/comments/" + getId();
+    }
+
+    public Comment update(Comment updatedComment) {
+        if (!writer.equals(updatedComment.writer)) {
+            throw new IllegalStateException("not matched user");
+        }
+        this.contents = updatedComment.contents;
+        return this;
     }
 }
