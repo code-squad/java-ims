@@ -45,21 +45,4 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = basicAuthTemplate().getForEntity("/api/issues/" + issueId + "/users/" + assigneeId, String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
-
-    @Test
-    public void updateComment() {
-        Long issueId = 1L;
-        Long commentId = 1L;
-        String createUrl = "/api/issues/"+issueId+"/comments/";
-        String updateUrl = "/api/issues/"+issueId+"/comments/"+commentId;
-
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("contents", "댓글 문제가 아닌데요?")
-                .build();
-
-//        ResponseEntity<String> response = basicAuthTemplate().postForObject(createUrl, request, Comment.class);
-//        assertTrue(createdComment.toString().contains("댓글 문제가 아닌데요?"));
-//        log.debug("created Comment : {}", createdComment.toString());
-//        assertThat(createdComment.toString().contains("댓글 문제가 아닌데요?"), is(true));
-    }
 }
