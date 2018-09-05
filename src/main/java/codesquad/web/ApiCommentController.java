@@ -26,11 +26,17 @@ public class ApiCommentController {
         return commentService.getOne(issueId, commentId);
     }
 
+    /*
+        왜 create의 응답 body에 comment가 담겨야 하는가?
+        ajax로 comment create 요청을 했을 때, 응답으로 comment가 있어야 클라이언트에서 추가하여 바로 보여줄 수 있다.
+
+        왜 create의 파라미터 중 Comment에 @RequestBody가 붙으면 415 error가 발생할까?
+     */
     @PostMapping()
-    public ResponseEntity<Void> create(@LoginUser User writer, @PathVariable Long issueId, @RequestBody Comment comment) {
+    public ResponseEntity<Comment> create(@LoginUser User writer, @PathVariable Long issueId, Comment comment) {
         log.debug("comment : {}", comment.toString());
-        String location = commentService.create(writer, comment, issueId).generatedUri(issueId);
-        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create(location)).build();
+        Comment createdComment = commentService.create(writer, comment, issueId);
+        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create(createdComment.generatedUri(issueId))).body(createdComment);
     }
 
     @PutMapping("{commentId}")

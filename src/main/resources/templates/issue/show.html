@@ -115,8 +115,12 @@
                                 </strong>
                             </div>
                         </header>
-                        <article>
-                            {{this.contents}}
+                        <article class="comment_area">
+                            <div class="contents">{{this.contents}}</div>
+                            <div class="buttons">
+                                <button class="update_comment">수정</button>
+                                <button class="delete_comment">삭제</button>
+                            </div>
                         </article>
                     </div>
                     <hr>
@@ -166,8 +170,13 @@
                 </strong>
             </div>
         </header>
-        <article>
-            {1}
+        <article class="comment_area">
+            <div class="contents">{1}</div>
+            <div class="buttons">
+                <!--<button class="update_comment" onclick="updateComment(event)">수정</button>-->
+                <button class="update_comment">수정</button>
+                <button class="delete_comment">삭제</button>
+            </div>
         </article>
     </div>
     <hr>
