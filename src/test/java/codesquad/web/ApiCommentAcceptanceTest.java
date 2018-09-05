@@ -14,7 +14,7 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
     @Test
     public void create() {
         Comment comment = new Comment(1L, findDefaultUser(), "댓글 문제가 아니야");
-        ResponseEntity<Void> response = basicAuthTemplate().postForEntity("/api/issues/1/comments", comment, Void.class);
+        ResponseEntity<Comment> response = basicAuthTemplate().postForEntity("/api/issues/1/comments", comment, Comment.class);
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
     }
 
@@ -22,7 +22,7 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
     public void getComment() {
         Long issueId = 1L;
         Comment comment = new Comment(1L, findDefaultUser(), "댓글 문제가 아닙니다.");
-        ResponseEntity<Void> response = basicAuthTemplate().postForEntity("/api/issues/" + issueId + "/comments", comment, Void.class);
+        ResponseEntity<Comment> response = basicAuthTemplate().postForEntity("/api/issues/" + issueId + "/comments", comment, Comment.class);
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
 
         Comment dbComment = basicAuthTemplate().getForObject(comment.generatedUri(issueId), Comment.class);
