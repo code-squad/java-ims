@@ -135,7 +135,7 @@
                         <button class="mdl-button" type="submit">upload file</button>
                     </div>
                 </form>
-                <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-contents">
+                <div id="comment-form-parent" class="mdl-color-text--primary-contrast mdl-card__supporting-text new-contents">
                     <form action="/api/issues/{{issue.id}}/comments" method="post" id="contents-form">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <textarea style="color:black" rows=5 class="mdl-textfield__input" id="contents"
@@ -186,6 +186,41 @@
         </article>
     </div>
     <hr>
+</script>
+<script type="text/template" id="commentAddForm">
+    <form action="/api/issues/{{issue.id}}/comments" method="post" id="contents-form">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <textarea style="color:black" rows=5 class="mdl-textfield__input" id="contents"
+                                      name="contents"></textarea>
+            <label for="contents" class="mdl-textfield__label">Leave a contents</label>
+        </div>
+        <button type="button" class="mdl-button"
+                id="addCommentSubmit">
+            <i class="material-icons">check_circle</i><span class="visuallyhidden">add contents</span>
+        </button>
+        <button type="button" class="mdl-button"
+                id="updateCommentSubmit" style="display: none">
+            <i class="material-icons">check_circle</i><span class="visuallyhidden">update contents</span>
+        </button>
+    </form>
+</script>
+<script type="text/template" id="commentUpdateForm">
+    <form action="" method="post" id="contents-form">
+        <input type="hidden" name="_method" value="put">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <textarea style="color:black" rows=5 class="mdl-textfield__input" id="contents"
+                                      name="contents"></textarea>
+            <label for="contents" class="mdl-textfield__label">Leave a contents</label>
+        </div>
+        <button type="button" class="mdl-button"
+                id="addCommentSubmit">
+            <i class="material-icons">check_circle</i><span class="visuallyhidden">add contents</span>
+        </button>
+        <button type="button" class="mdl-button"
+                id="updateCommentSubmit" style="display: none" onclick="updateComment(event)">
+            <i class="material-icons">check_circle</i><span class="visuallyhidden">update contents</span>
+        </button>
+    </form>
 </script>
 <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>-->
