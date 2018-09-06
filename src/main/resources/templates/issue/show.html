@@ -116,6 +116,7 @@
                             </div>
                         </header>
                         <article class="comment_area">
+                            <input class="id" type="hidden" value="{{this.id}}">
                             <div class="contents">{{this.contents}}</div>
                             <div class="buttons">
                                 <button class="update_comment">수정</button>
@@ -145,6 +146,10 @@
                                 id="addCommentSubmit">
                             <i class="material-icons">check_circle</i><span class="visuallyhidden">add contents</span>
                         </button>
+                        <button type="button" class="mdl-button"
+                                id="updateCommentSubmit" style="display: none">
+                            <i class="material-icons">check_circle</i><span class="visuallyhidden">update contents</span>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -171,6 +176,7 @@
             </div>
         </header>
         <article class="comment_area">
+            <input class="id" type="hidden" value="{2}">
             <div class="contents">{1}</div>
             <div class="buttons">
                 <!--<button class="update_comment" onclick="updateComment(event)">수정</button>-->
