@@ -44,4 +44,20 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
         savedComment = basicAuthTemplate().getForObject(comment.generatedUri(issueId), Comment.class);
         assertThat(savedComment.toString().contains("수정된 댓글 문제가 아닙니다."), is(true));
     }
+
+    @Test
+    public void delete() {
+        Long issueId = 1L;
+        Comment comment = new Comment(1L, findDefaultUser(), "댓글 문제가 아닙니다.");
+        ResponseEntity<Void> response = basicAuthTemplate().postForEntity("/api/issues/" + issueId + "/comments", comment, Void.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+
+        comment = basicAuthTemplate().getForObject(comment.generatedUri(issueId), Comment.class);
+        assertThat(comment.isDeleted(), is(false));
+
+        basicAuthTemplate().delete("/api/issues/" + issueId + "/comments/" + comment.getId());
+
+        comment = basicAuthTemplate().getForObject(comment.generatedUri(issueId), Comment.class);
+        assertThat(comment.isDeleted(), is(true));
+    }
 }

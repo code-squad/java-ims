@@ -15,6 +15,8 @@ public class Comment extends AbstractEntity {
 
     private Long issueId;
 
+    private boolean deleted = false;
+
     public Comment() {
 
     }
@@ -79,5 +81,16 @@ public class Comment extends AbstractEntity {
         }
         this.contents = updatedComment.contents;
         return this;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void delete(User user) {
+        if (!this.writer.equals(user)) {
+            throw new IllegalArgumentException("not match user");
+        }
+        deleted = true;
     }
 }

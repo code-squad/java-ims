@@ -40,15 +40,20 @@ public class ApiCommentController {
     }
 
     @PutMapping("{commentId}")
-//    public ResponseEntity<Void> update(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long commentId, @RequestBody Comment updateComment) {
     public ResponseEntity<Comment> update(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long commentId, Comment updateComment) {
         updateComment.writtenby(user);
         log.debug("updatedComment : {}", updateComment.toString());
         Comment savedComment = commentService.update(issueId, commentId, updateComment);
         log.debug("savedComment : {}", savedComment.toString());
-        String location = savedComment.generatedUri(issueId);
 
         return ResponseEntity.status(HttpStatus.OK).location(URI.create(savedComment.generatedUri(issueId))).body(savedComment);
 
+    }
+
+    @DeleteMapping("{commentId}")
+    public ResponseEntity<Void> delete(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long commentId) {
+        log.debug("api comment delete is called");
+        commentService.delete(user, issueId, commentId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
