@@ -1,5 +1,7 @@
 $("#addCommentSubmit").on("click", addComment);
+
 $(document).on("click", ".buttons .update_comment", updateFormSetting);
+$(document).on("click", ".buttons .delete_comment", deleteComment);
 
 function assign(e) {
     e.preventDefault();
@@ -68,7 +70,7 @@ function updateFormSetting(e) {
     var id = $(e.target).closest(".comment_area").find(".id").attr("value");
     console.log("commentId : " + id);
 
-    // bug : toggle로만 동작하면 수정버튼을 연속 2번 누를 경우 updateCommentSubmit이 아닌 addCommentSubmit으로 다시 바뀐다
+    // TODO bug : toggle로만 동작하면 수정버튼을 연속 2번 누를 경우 updateCommentSubmit이 아닌 addCommentSubmit으로 다시 바뀐다
     $("#addCommentSubmit").toggle();
     $("#updateCommentSubmit").toggle();
 
@@ -88,6 +90,7 @@ function updateFormSetting(e) {
     $("#contents").val(comment_contents);
 }
 
+// 자바스크립트에서도 Interceptor와 같은 게 있는가? 사용자 인증 로직 처리를 위해
 function updateComment(e) {
     e.preventDefault();
     console.log("updateComment is called");
@@ -103,13 +106,41 @@ function updateComment(e) {
         data: queryString,
         url: url,
         dataType: 'json',
-        error: onError,
+        error: function () {
+            alert("본인이 쓴 댓글만 수정할 수 있습니다");
+        },
         success: function (data, status) {
             console.log(data);
             console.log(status);
             $(".update_contents").text(data.contents);
             console.log(data.contents);
             $("#contents").val("");
+        }
+    });
+}
+
+function deleteComment(e) {
+    var id = $(e.target).closest(".comment_area").find(".id").attr("value");
+    console.log("commentId : " + id);
+
+    var path = window.location.pathname; // path : /issue/1
+    var index = path.lastIndexOf('/');
+    var issueId = path.substring(index+1); // issueId : 1
+    console.log("issueId : " + issueId);
+
+    var deleteUrl = "/api/issues/"+ issueId +"/comments/"+id;
+    console.log("delete url : " + deleteUrl);
+
+    $.ajax({
+        type: 'DELETE',
+        url: deleteUrl,
+        error: function () {
+            alert("본인이 쓴 댓글만 삭제할  있습니다");
+        },
+        success: function (data, status) {
+            console.log(data);
+            console.log(status);
+            $(e.target).closest(".contents").remove();
         }
     });
 }

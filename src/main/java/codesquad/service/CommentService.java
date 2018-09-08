@@ -32,4 +32,10 @@ public class CommentService {
         Comment savedComment = commentRepository.findByIssueIdAndId(issueId, commentId);
         return commentRepository.save(savedComment.update(updateComment));
     }
+
+    public void delete(User user, Long issueId, Long commentId) {
+        Comment savedComment = commentRepository.findByIssueIdAndId(issueId, commentId);
+        savedComment.delete(user);
+        commentRepository.save(savedComment);
+    }
 }

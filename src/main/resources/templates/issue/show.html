@@ -80,7 +80,6 @@
                         </li>
                         {{/labels}}
                     </ul>
-
                     <button id="assignee-menu" class="mdl-button mdl-js-button">
                         Assignee
                     </button>
@@ -97,9 +96,10 @@
                     <p>{{issue.contents}}</p>
                 </div>
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
-
                     <!-- comments start -->
                     {{#comments}}
+                    {{#if deleted}}
+                    {{else}}
                     <div class="contents mdl-color-text--grey-700">
                         <header class="comment__header">
                             <img class="comment__avatar2" height="48" width="48"
@@ -107,11 +107,7 @@
                             <div class="comment__author">
                                 <strong>
                                     <a>{{this.writer.userId}}</a>
-
-
                                     <span>changed milestone 1 on 2017-01-14</span>
-
-
                                 </strong>
                             </div>
                         </header>
@@ -125,6 +121,7 @@
                         </article>
                     </div>
                     <hr>
+                    {{/if}}
                     {{/comments}}
                     <div id="comment-bottom"></div>
                     <!-- comments end -->

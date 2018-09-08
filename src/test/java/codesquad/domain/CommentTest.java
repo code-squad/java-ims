@@ -42,4 +42,28 @@ public class CommentTest {
         comment.update(updatedComment);
         assertThat(comment.toString().contains("수정된 댓글 내용"), is(true));
     }
+
+    @Test
+    public void isDeleted() {
+        User writer = new User(1L, "javajigi", "password", "jaesung");
+        Comment comment = new Comment(writer, "댓글 내용");
+        assertThat(comment.isDeleted(), is(false));
+    }
+
+    @Test
+    public void delete() {
+        User writer = new User(1L, "javajigi", "password", "jaesung");
+        Comment comment = new Comment(writer, "댓글 내용");
+        comment.delete(writer);
+        assertThat(comment.isDeleted(), is(true));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void delete_fail() {
+        User writer = new User(1L, "javajigi", "password", "jaesung");
+        User not_writer = new User(2L, "learner", "password", "taewon");
+        Comment comment = new Comment(writer, "댓글 내용");
+        comment.delete(not_writer);
+        assertThat(comment.isDeleted(), is(false));
+    }
 }
