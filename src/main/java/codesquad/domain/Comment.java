@@ -62,7 +62,9 @@ public class Comment extends AbstractEntity {
     @Override
     public String toString() {
         return "Comment{" +
-                "contents='" + contents + '\'' +
+                "writer=" + writer +
+                ", contents='" + contents + '\'' +
+                ", deleted=" + deleted +
                 '}';
     }
 
