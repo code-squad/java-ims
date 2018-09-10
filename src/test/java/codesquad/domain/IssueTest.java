@@ -48,7 +48,7 @@ public class IssueTest {
 
     @Test
     public void setAssignee() {
-        Issue issue = new Issue(4L, "사용자 일치 이슈", "이슈 내용", writer);
+        Issue issue = new Issue("사용자 일치 이슈", "이슈 내용", writer);
 
         issue.registerAssignee(writer);
         System.out.println(issue.toString());
@@ -67,7 +67,8 @@ public class IssueTest {
     @Test
     public void setComments() {
         Issue issue = new Issue("댓글 등록 이슈", "댓글 등록 내용");
-        Comment comment = new Comment(writer, "댓글에는 문제가 없는데요?");
+        Comment comment = new Comment("댓글에는 문제가 없는데요?");
+        comment.writtenby(writer);
         List<Comment> comments =  issue.addComment(comment);
 
         assertThat(comments.size()>0, is(true));

@@ -11,7 +11,8 @@ public class CommentTest {
 
     @Test
     public void create() {
-        Comment comment = new Comment(writer, default_contents);
+        Comment comment = new Comment(default_contents);
+        comment.writtenby(writer);
         assertThat(comment.toString().contains("이슈 댓글 내용"), is(true));
     }
 
@@ -27,28 +28,45 @@ public class CommentTest {
     @Test
     public void generatedUri() {
         Long issueId = 2L;
-        Comment comment = new Comment(3L, writer, "댓글에는 문제가 없습니다.");
+        Comment comment = new Comment(3L, "댓글에는 문제가 없습니다.");
+        comment.writtenby(writer);
         assertThat(comment.generatedUri(issueId), is("/api/issues/" + issueId + "/comments/3"));
     }
 
     @Test
     public void update() {
-        Comment comment = new Comment(writer, default_contents);
-        Comment updatedComment = new Comment(writer, "수정된 댓글 내용");
+        Comment comment = new Comment(default_contents);
+        comment.writtenby(writer);
+        Comment updatedComment = new Comment("수정된 댓글 내용");
+        updatedComment.writtenby(writer);
 
         comment.update(updatedComment);
         assertThat(comment.toString().contains("수정된 댓글 내용"), is(true));
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void update_fail() {
+        Comment comment = new Comment(default_contents);
+        comment.writtenby(writer);
+
+        Comment updatedComment = new Comment("수정된 댓글 내용");
+        User not_writer = new User("crong", "password", "윤지수");
+        updatedComment.writtenby(not_writer);
+
+        comment.update(updatedComment);
+    }
+
     @Test
     public void isDeleted() {
-        Comment comment = new Comment(writer, default_contents);
+        Comment comment = new Comment(default_contents);
+        comment.writtenby(writer);
         assertThat(comment.isDeleted(), is(false));
     }
 
     @Test
     public void delete() {
-        Comment comment = new Comment(writer, default_contents);
+        Comment comment = new Comment(default_contents);
+        comment.writtenby(writer);
         comment.delete(writer);
         assertThat(comment.isDeleted(), is(true));
     }
@@ -56,7 +74,8 @@ public class CommentTest {
     @Test(expected = IllegalArgumentException.class)
     public void delete_fail() {
         User not_writer = new User(2L, "learner", "password", "taewon");
-        Comment comment = new Comment(writer, default_contents);
+        Comment comment = new Comment(default_contents);
+        comment.writtenby(writer);
         comment.delete(not_writer);
         assertThat(comment.isDeleted(), is(false));
     }

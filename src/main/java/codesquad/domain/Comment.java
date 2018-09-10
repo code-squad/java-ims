@@ -22,16 +22,11 @@ public class Comment extends AbstractEntity {
     }
 
     public Comment(String contents) {
-        this(0L, null, contents);
+        this(0L, contents);
     }
 
-    public Comment(User writer, String contents) {
-        this(0L, writer, contents);
-    }
-
-    public Comment(Long id, User writer, String contents) {
+    public Comment(Long id, String contents) {
         super(id);
-        this.writer = writer;
         this.contents = contents;
     }
 

@@ -15,13 +15,15 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(ApiCommentAcceptanceTest.class);
 
     public ResponseEntity<Comment> createComment() {
-        Comment comment = new Comment(1L, findDefaultUser(), "댓글 문제가 아니야");
+        Comment comment = new Comment(1L, "댓글 문제가 아니야");
+        comment.writtenby(findDefaultUser());
         return basicAuthTemplate().postForEntity("/api/issues/1/comments", comment, Comment.class);
     }
 
     @Test
     public void create() {
-        Comment comment = new Comment(1L, findDefaultUser(), "댓글 문제가 아니야");
+        Comment comment = new Comment(1L, "댓글 문제가 아니야");
+        comment.writtenby(findDefaultUser());
         ResponseEntity<Comment> response = basicAuthTemplate().postForEntity("/api/issues/1/comments", comment, Comment.class);
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
     }
@@ -49,7 +51,8 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
         Comment comment = response.getBody();
 
         Comment savedComment = basicAuthTemplate().getForObject(comment.generatedUri(issueId), Comment.class);
-        Comment updatedComment = new Comment(findDefaultUser(), "수정된 댓글 문제가 아닙니다.");
+        Comment updatedComment = new Comment("수정된 댓글 문제가 아닙니다.");
+        updatedComment.writtenby(findDefaultUser());
         basicAuthTemplate().put(savedComment.generatedUri(issueId), updatedComment);
 
         savedComment = basicAuthTemplate().getForObject(comment.generatedUri(issueId), Comment.class);
