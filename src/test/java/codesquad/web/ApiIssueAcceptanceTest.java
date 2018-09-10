@@ -1,26 +1,17 @@
 package codesquad.web;
 
-import codesquad.domain.Comment;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import support.test.AcceptanceTest;
-import support.test.HtmlFormDataBuilder;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class ApiIssueAcceptanceTest extends AcceptanceTest {
-    private static final Logger log =  LoggerFactory.getLogger(ApiIssueAcceptanceTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ApiIssueAcceptanceTest.class);
 
     @Test
     public void setMilestone() {

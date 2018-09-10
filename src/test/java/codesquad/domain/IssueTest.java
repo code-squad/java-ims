@@ -21,7 +21,6 @@ public class IssueTest {
 
     @Test
     public void update() {
-        User writer = new User("learner", "test1234", "taewon");
         IssueDto issueDto = new IssueDto("subject", "comment");
         Issue issue = issueDto.toIssue(writer);
 
@@ -29,12 +28,10 @@ public class IssueTest {
         issue.update(updateIssueDto, writer);
 
         assertThat(issue.toString().contains("updateSubject"), is(true));
-
     }
 
     @Test
     public void matchWriter() {
-        User writer = new User(1L, "learner", "test1234", "taewon");
         Issue issue = new Issue("사용자 일치 이슈", "코멘트 내용", writer);
 
         assertThat(issue.matchWriter(writer), is(true));
@@ -51,7 +48,6 @@ public class IssueTest {
 
     @Test
     public void setAssignee() {
-        User writer = new User(3L, "learner", "password", "taewon");
         Issue issue = new Issue(4L, "사용자 일치 이슈", "이슈 내용", writer);
 
         issue.registerAssignee(writer);
@@ -71,7 +67,6 @@ public class IssueTest {
     @Test
     public void setComments() {
         Issue issue = new Issue("댓글 등록 이슈", "댓글 등록 내용");
-        User writer = new User("learner", "test1234", "taewon");
         Comment comment = new Comment(writer, "댓글에는 문제가 없는데요?");
         List<Comment> comments =  issue.addComment(comment);
 
