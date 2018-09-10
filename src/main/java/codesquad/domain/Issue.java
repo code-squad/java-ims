@@ -43,15 +43,10 @@ public class Issue extends AbstractEntity {
     }
 
     public Issue(String subject, String contents) {
-        this(0L, subject, contents, null);
+        this(subject, contents, null);
     }
 
     public Issue(String subject, String contents, User writer) {
-        this(0L, subject, contents, writer);
-    }
-
-    public Issue(Long id, String subject, String contents, User writer) {
-        super(id);
         this.subject = subject;
         this.contents = contents;
         this.writer = writer;
