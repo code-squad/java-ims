@@ -2,14 +2,20 @@ package codesquad.web;
 
 import codesquad.domain.Comment;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import support.test.AcceptanceTest;
+import support.test.HtmlFormDataBuilder;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class ApiCommentAcceptanceTest extends AcceptanceTest {
+    private static final Logger log =  LoggerFactory.getLogger(ApiCommentAcceptanceTest.class);
 
     @Test
     public void create() {
@@ -23,10 +29,25 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
         Long issueId = 1L;
         Comment comment = new Comment(1L, findDefaultUser(), "댓글 문제가 아닙니다.");
         ResponseEntity<Comment> response = basicAuthTemplate().postForEntity("/api/issues/" + issueId + "/comments", comment, Comment.class);
+//        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+//                .addParameter("contents", "댓글 문제가 아닙니다.").build();
+//        ResponseEntity<Comment> response = basicAuthTemplate().postForEntity("/api/issues/" + issueId + "/comments", request, Comment.class);
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
 
-        Comment dbComment = basicAuthTemplate().getForObject(comment.generatedUri(issueId), Comment.class);
-        assertThat(dbComment.toString().contains("댓글 문제가 아닙니다."), is(true));
+        Comment responseComment = response.getBody();
+        response = basicAuthTemplate().getForEntity(responseComment.generatedUri(issueId), Comment.class);
+        responseComment = response.getBody();
+
+        log.debug("responseComment : {}", responseComment.toString());
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(responseComment.toString().contains("댓글 문제가 아닙니다"), is(true));
+
+
+//        log.debug("comment : {}", comment.toString());
+//        Comment dbComment = basicAuthTemplate().getForObject(comment.generatedUri(issueId), Comment.class);
+//        log.debug("dbComment : {}", dbComment.toString());
+//        assertThat(dbComment.toString().contains("댓글 문제가 아닙니다."), is(true));
     }
 
 
