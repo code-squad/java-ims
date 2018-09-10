@@ -22,15 +22,21 @@ function addComment(e) {
     e.preventDefault();
     console.log("addComment is called");
 
-    var queryString = $("#contents-form").serialize();
-    console.log("queryString : " + queryString);
+    // var queryString = $("#contents-form").serialize();
+    // json 형태로 데이터를 구성해줘야 Controller메소드의 @RequestBody를 타고 들어갈 수 있다
+    // json 형태가 아니거나 MessageConverter에서 알 수 없는 데이터 형태이면 415 error를 뱉는다
+    var formdata = {
+        contents : $("#contents").val()
+    };
+    console.log("formdata : " + formdata);
 
     var url = $("#contents-form").attr("action");
     console.log("url : " + url);
 
     $.ajax({
         type: 'POST',
-        data: queryString,
+        contentType: "application/json",
+        data: JSON.stringify(formdata),
         url: url,
         dataType: 'json',
         error: onError,
@@ -98,12 +104,16 @@ function updateComment(e) {
     var url = $("#updateCommentSubmit").data("message");
     console.log("update url : " + url);
 
-    var queryString = $("#contents-form").serialize();
-    console.log("queryString : " + queryString);
+    // var queryString = $("#contents-form").serialize();
+    var formdata = {
+      contents : $("#contents").val()
+    };
+    console.log("form data : {}", formdata);
 
     $.ajax({
         type: 'PUT',
-        data: queryString,
+        data: JSON.stringify(formdata),
+        contentType: "application/json",
         url: url,
         dataType: 'json',
         error: function () {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.net.URI;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/issues/{issueId}/comments")
@@ -24,19 +25,11 @@ public class ApiCommentController {
     private CommentService commentService;
 
     @GetMapping("{commentId}")
-//    public Comment getComment(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long commentId) {
     public ResponseEntity<Comment> getComment(@LoginUser User user, @PathVariable Long issueId, @PathVariable Long commentId) {
-//        return commentService.getOne(issueId, commentId);
         Comment comment = commentService.getOne(issueId, commentId);
         return ResponseEntity.status(HttpStatus.OK).location(URI.create(comment.generatedUri(issueId))).body(comment);
     }
 
-    /*
-        왜 create의 응답 body에 comment가 담겨야 하는가?
-        ajax로 comment create 요청을 했을 때, 응답으로 comment가 있어야 클라이언트에서 추가하여 바로 보여줄 수 있다.
-
-        왜 create의 파라미터 중 Comment에 @RequestBody가 붙으면 415 error가 발생할까?
-     */
     @PostMapping()
     public ResponseEntity<Comment> create(@LoginUser User writer, @PathVariable Long issueId, @RequestBody Comment comment) {
         log.debug("comment : {}", comment.toString());
