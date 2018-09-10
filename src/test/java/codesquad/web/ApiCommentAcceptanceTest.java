@@ -4,18 +4,20 @@ import codesquad.domain.Comment;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import support.test.AcceptanceTest;
-import support.test.HtmlFormDataBuilder;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class ApiCommentAcceptanceTest extends AcceptanceTest {
-    private static final Logger log =  LoggerFactory.getLogger(ApiCommentAcceptanceTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ApiCommentAcceptanceTest.class);
+
+    public ResponseEntity<Comment> createComment() {
+        Comment comment = new Comment(1L, findDefaultUser(), "댓글 문제가 아니야");
+        return basicAuthTemplate().postForEntity("/api/issues/1/comments", comment, Comment.class);
+    }
 
     @Test
     public void create() {
@@ -27,36 +29,24 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
     @Test
     public void getComment() {
         Long issueId = 1L;
-        Comment comment = new Comment(1L, findDefaultUser(), "댓글 문제가 아닙니다.");
-        ResponseEntity<Comment> response = basicAuthTemplate().postForEntity("/api/issues/" + issueId + "/comments", comment, Comment.class);
-//        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-//                .addParameter("contents", "댓글 문제가 아닙니다.").build();
-//        ResponseEntity<Comment> response = basicAuthTemplate().postForEntity("/api/issues/" + issueId + "/comments", request, Comment.class);
+        ResponseEntity<Comment> response = createComment();
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
 
         Comment responseComment = response.getBody();
         response = basicAuthTemplate().getForEntity(responseComment.generatedUri(issueId), Comment.class);
         responseComment = response.getBody();
 
-        log.debug("responseComment : {}", responseComment.toString());
-
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(responseComment.toString().contains("댓글 문제가 아닙니다"), is(true));
-
-
-//        log.debug("comment : {}", comment.toString());
-//        Comment dbComment = basicAuthTemplate().getForObject(comment.generatedUri(issueId), Comment.class);
-//        log.debug("dbComment : {}", dbComment.toString());
-//        assertThat(dbComment.toString().contains("댓글 문제가 아닙니다."), is(true));
+        assertThat(responseComment.toString().contains("댓글 문제가 아니야"), is(true));
     }
 
 
     @Test
     public void update() {
         Long issueId = 1L;
-        Comment comment = new Comment(1L, findDefaultUser(), "댓글 문제가 아닙니다.");
-        ResponseEntity<Void> response = basicAuthTemplate().postForEntity("/api/issues/" + issueId + "/comments", comment, Void.class);
+        ResponseEntity<Comment> response = createComment();
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+        Comment comment = response.getBody();
 
         Comment savedComment = basicAuthTemplate().getForObject(comment.generatedUri(issueId), Comment.class);
         Comment updatedComment = new Comment(findDefaultUser(), "수정된 댓글 문제가 아닙니다.");
@@ -69,9 +59,9 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
     @Test
     public void delete() {
         Long issueId = 1L;
-        Comment comment = new Comment(1L, findDefaultUser(), "댓글 문제가 아닙니다.");
-        ResponseEntity<Void> response = basicAuthTemplate().postForEntity("/api/issues/" + issueId + "/comments", comment, Void.class);
+        ResponseEntity<Comment> response = createComment();
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+        Comment comment = response.getBody();
 
         comment = basicAuthTemplate().getForObject(comment.generatedUri(issueId), Comment.class);
         assertThat(comment.isDeleted(), is(false));
