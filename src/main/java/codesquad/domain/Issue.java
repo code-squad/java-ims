@@ -5,6 +5,8 @@ import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Issue extends AbstractEntity {
@@ -19,7 +21,7 @@ public class Issue extends AbstractEntity {
 
     @Size(min = 1, max = 200)
     @Column(length = 200)
-    private String comment;
+    private String contents;
 
     private Boolean deleted = false;
 
@@ -33,21 +35,20 @@ public class Issue extends AbstractEntity {
     @Embedded
     private Labels labels = new Labels();
 
+    @OneToMany
+    @JoinColumn(name = "issueId")
+    private List<Comment> comments = new ArrayList<>();
+
     public Issue() {
     }
 
-    public Issue(String subject, String comment) {
-        this(0L, subject, comment, null);
+    public Issue(String subject, String contents) {
+        this(subject, contents, null);
     }
 
-    public Issue(String subject, String comment, User writer) {
-        this(0L, subject, comment, writer);
-    }
-
-    public Issue(Long id, String subject, String comment, User writer) {
-        super(id);
+    public Issue(String subject, String contents, User writer) {
         this.subject = subject;
-        this.comment = comment;
+        this.contents = contents;
         this.writer = writer;
     }
 
@@ -55,8 +56,8 @@ public class Issue extends AbstractEntity {
         return subject;
     }
 
-    public String getComment() {
-        return comment;
+    public String getContents() {
+        return contents;
     }
 
     public User getWriter() {
@@ -71,13 +72,21 @@ public class Issue extends AbstractEntity {
         return milestone;
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
                 "id=" + getId() +
                 ", writer=" + writer +
                 ", subject='" + subject + '\'' +
-                ", comment='" + comment + '\'' +
+                ", contents='" + contents + '\'' +
                 ", milestone='" + milestone + '\'' +
                 ", assignee='" + assignees + '\'' +
                 '}';
@@ -88,7 +97,7 @@ public class Issue extends AbstractEntity {
             throw new IllegalArgumentException("Cannot match user");
         }
         this.subject = updateIssue.subject;
-        this.comment = updateIssue.comment;
+        this.contents = updateIssue.contents;
         return this;
     }
 
@@ -97,7 +106,7 @@ public class Issue extends AbstractEntity {
             throw new IllegalArgumentException("Cannot match user");
         }
         this.subject = updateIssueDto.getSubject();
-        this.comment = updateIssueDto.getComment();
+        this.contents = updateIssueDto.getComment();
         return this;
     }
 
@@ -123,5 +132,10 @@ public class Issue extends AbstractEntity {
 
     public void registerLabel(Label label) {
         labels.addLabel(label);
+    }
+
+    public List<Comment> addComment(Comment comment) {
+        comments.add(comment);
+        return comments;
     }
 }
