@@ -125,7 +125,8 @@
                     <div id="comment-bottom"></div>
                     <!-- comments end -->
                 </div>
-                <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
+                <!--<form action="/issue/{{issue.id}}/attachements" enctype="multipart/form-data" method="POST">-->
+                <form action="/attachments" enctype="multipart/form-data" method="POST">
                     <div style="margin:10px;">
                         <input type="file" name="file" id="file"/>
                         <button class="mdl-button" type="submit">upload file</button>

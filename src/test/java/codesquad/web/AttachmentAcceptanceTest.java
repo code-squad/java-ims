@@ -13,8 +13,8 @@ import support.test.HtmlFormDataBuilder;
 
 import static org.junit.Assert.assertEquals;
 
-public class AttachmentControllerTest extends AcceptanceTest {
-    private static final Logger log = LoggerFactory.getLogger(AttachmentControllerTest.class);
+public class AttachmentAcceptanceTest extends AcceptanceTest {
+    private static final Logger log = LoggerFactory.getLogger(AttachmentAcceptanceTest.class);
 
     @Test
     public void download() throws Exception {
