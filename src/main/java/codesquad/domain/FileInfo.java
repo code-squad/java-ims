@@ -72,7 +72,7 @@ public class FileInfo {
         String extension = name.substring(index);
         log.debug("extension : {}", extension);
 
-        name = name.substring(0, index) + "0";
+        name = name.substring(0, index) + "0" + extension;
         log.debug("updated name : " + name);
 
         // name 수정된 것을 path에 반영하기
@@ -80,7 +80,7 @@ public class FileInfo {
         String dirPath = path.toString().substring(0, index);
         log.debug("dirPath in FileInfo : {}", dirPath);
 
-        path = Paths.get(dirPath).resolve(name + extension);
+        path = Paths.get(dirPath).resolve(name);
         log.debug("updated Path : {}", path);
     }
 
