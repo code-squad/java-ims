@@ -10,16 +10,14 @@ import java.nio.file.Paths;
 
 @Entity
 public class FileInfo {
-    private static final Logger log =  LoggerFactory.getLogger(FileInfo.class);
+    private static final Logger log = LoggerFactory.getLogger(FileInfo.class);
 
-//    @Transient
-//    public static final Path rootLocation = Paths.get("target/files/");
-
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
-    @Column(length = 20, nullable = false)
-    private String name;
+    @Column(length = 20, nullable = false, unique = true)
+    private String name; // img001.jpg
 
     @Column(nullable = false)
     @Convert(converter = PathConverter.class)
@@ -38,8 +36,8 @@ public class FileInfo {
     }
 
     public FileInfo(MultipartFile file, Path dirPath) {
-        this.name = getFileName(file);
-        this.path = dirPath.resolve(getFileName(file)); // target/files/3456789123/img001.jpg
+        this.name = getFilename(file);
+        this.path = dirPath.resolve(getFilename(file)); // target/files/3456789123/img001.jpg
         log.debug("path : {}", path);
         log.debug("name : {}", name);
     }
@@ -68,8 +66,32 @@ public class FileInfo {
         this.id = id;
     }
 
-    private static String getFileName(MultipartFile file) {
+    public void addNumberToFilename() {
+        // name 수정
+        int index = name.lastIndexOf(".");
+        String extension = name.substring(index);
+        log.debug("extension : {}", extension);
+
+        name = name.substring(0, index) + "0";
+        log.debug("updated name : " + name);
+
+        // name 수정된 것을 path에 반영하기
+        index = path.toString().lastIndexOf("\\");
+        String dirPath = path.toString().substring(0, index);
+        log.debug("dirPath in FileInfo : {}", dirPath);
+
+        path = Paths.get(dirPath).resolve(name + extension);
+        log.debug("updated Path : {}", path);
+    }
+
+    private static String getFilename(MultipartFile file) {
         int index = file.getOriginalFilename().lastIndexOf("\\"); // C:/image/img001.jpg
-        return file.getOriginalFilename().substring(index+1); // img001.jpg
+        return file.getOriginalFilename().substring(index + 1); // img001.jpg
+    }
+
+    public Path getDirPath() {
+        Path test = Paths.get(path.toString().substring(0, path.toString().lastIndexOf("\\")));
+        log.debug("path : {}", test.toString());
+        return test;
     }
 }
