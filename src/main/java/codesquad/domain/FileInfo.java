@@ -12,8 +12,8 @@ import java.nio.file.Paths;
 public class FileInfo {
     private static final Logger log =  LoggerFactory.getLogger(FileInfo.class);
 
-    @Transient
-    public static final Path rootLocation = Paths.get("target/files/");
+//    @Transient
+//    public static final Path rootLocation = Paths.get("target/files/");
 
     @Id @GeneratedValue
     private Long id;
@@ -38,16 +38,10 @@ public class FileInfo {
     }
 
     public FileInfo(MultipartFile file, Path dirPath) {
-        this.name = file.getName(); // file
-
-        int index = file.getOriginalFilename().lastIndexOf("\\"); // C:/image/img001.jpg
-        String originalName = file.getOriginalFilename().substring(index+1); // img001.jpg
-        this.path = rootLocation.resolve(dirPath).resolve(originalName); // target/files/3456789123/img001.jpg
-
-        log.debug("rootLocation : {}", rootLocation.toString());
-        log.debug("index : {}", index);
-        log.debug("original name : {}", originalName);
-        log.debug("this path : {}", this.path);
+        this.name = getFileName(file);
+        this.path = dirPath.resolve(getFileName(file)); // target/files/3456789123/img001.jpg
+        log.debug("path : {}", path);
+        log.debug("name : {}", name);
     }
 
     public String getName() {
@@ -72,5 +66,10 @@ public class FileInfo {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    private static String getFileName(MultipartFile file) {
+        int index = file.getOriginalFilename().lastIndexOf("\\"); // C:/image/img001.jpg
+        return file.getOriginalFilename().substring(index+1); // img001.jpg
     }
 }
