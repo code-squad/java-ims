@@ -125,6 +125,14 @@
                     <div id="comment-bottom"></div>
                     <!-- comments end -->
                 </div>
+                <div>
+                    첨부파일목록
+                    <ul>
+                        {{#files}}
+                        <li><a href="/attachments/{{id}}">{{name}}</a></li>
+                        {{/files}}
+                    </ul>
+                </div>
                 <!--<form action="/issue/{{issue.id}}/attachements" enctype="multipart/form-data" method="POST">-->
                 <form action="/attachments" enctype="multipart/form-data" method="POST">
                     <div style="margin:10px;">

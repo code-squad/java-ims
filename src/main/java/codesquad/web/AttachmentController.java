@@ -29,7 +29,6 @@ public class AttachmentController {
         log.debug("contenttype : {}", file.getContentType());
 
         // TODO MultipartFile로 전달된 데이터를 서버의 특정 디렉토리에 저장하고, DB에 관련 정보를 저장한다.
-//        fileStorageService.storeFileInfo(fileStorageService.storeFile(file));
         fileStorageService.store(file);
         return "redirect:/";
     }
