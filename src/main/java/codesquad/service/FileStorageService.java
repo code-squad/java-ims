@@ -26,6 +26,10 @@ public class FileStorageService {
         return fileStorageRepository.findAll();
     }
 
+    public FileInfo getOne(Long id) {
+        return fileStorageRepository.getOne(id);
+    }
+
     public FileInfo store(MultipartFile file) {
         return saveFile(file, saveFileInfo(file));
     }
