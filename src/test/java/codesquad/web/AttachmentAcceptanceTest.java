@@ -35,7 +35,8 @@ public class AttachmentAcceptanceTest extends AcceptanceTest {
                 .multipartFormData()
                 .addParameter("file", new ClassPathResource("logback.xml"))
                 .build();
-        ResponseEntity<String> result = template.postForEntity("/attachments", request, String.class);
+        Long issueId = 1L;
+        ResponseEntity<String> result = template.postForEntity("/issues/1/attachments", request, String.class);
         assertEquals(HttpStatus.FOUND, result.getStatusCode());
     }
 }

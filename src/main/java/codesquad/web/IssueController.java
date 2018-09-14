@@ -59,7 +59,7 @@ public class IssueController {
         model.addAttribute("users", userService.findAll());
         model.addAttribute("labels", labelService.findAll());
         model.addAttribute("comments", commentService.findAllByIssueId(id));
-        model.addAttribute("files", fileStorageService.findAll());
+        model.addAttribute("files", fileStorageService.getFiles(id));
         return "/issue/show";
     }
 

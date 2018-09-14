@@ -30,7 +30,7 @@ public class FileStorageServiceTest {
     private String originalFilename = "foo.txt";
     private MultipartFile multipartFile = new MockMultipartFile("foo", originalFilename,
             MediaType.TEXT_PLAIN_VALUE, "Hard Learner".getBytes());
-    private FileInfo fileInfo = new FileInfo(multipartFile, new DirectoryPathMaker().makePath());
+    private FileInfo fileInfo = new FileInfo(multipartFile, new DirectoryPathMaker().makePath(), 1L);
 
     @Before
     public void setUp() {
@@ -45,7 +45,7 @@ public class FileStorageServiceTest {
 
     @Test
     public void storeFile() {
-        FileInfo fileInfo = fileStorageService.store(multipartFile);
+        FileInfo fileInfo = fileStorageService.store(multipartFile, 1L);
 
         assertNotNull(fileStorageService.getOne(fileInfo.getId()));
         assertThat(fileInfo.getPath().startsWith("target/files/"),is(true));

@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 @Controller
-@RequestMapping("/attachments")
+@RequestMapping("/issues/{issueId}/attachments")
 public class AttachmentController {
     private static final Logger log = LoggerFactory.getLogger(AttachmentController.class);
 
@@ -29,12 +29,12 @@ public class AttachmentController {
     private FileStorageService fileStorageService;
 
     @PostMapping
-    public String upload(MultipartFile file) {
+    public String upload(MultipartFile file, @PathVariable Long issueId) {
         log.debug("file name : {}", file.getName());
         log.debug("original file name : {}", file.getOriginalFilename());
         log.debug("contenttype : {}", file.getContentType());
 
-        fileStorageService.store(file);
+        fileStorageService.store(file, issueId);
         return "redirect:/";
     }
 

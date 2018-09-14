@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import sun.reflect.FieldInfo;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -22,16 +23,16 @@ public class FileStorageService {
     @Resource(name = "fileStorageRepository")
     private FileStorageRepository fileStorageRepository;
 
-    public List<FileInfo> findAll() {
-        return fileStorageRepository.findAll();
-    }
-
     public FileInfo getOne(Long id) {
         return fileStorageRepository.getOne(id);
     }
 
-    public FileInfo store(MultipartFile file) {
-        return saveFile(file, saveFileInfo(file));
+    public List<FileInfo> getFiles(Long issueId) {
+        return fileStorageRepository.findByIssueId(issueId);
+    }
+
+    public FileInfo store(MultipartFile file, Long issueId) {
+        return saveFile(file, saveFileInfo(file, issueId));
     }
 
     private FileInfo saveFile(MultipartFile file, FileInfo fileInfo) {
@@ -46,8 +47,8 @@ public class FileStorageService {
         return fileInfo;
     }
 
-    private FileInfo saveFileInfo(MultipartFile file) {
-        FileInfo fileInfo = new FileInfo(file, new DirectoryPathMaker().makePath());
+    private FileInfo saveFileInfo(MultipartFile file, Long issueId) {
+        FileInfo fileInfo = new FileInfo(file, new DirectoryPathMaker().makePath(), issueId);
 
         while (true) {
             try {

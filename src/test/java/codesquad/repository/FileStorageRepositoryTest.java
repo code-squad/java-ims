@@ -20,9 +20,10 @@ public class FileStorageRepositoryTest {
 
     @Test
     public void save() {
+        Long issueId = 1L;
         MultipartFile multipartFile = new MockMultipartFile("foo", "foo.txt",
                 MediaType.TEXT_PLAIN_VALUE, "Hard Learner".getBytes());
-        FileInfo fileInfo = new FileInfo(multipartFile, new DirectoryPathMaker().makePath());
+        FileInfo fileInfo = new FileInfo(multipartFile, new DirectoryPathMaker().makePath(), issueId);
 
         fileStorageRepository.save(fileInfo);
     }

@@ -11,11 +11,15 @@ import java.nio.file.Paths;
 @Entity
 public class FileInfo {
     private static final Logger log = LoggerFactory.getLogger(FileInfo.class);
+
+    @Transient
     private final String SUFFIX = "0";
 
     @Id
     @GeneratedValue
     private Long id;
+
+    private Long issueId;
 
     @Column(length = 20, nullable = false, unique = true)
     private String name; // img001.jpg
@@ -36,7 +40,8 @@ public class FileInfo {
         this.path = path;
     }
 
-    public FileInfo(MultipartFile file, Path dirPath) {
+    public FileInfo(MultipartFile file, Path dirPath, Long issueId) {
+        this.issueId = issueId;
         this.name = getFilename(file); // img001.jpg
         this.path = dirPath.resolve(getFilename(file)); // target/files/[randomNumber]/img001.jpg
         log.debug("path : {}", path);
@@ -65,6 +70,14 @@ public class FileInfo {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getIssueId() {
+        return issueId;
+    }
+
+    public void setIssueId(Long issueId) {
+        this.issueId = issueId;
     }
 
     public void addNumberToFilename() {
