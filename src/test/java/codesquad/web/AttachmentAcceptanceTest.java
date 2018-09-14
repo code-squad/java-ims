@@ -17,14 +17,20 @@ public class AttachmentAcceptanceTest extends AcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(AttachmentAcceptanceTest.class);
 
     @Test
-    public void download() throws Exception {
+    public void download() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
+                .multipartFormData()
+                .addParameter("file", new ClassPathResource("logback.xml"))
+                .build();
+        template.postForEntity("/attachments", request, String.class);
+
         ResponseEntity<String> result = template.getForEntity("/attachments/1", String.class);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         log.debug("body : {}", result.getBody());
     }
 
     @Test
-    public void upload() throws Exception {
+    public void upload() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
                 .multipartFormData()
                 .addParameter("file", new ClassPathResource("logback.xml"))

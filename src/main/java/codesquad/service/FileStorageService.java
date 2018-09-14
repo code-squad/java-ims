@@ -49,12 +49,14 @@ public class FileStorageService {
     private FileInfo saveFileInfo(MultipartFile file) {
         FileInfo fileInfo = new FileInfo(file, new DirectoryPathMaker().makePath());
 
-        while(true) {
+        while (true) {
             try {
                 fileStorageRepository.save(fileInfo);
                 break;
-            } catch (Exception e) { // 파일 이름 중복된 것이 있을 때 발생
-                fileInfo.addNumberToFilename();
+            } catch (RuntimeException e) { // 파일 이름 중복된 것이 있을 때 발생
+                if (e.getMessage().contains("ConstraintViolationException")) {
+                    fileInfo.addNumberToFilename();
+                }
                 log.debug("updated fileInfo : {}, {}", fileInfo.getName(), fileInfo.getPath());
             }
         }

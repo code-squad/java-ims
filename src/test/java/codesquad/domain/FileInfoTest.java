@@ -7,18 +7,15 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Random;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class FileInfoTest {
-    private static final Logger log =  LoggerFactory.getLogger(FileInfoTest.class);
+    private static final Logger log = LoggerFactory.getLogger(FileInfoTest.class);
 
     @Test
     public void name() {

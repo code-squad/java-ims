@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 @Entity
 public class FileInfo {
     private static final Logger log = LoggerFactory.getLogger(FileInfo.class);
+    private final String SUFFIX = "0";
 
     @Id
     @GeneratedValue
@@ -21,7 +22,7 @@ public class FileInfo {
 
     @Column(nullable = false)
     @Convert(converter = PathConverter.class)
-    private Path path; // target/files/sample.txt
+    private Path path; // target/files/[randomNumber]/img001.jpg
 
     public FileInfo() {
     }
@@ -36,8 +37,8 @@ public class FileInfo {
     }
 
     public FileInfo(MultipartFile file, Path dirPath) {
-        this.name = getFilename(file);
-        this.path = dirPath.resolve(getFilename(file)); // target/files/3456789123/img001.jpg
+        this.name = getFilename(file); // img001.jpg
+        this.path = dirPath.resolve(getFilename(file)); // target/files/[randomNumber]/img001.jpg
         log.debug("path : {}", path);
         log.debug("name : {}", name);
     }
@@ -67,26 +68,24 @@ public class FileInfo {
     }
 
     public void addNumberToFilename() {
-        // name 수정
         int index = name.lastIndexOf(".");
         String extension = name.substring(index);
         log.debug("extension : {}", extension);
 
-        name = name.substring(0, index) + "0" + extension;
+        name = name.substring(0, index) + SUFFIX + extension;
         log.debug("updated name : " + name);
 
-        // name 수정된 것을 path에 반영하기
-        index = path.toString().lastIndexOf("\\");
-        String dirPath = path.toString().substring(0, index);
-        log.debug("dirPath in FileInfo : {}", dirPath);
-
-        path = Paths.get(dirPath).resolve(name);
-        log.debug("updated Path : {}", path);
+        updateFilenameOnPath(name);
     }
 
     private static String getFilename(MultipartFile file) {
         int index = file.getOriginalFilename().lastIndexOf("\\"); // C:/image/img001.jpg
         return file.getOriginalFilename().substring(index + 1); // img001.jpg
+    }
+
+    private void updateFilenameOnPath(String name) {
+        this.path = getDirPath().resolve(name);
+        log.debug("updated Path : {}", path);
     }
 
     public Path getDirPath() {
