@@ -12,8 +12,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.Temporal;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -31,7 +29,7 @@ public class FileInfoTest {
 
     @Before
     public void setUp() {
-         file = new MockMultipartFile("readme", "readme.txt"
+        file = new MockMultipartFile("readme", "readme.txt"
                 , MediaType.TEXT_PLAIN_VALUE, "plz readme".getBytes());
     }
 

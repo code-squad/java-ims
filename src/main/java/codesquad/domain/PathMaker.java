@@ -39,7 +39,6 @@ public class PathMaker {
 
     public String getFullPath(String filename, String dirPath) {
         // target\files\[random number]\sample.txt
-        log.debug("PathMaker rootLocation : {}", rootLocation);
         return rootLocation + dirPath + File.separator + filename;
     }
 }

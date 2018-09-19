@@ -23,6 +23,12 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FileStorageServiceTest {
+
+    private static final Logger log = LoggerFactory.getLogger(FileStorageServiceTest.class);
+
+    @Mock
+    private FileStorageRepository fileStorageRepository;
+
     @Mock
     private PathMaker pathMaker;
 

@@ -39,7 +39,6 @@ public class AttachmentController {
         log.debug("original file name : {}", file.getOriginalFilename());
         log.debug("contenttype : {}", file.getContentType());
 
-//        fileStorageService.store(file, issueId);
         fileStorageService.saveFile(file, fileStorageService.saveFileInfo(file, issueId));
         return "redirect:/";
     }

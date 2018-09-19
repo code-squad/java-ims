@@ -34,14 +34,11 @@ public class FileStorageService {
         return fileStorageRepository.findByIssueId(issueId);
     }
 
-    public FileInfo store(MultipartFile file, Long issueId) {
-        return saveFile(file, saveFileInfo(file, issueId));
-    }
-
     public FileInfo saveFile(MultipartFile file, FileInfo fileInfo) {
         try {
             Path dirPathWithRoot = Files.createDirectories(Paths.get(fileInfo.getDirPathWithRoot(pathMaker)));
             log.debug("result path : {}", dirPathWithRoot);
+
             String fullPath = fileInfo.getFullPath(pathMaker);
             log.debug("fullpath : {}", fullPath);
             Files.copy(file.getInputStream(), Paths.get(fullPath), StandardCopyOption.REPLACE_EXISTING);
