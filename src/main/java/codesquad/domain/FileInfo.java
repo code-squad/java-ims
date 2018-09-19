@@ -2,11 +2,13 @@ package codesquad.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Entity
 public class FileInfo {
@@ -25,26 +27,21 @@ public class FileInfo {
     private String name; // img001.jpg
 
     @Column(nullable = false)
-    @Convert(converter = PathConverter.class)
-    private Path path; // target/files/[randomNumber]/img001.jpg
+    private String dirPath; // /[random number]
 
     public FileInfo() {
     }
 
-    public FileInfo(String name) {
+    public FileInfo(String name, String dirPath) {
         this.name = name;
+        this.dirPath = dirPath;
     }
 
-    public FileInfo(String name, Path path) {
-        this.name = name;
-        this.path = path;
-    }
-
-    public FileInfo(MultipartFile file, Path dirPath, Long issueId) {
+    public FileInfo(MultipartFile file, String dirPath, Long issueId) {
         this.issueId = issueId;
         this.name = getFilename(file); // img001.jpg
-        this.path = dirPath.resolve(getFilename(file)); // target/files/[randomNumber]/img001.jpg
-        log.debug("path : {}", path);
+        this.dirPath = dirPath;
+        log.debug("dirPath : {}", this.dirPath);
         log.debug("name : {}", name);
     }
 
@@ -56,12 +53,12 @@ public class FileInfo {
         this.name = name;
     }
 
-    public Path getPath() {
-        return path;
+    public String getDirPath() {
+        return dirPath;
     }
 
-    public void setPath(Path path) {
-        this.path = path;
+    public void setDirPath(String dirPath) {
+        this.dirPath = dirPath;
     }
 
     public Long getId() {
@@ -87,8 +84,6 @@ public class FileInfo {
 
         name = name.substring(0, index) + SUFFIX + extension;
         log.debug("updated name : " + name);
-
-        updateFilenameOnPath(name);
     }
 
     private static String getFilename(MultipartFile file) {
@@ -96,14 +91,23 @@ public class FileInfo {
         return file.getOriginalFilename().substring(index + 1); // img001.jpg
     }
 
-    private void updateFilenameOnPath(String name) {
-        this.path = getDirPath().resolve(name);
-        log.debug("updated Path : {}", path);
+    public String getFullPath(PathMaker pathMaker) {
+        return pathMaker.getFullPath(name, dirPath);
     }
 
-    public Path getDirPath() {
-        Path test = Paths.get(path.toString().substring(0, path.toString().lastIndexOf("\\")));
-        log.debug("path : {}", test.toString());
-        return test;
+    public String getDirPathWithRoot(PathMaker pathMaker) {
+        log.debug("dir path with root : {} ", pathMaker.getRootLocation() + dirPath);
+        return pathMaker.getRootLocation() + dirPath + File.separator; // target\files\[random number]
+    }
+
+    @Override
+    public String toString() {
+        return "FileInfo{" +
+                "SUFFIX='" + SUFFIX + '\'' +
+                ", id=" + id +
+                ", issueId=" + issueId +
+                ", name='" + name + '\'' +
+                ", dirPath='" + dirPath + '\'' +
+                '}';
     }
 }

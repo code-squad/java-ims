@@ -1,18 +1,18 @@
 package codesquad.service;
 
-import codesquad.domain.DirectoryPathMaker;
 import codesquad.domain.FileInfo;
 import codesquad.domain.FileStorageRepository;
+import codesquad.domain.PathMaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import sun.reflect.FieldInfo;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
@@ -22,6 +22,9 @@ public class FileStorageService {
 
     @Resource(name = "fileStorageRepository")
     private FileStorageRepository fileStorageRepository;
+
+    @Resource(name = "pathMaker")
+    private PathMaker pathMaker;
 
     public FileInfo getOne(Long id) {
         return fileStorageRepository.getOne(id);
@@ -35,20 +38,21 @@ public class FileStorageService {
         return saveFile(file, saveFileInfo(file, issueId));
     }
 
-    private FileInfo saveFile(MultipartFile file, FileInfo fileInfo) {
+    public FileInfo saveFile(MultipartFile file, FileInfo fileInfo) {
         try {
-            Path resultPath = Files.createDirectories(fileInfo.getDirPath());
-            log.debug("result path : {}", resultPath);
-
-            Files.copy(file.getInputStream(), fileInfo.getPath(), StandardCopyOption.REPLACE_EXISTING);
+            Path dirPathWithRoot = Files.createDirectories(Paths.get(fileInfo.getDirPathWithRoot(pathMaker)));
+            log.debug("result path : {}", dirPathWithRoot);
+            String fullPath = fileInfo.getFullPath(pathMaker);
+            log.debug("fullpath : {}", fullPath);
+            Files.copy(file.getInputStream(), Paths.get(fullPath), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return fileInfo;
     }
 
-    private FileInfo saveFileInfo(MultipartFile file, Long issueId) {
-        FileInfo fileInfo = new FileInfo(file, new DirectoryPathMaker().makePath(), issueId);
+    public FileInfo saveFileInfo(MultipartFile file, Long issueId) {
+        FileInfo fileInfo = new FileInfo(file, pathMaker.makeRandomDirPath(), issueId);
 
         while (true) {
             try {
@@ -58,7 +62,7 @@ public class FileStorageService {
                 if (e.getMessage().contains("ConstraintViolationException")) {
                     fileInfo.addNumberToFilename();
                 }
-                log.debug("updated fileInfo : {}, {}", fileInfo.getName(), fileInfo.getPath());
+                log.debug("updated fileInfo : {}, {}", fileInfo.getName(), fileInfo.getDirPath());
             }
         }
         return fileInfo;
