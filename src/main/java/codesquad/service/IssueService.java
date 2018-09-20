@@ -65,20 +65,15 @@ public class IssueService {
         Milestone maybeMilestone = milestoneRepository.findById(milestoneId).orElseThrow( () -> new NullPointerException("not exist milestone."));
 
         Issue issue = findById(issueId);
-        // Java8에서는 ifPresentOrElse를 지원하지 않는다. (Java9이상)
-        // 아래와 같이 작성하면 milestone이 존재하지 않을 때 로직처리를 할 수 없다.
-//        milestoneRepository.findById(milestoneId).ifPresent(issue::registerMilestone);
         issue.registerMilestone(maybeMilestone);
     }
 
     @Transactional
     public void setAssignee(Long issueId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("not exist user."));
-//        findById(issueId).registerAssignee(userId);
         findById(issueId).registerAssignee(user);
     }
 
-    // TODO 중복저장되지 않게 하기
     @Transactional
     public void setLabel(Long issueId, Long labelId) {
         Label label = labelRepository.findById(labelId).orElseThrow(() -> new NullPointerException("not exist label."));

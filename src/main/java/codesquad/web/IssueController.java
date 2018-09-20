@@ -2,6 +2,7 @@ package codesquad.web;
 
 import codesquad.CannotShowException;
 import codesquad.domain.Comment;
+import codesquad.domain.FileStorageRepository;
 import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
@@ -35,6 +36,9 @@ public class IssueController {
     @Resource(name = "commentService")
     private CommentService commentService;
 
+    @Resource(name = "fileStorageService")
+    private FileStorageService fileStorageService;
+
     @GetMapping("/form")
     public String createForm(@LoginUser User user) {
         log.debug("issue form");
@@ -55,6 +59,7 @@ public class IssueController {
         model.addAttribute("users", userService.findAll());
         model.addAttribute("labels", labelService.findAll());
         model.addAttribute("comments", commentService.findAllByIssueId(id));
+        model.addAttribute("files", fileStorageService.getFiles(id));
         return "/issue/show";
     }
 

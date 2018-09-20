@@ -8,6 +8,7 @@ import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class HomeController {
         Iterable<Issue> issues = issueService.findAll();
         log.debug("issue : {}", issues.toString());
         model.addAttribute("issues", issues);
+
         return "index";
     }
 }

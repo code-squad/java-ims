@@ -1,4 +1,4 @@
-package codesquad;
+package codesquad.configuration;
 
 import java.util.List;
 
