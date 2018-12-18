@@ -11,12 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public abstract class AcceptanceTest {
+public abstract class AcceptanceTest extends BaseTest {
     private static final String DEFAULT_LOGIN_USER = "javajigi";
 
     @Autowired
@@ -47,7 +44,7 @@ public abstract class AcceptanceTest {
 
     protected String createResource(String path, Object bodyPayload) {
         ResponseEntity<String> response = template().postForEntity(path, bodyPayload, String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         return response.getHeaders().getLocation().getPath();
     }
 

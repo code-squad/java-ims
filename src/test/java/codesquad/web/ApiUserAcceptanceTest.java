@@ -7,9 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import support.test.AcceptanceTest;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 public class ApiUserAcceptanceTest extends AcceptanceTest {
 
     @Test
@@ -18,7 +15,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         String location = createResource("/api/users", newUser);
 
         UserDto dbUser = getResource(location, UserDto.class, findByUserId(newUser.getUserId()));
-        assertThat(dbUser, is(newUser));
+        softly.assertThat(dbUser).isEqualTo(newUser);
     }
 
     @Test
@@ -27,7 +24,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         String location = createResource("/api/users", newUser);
 
         ResponseEntity<String> response = getResource(location, findDefaultUser());
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     private UserDto createUserDto(String userId) {
@@ -44,7 +41,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         basicAuthTemplate(loginUser).put(location, updateUser);
 
         UserDto dbUser = getResource(location, UserDto.class, findByUserId(newUser.getUserId()));
-        assertThat(dbUser, is(updateUser));
+        softly.assertThat(dbUser).isEqualTo(updateUser);
     }
 
     @Test
@@ -56,6 +53,6 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         basicAuthTemplate(findDefaultUser()).put(location, updateUser);
 
         UserDto dbUser = getResource(location, UserDto.class, findByUserId(newUser.getUserId()));
-        assertThat(dbUser, is(newUser));
+        softly.assertThat(dbUser).isEqualTo(newUser);
     }
 }

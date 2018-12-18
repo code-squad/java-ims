@@ -13,9 +13,6 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-
 public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(UserAcceptanceTest.class);
 
@@ -25,7 +22,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void createForm() throws Exception {
         ResponseEntity<String> response = template.getForEntity("/users/form", String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         log.debug("body : {}", response.getBody());
     }
 
@@ -40,30 +37,30 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
         ResponseEntity<String> response = template.postForEntity("/users", request, String.class);
 
-        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertNotNull(userRepository.findByUserId(userId));
-        assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(userRepository.findByUserId(userId)).isNotNull();
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users");
     }
 
     @Test
     public void updateForm_no_login() throws Exception {
         ResponseEntity<String> response = template.getForEntity(String.format("/users/%d/form", loginUser.getId()),
                 String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
     public void updateForm_login() throws Exception {
         ResponseEntity<String> response = basicAuthTemplate
                 .getForEntity(String.format("/users/%d/form", loginUser.getId()), String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().contains(loginUser.getName()), is(true));
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        softly.assertThat(response.getBody().contains(loginUser.getName())).isTrue();
     }
 
     @Test
     public void update_no_login() throws Exception {
         ResponseEntity<String> response = update(template);
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
@@ -79,7 +76,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void update() throws Exception {
         ResponseEntity<String> response = update(basicAuthTemplate);
-        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-        assertTrue(response.getHeaders().getLocation().getPath().startsWith("/users"));
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users");
     }
 }
