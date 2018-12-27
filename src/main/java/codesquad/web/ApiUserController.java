@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 public class ApiUserController {
     @Resource(name = "userService")
     private UserService userService;
@@ -24,7 +24,7 @@ public class ApiUserController {
         User savedUser = userService.add(user);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/api/users/" + savedUser.getId()));
+        headers.setLocation(URI.create("/api/user/" + savedUser.getId()));
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 

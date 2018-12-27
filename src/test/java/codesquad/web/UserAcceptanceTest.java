@@ -21,7 +21,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void createForm() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/users/form", String.class);
+        ResponseEntity<String> response = template.getForEntity("/user/form", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         log.debug("body : {}", response.getBody());
     }
@@ -35,16 +35,16 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("name", "자바지기")
                 .addParameter("email", "javajigi@slipp.net").build();
 
-        ResponseEntity<String> response = template.postForEntity("/users", request, String.class);
+        ResponseEntity<String> response = template.postForEntity("/user", request, String.class);
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(userRepository.findByUserId(userId)).isNotNull();
-        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/user");
     }
 
     @Test
     public void updateForm_no_login() throws Exception {
-        ResponseEntity<String> response = template.getForEntity(String.format("/users/%d/form", loginUser.getId()),
+        ResponseEntity<String> response = template.getForEntity(String.format("/user/%d/form", loginUser.getId()),
                 String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
@@ -52,7 +52,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void updateForm_login() throws Exception {
         ResponseEntity<String> response = basicAuthTemplate
-                .getForEntity(String.format("/users/%d/form", loginUser.getId()), String.class);
+                .getForEntity(String.format("/user/%d/form", loginUser.getId()), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         softly.assertThat(response.getBody().contains(loginUser.getName())).isTrue();
     }
@@ -70,13 +70,13 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("name", "재성2")
                 .addParameter("email", "javajigi@slipp.net").build();
 
-        return template.postForEntity(String.format("/users/%d", loginUser.getId()), request, String.class);
+        return template.postForEntity(String.format("/user/%d", loginUser.getId()), request, String.class);
     }
 
     @Test
     public void update() throws Exception {
         ResponseEntity<String> response = update(basicAuthTemplate);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/user");
     }
 }

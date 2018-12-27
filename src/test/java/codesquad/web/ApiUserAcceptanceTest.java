@@ -12,7 +12,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     @Test
     public void create() throws Exception {
         UserDto newUser = createUserDto("testuser1");
-        String location = createResource("/api/users", newUser);
+        String location = createResource("/api/user", newUser);
 
         UserDto dbUser = getResource(location, UserDto.class, findByUserId(newUser.getUserId()));
         softly.assertThat(dbUser).isEqualTo(newUser);
@@ -21,7 +21,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     @Test
     public void show_다른_사람() throws Exception {
         UserDto newUser = createUserDto("testuser2");
-        String location = createResource("/api/users", newUser);
+        String location = createResource("/api/user", newUser);
 
         ResponseEntity<String> response = getResource(location, findDefaultUser());
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -34,7 +34,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     @Test
     public void update() throws Exception {
         UserDto newUser = createUserDto("testuser3");
-        String location = createResource("/api/users", newUser);
+        String location = createResource("/api/user", newUser);
 
         User loginUser = findByUserId(newUser.getUserId());
         UserDto updateUser = new UserDto(newUser.getUserId(), "password", "name2");
@@ -47,7 +47,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     @Test
     public void update_다른_사람() throws Exception {
         UserDto newUser = createUserDto("testuser4");
-        String location = createResource("/api/users", newUser);
+        String location = createResource("/api/user", newUser);
 
         UserDto updateUser = new UserDto(newUser.getUserId(), "password", "name2");
         basicAuthTemplate(findDefaultUser()).put(location, updateUser);
