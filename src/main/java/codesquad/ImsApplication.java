@@ -12,3 +12,5 @@ public class ImsApplication {
         SpringApplication.run(ImsApplication.class, args);
     }
 }
+
+// TODO : html 자원들 중복 제거하면서 스타일이 제대로 안나오는 부분이 있다, 추후 중복 제거 다시해서 레이아웃이 제대로 나오도록...!
