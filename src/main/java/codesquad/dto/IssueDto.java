@@ -7,10 +7,10 @@ import javax.validation.constraints.Size;
 
 public class IssueDto {
     @Size(min = 3, max = 100)
-    private String title;
+    private String subject;
 
     @Size(min = 3)
-    private String contents;
+    private String comment;
 
     private User writer;
 
@@ -18,46 +18,46 @@ public class IssueDto {
 
     }
 
-    public IssueDto(String title, String contents, User writer) {
+    public IssueDto(String subject, String comment, User writer) {
         super();
-        this.title = title;
-        this.contents = contents;
+        this.subject = subject;
+        this.comment = comment;
         this.writer = writer;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public String getContents() {
-        return contents;
+    public String getComment() {
+        return comment;
     }
 
-    public void setContents(String contents) {
-        this.contents = contents;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public User getWriter() {
         return writer;
     }
 
-    public void setWriter(User writer) {
-        this.writer = writer;
+    public void writeBy(User loginUser) {
+        this.writer = loginUser;
     }
 
     public Issue _toIssue() {
-        return new Issue(this.title, this.contents, this.writer);
+        return new Issue(this.subject, this.comment, this.writer);
     }
 
     @Override
     public String toString() {
         return "IssueDto{" +
-                "title='" + title + '\'' +
-                ", contents='" + contents + '\'' +
+                "subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
                 ", writer=" + writer +
                 '}';
     }

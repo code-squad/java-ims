@@ -10,11 +10,11 @@ import javax.validation.constraints.Size;
 public class Issue extends AbstractEntity {
     @Size(min = 3, max = 100)
     @Column(nullable = false, length = 100)
-    private String title;
+    private String subject;
 
     @Size(min = 3)
     @Lob
-    private String contents;
+    private String comment;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
@@ -24,58 +24,58 @@ public class Issue extends AbstractEntity {
 
     }
 
-    public Issue(String title, String contents) {
-        this.title = title;
-        this.contents = contents;
+    public Issue(String subject, String comment) {
+        this.subject = subject;
+        this.comment = comment;
     }
 
-    public Issue(String title, String contents, User writer) {
-        this.title = title;
-        this.contents = contents;
+    public Issue(String subject, String comment, User writer) {
+        this.subject = subject;
+        this.comment = comment;
         this.writer = writer;
     }
 
-    public Issue(long id, String title, String contents, User writer) {
+    public Issue(long id, String subject, String comment, User writer) {
         super(id);
-        this.title = title;
-        this.contents = contents;
+        this.subject = subject;
+        this.comment = comment;
         this.writer = writer;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public String getContents() {
-        return contents;
+    public String getComment() {
+        return comment;
     }
 
-    public void setContents(String contents) {
-        this.contents = contents;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public User getWriter() {
         return writer;
     }
 
-    public void setWriter(User writer) {
-        this.writer = writer;
+    public void writeBy(User loginUser) {
+        this.writer = loginUser;
     }
 
     public IssueDto _toIssueDto() {
-        return new IssueDto(this.title, this.contents, this.writer);
+        return new IssueDto(this.subject, this.comment, this.writer);
     }
 
     @Override
     public String toString() {
         return "Issue{" +
                 "id='" + getId() + '\'' +
-                "title='" + title + '\'' +
-                ", contents='" + contents + '\'' +
+                "subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
                 ", writer=" + writer +
                 '}';
     }
