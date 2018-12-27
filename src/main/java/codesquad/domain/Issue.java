@@ -20,6 +20,14 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    public Issue() {
+    }
+
+    public Issue(@Size(min = 3, max = 100) String subject, @Size(min = 5) String comment) {
+        this.subject = subject;
+        this.comment = comment;
+    }
+
     public String getSubject() {
         return subject;
     }
