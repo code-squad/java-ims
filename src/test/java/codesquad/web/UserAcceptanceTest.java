@@ -43,6 +43,19 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
+    public void login() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", "javajigi")
+                .addParameter("password", "test")
+                .build();
+
+        ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
+    }
+
+    @Test
     public void updateForm_no_login() throws Exception {
         ResponseEntity<String> response = template.getForEntity(String.format("/users/%d/form", loginUser.getId()),
                 String.class);
