@@ -65,7 +65,7 @@ public class UserController {
             httpSession.setAttribute(USER_SESSION_KEY, user);
             return "redirect:/";
         } catch (UnAuthenticationException e) {
-            return "/user/login_failed";
+            return "/user/loginFailed";
         }
     }
 
