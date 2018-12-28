@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import static codesquad.security.HttpSessionUtils.USER_SESSION_KEY;
+
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -49,17 +51,29 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginForm() {
+        log.debug("***** User pushed Login button");
+
         return "/user/login";
     }
 
     @PostMapping("/login")
     public String login(String userId, String password, HttpSession httpSession) {
+        log.debug("***** User logged in");
+
         try {
             User user = userService.login(userId, password);
-            httpSession.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
+            httpSession.setAttribute(USER_SESSION_KEY, user);
             return "redirect:/";
         } catch (UnAuthenticationException e) {
             return "/user/login_failed";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession httpSession) {
+        log.debug("***** User logged out");
+
+        httpSession.removeAttribute(USER_SESSION_KEY);
+        return "redirect:/";
     }
 }
