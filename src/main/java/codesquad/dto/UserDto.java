@@ -15,10 +15,11 @@ public class UserDto {
     private String name;
 
     public UserDto() {
+
     }
 
     public UserDto(String userId, String password, String name) {
-        super();
+//        super();
         this.userId = userId;
         this.password = password;
         this.name = name;
