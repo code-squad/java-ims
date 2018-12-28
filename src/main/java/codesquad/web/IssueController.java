@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 
 
 @Controller
-@RequestMapping("/newIssue")
+@RequestMapping("/issues")
 public class IssueController {
     private static final Logger log = LoggerFactory.getLogger(IssueController.class);
 

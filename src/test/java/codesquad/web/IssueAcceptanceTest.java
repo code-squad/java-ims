@@ -22,7 +22,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void createForm() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/newIssue/form", String.class);
+        ResponseEntity<String> response = template.getForEntity("/issues/form", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         log.debug("body : {}", response.getBody());
     }
@@ -34,7 +34,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
                 .addParameter("comment", "test comment")
                 .build();
 
-        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/newIssue", request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues", request, String.class);
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(issueRepository.findBySubject("test subject").isPresent()).isTrue();
