@@ -21,4 +21,8 @@ public class IssueService {
         return issueRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
+
+    public Iterable<Issue> findAll() {
+        return issueRepository.findAll();
+    }
 }
