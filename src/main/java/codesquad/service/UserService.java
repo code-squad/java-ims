@@ -19,7 +19,7 @@ public class UserService {
 
     public User add(UserDto userDto) {
         return userRepository.save(userDto._toUser());
-    }
+}
 
     public User update(User loginUser, long id, UserDto updatedUser) {
         User original = findById(loginUser, id);

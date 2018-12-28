@@ -33,7 +33,7 @@ public class UserController {
     @PostMapping("")
     public String create(UserDto userDto) {
         userService.add(userDto);
-        return "redirect:/users";
+        return "redirect:/";
     }
 
     @GetMapping("/{id}/form")
@@ -46,7 +46,7 @@ public class UserController {
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
         userService.update(loginUser, id, target);
-        return "redirect:/users";
+        return "redirect:/";
     }
 
     @GetMapping("/login")
