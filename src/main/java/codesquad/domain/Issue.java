@@ -28,6 +28,12 @@ public class Issue extends AbstractEntity {
         this.comment = comment;
     }
 
+    public Issue(long id, @Size(min = 3, max = 100) String subject, @Size(min = 5) String comment) {
+        super(id);
+        this.subject = subject;
+        this.comment = comment;
+    }
+
     public String getSubject() {
         return subject;
     }
@@ -50,6 +56,10 @@ public class Issue extends AbstractEntity {
 
     public void setWriter(User writer) {
         this.writer = writer;
+    }
+
+    public boolean hasSameSubjectAndComment(Issue target) {
+        return subject.equals(target.subject) && comment.equals(target.comment);
     }
 
     @Override

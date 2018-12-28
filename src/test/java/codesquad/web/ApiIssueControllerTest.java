@@ -3,19 +3,19 @@ package codesquad.web;
 import codesquad.domain.Issue;
 import org.junit.Test;
 import org.slf4j.Logger;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import support.test.AcceptanceTest;
 
+import static codesquad.domain.IssueTest.issue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ApiIssueControllerTest extends AcceptanceTest {
     private static final Logger log = getLogger(ApiIssueControllerTest.class);
 
     @Test
-    public void create() {
-        Issue issue = new Issue("테스트 제목", "테스트 데이터입니다");
+    public void show() {
         String location = createResource("/api/issues", issue);
-
-        log.info("location : " + location);
+        ResponseEntity<Issue> responseEntity = template().getForEntity(location, Issue.class);
+        softly.assertThat(responseEntity.getBody().hasSameSubjectAndComment(issue)).isEqualTo(true);
     }
 }

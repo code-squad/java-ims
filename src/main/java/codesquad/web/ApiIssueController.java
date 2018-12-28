@@ -6,10 +6,7 @@ import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -28,8 +25,15 @@ public class ApiIssueController {
     @PostMapping("")
     public ResponseEntity<Void> create(@Valid @RequestBody Issue issue) {
         Issue savedIssue = issueService.add(issue);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/api/issues/" + savedIssue.getId()));
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
+
+    @GetMapping("/{id}")
+    public Issue show(@PathVariable long id) {
+        return issueService.findById(id);
+    }
+
 }

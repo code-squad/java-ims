@@ -11,6 +11,8 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import static codesquad.domain.IssueTest.WRONG_ISSUE_ID;
+import static codesquad.domain.IssueTest.issue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
@@ -27,14 +29,44 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
-    public void create() {
+    public void create_성공() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("subject", "테스트 주제")
                 .addParameter("comment", "테스트 내용입니다")
                 .build();
-
         ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
-
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+    }
+
+    @Test
+    public void create_내용이_너무짧을때() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "테")
+                .addParameter("comment", "테")
+                .build();
+        ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void create_내용이_없을때() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "")
+                .addParameter("comment", "")
+                .build();
+        ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void show() {
+        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d", issue.getId()), String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void show_없는이슈찾을때() {
+        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d", WRONG_ISSUE_ID), String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }
