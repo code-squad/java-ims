@@ -24,19 +24,7 @@ public class Issue extends AbstractEntity {
 
     }
 
-    public Issue(String subject, String comment) {
-        this.subject = subject;
-        this.comment = comment;
-    }
-
     public Issue(String subject, String comment, User writer) {
-        this.subject = subject;
-        this.comment = comment;
-        this.writer = writer;
-    }
-
-    public Issue(long id, String subject, String comment, User writer) {
-        super(id);
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
