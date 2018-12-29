@@ -33,10 +33,10 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("contents", "내용").build();
 
         ResponseEntity<String> response = template.postForEntity("/issue", request, String.class);
-
+        log.debug("이겟은 이슈: {}",issueRepository.findById(1L));
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(issueRepository.findById(1L)).isNotNull();
-        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/issue");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 }
 
