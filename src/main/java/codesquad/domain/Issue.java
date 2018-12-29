@@ -23,7 +23,7 @@ public class Issue extends AbstractEntity {
     public Issue() {
     }
 
-    public Issue(@Size(min = 3, max = 100) String subject, @Size(min = 5) String comment) {
+    public Issue(String subject, String comment) {
         this.subject = subject;
         this.comment = comment;
     }
