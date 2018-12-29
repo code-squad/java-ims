@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
@@ -29,6 +30,20 @@ public class Issue extends AbstractEntity {
         this.comment = comment;
         this.writer = writer;
     }
+
+    public boolean isMatchWriter(User loginUser) {
+        return this.writer.equals(loginUser);
+    }
+
+    public void update(User loginUser, Issue target) {
+        if (!isMatchWriter(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.subject = target.subject;
+        this.comment = target.comment;
+    }
+
 
     public String getSubject() {
         return subject;

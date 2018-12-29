@@ -18,6 +18,19 @@ public class IssueService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
+//    public Iterable<Issue> findAll() {
+//        return issueRepository.findByDeleted(false);
+//    }
+
+    public List<Issue> findAll(Pageable pageable) {
+        return issueRepository.findAll(pageable).getContent();
+    }
+
+    public Issue findById(long id) {
+        //여기서 작성자일치여부 검증필요?
+        return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
     public Issue add(IssueDto issueDto) {
         return issueRepository.save(issueDto._toIssue());
     }
@@ -29,15 +42,10 @@ public class IssueService {
         return issueDto._toIssue();
     }
 
-//    public Iterable<Issue> findAll() {
-//        return issueRepository.findByDeleted(false);
-//    }
-
-    public List<Issue> findAll(Pageable pageable) {
-        return issueRepository.findAll(pageable).getContent();
-    }
-
-    public Issue findById(long id) {
-        return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    @Transactional
+    public Issue update(User loginUser, long id, IssueDto updatedIssueDto) {
+        Issue original = findById(id);
+        original.update(loginUser, updatedIssueDto._toIssue());
+        return issueRepository.save(original);
     }
 }
