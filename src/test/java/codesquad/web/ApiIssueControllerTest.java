@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import support.test.AcceptanceTest;
 
-import static codesquad.domain.IssueTest.issue;
+import static codesquad.domain.IssueTest.ISSUE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ApiIssueControllerTest extends AcceptanceTest {
@@ -14,8 +14,8 @@ public class ApiIssueControllerTest extends AcceptanceTest {
 
     @Test
     public void show() {
-        String location = createResource("/api/issues", issue);
+        String location = createResource("/api/issues", ISSUE);
         ResponseEntity<Issue> responseEntity = template().getForEntity(location, Issue.class);
-        softly.assertThat(responseEntity.getBody().hasSameSubjectAndComment(issue)).isEqualTo(true);
+        softly.assertThat(responseEntity.getBody().hasSameSubjectAndComment(ISSUE)).isEqualTo(true);
     }
 }

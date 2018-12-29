@@ -12,7 +12,7 @@ import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 import static codesquad.domain.IssueTest.WRONG_ISSUE_ID;
-import static codesquad.domain.IssueTest.issue;
+import static codesquad.domain.IssueTest.ISSUE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
@@ -60,7 +60,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void show() {
-        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d", issue.getId()), String.class);
+        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d", ISSUE.getId()), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 

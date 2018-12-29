@@ -13,7 +13,7 @@ import support.test.BaseTest;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
-import static codesquad.domain.IssueTest.issue;
+import static codesquad.domain.IssueTest.ISSUE;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -27,13 +27,13 @@ public class IssueServiceTest extends BaseTest {
 
     @Before
     public void setUp() throws Exception {
-        when(issueRepository.findById(issue.getId())).thenReturn(Optional.of(issue));
+        when(issueRepository.findById(ISSUE.getId())).thenReturn(Optional.of(ISSUE));
     }
 
     @Test
     public void show() {
-        Issue savedIssue = issueService.findById(issue.getId());
-        softly.assertThat(savedIssue.hasSameSubjectAndComment(issue)).isEqualTo(true);
+        Issue savedIssue = issueService.findById(ISSUE.getId());
+        softly.assertThat(savedIssue.hasSameSubjectAndComment(ISSUE)).isEqualTo(true);
     }
 
     @Test(expected = EntityNotFoundException.class)
