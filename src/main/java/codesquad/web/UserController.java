@@ -20,9 +20,14 @@ public class UserController {
     @Resource(name = "userService")
     private UserService userService;
 
-    @GetMapping("/form")
+    @GetMapping("/join")
     public String form() {
-        return "/user/form";
+        return "/user/join";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "/user/login";
     }
 
     @PostMapping("")
