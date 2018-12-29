@@ -107,4 +107,11 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users");
     }
+
+    @Test
+    public void logout() {
+        ResponseEntity<String> responseEntity = basicAuthTemplate().getForEntity("/users/logout", String.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/");
+    }
 }
