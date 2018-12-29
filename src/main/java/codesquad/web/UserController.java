@@ -40,7 +40,7 @@ public class UserController {
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
         log.debug("LoginUser : {}", loginUser);
         model.addAttribute("user", userService.findById(loginUser, id));
-        return "/user/updateForm";
+        return "/user/form_update";
     }
 
     @PutMapping("/{id}")
@@ -65,7 +65,7 @@ public class UserController {
             httpSession.setAttribute(USER_SESSION_KEY, user);
             return "redirect:/";
         } catch (UnAuthenticationException e) {
-            return "/user/loginFailed";
+            return "/user/login_failed";
         }
     }
 
