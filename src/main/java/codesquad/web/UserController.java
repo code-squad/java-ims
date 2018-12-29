@@ -36,7 +36,6 @@ public class UserController {
     @PostMapping("/login")
     public String login(HttpSession session, String userId, String password) {
         try {
-            log.info("userId : " + userId + ", password : " + password);
             User user = userService.login(userId, password);
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
             return "redirect:/";

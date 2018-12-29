@@ -8,8 +8,8 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 
 public class UserTest {
-    public static final User USER = new User(1L, "brad", "password", "Brad");
-    public static final User USER2 = new User(2L, "leejh903", "password", "이정현");
+    public static final User BRAD = new User(1L, "brad", "password", "Brad");
+    public static final User JUNGHYUN = new User(2L, "leejh903", "password", "이정현");
 
     public static User newUser(Long id) {
         return new User(id, "userId", "password", "name");

@@ -46,7 +46,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void login() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("userId", "brad903")
-                .addParameter("password", "test")
+                .addParameter("password", "password")
                 .build();
 
         ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
