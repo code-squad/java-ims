@@ -34,13 +34,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(HttpSession session, String userId, String password) {
+    public String login(HttpSession session, String userId, String password, Model model) {
         try {
             User user = userService.login(userId, password);
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
             return "redirect:/";
         } catch(UnAuthenticationException e) {
-            return "/user/login";
+            model.addAttribute("errorMessage", e.getMessage());
+            return "/user/login_fail";
         }
     }
 

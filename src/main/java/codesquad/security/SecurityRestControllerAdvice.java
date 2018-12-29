@@ -1,7 +1,10 @@
 package codesquad.security;
 
+import codesquad.UnAuthenticationException;
+import codesquad.domain.ErrorMessage;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,7 +19,15 @@ public class SecurityRestControllerAdvice {
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public void emptyResultData() {
+    public ErrorMessage emptyResultData() {
         log.debug("EntityNotFoundException is happened!");
+        return new ErrorMessage("EntityNotFoundException is happened!");
+    }
+
+    @ExceptionHandler(UnAuthenticationException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public ErrorMessage unAuthentication(UnAuthenticationException e) {
+        log.debug("UnAuthenticationException is happened!");
+        return new ErrorMessage(e.getMessage());
     }
 }
