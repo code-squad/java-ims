@@ -5,7 +5,6 @@ import codesquad.UnAuthorizedException;
 import codesquad.domain.ErrorMessage;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,7 +13,7 @@ import javax.persistence.EntityNotFoundException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-@RestControllerAdvice
+@RestControllerAdvice("codesquad.api")
 public class SecurityRestControllerAdvice {
     private static final Logger log = getLogger(SecurityRestControllerAdvice.class);
 

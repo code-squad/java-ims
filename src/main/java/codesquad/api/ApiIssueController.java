@@ -1,6 +1,8 @@
-package codesquad.web;
+package codesquad.api;
 
 import codesquad.domain.Issue;
+import codesquad.domain.User;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
@@ -23,8 +25,8 @@ public class ApiIssueController {
     private IssueService issueService;
 
     @PostMapping("")
-    public ResponseEntity<Void> create(@Valid @RequestBody Issue issue) {
-        Issue savedIssue = issueService.add(issue);
+    public ResponseEntity<Void> create(@LoginUser User loginUser, @Valid @RequestBody Issue issue) {
+        Issue savedIssue = issueService.create(loginUser, issue);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/api/issues/" + savedIssue.getId()));

@@ -1,12 +1,16 @@
 package codesquad.domain;
 
+import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Entity
 public class Issue extends AbstractEntity {
+    private static final Logger log = getLogger(Issue.class);
 
     @Size(min = 3, max = 100)
     @Column(length = 100, nullable = false)
@@ -58,8 +62,16 @@ public class Issue extends AbstractEntity {
         this.writer = writer;
     }
 
+    public void writtenBy(User loginUser) {
+        this.writer = loginUser;
+    }
+
     public boolean hasSameSubjectAndComment(Issue target) {
         return subject.equals(target.subject) && comment.equals(target.comment);
+    }
+
+    public boolean isOwner(User target) {
+        return writer.equals(target);
     }
 
     @Override

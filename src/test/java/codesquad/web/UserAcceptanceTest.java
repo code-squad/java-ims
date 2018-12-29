@@ -61,7 +61,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void login_fail() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("userId", BRAD.getUserId())
-                .addParameter("password", BRAD.getPassword())
+                .addParameter("password", BRAD.getPassword() + "2")
                 .build();
 
         ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
@@ -74,7 +74,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void updateForm_no_login() throws Exception {
         ResponseEntity<String> response = template.getForEntity(String.format("/users/%d/form", loginUser.getId()),
                 String.class);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void update_no_login() throws Exception {
         ResponseEntity<String> response = update(template);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     private ResponseEntity<String> update(TestRestTemplate template) throws Exception {

@@ -23,8 +23,16 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void createForm() {
-        ResponseEntity<String> response = template.getForEntity("/issues/form", String.class);
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity("/issues/form", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        log.debug("body : {}", response.getBody());
+    }
+
+    @Test
+    public void createForm_로그인안한유저() {
+        ResponseEntity<String> response = template.getForEntity("/issues/form", String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        softly.assertThat(response.getBody().contains("로그인이 필요합니다!"));
         log.debug("body : {}", response.getBody());
     }
 
@@ -34,9 +42,18 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("subject", "테스트 주제")
                 .addParameter("comment", "테스트 내용입니다")
                 .build();
-        ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues", request, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
     }
+
+    @Test
+    public void create_로그인안한유저() {
+        ResponseEntity<String> response = template.getForEntity("/issues/form", String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        softly.assertThat(response.getBody().contains("로그인이 필요합니다!"));
+        log.debug("body : {}", response.getBody());
+    }
+
 
     @Test
     public void create_내용이_너무짧을때() {
@@ -44,7 +61,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("subject", "테")
                 .addParameter("comment", "테")
                 .build();
-        ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues", request, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
@@ -54,7 +71,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("subject", "")
                 .addParameter("comment", "")
                 .build();
-        ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues", request, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 

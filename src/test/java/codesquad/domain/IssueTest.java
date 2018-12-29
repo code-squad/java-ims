@@ -1,9 +1,14 @@
 package codesquad.domain;
 
+import org.junit.Test;
+import support.test.BaseTest;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class IssueTest {
+import static codesquad.domain.UserTest.BRAD;
+
+public class IssueTest extends BaseTest {
     public static final long WRONG_ISSUE_ID = 100L;
     public static final List<Issue> issues = new ArrayList<>();
     public static final Issue ISSUE = new Issue(1L, "테스트 이슈1", "테스트 이슈 내용입니다1");
@@ -14,5 +19,11 @@ public class IssueTest {
         issues.add(ISSUE);
         issues.add(ISSUE2);
         issues.add(ISSUE3);
+    }
+
+    @Test
+    public void wirttenBy() {
+        ISSUE.writtenBy(BRAD);
+        softly.assertThat(ISSUE.isOwner(BRAD)).isEqualTo(true);
     }
 }
