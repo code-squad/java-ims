@@ -1,6 +1,7 @@
 package codesquad.security;
 
 import codesquad.UnAuthenticationException;
+import codesquad.UnAuthorizedException;
 import codesquad.domain.ErrorMessage;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,13 @@ public class SecurityRestControllerAdvice {
     public ErrorMessage emptyResultData() {
         log.debug("EntityNotFoundException is happened!");
         return new ErrorMessage("EntityNotFoundException is happened!");
+    }
+
+    @ExceptionHandler(UnAuthorizedException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ErrorMessage unAuthorized() {
+        log.debug("UnAuthorizedException is happened!");
+        return new ErrorMessage("UnAuthorizedException is happened!");
     }
 
     @ExceptionHandler(UnAuthenticationException.class)

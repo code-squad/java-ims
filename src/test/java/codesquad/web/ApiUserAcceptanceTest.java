@@ -37,11 +37,13 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         String location = createResource("/api/users", newUser);
 
         User loginUser = findByUserId(newUser.getUserId());
-        UserDto updateUser = new UserDto(newUser.getUserId(), "password", "name2");
+        UserDto updateUser = new UserDto(newUser.getUserId(), "password2", "name2");
         basicAuthTemplate(loginUser).put(location, updateUser);
 
         UserDto dbUser = getResource(location, UserDto.class, findByUserId(newUser.getUserId()));
         softly.assertThat(dbUser).isEqualTo(updateUser);
+        softly.assertThat(dbUser.getPassword()).isEqualTo(updateUser.getPassword());
+        softly.assertThat(dbUser.getName()).isEqualTo(updateUser.getName());
     }
 
     @Test
@@ -49,10 +51,12 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         UserDto newUser = createUserDto("testuser4");
         String location = createResource("/api/users", newUser);
 
-        UserDto updateUser = new UserDto(newUser.getUserId(), "password", "name2");
+        UserDto updateUser = new UserDto(newUser.getUserId(), "password2", "name2");
         basicAuthTemplate(findDefaultUser()).put(location, updateUser);
 
         UserDto dbUser = getResource(location, UserDto.class, findByUserId(newUser.getUserId()));
         softly.assertThat(dbUser).isEqualTo(newUser);
+        softly.assertThat(dbUser.getPassword()).isEqualTo(newUser.getPassword());
+        softly.assertThat(dbUser.getName()).isEqualTo(newUser.getName());
     }
 }

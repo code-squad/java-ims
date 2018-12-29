@@ -8,6 +8,7 @@ import codesquad.dto.UserDto;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ public class UserService {
         return userRepository.save(userDto._toUser());
     }
 
+    @Transactional
     public User update(User loginUser, long id, UserDto updatedUser) {
         User original = findById(loginUser, id);
         original.update(loginUser, updatedUser._toUser());
