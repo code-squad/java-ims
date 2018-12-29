@@ -6,6 +6,7 @@ import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 public class Issue extends AbstractEntity {
@@ -71,6 +72,22 @@ public class Issue extends AbstractEntity {
 
     public IssueDto _toIssueDto() {
         return new IssueDto(this.subject, this.comment, this.writer);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Issue issue = (Issue) o;
+        return Objects.equals(subject, issue.subject) &&
+                Objects.equals(comment, issue.comment) &&
+                Objects.equals(writer, issue.writer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), subject, comment, writer);
     }
 
     @Override
