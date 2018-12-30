@@ -4,6 +4,7 @@ import codesquad.UnAuthenticationException;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
 import codesquad.security.HttpSessionUtils;
+import codesquad.security.LoginUser;
 import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,14 +52,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}/form")
-    public String updateForm(User loginUser, @PathVariable long id, Model model) {
+    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
         log.debug("LoginUser : {}", loginUser);
         model.addAttribute("user", userService.findById(loginUser, id));
         return "/user/updateForm";
     }
 
     @PutMapping("/{id}")
-    public String update(User loginUser, @PathVariable long id, UserDto target) {
+    public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
         userService.update(loginUser, id, target);
         return "redirect:/";
     }

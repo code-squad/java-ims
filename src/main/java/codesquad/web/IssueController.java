@@ -21,7 +21,7 @@ public class IssueController {
     private IssueService issueService;
 
     @GetMapping("/form")
-    public String createForm(User user) {
+    public String createForm(@LoginUser User user) {
         return "issue/form";
     }
 

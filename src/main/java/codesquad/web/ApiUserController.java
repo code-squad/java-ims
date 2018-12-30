@@ -2,6 +2,7 @@ package codesquad.web;
 
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
+import codesquad.security.LoginUser;
 import codesquad.service.UserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,13 +29,13 @@ public class ApiUserController {
     }
 
     @GetMapping("{id}")
-    public UserDto show(User loginUser, @PathVariable long id) {
+    public UserDto show(@LoginUser User loginUser, @PathVariable long id) {
         User user = userService.findById(loginUser, id);
         return user._toUserDto();
     }
 
     @PutMapping("{id}")
-    public void update(User loginUser, @PathVariable long id, @Valid @RequestBody UserDto updatedUser) {
+    public void update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody UserDto updatedUser) {
         userService.update(loginUser, id, updatedUser);
     }
 }
