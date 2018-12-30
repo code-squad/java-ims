@@ -97,6 +97,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void show() {
         ResponseEntity<String> response = template.getForEntity(ISSUE.generateUrl(), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        softly.assertThat(response.getBody().contains(ISSUE.getWriter().getName())).isTrue();
     }
 
     @Test

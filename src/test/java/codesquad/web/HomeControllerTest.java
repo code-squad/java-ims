@@ -19,6 +19,7 @@ public class HomeControllerTest extends AcceptanceTest {
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         for (Issue issue : issues) {
             softly.assertThat(responseEntity.getBody().contains(issue.getSubject())).isTrue();
+            softly.assertThat(responseEntity.getBody().contains(issue.getWriter().getName())).isTrue();
         }
         log.debug("response : {}", responseEntity.getBody());
     }
