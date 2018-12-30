@@ -17,6 +17,7 @@ public class AbstractEntity {
     private long id;
 
     @CreatedDate
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createDate;
 
     @LastModifiedDate

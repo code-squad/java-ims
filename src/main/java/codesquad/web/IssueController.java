@@ -28,9 +28,9 @@ public class IssueController {
     }
 
     @PostMapping("")
-    public String create(@LoginUser User user, @Valid Issue issue) {
+    public String create(@LoginUser User loginUser, @Valid Issue issue) {
         log.debug("issue : {}", issue);
-        issueService.create(user, issue);
+        issueService.create(loginUser, issue);
         return "redirect:/";
     }
 
