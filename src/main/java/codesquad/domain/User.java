@@ -19,7 +19,7 @@ public class User extends AbstractEntity {
 
     @Size(min = 6, max = 20)
     @Column(nullable = false, length = 20)
-    @JsonIgnore
+    @JsonIgnore /* 질문! */
     private String password;
 
     @Size(min = 3, max = 20)
@@ -27,6 +27,7 @@ public class User extends AbstractEntity {
     private String name;
 
     public User() {
+
     }
 
     public User(String userId, String password, String name) {
