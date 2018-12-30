@@ -1,5 +1,6 @@
 package codesquad.service;
 
+import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import org.junit.Before;
@@ -13,9 +14,9 @@ import support.test.BaseTest;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
-import static codesquad.domain.IssueTest.ISSUE;
-import static codesquad.domain.IssueTest.UPDATE_ISSUE;
+import static codesquad.domain.IssueTest.*;
 import static codesquad.domain.UserTest.BRAD;
+import static codesquad.domain.UserTest.JUNGHYUN;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,7 +42,7 @@ public class IssueServiceTest extends BaseTest {
 
     @Test(expected = EntityNotFoundException.class)
     public void show_없는이슈_찾을때() {
-        issueService.findById(1000L);
+        issueService.findById(WRONG_ISSUE_ID);
     }
 
     @Test
@@ -53,5 +54,15 @@ public class IssueServiceTest extends BaseTest {
     @Test
     public void update() {
         Issue updatedIssue = issueService.update(BRAD, ISSUE.getId(), UPDATE_ISSUE);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void update_없는이슈() {
+        issueService.update(BRAD, WRONG_ISSUE_ID, UPDATE_ISSUE);
+    }
+
+    @Test(expected = UnAuthorizedException.class)
+    public void update_다른유저() {
+        issueService.update(JUNGHYUN, ISSUE.getId(), UPDATE_ISSUE);
     }
 }

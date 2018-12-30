@@ -6,10 +6,12 @@ import org.slf4j.Logger;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import support.domain.ErrorMessage;
 import support.test.AcceptanceTest;
 
 import static codesquad.domain.IssueTest.*;
 import static codesquad.domain.UserTest.BRAD;
+import static codesquad.domain.UserTest.JUNGHYUN;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ApiIssueControllerTest extends AcceptanceTest {
@@ -37,4 +39,20 @@ public class ApiIssueControllerTest extends AcceptanceTest {
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         softly.assertThat(responseEntity.getBody().hasSameSubjectAndComment(UPDATE_ISSUE)).isTrue();
     }
+
+    @Test
+    public void update_로그인안한유저() {
+        String location = createResource("/api/issues", BRAD, newIssue());
+        ResponseEntity<ErrorMessage> responseEntity = template().exchange(location, HttpMethod.PUT, createHttpEntity(UPDATE_ISSUE), ErrorMessage.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        log.debug("errorMessage : {}", responseEntity.getBody().getMessage());
+    }
+
+    @Test
+    public void update_다른유저() {
+        String location = createResource("/api/issues", BRAD, newIssue());
+        ResponseEntity<ErrorMessage> responseEntity = basicAuthTemplate(JUNGHYUN).exchange(location, HttpMethod.PUT, createHttpEntity(UPDATE_ISSUE), ErrorMessage.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
 }

@@ -2,25 +2,39 @@ package codesquad.web;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
+import support.domain.ErrorMessage;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 import static codesquad.domain.IssueTest.*;
 import static codesquad.domain.UserTest.BRAD;
+import static codesquad.domain.UserTest.JUNGHYUN;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = getLogger(IssueAcceptanceTest.class);
 
+    HttpEntity<MultiValueMap<String, Object>> updateRequest;
+
     @Autowired
     private IssueRepository issueRepository;
+
+    @Before
+    public void setUp() throws Exception {
+        updateRequest = HtmlFormDataBuilder.urlEncodedForm().put()
+                .addParameter("subject", UPDATE_ISSUE.getSubject())
+                .addParameter("comment", UPDATE_ISSUE.getComment())
+                .build();
+    }
 
     @Test
     public void createForm() {
@@ -90,14 +104,22 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void update() {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().put()
-                .addParameter("subject", UPDATE_ISSUE.getSubject())
-                .addParameter("comment", UPDATE_ISSUE.getComment())
-                .build();
-        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/" + ISSUE.getId(), request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/" + ISSUE.getId(), updateRequest, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         softly.assertThat(response.getBody().contains(UPDATE_ISSUE.getSubject())).isEqualTo(true);
         softly.assertThat(response.getBody().contains(UPDATE_ISSUE.getComment())).isEqualTo(true);
         log.debug("reponse : {}", response.getBody());
+    }
+
+    @Test
+    public void update_로그인안한유저() {
+        ResponseEntity<String> responseEntity = template().postForEntity("/issues/" + ISSUE.getId(), updateRequest, String.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void update_다른유저() {
+        ResponseEntity<String> responseEntity = basicAuthTemplate(JUNGHYUN).postForEntity("/issues/" + ISSUE.getId(), updateRequest, String.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 }
