@@ -37,6 +37,7 @@ public class IssueController {
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
         Issue issue = issueService.findById(loginUser, id);
+        log.debug("issue updateForm :", issue);
         model.addAttribute("issue", issue);
         return "issue/updateForm";
     }
