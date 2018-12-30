@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 
 @Service
 public class IssueService {
@@ -26,5 +27,10 @@ public class IssueService {
 
     public Iterable<Issue> findAll() {
         return issueRepository.findAll();
+    }
+
+    @Transactional
+    public Issue update(User loginUser, long id, Issue updateIssue) {
+        return findById(id).update(loginUser, updateIssue);
     }
 }

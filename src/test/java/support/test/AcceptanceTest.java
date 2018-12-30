@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -60,5 +59,11 @@ public abstract class AcceptanceTest extends BaseTest {
 
     protected ResponseEntity<String> getResource(String location, User loginUser) {
         return basicAuthTemplate(loginUser).getForEntity(location, String.class);
+    }
+
+    protected HttpEntity createHttpEntity(Object body) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new HttpEntity(body, headers);
     }
 }

@@ -14,6 +14,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 import static codesquad.domain.IssueTest.ISSUE;
+import static codesquad.domain.IssueTest.UPDATE_ISSUE;
 import static codesquad.domain.UserTest.BRAD;
 import static org.mockito.Mockito.when;
 
@@ -47,5 +48,10 @@ public class IssueServiceTest extends BaseTest {
     public void create() {
         Issue createdIssue = issueService.create(BRAD, ISSUE);
         softly.assertThat(createdIssue.isOwner(BRAD)).isEqualTo(true);
+    }
+
+    @Test
+    public void update() {
+        Issue updatedIssue = issueService.update(BRAD, ISSUE.getId(), UPDATE_ISSUE);
     }
 }

@@ -1,7 +1,9 @@
 package codesquad.domain;
 
+import codesquad.UnAuthorizedException;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
+import support.domain.UrlGeneratable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -9,7 +11,7 @@ import javax.validation.constraints.Size;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Entity
-public class Issue extends AbstractEntity {
+public class Issue extends AbstractEntity implements UrlGeneratable {
     private static final Logger log = getLogger(Issue.class);
 
     @Size(min = 3, max = 100)
@@ -32,10 +34,17 @@ public class Issue extends AbstractEntity {
         this.comment = comment;
     }
 
-    public Issue(long id, @Size(min = 3, max = 100) String subject, @Size(min = 5) String comment) {
+    public Issue(long id, String subject, String comment) {
         super(id);
         this.subject = subject;
         this.comment = comment;
+    }
+
+    public Issue(long id, String subject, String comment, User writer) {
+        super(id);
+        this.subject = subject;
+        this.comment = comment;
+        this.writer = writer;
     }
 
     public String getSubject() {
@@ -75,7 +84,19 @@ public class Issue extends AbstractEntity {
     }
 
     @Override
+    public String generateUrl() {
+        return String.format("/issues/%d", getId());
+    }
+
+    @Override
     public String toString() {
         return "Issue [subject=" + subject + ", comment=" + comment + ", writer=" + writer + ']';
+    }
+
+    public Issue update(User loginUser, Issue updateIssue) {
+        if(!isOwner(loginUser)) throw new UnAuthorizedException();
+        this.subject = updateIssue.subject;
+        this.comment = updateIssue.comment;
+        return this;
     }
 }
