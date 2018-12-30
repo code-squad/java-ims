@@ -34,8 +34,9 @@ public class IssueController {
     @PostMapping("")
     public String create(@LoginUser User loginUser, Issue issue) {
         if (Objects.isNull(loginUser)) {
-            return "redirect:/user/login";
+            return "redirect:/users/login";
         }
+        log.debug("loginUser:{}",loginUser);
         issueService.add(loginUser, issue);
         return "redirect:/";
     }

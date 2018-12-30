@@ -14,39 +14,16 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Issue extends AbstractEntity {
     @Size(min = 3, max = 100)
     @Column(length = 100, nullable = false)
-    private String title;
+    private String subject;
 
     @Size(min = 3)
     @Lob
-    private String contents;
+    private String comment;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
-    public User getWriter() {
-        return writer;
-    }
-
-    public void setWriter(User writer) {
-        this.writer = writer;
-    }
 
     public void writtenBy(User loginUser) {
         if (isLogin(loginUser)) {
@@ -59,5 +36,29 @@ public class Issue extends AbstractEntity {
             return false;
         }
         return true;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public User getWriter() {
+        return writer;
+    }
+
+    public void setWriter(User writer) {
+        this.writer = writer;
     }
 }
