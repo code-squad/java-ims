@@ -41,7 +41,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(issueRepository.findBySubject("subject1").isPresent()).isTrue();
-        softly.assertThat(response.getHeaders().getLocation().getPath()).startsWith("/issues");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).startsWith("/");
 
         log.debug("bodyy : {}", response.getBody());
     }
@@ -50,13 +50,13 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void show() {
         HttpEntity<MultiValueMap<String, Object>> request =
                 HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "subject1")
-                .addParameter("comment", "comment1")
+                .addParameter("subject", "subject_showTest")
+                .addParameter("comment", "comment_showTest")
                 .build();
 
         ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
 
-        Issue issue = issueRepository.findBySubject("subject1").orElse(null);
+        Issue issue = issueRepository.findBySubject("subject_showTest").orElse(null);
 
         ResponseEntity<String> responseEntity = template.getForEntity(String.format("/issues/%d", issue.getId()), String.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
