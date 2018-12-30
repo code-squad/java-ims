@@ -1,4 +1,4 @@
-package codesquad.api;
+package codesquad.web;
 
 import codesquad.domain.Issue;
 import codesquad.domain.User;

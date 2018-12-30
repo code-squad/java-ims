@@ -1,4 +1,4 @@
-package codesquad.domain;
+package support.domain;
 
 public class ErrorMessage {
     private String message;
