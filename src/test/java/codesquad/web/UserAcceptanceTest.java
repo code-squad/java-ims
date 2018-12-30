@@ -21,7 +21,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void createForm() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/users/form", String.class);
+        ResponseEntity<String> response = template.getForEntity("/users/join", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         log.debug("body : {}", response.getBody());
     }
@@ -39,7 +39,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(userRepository.findByUserId(userId)).isNotNull();
-        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 
     @Test
@@ -78,6 +78,6 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void update() throws Exception {
         ResponseEntity<String> response = update(basicAuthTemplate);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 }
