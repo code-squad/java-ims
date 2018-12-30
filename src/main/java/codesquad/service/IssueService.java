@@ -37,7 +37,7 @@ public class IssueService {
     }
 
     public Iterable<Issue> findAll() {
-        return issueRepository.findAll();
+        return issueRepository.findByDeleted(false);
     }
 
     @Transactional
