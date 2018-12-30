@@ -34,14 +34,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(HttpSession session, String userId, String password) {
+    public String login(HttpSession session, String userId, String password, Model model) {
         try {
-            log.info("userId : " + userId + ", password : " + password);
             User user = userService.login(userId, password);
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
             return "redirect:/";
         } catch(UnAuthenticationException e) {
-            return "/user/login";
+            model.addAttribute("errorMessage", e.getMessage());
+            return "/user/login_fail";
         }
     }
 
@@ -61,7 +61,13 @@ public class UserController {
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
         userService.update(loginUser, id, target);
-        return "redirect:/users";
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+        return "redirect:/";
     }
 
 }

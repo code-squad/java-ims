@@ -18,7 +18,25 @@ public class HomeControllerTest extends AcceptanceTest {
         ResponseEntity<String> responseEntity = template.getForEntity("/", String.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         for (Issue issue : issues) {
-            softly.assertThat(responseEntity.getBody().contains(issue.getSubject()));
+            softly.assertThat(responseEntity.getBody().contains(issue.getSubject())).isTrue();
+            softly.assertThat(responseEntity.getBody().contains(issue.getWriter().getName())).isTrue();
         }
+        log.debug("response : {}", responseEntity.getBody());
+    }
+
+    @Test
+    public void 로그인_안했을때_네비게이션() {
+        ResponseEntity<String> responseEntity = template.getForEntity("/", String.class);
+        softly.assertThat(responseEntity.getBody().contains("login")).isTrue();
+        softly.assertThat(responseEntity.getBody().contains("join")).isTrue();
+        log.debug("response : {}", responseEntity.getBody());
+    }
+
+    @Test
+    public void 로그인_했을때_네비게이션() {
+        ResponseEntity<String> responseEntity = basicAuthTemplate().getForEntity("/", String.class);
+        softly.assertThat(responseEntity.getBody().contains("logout")).isTrue();
+        softly.assertThat(responseEntity.getBody().contains("my")).isTrue();;
+        log.debug("response : {}", responseEntity.getBody());
     }
 }

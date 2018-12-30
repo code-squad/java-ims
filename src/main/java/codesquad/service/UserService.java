@@ -8,6 +8,7 @@ import codesquad.dto.UserDto;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ public class UserService {
         return userRepository.save(userDto._toUser());
     }
 
+    @Transactional
     public User update(User loginUser, long id, UserDto updatedUser) {
         User original = findById(loginUser, id);
         original.update(loginUser, updatedUser._toUser());
@@ -40,6 +42,6 @@ public class UserService {
     public User login(String userId, String password) throws UnAuthenticationException {
         return userRepository.findByUserId(userId)
                 .filter(user -> user.matchPassword(password))
-                .orElseThrow(UnAuthenticationException::new);
+                .orElseThrow(() -> new UnAuthenticationException("아이디 또는 비밀번호가 다릅니다."));
     }
 }
