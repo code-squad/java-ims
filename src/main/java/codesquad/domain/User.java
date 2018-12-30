@@ -96,7 +96,7 @@ public class User extends AbstractEntity {
         return false;
     }
 
-    private static class GuestUser extends User {
+    public static class GuestUser extends User {
         @Override
         public boolean isGuestUser() {
             return true;

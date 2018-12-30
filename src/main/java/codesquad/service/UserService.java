@@ -38,10 +38,6 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findUser(String userId) {
-        return userRepository.findByUserId(userId).orElseThrow(EntityNotFoundException::new);
-    }
-
     public User login(String userId, String password) throws UnAuthenticationException {
         return userRepository.findByUserId(userId)
                 .filter(user -> user.matchPassword(password))
