@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -42,6 +41,12 @@ public class ApiIssueController {
     @PutMapping("/{id}")
     public Issue update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody Issue updateIssue) {
         return issueService.update(loginUser, id, updateIssue);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@LoginUser User loginUser, @PathVariable long id) {
+        issueService.deleteIssue(loginUser, id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

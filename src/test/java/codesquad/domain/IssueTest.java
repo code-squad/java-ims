@@ -2,6 +2,7 @@ package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
 import org.junit.Test;
+import org.slf4j.Logger;
 import support.test.BaseTest;
 
 import java.util.ArrayList;
@@ -9,8 +10,11 @@ import java.util.List;
 
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class IssueTest extends BaseTest {
+    private static final Logger log = getLogger(IssueTest.class);
+
     public static final long WRONG_ISSUE_ID = 100L;
     public static final List<Issue> issues = new ArrayList<>();
     public static final Issue ISSUE = new Issue(1L, "테스트 이슈1", "테스트 이슈 내용입니다1", BRAD);
@@ -51,5 +55,17 @@ public class IssueTest extends BaseTest {
     @Test(expected = UnAuthorizedException.class)
     public void update_같은유저아닐떄() {
         ISSUE.update(JUNGHYUN, UPDATE_ISSUE);
+    }
+
+    @Test
+    public void delete() {
+        DeleteHistory deleteHistory = ISSUE.delete(BRAD);
+        softly.assertThat(ISSUE.isDeleted()).isEqualTo(true);
+    }
+
+    @Test(expected = UnAuthorizedException.class)
+    public void delete_다른유저() {
+        ISSUE.delete(JUNGHYUN);
+        softly.assertThat(ISSUE.isDeleted()).isEqualTo(false);
     }
 }

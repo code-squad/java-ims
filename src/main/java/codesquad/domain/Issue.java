@@ -26,6 +26,8 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    private boolean isDeleted = false;
+
     public Issue() {
     }
 
@@ -83,6 +85,14 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         return writer.equals(target);
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
     @Override
     public String generateUrl() {
         return String.format("/issues/%d", getId());
@@ -98,5 +108,11 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         this.subject = updateIssue.subject;
         this.comment = updateIssue.comment;
         return this;
+    }
+
+    public DeleteHistory delete(User loginUser) {
+        if(!isOwner(loginUser)) throw new UnAuthorizedException();
+        isDeleted = true;
+        return new DeleteHistory(ContentType.ISSUE, getId(), loginUser);
     }
 }

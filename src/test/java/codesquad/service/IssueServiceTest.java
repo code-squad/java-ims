@@ -1,6 +1,7 @@
 package codesquad.service;
 
 import codesquad.UnAuthorizedException;
+import codesquad.domain.DeleteHistoryRepository;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import org.junit.Before;
@@ -24,6 +25,9 @@ public class IssueServiceTest extends BaseTest {
 
     @Mock
     private IssueRepository issueRepository;
+
+    @Mock
+    private DeleteHistoryRepository deleteHistoryRepository;
 
     @InjectMocks
     private IssueService issueService;
@@ -75,5 +79,17 @@ public class IssueServiceTest extends BaseTest {
     @Test(expected = UnAuthorizedException.class)
     public void findById_다른유저() {
         Issue issue = issueService.findById(JUNGHYUN, ISSUE.getId());
+    }
+
+    @Test
+    public void delete() {
+        issueService.deleteIssue(BRAD, ISSUE.getId());
+        softly.assertThat(ISSUE.isDeleted()).isEqualTo(true);
+    }
+
+    @Test(expected = UnAuthorizedException.class)
+    public void delete_다른유저() {
+        issueService.deleteIssue(JUNGHYUN, ISSUE.getId());
+        softly.assertThat(ISSUE.isDeleted()).isEqualTo(false);
     }
 }

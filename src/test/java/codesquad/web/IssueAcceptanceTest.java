@@ -24,6 +24,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = getLogger(IssueAcceptanceTest.class);
 
     HttpEntity<MultiValueMap<String, Object>> updateRequest;
+    HttpEntity<MultiValueMap<String, Object>> deleteRequest;
 
     @Autowired
     private IssueRepository issueRepository;
@@ -34,6 +35,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("subject", UPDATE_ISSUE.getSubject())
                 .addParameter("comment", UPDATE_ISSUE.getComment())
                 .build();
+
+        deleteRequest = HtmlFormDataBuilder.urlEncodedForm().delete().build();
     }
 
     @Test
@@ -144,5 +147,33 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void updateForm_로그인안한유저() {
         ResponseEntity<String> responseEntity = template().getForEntity(String.format("/issues/%d/form", ISSUE.getId()), String.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void delete() {
+        String location = createResource("/api/issues", BRAD, newIssue());
+        Issue createdIssue = getResource(location, Issue.class, BRAD);
+
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity(createdIssue.generateUrl(), deleteRequest, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
+    }
+
+    @Test
+    public void delete_로그인안한유저() {
+        String location = createResource("/api/issues", BRAD, newIssue());
+        Issue createdIssue = getResource(location, Issue.class, BRAD);
+
+        ResponseEntity<String> response = template().postForEntity(createdIssue.generateUrl(), deleteRequest, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void delete_다른유저() {
+        String location = createResource("/api/issues", BRAD, newIssue());
+        Issue createdIssue = getResource(location, Issue.class, BRAD);
+
+        ResponseEntity<String> response = template().postForEntity(createdIssue.generateUrl(), deleteRequest, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 }
