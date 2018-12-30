@@ -45,4 +45,22 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
         log.debug("bodyy : {}", response.getBody());
     }
+
+    @Test
+    public void show() {
+        HttpEntity<MultiValueMap<String, Object>> request =
+                HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "subject1")
+                .addParameter("comment", "comment1")
+                .build();
+
+        ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+
+        Issue issue = issueRepository.findBySubject("subject1").orElse(null);
+
+        ResponseEntity<String> responseEntity = template.getForEntity(String.format("/issues/%d", issue.getId()), String.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        softly.assertThat(responseEntity.getBody()).contains(issue.getComment());
+        log.debug("body : {}", responseEntity.getBody());
+    }
 }

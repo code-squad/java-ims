@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/users")
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public String create(UserDto userDto) {
+    public String create(@Valid UserDto userDto) {
         userService.add(userDto);
         return "redirect:/users";
     }

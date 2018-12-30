@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Column;
@@ -44,5 +45,7 @@ public class Issue extends AbstractEntity {
         this.comment = comment;
     }
 
-
+    public IssueDto _toIssueDto() {
+        return new IssueDto(this.subject, this.comment);
+    }
 }
