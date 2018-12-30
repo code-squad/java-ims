@@ -38,16 +38,8 @@ public class UserService {
     }
 
     public User login(String userId, String password) throws UnAuthenticationException {
-        Optional<User> maybeUser = userRepository.findByUserId(userId);
-        if (!maybeUser.isPresent()) {
-            throw new UnAuthenticationException();
-        }
-
-        User user = maybeUser.get();
-        if (!user.matchPassword(password)) {
-            throw new UnAuthenticationException();
-        }
-
-        return user;
+        return userRepository.findByUserId(userId)
+                .filter(user -> user.matchPassword(password))
+                .orElseThrow(UnAuthenticationException::new);
     }
 }
