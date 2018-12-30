@@ -65,4 +65,15 @@ public class IssueServiceTest extends BaseTest {
     public void update_다른유저() {
         issueService.update(JUNGHYUN, ISSUE.getId(), UPDATE_ISSUE);
     }
+
+    @Test
+    public void findById() {
+        Issue issue = issueService.findById(BRAD, ISSUE.getId());
+        softly.assertThat(issue.equals(ISSUE)).isTrue();
+    }
+
+    @Test(expected = UnAuthorizedException.class)
+    public void findById_다른유저() {
+        Issue issue = issueService.findById(JUNGHYUN, ISSUE.getId());
+    }
 }

@@ -92,7 +92,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void show() {
-        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d", ISSUE.getId()), String.class);
+        ResponseEntity<String> response = template.getForEntity(ISSUE.generateUrl(), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
@@ -104,7 +104,9 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void update() {
-        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues/" + ISSUE.getId(), updateRequest, String.class);
+        String location = createResource("/api/issues", BRAD, newIssue());
+        Issue createdIssue = getResource(location, Issue.class, BRAD);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity(createdIssue.generateUrl(), updateRequest, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         softly.assertThat(response.getBody().contains(UPDATE_ISSUE.getSubject())).isEqualTo(true);
         softly.assertThat(response.getBody().contains(UPDATE_ISSUE.getComment())).isEqualTo(true);
@@ -113,13 +115,34 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void update_로그인안한유저() {
-        ResponseEntity<String> responseEntity = template().postForEntity("/issues/" + ISSUE.getId(), updateRequest, String.class);
+        ResponseEntity<String> responseEntity = template().postForEntity(ISSUE.generateUrl(), updateRequest, String.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
     public void update_다른유저() {
-        ResponseEntity<String> responseEntity = basicAuthTemplate(JUNGHYUN).postForEntity("/issues/" + ISSUE.getId(), updateRequest, String.class);
+        ResponseEntity<String> responseEntity = basicAuthTemplate(JUNGHYUN).postForEntity(ISSUE.generateUrl(), updateRequest, String.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    public void updateForm() {
+        ResponseEntity<String> responseEntity = basicAuthTemplate().getForEntity(String.format("/issues/%d/form", ISSUE.getId()), String.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        softly.assertThat(responseEntity.getBody().contains(ISSUE.getSubject())).isTrue();
+        softly.assertThat(responseEntity.getBody().contains(ISSUE.getComment())).isTrue();
+        log.debug("response : {}", responseEntity.getBody());
+    }
+
+    @Test
+    public void updateForm_다른유저() {
+        ResponseEntity<String> responseEntity = basicAuthTemplate(JUNGHYUN).getForEntity(String.format("/issues/%d/form", ISSUE.getId()), String.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    public void updateForm_로그인안한유저() {
+        ResponseEntity<String> responseEntity = template().getForEntity(String.format("/issues/%d/form", ISSUE.getId()), String.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 }

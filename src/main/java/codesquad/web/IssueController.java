@@ -34,6 +34,13 @@ public class IssueController {
         return "redirect:/";
     }
 
+    @GetMapping("/{id}/form")
+    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+        Issue issue = issueService.findById(loginUser, id);
+        model.addAttribute("issue", issue);
+        return "issue/updateForm";
+    }
+
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));

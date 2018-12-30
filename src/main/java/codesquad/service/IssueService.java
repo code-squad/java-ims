@@ -1,5 +1,6 @@
 package codesquad.service;
 
+import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
@@ -23,6 +24,12 @@ public class IssueService {
     public Issue findById(long id) {
         return issueRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public Issue findById(User loginUser, long id) {
+        Issue issue = findById(id);
+        if(!issue.isOwner(loginUser)) throw new UnAuthorizedException();
+        return issue;
     }
 
     public Iterable<Issue> findAll() {
