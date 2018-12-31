@@ -1,6 +1,7 @@
 package codesquad.web;
 
-import codesquad.domain.Issue;
+import codesquad.domain.issue.Issue;
+import codesquad.domain.issue.IssueBody;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,8 @@ public class HomeControllerTest extends AcceptanceTest {
         ResponseEntity<String> responseEntity = template.getForEntity("/", String.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         for (Issue issue : issues) {
-            softly.assertThat(responseEntity.getBody().contains(issue.getSubject())).isTrue();
+            IssueBody issueBody = issue.getIssueBody();
+            softly.assertThat(responseEntity.getBody().contains(issueBody.getSubject())).isTrue();
             softly.assertThat(responseEntity.getBody().contains(issue.getWriter().getName())).isTrue();
         }
         log.debug("response : {}", responseEntity.getBody());

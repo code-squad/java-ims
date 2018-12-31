@@ -1,17 +1,16 @@
 package codesquad.web;
 
-import codesquad.domain.Issue;
+import codesquad.domain.issue.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.issue.IssueBody;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-import support.domain.ErrorMessage;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
@@ -32,8 +31,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     @Before
     public void setUp() throws Exception {
         updateRequest = HtmlFormDataBuilder.urlEncodedForm().put()
-                .addParameter("subject", UPDATE_ISSUE.getSubject())
-                .addParameter("comment", UPDATE_ISSUE.getComment())
+                .addParameter("subject", UPDATE_ISSUE_BODY.getSubject())
+                .addParameter("comment", UPDATE_ISSUE_BODY.getComment())
                 .build();
 
         deleteRequest = HtmlFormDataBuilder.urlEncodedForm().delete().build();
@@ -108,12 +107,12 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void update() {
-        String location = createResource("/api/issues", BRAD, newIssue());
+        String location = createResource("/api/issues", BRAD, ISSUE_BODY);
         Issue createdIssue = getResource(location, Issue.class, BRAD);
         ResponseEntity<String> response = basicAuthTemplate().postForEntity(createdIssue.generateUrl(), updateRequest, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        softly.assertThat(response.getBody().contains(UPDATE_ISSUE.getSubject())).isEqualTo(true);
-        softly.assertThat(response.getBody().contains(UPDATE_ISSUE.getComment())).isEqualTo(true);
+        softly.assertThat(response.getBody().contains(UPDATE_ISSUE_BODY.getSubject())).isEqualTo(true);
+        softly.assertThat(response.getBody().contains(UPDATE_ISSUE_BODY.getComment())).isEqualTo(true);
         log.debug("reponse : {}", response.getBody());
     }
 
@@ -133,8 +132,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void updateForm() {
         ResponseEntity<String> responseEntity = basicAuthTemplate().getForEntity(String.format("/issues/%d/form", ISSUE.getId()), String.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        softly.assertThat(responseEntity.getBody().contains(ISSUE.getSubject())).isTrue();
-        softly.assertThat(responseEntity.getBody().contains(ISSUE.getComment())).isTrue();
+        softly.assertThat(responseEntity.getBody().contains(ISSUE_BODY.getSubject())).isTrue();
+        softly.assertThat(responseEntity.getBody().contains(ISSUE_BODY.getComment())).isTrue();
         log.debug("response : {}", responseEntity.getBody());
     }
 
@@ -152,7 +151,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void delete() {
-        String location = createResource("/api/issues", BRAD, newIssue());
+        String location = createResource("/api/issues", BRAD, ISSUE_BODY);
         Issue createdIssue = getResource(location, Issue.class, BRAD);
 
         ResponseEntity<String> response = basicAuthTemplate().postForEntity(createdIssue.generateUrl(), deleteRequest, String.class);
@@ -162,7 +161,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void delete_로그인안한유저() {
-        String location = createResource("/api/issues", BRAD, newIssue());
+        String location = createResource("/api/issues", BRAD, ISSUE_BODY);
         Issue createdIssue = getResource(location, Issue.class, BRAD);
 
         ResponseEntity<String> response = template().postForEntity(createdIssue.generateUrl(), deleteRequest, String.class);
@@ -171,7 +170,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void delete_다른유저() {
-        String location = createResource("/api/issues", BRAD, newIssue());
+        String location = createResource("/api/issues", BRAD, ISSUE_BODY);
         Issue createdIssue = getResource(location, Issue.class, BRAD);
 
         ResponseEntity<String> response = template().postForEntity(createdIssue.generateUrl(), deleteRequest, String.class);

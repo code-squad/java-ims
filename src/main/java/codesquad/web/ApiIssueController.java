@@ -1,7 +1,8 @@
 package codesquad.web;
 
-import codesquad.domain.Issue;
+import codesquad.domain.issue.Issue;
 import codesquad.domain.User;
+import codesquad.domain.issue.IssueBody;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
@@ -25,8 +26,8 @@ public class ApiIssueController {
     private IssueService issueService;
 
     @PostMapping("")
-    public ResponseEntity<Void> create(@LoginUser User loginUser, @Valid @RequestBody Issue issue) {
-        Issue savedIssue = issueService.create(loginUser, issue);
+    public ResponseEntity<Void> create(@LoginUser User loginUser, @Valid @RequestBody IssueBody issueBody) {
+        Issue savedIssue = issueService.create(loginUser, issueBody);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/api/issues/" + savedIssue.getId()));
@@ -39,8 +40,8 @@ public class ApiIssueController {
     }
 
     @PutMapping("/{id}")
-    public Issue update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody Issue updateIssue) {
-        return issueService.update(loginUser, id, updateIssue);
+    public Issue update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody IssueBody updateIssueBody) {
+        return issueService.update(loginUser, id, updateIssueBody);
     }
 
     @DeleteMapping("/{id}")

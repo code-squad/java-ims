@@ -2,14 +2,16 @@ package codesquad.service;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.DeleteHistoryRepository;
-import codesquad.domain.Issue;
+import codesquad.domain.issue.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.issue.IssueBody;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
 import support.test.BaseTest;
 
 import javax.persistence.EntityNotFoundException;
@@ -19,9 +21,11 @@ import static codesquad.domain.IssueTest.*;
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
 import static org.mockito.Mockito.when;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IssueServiceTest extends BaseTest {
+    private static final Logger log = getLogger(IssueServiceTest.class);
 
     @Mock
     private IssueRepository issueRepository;
@@ -35,13 +39,13 @@ public class IssueServiceTest extends BaseTest {
     @Before
     public void setUp() throws Exception {
         when(issueRepository.findById(ISSUE.getId())).thenReturn(Optional.of(ISSUE));
-        when(issueRepository.save(ISSUE)).thenReturn(ISSUE);
+        when(issueRepository.save(new Issue((NEW_ISSUE_BODY), BRAD))).thenReturn(ISSUE);
     }
 
     @Test
     public void show() {
         Issue savedIssue = issueService.findById(ISSUE.getId());
-        softly.assertThat(savedIssue.hasSameSubjectAndComment(ISSUE)).isEqualTo(true);
+        softly.assertThat(savedIssue.hasSameIssueBody(ISSUE.getIssueBody())).isEqualTo(true);
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -51,23 +55,24 @@ public class IssueServiceTest extends BaseTest {
 
     @Test
     public void create() {
-        Issue createdIssue = issueService.create(BRAD, ISSUE);
+        Issue createdIssue = issueService.create(BRAD, ISSUE_BODY);
+        log.debug("createdIssue : {}", createdIssue);
         softly.assertThat(createdIssue.isOwner(BRAD)).isEqualTo(true);
     }
 
     @Test
     public void update() {
-        Issue updatedIssue = issueService.update(BRAD, ISSUE.getId(), UPDATE_ISSUE);
+        Issue updatedIssue = issueService.update(BRAD, ISSUE.getId(), UPDATE_ISSUE_BODY);
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void update_없는이슈() {
-        issueService.update(BRAD, WRONG_ISSUE_ID, UPDATE_ISSUE);
+        issueService.update(BRAD, WRONG_ISSUE_ID, UPDATE_ISSUE_BODY);
     }
 
     @Test(expected = UnAuthorizedException.class)
     public void update_다른유저() {
-        issueService.update(JUNGHYUN, ISSUE.getId(), UPDATE_ISSUE);
+        issueService.update(JUNGHYUN, ISSUE.getId(), UPDATE_ISSUE_BODY);
     }
 
     @Test
