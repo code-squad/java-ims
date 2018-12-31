@@ -1,7 +1,9 @@
 package codesquad.web;
 
+import codesquad.UnAuthenticationException;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
+import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/users")
@@ -29,6 +32,23 @@ public class UserController {
     public String create(UserDto userDto) {
         userService.add(userDto);
         return "redirect:/users";
+    }
+
+    @GetMapping("/login")
+    public String loginForm() {
+        return "/user/login";
+    }
+
+    @PostMapping("/login")
+    public String login(HttpSession session, String userId, String password) {
+        try {
+            User user = userService.login(userId, password);
+            session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
+            log.info("userId : " + userId + ", password : " + password);
+        } catch (UnAuthenticationException e) {
+            return "user/login_failed";
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/{id}/form")
