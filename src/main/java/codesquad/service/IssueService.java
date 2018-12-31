@@ -1,5 +1,6 @@
 package codesquad.service;
 
+import codesquad.CannotDeleteException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
@@ -18,9 +19,12 @@ public class IssueService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
-//    public Iterable<Issue> findAll() {
-//        return issueRepository.findByDeleted(false);
-//    }
+    @Resource(name = "deleteHistoryService")
+    private DeleteHistoryService deleteHistoryService;
+
+    public Iterable<Issue> findAll() {
+        return issueRepository.findByDeleted(false);
+    }
 
     public List<Issue> findAll(Pageable pageable) {
         return issueRepository.findAll(pageable).getContent();
@@ -46,6 +50,13 @@ public class IssueService {
     public Issue update(User loginUser, long id, IssueDto updatedIssueDto) {
         Issue original = findById(id);
         original.update(loginUser, updatedIssueDto._toIssue());
+        return issueRepository.save(original);
+    }
+
+    @Transactional
+    public Issue delete(User loginUser, long id) throws CannotDeleteException {
+        Issue original = findById(id);
+        deleteHistoryService.saveAll(original.delete(loginUser, id));
         return issueRepository.save(original);
     }
 }

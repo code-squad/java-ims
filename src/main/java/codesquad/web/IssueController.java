@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.User;
@@ -59,7 +60,17 @@ public class IssueController {
 
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, IssueDto target) {
+        log.debug("***** update issue id : {}", id);
+
         issueService.update(loginUser, id, target);
         return "redirect:/issues/{id}";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User loginUser, @PathVariable long id) {
+        log.debug("***** delete issue id : {}", id);
+
+        issueService.delete(loginUser, id);
+        return "redirect:/";
     }
 }
