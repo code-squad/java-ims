@@ -20,13 +20,9 @@ public class IssueBody {
     public IssueBody() {
     }
 
-    private IssueBody(String subject, String comment) {
+    public IssueBody(String subject, String comment) {
         this.subject = subject;
         this.comment = comment;
-    }
-
-    public static IssueBody of(String subject, String comment) {
-        return new IssueBody(subject, comment);
     }
 
     public String getSubject() {

@@ -2,9 +2,9 @@ package codesquad.service;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.DeleteHistoryRepository;
-import codesquad.domain.issue.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
+import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueBody;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class IssueService {
     private DeleteHistoryRepository deleteHistoryRepository;
 
     public Issue create(User loginUser, IssueBody issueBody) {
-        Issue issue = Issue.of(issueBody);
+        Issue issue = new Issue(issueBody);
         issue.writtenBy(loginUser);
         return issueRepository.save(issue);
     }

@@ -32,22 +32,8 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         this.issueBody = issueBody;
     }
 
-    public static Issue of(IssueBody issueBody) {
-        return new Issue(issueBody);
-    }
-
-    public Issue(long id, IssueBody issueBody) {
-        super(id);
-        this.issueBody = issueBody;
-    }
-
     public Issue(long id, IssueBody issueBody, User writer) {
         super(id);
-        this.issueBody = issueBody;
-        this.writer = writer;
-    }
-
-    public Issue(IssueBody issueBody, User writer) {
         this.issueBody = issueBody;
         this.writer = writer;
     }
@@ -107,6 +93,6 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
 
     @Override
     public String toString() {
-        return "Issue [issueBody=" + issueBody + ", writer=" + writer + ']';
+        return "Issue [id=" + getId() + ", issueBody=" + issueBody + ", writer=" + writer + ']';
     }
 }

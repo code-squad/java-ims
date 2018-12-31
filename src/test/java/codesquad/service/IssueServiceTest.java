@@ -2,9 +2,8 @@ package codesquad.service;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.DeleteHistoryRepository;
-import codesquad.domain.issue.Issue;
 import codesquad.domain.IssueRepository;
-import codesquad.domain.issue.IssueBody;
+import codesquad.domain.issue.Issue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +38,7 @@ public class IssueServiceTest extends BaseTest {
     @Before
     public void setUp() throws Exception {
         when(issueRepository.findById(ISSUE.getId())).thenReturn(Optional.of(ISSUE));
-        when(issueRepository.save(new Issue((NEW_ISSUE_BODY), BRAD))).thenReturn(ISSUE);
+        when(issueRepository.save(newIssue())).thenReturn(newIssue());
     }
 
     @Test
@@ -56,7 +55,6 @@ public class IssueServiceTest extends BaseTest {
     @Test
     public void create() {
         Issue createdIssue = issueService.create(BRAD, ISSUE_BODY);
-        log.debug("createdIssue : {}", createdIssue);
         softly.assertThat(createdIssue.isOwner(BRAD)).isEqualTo(true);
     }
 
