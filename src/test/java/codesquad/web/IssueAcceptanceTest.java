@@ -29,13 +29,13 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void create() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("title", "제목")
-                .addParameter("contents", "내용").build();
+                .addParameter("subject", "제목")
+                .addParameter("comment", "내용").build();
 
         ResponseEntity<String> response = template.postForEntity("/issue", request, String.class);
         log.debug("이겟은 이슈: {}",issueRepository.findById(1L));
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        softly.assertThat(issueRepository.findById(1L)).isNotNull();
+        softly.assertThat(issueRepository.findById(1L)).isNotEmpty();
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 }

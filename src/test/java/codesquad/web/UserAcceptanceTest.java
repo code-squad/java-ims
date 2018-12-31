@@ -38,7 +38,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = template.postForEntity("/users", request, String.class);
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        softly.assertThat(userRepository.findByUserId(userId)).isNotNull();
+        softly.assertThat(userRepository.findByUserId(userId)).isNotEmpty();
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users");
     }
 

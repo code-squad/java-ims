@@ -1,10 +1,11 @@
-{{#partial "contents"}}
+{{#partial "comment"}}
 <div class="issues-back">
-    <a href="/" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon back-btn" title="go back"
+    <a href="/" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon back-btn" subject="go back"
        role="button">
         <i class="material-icons" role="presentation">arrow_back</i>
     </a>
 </div>
+{{#issue}}
 <div class="issues__posts mdl-grid">
     <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
         <div class="mdl-card__menu">
@@ -18,7 +19,7 @@
         </div>
         <div class="mdl-card__title mdl-color-text--grey-50">
             <i class="material-icons">check_circle</i>
-            <h2 class="mdl-card__title-text">testIssue #1</h2>
+            <h2 class="mdl-card__title-text">{{subject}}</h2>
         </div>
 
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
@@ -27,10 +28,10 @@
             <div style="margin-right:20px;">
                 <div class="author-text">
                     <strong>
-                        <a href="https://github.com/javajigi" class="author">javajigi</a>
+                        <a href="https://github.com/{{userId}}" class="author">{{userId}}</a>
                     </strong>
                 </div>
-                <span>2017-01-14</span>
+                <span>{{formattedCreateDate}}</span>
             </div>
             <a href="/issue/1/setOpen" class="mdl-button mdl-button--colored mdl-js-button">
                 Close issue
@@ -102,7 +103,7 @@
             </ul>
         </div>
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
-            <p>comment here!</p>
+            <p>{{comment}}</p>
         </div>
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
 
@@ -187,6 +188,7 @@
         </div>
     </div>
 </div>
+{{/issue}}
 {{/partial}}
 {{> base }}
 

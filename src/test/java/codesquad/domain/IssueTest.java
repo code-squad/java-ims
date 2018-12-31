@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 public class IssueTest {
+    public static final Issue TEST_ISSUE = new Issue(1L,"javajigi", "Test제목", "내용");
 
 
     /*
