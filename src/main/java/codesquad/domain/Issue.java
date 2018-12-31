@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.dto.IssueDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
@@ -26,6 +27,12 @@ public class Issue extends AbstractEntity {
     }
 
     public Issue(String subject, String comment) {
+        this.subject = subject;
+        this.comment = comment;
+    }
+
+    public Issue(String userId, String subject, String comment) {
+        this.userId = userId;
         this.subject = subject;
         this.comment = comment;
     }
@@ -59,5 +66,10 @@ public class Issue extends AbstractEntity {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+
+    public IssueDto _toIssueDto() {
+        return new IssueDto(this.subject, this.comment);
     }
 }

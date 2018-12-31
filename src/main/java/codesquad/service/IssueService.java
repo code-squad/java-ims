@@ -2,10 +2,10 @@ package codesquad.service;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.dto.IssueDto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -28,7 +28,7 @@ public class IssueService {
         return issueRepository.findAll();
     }
 
-    public void create(Issue newIssue) {
-        issueRepository.save(newIssue);
+    public void add(IssueDto newIssue) {
+        issueRepository.save(newIssue._toIssue());
     }
 }
