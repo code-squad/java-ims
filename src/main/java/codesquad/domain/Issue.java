@@ -50,7 +50,7 @@ public class Issue extends AbstractEntity {
         this.comment = target.comment;
     }
 
-    public List<DeleteHistory> delete(User loginUser, long id) {
+    public List<DeleteHistory> delete(User loginUser) {
         if (!isMatchWriter(loginUser)) {
             throw new CannotDeleteException("작성자만 삭제 가능합니다.");
         }

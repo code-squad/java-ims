@@ -21,7 +21,7 @@ public class DeleteHistory {
     private User deletedBy;
 
     @CreatedDate
-    private LocalDateTime createDate;
+    private LocalDateTime createDate = LocalDateTime.now();
 
     public DeleteHistory() {
     }

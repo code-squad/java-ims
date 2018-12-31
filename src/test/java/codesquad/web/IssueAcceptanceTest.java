@@ -14,6 +14,7 @@ import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 import static codesquad.domain.UserTest.JAVAJIGI;
+import static codesquad.domain.UserTest.SANJIGI;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
@@ -84,6 +85,34 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .put()
                 .addParameter("subject", "updated subject")
                 .addParameter("comment", "updated comment")
+                .build();
+        return template.postForEntity(String.format("/issues/%d", 1), request, String.class);
+    }
+
+    @Test
+    public void delete_삭제가능() throws Exception {
+        ResponseEntity<String> response = delete(basicAuthTemplate);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).startsWith("/");
+    }
+
+    @Test
+    public void delete_삭제불가_비로그인() throws Exception {
+        ResponseEntity<String> response = delete(template);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        log.debug("body : {}", response.getBody());
+    }
+
+    @Test
+    public void delete_삭제불가_타인의이슈() throws Exception {
+        ResponseEntity<String> response = delete(basicAuthTemplate(SANJIGI));
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        log.debug("body : {}", response.getBody());
+    }
+
+    private ResponseEntity<String> delete(TestRestTemplate template) throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .delete()
                 .build();
         return template.postForEntity(String.format("/issues/%d", 1), request, String.class);
     }

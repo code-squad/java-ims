@@ -56,7 +56,7 @@ public class IssueService {
     @Transactional
     public Issue delete(User loginUser, long id) throws CannotDeleteException {
         Issue original = findById(id);
-        deleteHistoryService.saveAll(original.delete(loginUser, id));
+        deleteHistoryService.saveAll(original.delete(loginUser));
         return issueRepository.save(original);
     }
 }

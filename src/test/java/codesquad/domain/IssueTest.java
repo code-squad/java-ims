@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,7 +8,6 @@ import org.junit.Test;
 import static codesquad.domain.UserTest.JAVAJIGI;
 import static codesquad.domain.UserTest.SANJIGI;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -45,5 +45,17 @@ public class IssueTest {
         Issue origin = ISSUE_JAVAJIGI;
         Issue target = new Issue("updated subject", "updated comment", JAVAJIGI);
         origin.update(SANJIGI, target);
+    }
+
+    @Test
+    public void delete_삭제가능_작성자의이슈() throws Exception {
+        Issue origin = ISSUE_JAVAJIGI;
+        origin.delete(JAVAJIGI);
+    }
+
+    @Test(expected = CannotDeleteException.class)
+    public void delete_삭제불가_타인의이슈() throws Exception {
+        Issue origin = ISSUE_JAVAJIGI;
+        origin.delete(SANJIGI);
     }
 }
