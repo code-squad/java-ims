@@ -8,6 +8,7 @@ import codesquad.dto.UserDto;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class UserService {
 
     public User findById(User loginUser, long id) {
         return userRepository.findById(id)
-                .filter(user -> user.equals(loginUser))
+                .filter(user -> user.equals(loginUser))         //본인이 맞는지
                 .orElseThrow(UnAuthorizedException::new);
     }
 
@@ -38,16 +39,8 @@ public class UserService {
     }
 
     public User login(String userId, String password) throws UnAuthenticationException {
-        Optional<User> maybeUser = userRepository.findByUserId(userId);
-        if (!maybeUser.isPresent()) {
-            throw new UnAuthenticationException();
-        }
-
-        User user = maybeUser.get();
-        if (!user.matchPassword(password)) {
-            throw new UnAuthenticationException();
-        }
-
-        return user;
+        return userRepository.findByUserId(userId)
+                .filter(user -> user.matchPassword(password))
+                .orElseThrow(UnAuthenticationException::new);
     }
 }
