@@ -10,4 +10,29 @@ public class Milestone extends AbstractEntity {
 
     @Embedded
     private MilestoneBody milestoneBody;
+
+    public Milestone() {
+    }
+
+    public Milestone(MilestoneBody milestoneBody) {
+        this.milestoneBody = milestoneBody;
+    }
+
+    public Milestone(long id, MilestoneBody milestoneBody) {
+        super(id);
+        this.milestoneBody = milestoneBody;
+    }
+
+    public MilestoneBody getMilestoneBody() {
+        return milestoneBody;
+    }
+
+    public void setMilestoneBody(MilestoneBody milestoneBody) {
+        this.milestoneBody = milestoneBody;
+    }
+
+    @Override
+    public String toString() {
+        return "Milestone[milestoneBody=" + milestoneBody + "]";
+    }
 }

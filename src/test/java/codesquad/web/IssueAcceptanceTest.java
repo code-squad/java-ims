@@ -1,8 +1,7 @@
 package codesquad.web;
 
 import codesquad.domain.issue.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.issue.IssueBody;
+import codesquad.domain.issue.IssueRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
