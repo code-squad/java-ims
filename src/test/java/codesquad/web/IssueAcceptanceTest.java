@@ -18,6 +18,7 @@ import support.test.HtmlFormDataBuilder;
 import static codesquad.domain.IssueTest.*;
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
+import static codesquad.domain.milestone.MilestoneTest.MILESTONE;
 import static codesquad.domain.milestone.MilestoneTest.MILESTONES;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -181,5 +182,12 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
         ResponseEntity<String> response = template().postForEntity(createdIssue.generateUrl(), deleteRequest, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void setMilestone() {
+        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d/milestones/%d", ISSUE.getId(), MILESTONE.getId()), String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE.getId()));
     }
 }

@@ -6,6 +6,7 @@ import codesquad.domain.issue.IssueRepository;
 import codesquad.domain.User;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueBody;
+import codesquad.domain.milestone.Milestone;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,9 @@ public class IssueService {
 
     @Resource(name = "deleteHistoryRepository")
     private DeleteHistoryRepository deleteHistoryRepository;
+
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
 
     public Issue create(User loginUser, IssueBody issueBody) {
         Issue issue = new Issue(issueBody);
@@ -54,5 +58,11 @@ public class IssueService {
     public Issue findById(long id) {
         return issueRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional
+    public Issue setMilestone(long issueId, long milestoneId) {
+        Milestone milestone = milestoneService.findById(milestoneId);
+        return findById(issueId).setMilestone(milestone);
     }
 }

@@ -2,8 +2,9 @@ package codesquad.service;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.DeleteHistoryRepository;
-import codesquad.domain.issue.IssueRepository;
 import codesquad.domain.issue.Issue;
+import codesquad.domain.issue.IssueRepository;
+import codesquad.domain.milestone.MilestoneRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import static codesquad.domain.IssueTest.*;
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
+import static codesquad.domain.milestone.MilestoneTest.MILESTONE;
 import static org.mockito.Mockito.when;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -32,6 +34,9 @@ public class IssueServiceTest extends BaseTest {
     @Mock
     private DeleteHistoryRepository deleteHistoryRepository;
 
+    @Mock
+    private MilestoneService milestoneService;
+
     @InjectMocks
     private IssueService issueService;
 
@@ -39,6 +44,7 @@ public class IssueServiceTest extends BaseTest {
     public void setUp() throws Exception {
         when(issueRepository.findById(ISSUE.getId())).thenReturn(Optional.of(ISSUE));
         when(issueRepository.save(newIssue())).thenReturn(newIssue());
+        when(milestoneService.findById(MILESTONE.getId())).thenReturn(MILESTONE);
     }
 
     @Test
@@ -94,5 +100,11 @@ public class IssueServiceTest extends BaseTest {
     public void delete_다른유저() {
         issueService.deleteIssue(JUNGHYUN, ISSUE.getId());
         softly.assertThat(ISSUE.isDeleted()).isEqualTo(false);
+    }
+
+    @Test
+    public void setMilestone() {
+        Issue issue = issueService.setMilestone(ISSUE.getId(), MILESTONE.getId());
+        softly.assertThat(issue.hasSameMilestone(MILESTONE)).isTrue();
     }
 }

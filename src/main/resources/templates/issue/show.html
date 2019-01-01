@@ -48,7 +48,7 @@
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="milestone-menu">
                 {{# milestones }}
                 <li class="mdl-menu__item">
-                    <a href="/issue/1/setMilestone/0">{{ milestoneBody.subject }}</a>
+                    <a href="/issues/{{ issue.id }}/milestones/{{ id }}">{{ milestoneBody.subject }}</a>
                 </li>
                 {{/ milestones }}
             </ul>

@@ -65,4 +65,10 @@ public class IssueController {
         issueService.deleteIssue(loginUser, id);
         return "redirect:/";
     }
+
+    @GetMapping("{issueId}/milestones/{milestoneId}")
+    public String setMilestone(@PathVariable long issueId, @PathVariable long milestoneId) {
+        Issue issue = issueService.setMilestone(issueId, milestoneId);
+        return "redirect:" + issue.generateUrl();
+    }
 }

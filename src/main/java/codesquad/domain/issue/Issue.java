@@ -59,6 +59,10 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         return this.issueBody.equals(target);
     }
 
+    public boolean hasSameMilestone(Milestone target) {
+        return this.milestone.equals(target);
+    }
+
     public User getWriter() {
         return writer;
     }
@@ -95,8 +99,9 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         return milestone;
     }
 
-    public void setMilestone(Milestone milestone) {
+    public Issue setMilestone(Milestone milestone) {
         this.milestone = milestone;
+        return this;
     }
 
     @Override
