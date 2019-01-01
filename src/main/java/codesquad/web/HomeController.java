@@ -18,7 +18,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model, Pageable pageable) {
-        List<Issue> issues = issueService.findAll(pageable);
+        Iterable<Issue> issues = issueService.findAll();
         model.addAttribute("issues", issues);
         return "index";
     }

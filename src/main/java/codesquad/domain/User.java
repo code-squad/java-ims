@@ -8,6 +8,7 @@ import support.domain.AbstractEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 public class User extends AbstractEntity {
@@ -17,7 +18,7 @@ public class User extends AbstractEntity {
     @Column(unique = true, nullable = false, length = 20)
     private String userId;
 
-    @Size(min = 6, max = 20)
+    @Size(min = 3, max = 20)
     @Column(nullable = false, length = 20)
     @JsonIgnore
     private String password;
@@ -94,6 +95,21 @@ public class User extends AbstractEntity {
     @JsonIgnore
     public boolean isGuestUser() {
         return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId) &&
+                Objects.equals(name, user.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), userId, name);
     }
 
     private static class GuestUser extends User {

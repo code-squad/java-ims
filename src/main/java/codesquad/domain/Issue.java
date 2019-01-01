@@ -1,10 +1,15 @@
 package codesquad.domain;
 
+import codesquad.CannotDeleteException;
+import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Issue extends AbstractEntity {
@@ -20,13 +25,10 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    private boolean deleted = false;
+
     public Issue() {
 
-    }
-
-    public Issue(String subject, String comment) {
-        this.subject = subject;
-        this.comment = comment;
     }
 
     public Issue(String subject, String comment, User writer) {
@@ -35,11 +37,28 @@ public class Issue extends AbstractEntity {
         this.writer = writer;
     }
 
-    public Issue(long id, String subject, String comment, User writer) {
-        super(id);
-        this.subject = subject;
-        this.comment = comment;
-        this.writer = writer;
+    public boolean isMatchWriter(User loginUser) {
+        return this.writer.equals(loginUser);
+    }
+
+    public void update(User loginUser, Issue target) {
+        if (!isMatchWriter(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.subject = target.subject;
+        this.comment = target.comment;
+    }
+
+    public List<DeleteHistory> delete(User loginUser) {
+        if (!isMatchWriter(loginUser)) {
+            throw new CannotDeleteException("작성자만 삭제 가능합니다.");
+        }
+        this.deleted = true;
+
+        List<DeleteHistory> temp = new ArrayList<>();
+        temp.add(new DeleteHistory(ContentType.ISSUE, getId(), writer));
+        return temp;
     }
 
     public String getSubject() {
@@ -68,6 +87,22 @@ public class Issue extends AbstractEntity {
 
     public IssueDto _toIssueDto() {
         return new IssueDto(this.subject, this.comment, this.writer);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Issue issue = (Issue) o;
+        return Objects.equals(subject, issue.subject) &&
+                Objects.equals(comment, issue.comment) &&
+                Objects.equals(writer, issue.writer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), subject, comment, writer);
     }
 
     @Override

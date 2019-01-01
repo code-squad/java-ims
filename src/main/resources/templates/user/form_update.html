@@ -16,14 +16,15 @@
         </div>
         <div class="issues__posts mdl-grid">
             <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
-                <form action="/join" enctype="multipart/form-data" method="post">
+                {{# user}}
+                <form action="/users/{{id}}" enctype="multipart/form-data" method="post">
+                    <input type="hidden" name="_method" value="put"/>
                     <div class="mdl-card__title mdl-color-text--grey-50" style="height:100px;">
                         <h4>Join Member</h4>
                     </div>
-                    {{# user}}
                     <div class="mdl-card__supporting-text">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
-                            <input class="mdl-textfield__input" type="text" id="userId" name="userId" value={{userId}}>
+                            <input class="mdl-textfield__input" type="text" id="userId" name="userId" value={{userId}} readonly>
                             <label class="mdl-textfield__label" for="userId">User ID</label>
                         </div>
                     </div>
@@ -35,7 +36,7 @@
                     </div>
                     <div class="mdl-card__supporting-text">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
-                            <input class="mdl-textfield__input" type="password" id="password" name="password" value={{password}}>
+                            <input class="mdl-textfield__input" type="password" id="password" name="password">
                             <label class="mdl-textfield__label" for="password">Password</label>
                         </div>
                     </div>
@@ -50,9 +51,8 @@
                                 style="margin:10px auto; width:200px;">Submit
                         </button>
                     </div>
-                    {{/ user}}
-
                 </form>
+                {{/ user}}
             </div>
         </div>
         <footer class="mdl-mini-footer">
