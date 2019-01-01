@@ -16,12 +16,8 @@ public class MilestoneBody {
     @Column(length = 30, nullable = false)
     private String subject;
 
-    // todo 추가 제한 사항 필요
-    @DateTimeFormat
     private LocalDateTime startDate;
 
-    // todo 추가 제한 사항 필요
-    @DateTimeFormat
     private LocalDateTime endDate;
 
     public MilestoneBody() {
