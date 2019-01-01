@@ -50,8 +50,11 @@ public class MilestoneBody {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
-//        June 23, 2016
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public String getFormattedEndDate() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
         return endDate.format(dateTimeFormatter);
     }

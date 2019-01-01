@@ -18,6 +18,11 @@ public class Label extends AbstractEntity {
         this.labelBody = labelBody;
     }
 
+    public Label(long id, LabelBody labelBody) {
+        super(id);
+        this.labelBody = labelBody;
+    }
+
     public LabelBody getLabelBody() {
         return labelBody;
     }

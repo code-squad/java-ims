@@ -20,6 +20,7 @@ import java.util.Optional;
 import static codesquad.domain.IssueTest.*;
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
+import static codesquad.domain.label.LabelTest.LABEL;
 import static codesquad.domain.milestone.MilestoneTest.MILESTONE;
 import static org.mockito.Mockito.when;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -40,6 +41,9 @@ public class IssueServiceTest extends BaseTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private LabelService labelService;
+
     @InjectMocks
     private IssueService issueService;
 
@@ -49,6 +53,7 @@ public class IssueServiceTest extends BaseTest {
         when(issueRepository.save(newIssue())).thenReturn(newIssue());
         when(milestoneService.findById(MILESTONE.getId())).thenReturn(MILESTONE);
         when(userService.findById(BRAD.getId())).thenReturn(BRAD);
+        when(labelService.findById(LABEL.getId())).thenReturn(LABEL);
     }
 
     @Test
@@ -116,5 +121,11 @@ public class IssueServiceTest extends BaseTest {
     public void setAssignee() {
         Issue issue = issueService.setAssignee(ISSUE.getId(), BRAD.getId());
         softly.assertThat(issue.isAssignee(BRAD)).isTrue();
+    }
+
+    @Test
+    public void setLabel() {
+        Issue issue = issueService.setLabel(ISSUE.getId(), LABEL.getId());
+        softly.assertThat(issue.hasSameLabel(LABEL)).isTrue();
     }
 }

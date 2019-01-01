@@ -86,4 +86,10 @@ public class IssueService {
         User assignee = userService.findById(assigneeId);
         return findById(issueId).setAssignee(assignee);
     }
+
+    @Transactional
+    public Issue setLabel(long issueId, long labelId) {
+        Label label = labelService.findById(labelId);
+        return findById(issueId).setLabel(label);
+    }
 }

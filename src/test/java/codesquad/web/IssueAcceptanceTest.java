@@ -18,6 +18,7 @@ import support.test.HtmlFormDataBuilder;
 import static codesquad.domain.IssueTest.*;
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
+import static codesquad.domain.label.LabelTest.LABEL;
 import static codesquad.domain.milestone.MilestoneTest.MILESTONE;
 import static codesquad.domain.milestone.MilestoneTest.MILESTONES;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -193,7 +194,14 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void setAssignee() {
-        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d/assignee/%d", ISSUE.getId(), BRAD.getId()), String.class);
+        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d/assignees/%d", ISSUE.getId(), BRAD.getId()), String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE.getId()));
+    }
+
+    @Test
+    public void setLabel() {
+        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d/labels/%d", ISSUE.getId(), LABEL.getId()), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE.getId()));
     }

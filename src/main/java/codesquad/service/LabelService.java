@@ -6,6 +6,7 @@ import codesquad.domain.label.LabelRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityNotFoundException;
 
 @Service
 public class LabelService {
@@ -21,5 +22,10 @@ public class LabelService {
 
     public Iterable<Label> findAll() {
         return labelRepository.findAll();
+    }
+
+    public Label findById(long id) {
+        return labelRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
     }
 }

@@ -72,9 +72,15 @@ public class IssueController {
         return "redirect:" + issue.generateUrl();
     }
 
-    @GetMapping("{issueId}/assignee/{assigneeId}")
+    @GetMapping("{issueId}/assignees/{assigneeId}")
     public String setAssignee(@PathVariable long issueId, @PathVariable long assigneeId) {
         Issue issue = issueService.setAssignee(issueId, assigneeId);
+        return "redirect:" + issue.generateUrl();
+    }
+
+    @GetMapping("{issueId}/labels/{labelId}")
+    public String setLabel(@PathVariable long issueId, @PathVariable long labelId) {
+        Issue issue = issueService.setLabel(issueId, labelId);
         return "redirect:" + issue.generateUrl();
     }
 }

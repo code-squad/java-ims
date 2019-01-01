@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import support.test.AcceptanceTest;
 
-import static codesquad.domain.milestone.MilestoneTest.MILESTONE;
 import static codesquad.domain.milestone.MilestoneTest.MILESTONE_BODY;
 import static org.slf4j.LoggerFactory.getLogger;
 

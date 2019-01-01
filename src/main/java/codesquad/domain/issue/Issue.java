@@ -4,6 +4,7 @@ import codesquad.UnAuthorizedException;
 import codesquad.domain.ContentType;
 import codesquad.domain.DeleteHistory;
 import codesquad.domain.User;
+import codesquad.domain.label.Label;
 import codesquad.domain.milestone.Milestone;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
@@ -31,6 +32,10 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
     private User assignee;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
+    private Label label;
 
     private boolean deleted = false;
 
@@ -69,6 +74,10 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
 
     public boolean isAssignee(User target) {
         return this.assignee.equals(target);
+    }
+
+    public boolean hasSameLabel(Label target) {
+        return this.label.equals(target);
     }
 
     public User getWriter() {
@@ -118,6 +127,15 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
 
     public Issue setAssignee(User assignee) {
         this.assignee = assignee;
+        return this;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public Issue setLabel(Label label) {
+        this.label = label;
         return this;
     }
 
