@@ -10,8 +10,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import support.test.BaseTest;
 
-import static codesquad.domain.milestone.MilestoneTest.MILESTONE;
-import static codesquad.domain.milestone.MilestoneTest.MILESTONE_BODY;
+import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
+
+import static codesquad.domain.milestone.MilestoneTest.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -25,12 +27,23 @@ public class MilestoneServiceTest extends BaseTest {
 
     @Before
     public void setUp() throws Exception {
-        when(milestoneRepository.save(MILESTONE)).thenReturn(MILESTONE);
+        when(milestoneRepository.save(new Milestone(MILESTONE_BODY))).thenReturn(MILESTONE);
+        when(milestoneRepository.findById(MILESTONE.getId())).thenReturn(Optional.of(MILESTONE));
     }
 
     @Test
     public void create() {
         Milestone savedMileStone = milestoneService.create(MILESTONE_BODY);
         softly.assertThat(savedMileStone.getMilestoneBody().equals(MILESTONE_BODY));
+    }
+
+    @Test
+    public void findById() {
+        softly.assertThat(milestoneService.findById(MILESTONE.getId())).isEqualTo(MILESTONE);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void findById_찾는값없을떄() {
+        softly.assertThat(milestoneService.findById(WRONG_MILESTONE_ID)).isEqualTo(MILESTONE);
     }
 }

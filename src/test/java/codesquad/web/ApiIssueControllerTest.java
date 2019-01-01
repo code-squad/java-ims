@@ -21,7 +21,7 @@ public class ApiIssueControllerTest extends AcceptanceTest {
     public void show() {
         String location = createResource("/api/issues", BRAD, ISSUE_BODY);
         ResponseEntity<Issue> responseEntity = template().getForEntity(location, Issue.class);
-        softly.assertThat(responseEntity.getBody().hasSameIssueBody(ISSUE_BODY)).isEqualTo(true);
+        softly.assertThat(responseEntity.getBody().hasSameBody(ISSUE_BODY)).isEqualTo(true);
         softly.assertThat(responseEntity.getBody().isOwner(BRAD)).isEqualTo(true);
     }
 
@@ -37,7 +37,7 @@ public class ApiIssueControllerTest extends AcceptanceTest {
         String location = createResource("/api/issues", BRAD, NEW_ISSUE_BODY);
         ResponseEntity<Issue> responseEntity = basicAuthTemplate().exchange(location, HttpMethod.PUT, createHttpEntity(UPDATE_ISSUE_BODY), Issue.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        softly.assertThat(responseEntity.getBody().hasSameIssueBody(UPDATE_ISSUE_BODY)).isTrue();
+        softly.assertThat(responseEntity.getBody().hasSameBody(UPDATE_ISSUE_BODY)).isTrue();
     }
 
     @Test

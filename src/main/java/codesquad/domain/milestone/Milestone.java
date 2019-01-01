@@ -31,6 +31,10 @@ public class Milestone extends AbstractEntity {
         this.milestoneBody = milestoneBody;
     }
 
+    public boolean hasSameBody(MilestoneBody target) {
+        return milestoneBody.equals(target);
+    }
+
     @Override
     public String toString() {
         return "Milestone[milestoneBody=" + milestoneBody + "]";

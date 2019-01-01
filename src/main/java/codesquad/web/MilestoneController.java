@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -31,7 +32,7 @@ public class MilestoneController {
     }
 
     @PostMapping("")
-    public String create(MilestoneBody milestoneBody) {
+    public String create(@Valid MilestoneBody milestoneBody) {
         milestoneService.create(milestoneBody);
         return "redirect:/milestones";
     }

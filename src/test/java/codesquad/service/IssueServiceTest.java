@@ -44,7 +44,7 @@ public class IssueServiceTest extends BaseTest {
     @Test
     public void show() {
         Issue savedIssue = issueService.findById(ISSUE.getId());
-        softly.assertThat(savedIssue.hasSameIssueBody(ISSUE.getIssueBody())).isEqualTo(true);
+        softly.assertThat(savedIssue.hasSameBody(ISSUE.getIssueBody())).isEqualTo(true);
     }
 
     @Test(expected = EntityNotFoundException.class)

@@ -50,7 +50,7 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         return new DeleteHistory(ContentType.ISSUE, getId(), loginUser);
     }
 
-    public boolean hasSameIssueBody(IssueBody target) {
+    public boolean hasSameBody(IssueBody target) {
         return this.issueBody.equals(target);
     }
 

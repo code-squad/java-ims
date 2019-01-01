@@ -56,7 +56,7 @@ public class IssueTest extends BaseTest {
     @Test
     public void update() {
         ISSUE.update(BRAD, UPDATE_ISSUE_BODY);
-        softly.assertThat(ISSUE.hasSameIssueBody(UPDATE_ISSUE_BODY));
+        softly.assertThat(ISSUE.hasSameBody(UPDATE_ISSUE_BODY));
     }
 
     @Test(expected = UnAuthorizedException.class)
