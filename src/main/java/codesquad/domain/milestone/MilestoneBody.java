@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Embeddable
@@ -49,8 +50,10 @@ public class MilestoneBody {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
-        return endDate;
+    public String getEndDate() {
+//        June 23, 2016
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+        return endDate.format(dateTimeFormatter);
     }
 
     public void setEndDate(LocalDateTime endDate) {

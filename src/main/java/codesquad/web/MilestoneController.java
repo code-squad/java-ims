@@ -4,6 +4,7 @@ import codesquad.domain.milestone.MilestoneBody;
 import codesquad.service.MilestoneService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,8 @@ public class MilestoneController {
     private MilestoneService milestoneService;
 
     @GetMapping("")
-    public String list() {
+    public String list(Model model) {
+        model.addAttribute("milestones", milestoneService.findAll());
         return "milestone/list";
     }
 
