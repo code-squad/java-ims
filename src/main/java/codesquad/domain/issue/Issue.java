@@ -28,6 +28,10 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
+
     private boolean deleted = false;
 
     public Issue() {
@@ -61,6 +65,10 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
 
     public boolean hasSameMilestone(Milestone target) {
         return this.milestone.equals(target);
+    }
+
+    public boolean isAssignee(User target) {
+        return this.assignee.equals(target);
     }
 
     public User getWriter() {
@@ -101,6 +109,15 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
 
     public Issue setMilestone(Milestone milestone) {
         this.milestone = milestone;
+        return this;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public Issue setAssignee(User assignee) {
+        this.assignee = assignee;
         return this;
     }
 

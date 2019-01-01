@@ -76,4 +76,10 @@ public class IssueController {
         Issue issue = issueService.setMilestone(issueId, milestoneId);
         return "redirect:" + issue.generateUrl();
     }
+
+    @GetMapping("{issueId}/assignee/{assigneeId}")
+    public String setAssignee(@PathVariable long issueId, @PathVariable long assigneeId) {
+        Issue issue = issueService.setAssignee(issueId, assigneeId);
+        return "redirect:" + issue.generateUrl();
+    }
 }

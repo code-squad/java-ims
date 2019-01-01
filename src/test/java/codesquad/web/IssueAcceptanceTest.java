@@ -190,4 +190,11 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE.getId()));
     }
+
+    @Test
+    public void setAssignee() {
+        ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d/assignee/%d", ISSUE.getId(), BRAD.getId()), String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE.getId()));
+    }
 }

@@ -37,6 +37,9 @@ public class IssueServiceTest extends BaseTest {
     @Mock
     private MilestoneService milestoneService;
 
+    @Mock
+    private UserService userService;
+
     @InjectMocks
     private IssueService issueService;
 
@@ -45,6 +48,7 @@ public class IssueServiceTest extends BaseTest {
         when(issueRepository.findById(ISSUE.getId())).thenReturn(Optional.of(ISSUE));
         when(issueRepository.save(newIssue())).thenReturn(newIssue());
         when(milestoneService.findById(MILESTONE.getId())).thenReturn(MILESTONE);
+        when(userService.findById(BRAD.getId())).thenReturn(BRAD);
     }
 
     @Test
@@ -106,5 +110,11 @@ public class IssueServiceTest extends BaseTest {
     public void setMilestone() {
         Issue issue = issueService.setMilestone(ISSUE.getId(), MILESTONE.getId());
         softly.assertThat(issue.hasSameMilestone(MILESTONE)).isTrue();
+    }
+
+    @Test
+    public void setAssignee() {
+        Issue issue = issueService.setAssignee(ISSUE.getId(), BRAD.getId());
+        softly.assertThat(issue.isAssignee(BRAD)).isTrue();
     }
 }
