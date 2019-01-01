@@ -16,11 +16,11 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
     public void create() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("subject", "midlestone 제목입니다")
-                .addParameter("startDate", LocalDateTime.now())
-                .addParameter("endDate", LocalDateTime.now())
+                .addParameter("startDate", LocalDateTime.now().toString())
+                .addParameter("endDate", LocalDateTime.now().toString())
                 .build();
         ResponseEntity<String> response = template.postForEntity("/milestones", request, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("milestones");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/milestones");
     }
 }
