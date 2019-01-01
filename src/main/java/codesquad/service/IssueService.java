@@ -6,6 +6,7 @@ import codesquad.domain.issue.IssueRepository;
 import codesquad.domain.User;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueBody;
+import codesquad.domain.label.Label;
 import codesquad.domain.milestone.Milestone;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,9 @@ public class IssueService {
     @Resource(name = "userService")
     private UserService userService;
 
+    @Resource(name = "labelService")
+    private LabelService labelService;
+
     public Issue create(User loginUser, IssueBody issueBody) {
         Issue issue = new Issue(issueBody);
         issue.writtenBy(loginUser);
@@ -44,8 +48,16 @@ public class IssueService {
         return issue;
     }
 
-    public Iterable<Issue> findAll() {
+    public Iterable<Issue> findIssueAll() {
         return issueRepository.findByDeleted(false);
+    }
+
+    public Iterable<Milestone> findMilestoneAll() {return milestoneService.findAll(); }
+
+    public Iterable<User> findUserAll() {return userService.findAll(); }
+
+    public Iterable<Label> findLabelAll() {
+        return labelService.findAll();
     }
 
     @Transactional

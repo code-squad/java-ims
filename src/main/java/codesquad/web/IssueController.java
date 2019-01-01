@@ -25,12 +25,6 @@ public class IssueController {
     @Resource(name = "issueService")
     private IssueService issueService;
 
-    @Resource(name = "milestoneService")
-    private MilestoneService milestoneService;
-
-    @Resource(name = "userService")
-    private UserService userService;
-
     @GetMapping("/form")
     public String createForm(@LoginUser User user) {
         return "issue/form";
@@ -54,8 +48,9 @@ public class IssueController {
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
-        model.addAttribute("milestones", milestoneService.findAll());
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute("milestones", issueService.findMilestoneAll());
+        model.addAttribute("users", issueService.findUserAll());
+        model.addAttribute("labels", issueService.findLabelAll());
         return "issue/show";
     }
 
