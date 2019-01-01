@@ -2,6 +2,8 @@ package codesquad.web;
 
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueRepository;
+import codesquad.domain.milestone.Milestone;
+import codesquad.service.MilestoneService;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import support.test.HtmlFormDataBuilder;
 import static codesquad.domain.IssueTest.*;
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
+import static codesquad.domain.milestone.MilestoneTest.MILESTONES;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
@@ -96,6 +99,10 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = template.getForEntity(ISSUE.generateUrl(), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         softly.assertThat(response.getBody().contains(ISSUE.getWriter().getName())).isTrue();
+        for (Milestone milestone : MILESTONES) {
+            softly.assertThat(response.getBody().contains(milestone.getMilestoneBody().getSubject())).isTrue();
+        }
+        log.debug("reponse : {}", response.getBody());
     }
 
     @Test

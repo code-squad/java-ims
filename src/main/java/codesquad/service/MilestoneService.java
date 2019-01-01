@@ -24,4 +24,8 @@ public class MilestoneService {
         return milestoneRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
+
+    public Iterable<Milestone> findAll() {
+        return milestoneRepository.findAll();
+    }
 }

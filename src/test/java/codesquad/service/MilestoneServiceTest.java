@@ -8,16 +8,20 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
 import support.test.BaseTest;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 
 import static codesquad.domain.milestone.MilestoneTest.*;
 import static org.mockito.Mockito.when;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MilestoneServiceTest extends BaseTest {
+    private static final Logger log = getLogger(MilestoneServiceTest.class);
 
     @Mock
     MilestoneRepository milestoneRepository;

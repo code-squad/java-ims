@@ -5,6 +5,7 @@ import codesquad.domain.User;
 import codesquad.domain.issue.IssueBody;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,9 @@ public class IssueController {
 
     @Resource(name = "issueService")
     private IssueService issueService;
+
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
 
     @GetMapping("/form")
     public String createForm(@LoginUser User user) {
@@ -46,6 +50,7 @@ public class IssueController {
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("milestones", milestoneService.findAll());
         return "issue/show";
     }
 

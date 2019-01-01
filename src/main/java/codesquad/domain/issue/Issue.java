@@ -4,6 +4,7 @@ import codesquad.UnAuthorizedException;
 import codesquad.domain.ContentType;
 import codesquad.domain.DeleteHistory;
 import codesquad.domain.User;
+import codesquad.domain.milestone.Milestone;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 import support.domain.UrlGeneratable;
@@ -22,6 +23,10 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
 
     private boolean deleted = false;
 
@@ -84,6 +89,14 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
 
     public void setIssueBody(IssueBody issueBody) {
         this.issueBody = issueBody;
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
     }
 
     @Override
