@@ -12,8 +12,8 @@ import java.util.Objects;
 @Embeddable
 public class MilestoneBody {
 
-    @Size(min = 3, max = 100)
-    @Column(length = 100, nullable = false)
+    @Size(min = 3, max = 30)
+    @Column(length = 30, nullable = false)
     private String subject;
 
     // todo 추가 제한 사항 필요
