@@ -39,4 +39,9 @@ public class LabelBody {
     public void setExplanation(String explanation) {
         this.explanation = explanation;
     }
+
+    @Override
+    public String toString() {
+        return "LabelBody[name=" + name + ", explanation=" + explanation + "]";
+    }
 }

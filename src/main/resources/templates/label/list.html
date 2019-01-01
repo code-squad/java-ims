@@ -11,23 +11,13 @@
         <div class="mdl-card__supporting-text">
             <ul class="issue-list mdl-list">
 
+                {{# labels }}
                 <li class="mdl-list__item mdl-list__item--two-line">
                   <span class="mdl-list__item-primary-content">
-                    <a href="/milestone/1"><strong>Label1</strong></a>
+                    <a href="/milestone/1"><strong>{{ labelBody.name }}</strong></a>
                   </span>
                 </li>
-
-                <li class="mdl-list__item mdl-list__item--two-line">
-                  <span class="mdl-list__item-primary-content">
-                    <a href="/milestone/1"><strong>Label1</strong></a>
-                  </span>
-                </li>
-
-                <li class="mdl-list__item mdl-list__item--two-line">
-                  <span class="mdl-list__item-primary-content">
-                    <a href="/milestone/1"><strong>Label1</strong></a>
-                  </span>
-                </li>
+                {{/ labels }}
 
             </ul>
         </div>
