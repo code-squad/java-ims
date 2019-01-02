@@ -2,6 +2,7 @@ package codesquad.web;
 
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
+import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/users")
@@ -29,11 +31,6 @@ public class UserController {
     public String create(UserDto userDto) {
         userService.add(userDto);
         return "redirect:/users";
-    }
-
-    @GetMapping("/login")
-    public String login() {
-        return "/user/login";
     }
 
     @GetMapping("/{id}/form")

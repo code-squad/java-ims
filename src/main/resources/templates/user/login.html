@@ -11,6 +11,9 @@
             <div class="mdl-card__title mdl-color-text--grey-50" style="height:100px;">
                 <h4>Login Member</h4>
             </div>
+            {{#errorMessage}}
+            <div class="alert alert-danger" role="alert">{{this}}</div>
+            {{/errorMessage}}
             <div class="mdl-card__supporting-text">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
                     <input class="mdl-textfield__input" type="text" id="userId" name="userId" required>

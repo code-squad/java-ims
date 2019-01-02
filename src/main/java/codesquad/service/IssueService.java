@@ -1,8 +1,9 @@
 package codesquad.service;
 
 import codesquad.domain.Issue;
+import codesquad.domain.IssueBody;
 import codesquad.domain.IssueRepository;
-import codesquad.dto.IssueDto;
+import codesquad.domain.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,11 @@ public class IssueService {
     }
 
     public List<Issue> findAll() {
-        log.debug("나는 잘 나옵니다. :{}",issueRepository.findAll());
+        log.debug("findAll");
         return issueRepository.findAll();
     }
 
-    public void add(IssueDto newIssue) {
-        issueRepository.save(newIssue._toIssue());
+    public void add(User loginUser, IssueBody issueBody) {
+        issueRepository.save(Issue.ofBody(loginUser, issueBody));
     }
 }

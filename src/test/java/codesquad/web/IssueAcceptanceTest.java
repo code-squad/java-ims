@@ -21,10 +21,18 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void createForm() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/issue/form", String.class);
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity("/issue/form", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         log.debug("body : {}", response.getBody());
     }
+
+    @Test
+    public void createForm_no_login() throws Exception {
+        ResponseEntity<String> response = template.getForEntity("/issue/form", String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        log.debug("body : {}", response.getBody());
+    }
+
 
     @Test
     public void create() throws Exception {
@@ -32,11 +40,22 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("subject", "제목입니다.")
                 .addParameter("comment", "내용입니다.").build();
 
-        ResponseEntity<String> response = template.postForEntity("/issue", request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issue", request, String.class);
         log.debug(response.getStatusCode());
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(issueRepository.findById(1L)).isNotEmpty();
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
+    }
+
+    @Test
+    public void create_no_login() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "제목입니다.")
+                .addParameter("comment", "내용입니다.").build();
+
+        ResponseEntity<String> response = template.postForEntity("/issue", request, String.class);
+        log.debug(response.getStatusCode());
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 }
 

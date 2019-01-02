@@ -1,75 +1,72 @@
 package codesquad.domain;
 
-import codesquad.dto.IssueDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 public class Issue extends AbstractEntity {
-    @Size(min = 6, max = 20)
-    @Column(length = 20)
-    @JsonIgnore
-    private String userId;
 
-    @Size(min = 3, max = 20)
-    @Column(nullable = false, length = 20)
-    private String subject;
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
+    private User writer;
 
-    @Size(min = 5, max = 100)
-    @Column(nullable = false, length = 100)
-    private String comment;
+    @Embedded
+    private IssueBody issueBody;
 
     public Issue() {
     }
 
-    public Issue(String subject, String comment) {
-        this.subject = subject;
-        this.comment = comment;
+    public Issue(User writer, IssueBody issueBody) {
+        this.writer = writer;
+        this.issueBody = issueBody;
     }
 
-    public Issue(String userId, String subject, String comment) {
-        this.userId = userId;
-        this.subject = subject;
-        this.comment = comment;
-    }
-
-    public Issue(long id, String userId, String subject, String comment) {
-        super(id);
-        this.userId = userId;
-        this.subject = subject;
-        this.comment = comment;
+    public static Issue ofBody(User loginUser, IssueBody issueBody) {
+        return new Issue(loginUser,issueBody);
     }
 
     public String getUserId() {
-        return userId;
+        return writer.getName();
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public User getWriter() {
+        return writer;
+    }
+
+    public void setWriter(User writer) {
+        this.writer = writer;
+    }
+
+    public IssueBody getIssueBody() {
+        return issueBody;
+    }
+
+    public void setIssueBody(IssueBody issueBody) {
+        this.issueBody = issueBody;
+    }
+
+    public void setUserId(User writher) {
+        this.writer = writher;
     }
 
     public String getSubject() {
-        return subject;
+        return issueBody.getSubject();
     }
 
     public void setSubject(String subject) {
-        this.subject = subject;
+        this.issueBody.setSubject(subject);
     }
 
     public String getComment() {
-        return comment;
+        return this.issueBody.getComment();
     }
 
     public void setComment(String comment) {
-        this.comment = comment;
+        this.issueBody.setComment(comment);
     }
 
-
-    public IssueDto _toIssueDto() {
-        return new IssueDto(this.subject, this.comment);
-    }
 }

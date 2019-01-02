@@ -1,7 +1,9 @@
 package codesquad.domain;
 
+import static codesquad.domain.UserTest.JAVAJIGI;
+
 public class IssueTest {
-    public static final Issue TEST_ISSUE = new Issue(1L,"javajigi", "Test제목", "내용");
+    public static final Issue ISSUE_NO1 = new Issue(JAVAJIGI,new IssueBody("제목입니다.","내용 입니다."));
 
 
     /*

@@ -1,7 +1,9 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
-import codesquad.dto.IssueDto;
+import codesquad.domain.IssueBody;
+import codesquad.domain.User;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,20 +25,21 @@ public class IssueController {
     private IssueService issueService;
 
     @GetMapping("/form")
-    public String createForm() {
+    public String createForm(@LoginUser User loginUser) {
+
         return "/issue/form";
     }
 
     @PostMapping("")
-    public String create(IssueDto issueDto) {
-        issueService.add(issueDto);
+    public String create(@LoginUser User loginUser, IssueBody issueBody) {
+        issueService.add(loginUser, issueBody);
         return "redirect:/";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
         Issue issue = issueService.findById(id).get();
-        model.addAttribute("issue",issue._toIssueDto());
+        model.addAttribute("issue",issue);
         return "/issue/show";
     }
 }
