@@ -63,8 +63,11 @@ public class UserController {
         return "/user/updateForm";
     }
 
+
+
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
+        log.debug("!!!!!!!!!!!!!!!!! : {}",target);
         userService.update(loginUser, id, target);
         return "redirect:/users";
     }
