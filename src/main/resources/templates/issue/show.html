@@ -3,10 +3,10 @@
     <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
         {{# issue }}
         <div class="mdl-card__menu">
-            <a href="/updateIssue/1" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+            <a href="/api/issues/{{id}}/updateForm" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" id="issues-menu-lower-left">
                 <i class="material-icons">edit</i>
             </a>
-            <a href="/deleteIssue/1" id="issues-menu-lower-right"
+            <a href="/api/issues/{{id}}" id="issues-menu-lower-right"
                class="mdl-button mdl-js-button mdl-button--icon">
                 <i class="material-icons">delete</i>
             </a>
@@ -22,7 +22,7 @@
             <div style="margin-right:20px;">
                 <div class="author-text">
                     <strong>
-                        <a href="https://github.com/javajigi" class="author">testUser</a>
+                        <a href="https://github.com/javajigi" class="author">{{writer.userId}}</a>
                     </strong>
                 </div>
                 <span>{{ createDate }}</span>

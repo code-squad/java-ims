@@ -1,6 +1,7 @@
 package codesquad.security;
 
 import codesquad.domain.User;
+import codesquad.dto.UserDto;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
@@ -35,5 +36,13 @@ public class HttpSessionUtils {
         }
 
         return (User) session.getAttribute(USER_SESSION_KEY);
+    }
+
+    public static void setSession(HttpSession httpSession, User user) {
+        httpSession.setAttribute(USER_SESSION_KEY, user);
+    }
+
+    public static void updateUserSession(HttpSession httpSession, UserDto updatedUser) {
+        getUserFromSession(httpSession).update(updatedUser);
     }
 }
