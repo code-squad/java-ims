@@ -23,7 +23,6 @@ public class IssueController {
     @PostMapping("")
     public String create(IssueDto issueDto) {
         issueService.add(issueDto);
-        return "redirect:/issues";
+        return "redirect:/";
     }
-
 }
