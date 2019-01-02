@@ -17,7 +17,7 @@ public class Issue extends AbstractEntity {
     public Issue() {
     }
 
-    public Issue(String comment, String subject, User writer) {
+    public Issue(String subject, String comment, User writer) {
         contents.setComment(comment);
         contents.setSubject(subject);
         this.writer = writer;
