@@ -19,7 +19,7 @@ public class HomeAcceptanceTest extends AcceptanceTest {
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         for (Issue issue : ISSUES) {
-            softly.assertThat(responseEntity.getBody().contains(issue.getSubject()));
+            softly.assertThat(responseEntity.getBody().contains(issue.getSubject())).isTrue();
         }
     }
 }

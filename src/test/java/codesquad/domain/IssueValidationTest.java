@@ -37,10 +37,54 @@ public class IssueValidationTest {
     }
 
     @Test
+    public void subjectWhenIsShort() throws Exception {
+        Issue issue = new Issue("s", "testComment1");
+        Set<ConstraintViolation<Issue>> constraintViolcations = validator.validate(issue);
+        assertThat(constraintViolcations.size(), is(1));
+
+        for (ConstraintViolation<Issue> constraintViolation : constraintViolcations) {
+            log.debug("violation error message : {}", constraintViolation.getMessage());
+        }
+    }
+
+    @Test
     public void commentWhenIsEmpty() throws Exception {
         Issue issue = new Issue("testSubject1", "");
         Set<ConstraintViolation<Issue>> constraintViolcations = validator.validate(issue);
         assertThat(constraintViolcations.size(), is(1));
+
+        for (ConstraintViolation<Issue> constraintViolation : constraintViolcations) {
+            log.debug("violation error message : {}", constraintViolation.getMessage());
+        }
+    }
+
+    @Test
+    public void commentWhenIsShort() throws Exception {
+        Issue issue = new Issue("testSubject1", "c");
+        Set<ConstraintViolation<Issue>> constraintViolcations = validator.validate(issue);
+        assertThat(constraintViolcations.size(), is(1));
+
+        for (ConstraintViolation<Issue> constraintViolation : constraintViolcations) {
+            log.debug("violation error message : {}", constraintViolation.getMessage());
+        }
+    }
+
+    @Test
+    public void bothWhenIsEmpty() throws Exception {
+        Issue issue = new Issue("", "");
+        Set<ConstraintViolation<Issue>> constraintViolcations = validator.validate(issue);
+        assertThat(constraintViolcations.size(), is(2));
+
+        for (ConstraintViolation<Issue> constraintViolation : constraintViolcations) {
+            log.debug("violation error message : {}", constraintViolation.getMessage());
+        }
+    }
+
+    @Test
+    public void bothWhenIsShort() throws Exception {
+        Issue issue = new Issue("s", "c");
+        Set<ConstraintViolation<Issue>> constraintViolcations = validator.validate(issue);
+        assertThat(constraintViolcations.size(), is(2));
 
         for (ConstraintViolation<Issue> constraintViolation : constraintViolcations) {
             log.debug("violation error message : {}", constraintViolation.getMessage());

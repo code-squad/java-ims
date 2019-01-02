@@ -27,6 +27,12 @@ public class Issue extends AbstractEntity {
         this.comment = comment;
     }
 
+    public Issue(long id, String subject, String comment) {
+        super(id);
+        this.subject = subject;
+        this.comment = comment;
+    }
+
     public String getSubject() {
         return subject;
     }

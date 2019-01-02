@@ -2,5 +2,5 @@ package codesquad.service;
 
 import support.test.BaseTest;
 
-public class IssueServceTest extends BaseTest {
+public class IssueServiceTest extends BaseTest {
 }
