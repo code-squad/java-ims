@@ -2,6 +2,8 @@ package codesquad.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IssueRepository extends JpaRepository<Issue, Long> {
+import java.util.List;
 
+public interface IssueRepository extends JpaRepository<Issue, Long> {
+    List<Issue> findByDeleted(boolean deleted);
 }

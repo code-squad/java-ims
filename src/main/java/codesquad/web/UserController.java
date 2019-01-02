@@ -1,7 +1,9 @@
 package codesquad.web;
 
+import codesquad.UnAuthenticationException;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
+import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/user")
@@ -20,16 +23,10 @@ public class UserController {
     @Resource(name = "userService")
     private UserService userService;
 
-    @GetMapping("/form")
+    @GetMapping("/join")
     public String form() {
         log.debug("Call form() Method!");
-        return "user/join";
-    }
-
-    @GetMapping("/login")
-    public String login() {
-        log.debug("Call login() Method!");
-        return "user/login";
+        return "/user/join";
     }
 
     @PostMapping("")
@@ -47,8 +44,20 @@ public class UserController {
 
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
+        log.debug("Call updateMethod()");
         userService.update(loginUser, id, target);
-        return "redirect:/user";
+        return "redirect:/";
     }
 
+    @GetMapping("/logout")
+    public String logout(@LoginUser User loginUser, HttpSession httpSession) {
+        httpSession.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+        return "redirect:/";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        log.debug("Call Method login()");
+        return "/user/login";
+    }
 }

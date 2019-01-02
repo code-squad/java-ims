@@ -1,6 +1,8 @@
 package codesquad.web;
 
+import codesquad.domain.User;
 import codesquad.domain.UserRepository;
+import codesquad.dto.UserDto;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,5 +80,13 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = update(basicAuthTemplate);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/user");
+    }
+
+    @Test
+    public void 로그아웃() {
+        ResponseEntity<Void> responseEntity = template.withBasicAuth("javajigi", "password")
+                .getForEntity("/user/logout", Void.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 }
