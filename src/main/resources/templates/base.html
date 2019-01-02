@@ -25,8 +25,15 @@
             <nav class="mdl-navigation">
                 <a class="mdl-navigation__link" href="/">Issues</a>
                 <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
+                {{^loginedUser}}
                 <a class="mdl-navigation__link" href="/users/login">login</a>
                 <a class="mdl-navigation__link" href="/users/form">join</a>
+                {{/loginedUser}}
+
+                {{#loginedUser}}
+                <a class="mdl-navigation__link" href="/users/logout">logout</a>
+                <a class="mdl-navigation__link" href="/users/{{id}}/form">my</a>
+                {{/loginedUser}}
             </nav>
         </div>
     </header>
