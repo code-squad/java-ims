@@ -1,9 +1,12 @@
 package codesquad.web;
 
-import codesquad.domain.Issue;
+import codesquad.domain.issue.Issue;
 import codesquad.domain.User;
+import codesquad.domain.issue.IssueBody;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,9 +31,9 @@ public class IssueController {
     }
 
     @PostMapping("")
-    public String create(@LoginUser User loginUser, @Valid Issue issue) {
-        log.debug("issue : {}", issue);
-        issueService.create(loginUser, issue);
+    public String create(@LoginUser User loginUser, @Valid IssueBody issueBody) {
+        log.debug("issue : {}", issueBody);
+        issueService.create(loginUser, issueBody);
         return "redirect:/";
     }
 
@@ -45,12 +48,15 @@ public class IssueController {
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("milestones", issueService.findMilestoneAll());
+        model.addAttribute("users", issueService.findUserAll());
+        model.addAttribute("labels", issueService.findLabelAll());
         return "issue/show";
     }
 
     @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, @Valid Issue updateIssue, Model model) {
-        model.addAttribute("issue", issueService.update(loginUser, id, updateIssue));
+    public String update(@LoginUser User loginUser, @PathVariable long id, @Valid IssueBody updateIssueBody, Model model) {
+        model.addAttribute("issue", issueService.update(loginUser, id, updateIssueBody));
         return "issue/show";
     }
 
@@ -58,5 +64,23 @@ public class IssueController {
     public String delete(@LoginUser User loginUser, @PathVariable long id) {
         issueService.deleteIssue(loginUser, id);
         return "redirect:/";
+    }
+
+    @GetMapping("{issueId}/milestones/{milestoneId}")
+    public String setMilestone(@PathVariable long issueId, @PathVariable long milestoneId) {
+        Issue issue = issueService.setMilestone(issueId, milestoneId);
+        return "redirect:" + issue.generateUrl();
+    }
+
+    @GetMapping("{issueId}/assignees/{assigneeId}")
+    public String setAssignee(@PathVariable long issueId, @PathVariable long assigneeId) {
+        Issue issue = issueService.setAssignee(issueId, assigneeId);
+        return "redirect:" + issue.generateUrl();
+    }
+
+    @GetMapping("{issueId}/labels/{labelId}")
+    public String setLabel(@PathVariable long issueId, @PathVariable long labelId) {
+        Issue issue = issueService.setLabel(issueId, labelId);
+        return "redirect:" + issue.generateUrl();
     }
 }
