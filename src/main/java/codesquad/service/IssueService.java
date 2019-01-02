@@ -12,7 +12,6 @@ public class IssueService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
-
     public Issue add(IssueDto issueDto) {
         return issueRepository.save(issueDto._toIssue());
     }
