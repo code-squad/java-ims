@@ -1,10 +1,18 @@
 package codesquad.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.tomcat.jni.Local;
+import org.springframework.format.annotation.DateTimeFormat;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.Size;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Entity
 public class MileStone extends AbstractEntity {
@@ -12,17 +20,15 @@ public class MileStone extends AbstractEntity {
     @Column(nullable = false, length = 20)
     private String subject;
 
-    @Column(nullable = false)
-    private String startDate;
+    private LocalDateTime startDate;
 
-    @Column(nullable = false)
-    private String endDate;
+    private LocalDateTime endDate;
 
     public MileStone() {
 
     }
 
-    public MileStone(String subject, String startDate, String endDate) {
+    public MileStone(String subject, LocalDateTime startDate, LocalDateTime endDate) {
         this.subject = subject;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -36,19 +42,26 @@ public class MileStone extends AbstractEntity {
         this.subject = subject;
     }
 
-    public String getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public String getFormattedDueDate() {
+        if (endDate == null) {
+            return "";
+        }
+        return endDate.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy"));
     }
 }

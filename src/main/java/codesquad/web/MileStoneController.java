@@ -7,6 +7,7 @@ import codesquad.service.MileStoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +29,15 @@ public class MileStoneController {
 
     @PostMapping("")
     public String create(@LoginUser User loginUser, MileStone mileStone) {
+        log.debug("***** milestone : {}", mileStone);
+
         mileStoneService.create(mileStone);
         return "redirect:/";
     }
 
     @GetMapping("")
-    public String list() {
+    public String list(Model model) {
+        model.addAttribute("milestones", mileStoneService.findAll());
         return "/milestone/list";
     }
 }

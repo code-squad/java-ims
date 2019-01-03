@@ -22,12 +22,12 @@
                 <div class="mdl-card__supporting-text">
                     <ul class="issue-list mdl-list">
 
-
+                        {{# milestones}}
                         <li class="mdl-list__item mdl-list__item--two-line">
                   <span class="mdl-list__item-primary-content">
-                    <a href="/milestone/1"><strong>Milestone1</strong></a>
+                    <a href="/milestones/{{id}}"><strong>{{subject}}</strong></a>
                     <span class="mdl-list__item-sub-subject">
-                      Due by June 23, 2016
+                      Due by {{formattedDueDate}}
                     </span>
                   </span>
 
@@ -40,6 +40,7 @@
                     </span>
                   </span>
                         </li>
+                        {{/ milestones}}
 
                         <li class="mdl-list__item mdl-list__item--two-line">
                   <span class="mdl-list__item-primary-content">
