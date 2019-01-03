@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import static codesquad.security.HttpSessionUtils.USER_SESSION_KEY;
+
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -27,15 +29,10 @@ public class UserController {
         return "/user/form";
     }
 
-    @GetMapping("")
-    public String show() {
-        return "index";
-    }
-
     @PostMapping("")
     public String create(UserDto userDto) {
         userService.add(userDto);
-        return "redirect:/users";
+        return "redirect:/";
     }
 
     @GetMapping("/login")
@@ -46,8 +43,14 @@ public class UserController {
     @PostMapping("/login")
     public String login(String userId, String password, HttpSession httpSession) throws UnAuthenticationException {
         User loginUser = userService.login(userId, password);
-        httpSession.setAttribute("loginUser", loginUser);
-        return "redirect:/users";
+        httpSession.setAttribute(USER_SESSION_KEY, loginUser);
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession httpSession) {
+        httpSession.removeAttribute(USER_SESSION_KEY);
+        return "redirect:/";
     }
 
     @GetMapping("/{id}/form")
@@ -58,9 +61,11 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
+    public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target, HttpSession httpSession) {
+        log.debug("업데이트 유저 : " + target);
         userService.update(loginUser, id, target);
-        return "redirect:/users";
+        httpSession.removeAttribute(USER_SESSION_KEY);
+        return "redirect:/";
     }
 
 }
