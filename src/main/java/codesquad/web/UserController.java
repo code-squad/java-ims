@@ -35,13 +35,8 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("")
-    public String list() {
-        return "/index";
-    }
-
     @GetMapping("/login/form")
-    public String loginForm(){
+    public String loginForm() {
         return "/user/login";
     }
 
@@ -50,7 +45,7 @@ public class UserController {
         try {
             User user = userService.login(userId, password);
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
-            return "redirect:/users";
+            return "redirect:/";
         } catch (UnAuthenticationException e) {
             return "user/login_failed";
         }
@@ -68,4 +63,11 @@ public class UserController {
         userService.update(loginUser, id, target);
         return "redirect:/users";
     }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+        return "redirect:/";
+    }
+
 }
