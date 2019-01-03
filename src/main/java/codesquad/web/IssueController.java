@@ -2,6 +2,7 @@ package codesquad.web;
 
 import codesquad.domain.Issue;
 import codesquad.domain.User;
+import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
@@ -31,7 +32,8 @@ public class IssueController {
     }
 
     @PostMapping("")
-    public String create(@Valid Issue issue) {
+    public String create(@Valid IssueDto issueDto) {
+        issueService.add(issueDto);
         return "redirect:/";
     }
 
