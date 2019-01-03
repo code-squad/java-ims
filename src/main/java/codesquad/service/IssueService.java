@@ -1,5 +1,6 @@
 package codesquad.service;
 
+import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
@@ -24,4 +25,8 @@ public class IssueService {
         return issueRepository.findAll();
     }
 
+    public Issue findById(long id) {
+        return issueRepository.findById(id)
+                .orElseThrow(UnAuthorizedException::new);
+    }
 }

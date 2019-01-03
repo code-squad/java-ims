@@ -15,6 +15,7 @@ public class Issue extends AbstractEntity {
 
     @Size(min = 3)
     @Lob
+    @Column(nullable = false)
     private String comment;
 
     @ManyToOne
