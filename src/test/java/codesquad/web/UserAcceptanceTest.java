@@ -78,8 +78,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("_method", "put")
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().put()
                 .addParameter("password", "pass2")
                 .addParameter("name", "재성2")
                 .addParameter("email", "javajigi@slipp.net").build();
@@ -92,5 +91,12 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = update(basicAuthTemplate);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users");
+    }
+
+    @Test
+    public void logout() throws Exception {
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity("/users/logout", String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 }
