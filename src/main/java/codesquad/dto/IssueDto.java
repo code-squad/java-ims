@@ -26,7 +26,7 @@ public class IssueDto {
         this.writer = writer;
     }
 
-    public boolean isOwner(User loginUser){
+    public boolean isOwner(User loginUser) {
         return this.writer.equals(loginUser);
     }
 
@@ -55,7 +55,7 @@ public class IssueDto {
     }
 
     public Issue _toIssue() {
-        return new Issue(this.subject,this.comment,this.writer);
+        return new Issue(this.subject, this.comment, this.writer);
     }
 
     @Override
