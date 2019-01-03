@@ -12,13 +12,15 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import static codesquad.domain.UserTest.SANJIGI;
+
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = LogManager.getLogger(IssueAcceptanceTest.class);
 
     @Autowired
     private IssueRepository issueRepository;
 
-
+    //todo 중복코드 리팩토링
     @Test
     public void createForm() throws Exception {
         ResponseEntity<String> response = basicAuthTemplate.getForEntity("/issue/form", String.class);
@@ -48,7 +50,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
-    public void create_no_login() throws Exception {
+    public void create_not_login() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("subject", "제목입니다.")
                 .addParameter("comment", "내용입니다.").build();
@@ -60,32 +62,79 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void update_form() {
-        //ToDO 업데이트 폼 생성
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity("/issue/1/form", String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        log.debug("body : {}", response.getBody());
+    }
+
+    @Test
+    public void update_form_not_login() {
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity("/issue/1/form", String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        log.debug("body : {}", response.getBody());
     }
 
     @Test
     public void update() {
-        //Todo 업데이트 성공
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .put()
+                .addParameter("subject", "나는 바뀐 제목입니다.")
+                .addParameter("comment", "나는 바뀐 내용입니다.")
+                .build();
+        ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issue/1", request, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        log.debug(response.getBody());
+        //Todo 바뀐내용을 확인해야한다.
     }
 
     @Test
-    public void update_no_login() {
-        //Todo 업데이트 실패
+    public void update_not_login() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .put()
+                .addParameter("subject", "나는 바뀐 제목입니다.")
+                .addParameter("comment", "나는 바뀐 내용입니다.")
+                .build();
+        ResponseEntity<String> response = template.postForEntity("/issue/1", request, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    public void update_not_others() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .put()
+                .addParameter("subject", "나는 바뀐 제목입니다.")
+                .addParameter("comment", "나는 바뀐 내용입니다.")
+                .build();
+        ResponseEntity<String> response = basicAuthTemplate(findByUserId("jar100")).postForEntity("/issue/1", request, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
     public void delete() {
-        //Todo 삭제성공
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .delete()
+                .build();
+        ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issue/1", request, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 
     @Test
     public void delete_no_login() {
-        //Todo 삭제 실패 로그인 안함
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .delete()
+                .build();
+        ResponseEntity<String> response = template.postForEntity("/issue/1", request, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
     public void delete_no_others() {
-        //Todo 삭제 실패 다른사람
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .delete()
+                .build();
+        ResponseEntity<String> response = basicAuthTemplate(findByUserId("jar100")).postForEntity("/issue/1", request, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 }
 

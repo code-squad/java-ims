@@ -23,6 +23,11 @@ public class IssueBody {
         this.comment = comment;
     }
 
+    public void update(IssueBody issueBody) {
+        this.comment = issueBody.comment;
+        this.subject = issueBody.subject;
+    }
+
     public String getSubject() {
         return subject;
     }

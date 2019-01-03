@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import codesquad.UnAuthenticationException;
+import codesquad.UnAuthorizedException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
@@ -8,7 +10,7 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
-public class Issue extends AbstractEntity {
+public class Issue extends AbstractEntity{
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
@@ -16,6 +18,8 @@ public class Issue extends AbstractEntity {
 
     @Embedded
     private IssueBody issueBody;
+
+    private boolean deleted = false;
 
     public Issue() {
     }
@@ -29,28 +33,20 @@ public class Issue extends AbstractEntity {
         return new Issue(loginUser,issueBody);
     }
 
-    public String getUserId() {
+    public Issue update(User loginUser, IssueBody issueBody) {
+        if (!writer.matchUser(loginUser)) {
+            throw new UnAuthorizedException("작성자가 아닙니다.");
+        }
+        this.issueBody.update(issueBody);
+        return this;
+    }
+
+    public String getWriter() {
         return writer.getName();
     }
 
-    public User getWriter() {
-        return writer;
-    }
-
-    public void setWriter(User writer) {
+    public void setUserId(User writer) {
         this.writer = writer;
-    }
-
-    public IssueBody getIssueBody() {
-        return issueBody;
-    }
-
-    public void setIssueBody(IssueBody issueBody) {
-        this.issueBody = issueBody;
-    }
-
-    public void setUserId(User writher) {
-        this.writer = writher;
     }
 
     public String getSubject() {
@@ -69,4 +65,15 @@ public class Issue extends AbstractEntity {
         this.issueBody.setComment(comment);
     }
 
+    public Issue deleted(User loginUser) {
+        if (!writer.matchUser(loginUser)) {
+            throw new UnAuthorizedException("작성자가 아닙니다.");
+        }
+        deleted = true;
+        return this;
+    }
+
+    public boolean isDeleted() {
+        return !deleted;
+    }
 }

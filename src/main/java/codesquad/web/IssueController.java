@@ -9,10 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -41,5 +38,23 @@ public class IssueController {
         Issue issue = issueService.findById(id).get();
         model.addAttribute("issue",issue);
         return "/issue/show";
+    }
+
+    @GetMapping("/{id}/form")
+    public String updateForm(@LoginUser User loginUser) {
+        return "/issue/updateForm";
+    }
+
+    @PutMapping("/{id}")
+    public String update(@LoginUser User loginUser, @PathVariable long id, Model model, IssueBody issueBody) {
+        Issue issue = issueService.update(id,loginUser,issueBody);
+        model.addAttribute("issue",issue);
+        return "redirect:/issue/{id}";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User loginUser, @PathVariable long id) {
+        issueService.deleted(id,loginUser);
+        return "redirect:/";
     }
 }

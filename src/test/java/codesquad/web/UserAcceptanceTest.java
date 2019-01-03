@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -65,7 +66,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("_method", "put")
+                .put()
                 .addParameter("password", "pass2")
                 .addParameter("name", "재성2")
                 .addParameter("email", "javajigi@slipp.net").build();
