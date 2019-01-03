@@ -49,8 +49,8 @@ public class UserDto {
     }
 
     public User _toUser() {
-        return new User(this.userId, this.password, this.name);
-    }
+        return new User(0L,this.userId, this.password, this.name);
+}
 
     @Override
     public int hashCode() {
