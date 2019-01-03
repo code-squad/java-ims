@@ -57,5 +57,35 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         log.debug(response.getStatusCode());
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
+
+    @Test
+    public void update_form() {
+        //ToDO 업데이트 폼 생성
+    }
+
+    @Test
+    public void update() {
+        //Todo 업데이트 성공
+    }
+
+    @Test
+    public void update_no_login() {
+        //Todo 업데이트 실패
+    }
+
+    @Test
+    public void delete() {
+        //Todo 삭제성공
+    }
+
+    @Test
+    public void delete_no_login() {
+        //Todo 삭제 실패 로그인 안함
+    }
+
+    @Test
+    public void delete_no_others() {
+        //Todo 삭제 실패 다른사람
+    }
 }
 
