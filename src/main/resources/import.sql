@@ -14,3 +14,7 @@ INSERT INTO issue (id, writer_id, subject, comment, create_date, modified_date, 
 INSERT INTO issue (id, writer_id, subject, comment, create_date, modified_date, deleted) values (6, 6, '여섯째 이슈', '내용123', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), false);
 INSERT INTO issue (id, writer_id, subject, comment, create_date, modified_date, deleted) values (7, 7, '일곱째 이슈', '내용123', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), false);
 INSERT INTO issue (id, writer_id, subject, comment, create_date, modified_date, deleted) values (8, 1, '자바지기 두 번째 이슈', '내용123', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), false);
+
+INSERT INTO mile_stone (id, subject, start_date, end_date) values (1, 'MileStone1', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+INSERT INTO mile_stone (id, subject, start_date, end_date) values (2, 'MileStone2', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+INSERT INTO mile_stone (id, subject, start_date, end_date) values (3, 'MileStone3', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());

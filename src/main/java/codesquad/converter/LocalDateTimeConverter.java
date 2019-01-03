@@ -19,7 +19,6 @@ public final class LocalDateTimeConverter implements Converter<String, LocalDate
         if (source == null || source.isEmpty()) {
             return null;
         }
-
         return LocalDateTime.parse(source, formatter);
     }
 }
