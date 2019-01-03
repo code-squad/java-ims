@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 
 @Embeddable
 public class Contents {
-    @Size(min = 5, max = 30)
+    @Size(min = 1, max = 30)
     @Column(nullable = false, length = 30)
     private String subject;
 

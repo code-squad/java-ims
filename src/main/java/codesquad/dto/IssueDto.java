@@ -8,7 +8,7 @@ import javax.persistence.Lob;
 import javax.validation.constraints.Size;
 
 public class IssueDto {
-    @Size(min = 5, max = 30)
+    @Size(min = 1, max = 30)
     @Column(nullable = false, length = 30)
     private String subject;
 
