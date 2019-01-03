@@ -41,7 +41,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(userRepository.findByUserId(userId)).isNotNull();
-        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 
     @Test

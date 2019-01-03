@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/users")
@@ -46,9 +47,10 @@ public class UserController {
     }
 
     @PostMapping("")
-    public String create(UserDto userDto) {
+    public String create(@Valid UserDto userDto) {
+        log.debug("UserDto : ", userDto.toString());
         userService.add(userDto);
-        return "redirect:/users";
+        return "redirect:/";
     }
 
     @GetMapping("/{id}/form")
