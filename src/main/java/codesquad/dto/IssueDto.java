@@ -29,7 +29,7 @@ public class IssueDto {
     }
 
     public Issue _toIssue() {
-        return new Issue(this.comment, this.subject, this.writer);
+        return new Issue(this.subject, this.comment, this.writer);
     }
 
     public String getSubject() {
