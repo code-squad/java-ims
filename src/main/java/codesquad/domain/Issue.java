@@ -1,22 +1,15 @@
 package codesquad.domain;
 
-import codesquad.UnAuthenticationException;
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @Entity
 public class Issue extends AbstractEntity {
 
-    @Size(min = 5, max = 200)
-    @Column(nullable = false)
-    private String subject;
-
-    @Size(min = 5, max = 1000)
-    @Column(nullable = false)
-    private String comment;
+    @Embedded
+    private Content content;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
@@ -28,26 +21,9 @@ public class Issue extends AbstractEntity {
 
     }
 
-    public Issue(String subject, String comment, User writer) {
-        this.subject = subject;
-        this.comment = comment;
+    public Issue(Content content, User writer) {
         this.writer = writer;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
+        this.content = content;
     }
 
     public User getWriter() {
@@ -67,7 +43,7 @@ public class Issue extends AbstractEntity {
     }
 
     public IssueDto _toIssueDto() {
-        return new IssueDto(this.subject, this.comment, this.writer);
+        return new IssueDto(this.content, this.writer);
     }
 
     public boolean isOneSelf(User loginUser) {
@@ -75,17 +51,24 @@ public class Issue extends AbstractEntity {
     }
 
     public Issue update(Issue issue) {
-        this.subject = issue.subject;
-        this.comment = issue.comment;
+        this.content = issue.content;
         return this;
+    }
+
+    public Content getContent() {
+        return content;
+    }
+
+    public void setContent(Content content) {
+        this.content = content;
     }
 
     @Override
     public String toString() {
         return "Issue{" +
-                "subject='" + subject + '\'' +
-                ", comment='" + comment + '\'' +
+                "content=" + content +
                 ", writer=" + writer +
+                ", deleted=" + deleted +
                 '}';
     }
 }
