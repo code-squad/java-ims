@@ -3,6 +3,7 @@ package support.test;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -11,9 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class AcceptanceTest extends BaseTest {
+    private static final Logger log = getLogger(AcceptanceTest.class);
     private static final String DEFAULT_LOGIN_USER = "javajigi";
 
     @Autowired

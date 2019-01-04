@@ -4,6 +4,7 @@ import codesquad.domain.User;
 import codesquad.dto.UserDto;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;
+import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +14,12 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.net.URI;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @RestController
 @RequestMapping("/api/users")
 public class ApiUserController {
+    private static final Logger log = getLogger(ApiUserController.class);
     @Resource(name = "userService")
     private UserService userService;
 
@@ -38,4 +42,6 @@ public class ApiUserController {
     public void update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody UserDto updatedUser) {
         userService.update(loginUser, id, updatedUser);
     }
+
+
 }

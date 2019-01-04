@@ -80,4 +80,12 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users");
     }
+
+    @Test
+    public void loginForm() {
+        ResponseEntity<String> response = template().getForEntity("/login/form", String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+
 }

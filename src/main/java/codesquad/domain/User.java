@@ -3,6 +3,7 @@ package codesquad.domain;
 import codesquad.UnAuthorizedException;
 import codesquad.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ public class User extends AbstractEntity {
 
     @Size(min = 3, max = 20)
     @Column(unique = true, nullable = false, length = 20)
+    @JsonProperty
     private String userId;
 
     @Size(min = 6, max = 20)
