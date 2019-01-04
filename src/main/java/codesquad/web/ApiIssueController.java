@@ -50,4 +50,21 @@ public class ApiIssueController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("{issueId}/milestones/{milestoneId}")
+    public ResponseEntity<Void> setMilestone(@PathVariable long issueId, @PathVariable long milestoneId) {
+        Issue issue = issueService.setMilestone(issueId, milestoneId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("{issueId}/assignees/{assigneeId}")
+    public ResponseEntity<Void> setAssignee(@PathVariable long issueId, @PathVariable long assigneeId) {
+        Issue issue = issueService.setAssignee(issueId, assigneeId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("{issueId}/labels/{labelId}")
+    public ResponseEntity<Void> setLabel(@PathVariable long issueId, @PathVariable long labelId) {
+        Issue issue = issueService.setLabel(issueId, labelId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

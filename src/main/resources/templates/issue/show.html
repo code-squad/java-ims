@@ -48,7 +48,7 @@
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="milestone-menu">
                 {{# milestones }}
                 <li class="mdl-menu__item">
-                    <a href="/issues/{{ issue.id }}/milestones/{{ id }}">{{ milestoneBody.subject }}</a>
+                    <a href="/api/issues/{{ issue.id }}/milestones/{{ id }}">{{ milestoneBody.subject }}</a>
                 </li>
                 {{/ milestones }}
             </ul>
@@ -61,7 +61,7 @@
 
                 {{# labels }}
                 <li class="mdl-menu__item">
-                    <a href="/issues/{{ issue.id }}/labels/{{ id }}">{{ labelBody.name }}</a>
+                    <a href="/api/issues/{{ issue.id }}/labels/{{ id }}">{{ labelBody.name }}</a>
                 </li>
                 {{/ labels }}
 
@@ -74,7 +74,7 @@
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="assignee-menu">
                 {{# users }}
                 <li class="mdl-menu__item">
-                    <a href="/issues/{{ issue.id }}/assignees/{{ id }}">{{ name }}</a>
+                    <a href="/api/issues/{{ issue.id }}/assignees/{{ id }}">{{ name }}</a>
                 </li>
                 {{/ users }}
             </ul>

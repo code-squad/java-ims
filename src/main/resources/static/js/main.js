@@ -8,7 +8,6 @@ function setIssueAttribute(e) {
     $.ajax({
             type : 'get',
             url : url,
-            dataType : 'json',
             error: onError,
             success : onSuccess
         });

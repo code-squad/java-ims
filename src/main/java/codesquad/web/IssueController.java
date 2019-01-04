@@ -65,22 +65,4 @@ public class IssueController {
         issueService.deleteIssue(loginUser, id);
         return "redirect:/";
     }
-
-    @GetMapping("{issueId}/milestones/{milestoneId}")
-    public String setMilestone(@PathVariable long issueId, @PathVariable long milestoneId) {
-        Issue issue = issueService.setMilestone(issueId, milestoneId);
-        return "redirect:" + issue.generateUrl();
-    }
-
-    @GetMapping("{issueId}/assignees/{assigneeId}")
-    public String setAssignee(@PathVariable long issueId, @PathVariable long assigneeId) {
-        Issue issue = issueService.setAssignee(issueId, assigneeId);
-        return "redirect:" + issue.generateUrl();
-    }
-
-    @GetMapping("{issueId}/labels/{labelId}")
-    public String setLabel(@PathVariable long issueId, @PathVariable long labelId) {
-        Issue issue = issueService.setLabel(issueId, labelId);
-        return "redirect:" + issue.generateUrl();
-    }
 }
