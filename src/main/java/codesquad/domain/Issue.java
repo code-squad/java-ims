@@ -28,6 +28,11 @@ public class Issue extends AbstractEntity {
     public Issue() {
     }
 
+    public Issue(String subject, String comment) {
+        contents.setComment(comment);
+        contents.setSubject(subject);
+    }
+
     public Issue(String subject, String comment, User writer) {
         contents.setComment(comment);
         contents.setSubject(subject);
@@ -38,6 +43,10 @@ public class Issue extends AbstractEntity {
         return writer.equals(loginUser);
     }
 
+    public void writenBy(User loginUser) {
+        this.writer = loginUser;
+    }
+
     public Issue update(User loginUser, Contents updateIssueContents) {
         if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
@@ -46,6 +55,19 @@ public class Issue extends AbstractEntity {
         this.contents.setSubject(updateIssueContents.getSubject());
         this.contents.setComment(updateIssueContents.getComment());
         return this;
+    }
+
+    public List<DeleteHistory> delete(User loginUser) {
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException("로그인 유저가 이슈 작성자와 달라 삭제할 수 없습니다");
+        }
+
+        List<DeleteHistory> histories = new ArrayList<>();
+
+        this.deleted = true;
+
+        histories.add(new DeleteHistory(ContentType.ISSUE, getId(), writer, LocalDateTime.now()));
+        return histories;
     }
 
     public Contents getContents() {
@@ -70,18 +92,5 @@ public class Issue extends AbstractEntity {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
-    }
-
-    public List<DeleteHistory> delete(User loginUser) {
-        if (!isOwner(loginUser)) {
-            throw new UnAuthorizedException("로그인 유저가 이슈 작성자와 달라 삭제할 수 없습니다");
-        }
-
-        List<DeleteHistory> histories = new ArrayList<>();
-
-        this.deleted = true;
-
-        histories.add(new DeleteHistory(ContentType.ISSUE, getId(), writer, LocalDateTime.now()));
-        return histories;
     }
 }
