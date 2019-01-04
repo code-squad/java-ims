@@ -63,15 +63,36 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    public void login() {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
-                .urlEncodedForm()
-                .addParameter("userId", "red")
-                .addParameter("password", "111111")
-                .build();
+    public void login_success() {
+        UserDto newUser = createUserDto("testUser1");
 
-        ResponseEntity<String> response = template().postForEntity("/login", request, String.class);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
+        ResponseEntity<Void> response = template.postForEntity("/api/users", newUser, Void.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        ResponseEntity<User> responseEntity = template.postForEntity("/api/users/login", newUser, User.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        softly.assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
+
+    @Test
+    public void login_fail_wrong_userId() {
+        UserDto newUser = createUserDto("testUser2");
+        String location = createResource("/api/users", newUser);
+        newUser.setUserId("otherUserId");
+
+        ResponseEntity<User> responseEntity = template.postForEntity("/api/users/login", newUser, User.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void login_fail_wrong_password() {
+        UserDto newUser = createUserDto("testUser3");
+        String location = createResource("/api/users", newUser);
+        newUser.setPassword("password2");
+
+        ResponseEntity<User> responseEntity = template.postForEntity("/api/users/login", newUser, User.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+
 }
