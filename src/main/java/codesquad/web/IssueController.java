@@ -44,7 +44,7 @@ public class IssueController {
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
         Issue updateIssue = issueService.oneself(loginUser, id);
-        model.addAttribute("updateIssueContents", updateIssue.getContents());
+        model.addAttribute("updateIssue", updateIssue);
         return "issue/updateform";
     }
 
