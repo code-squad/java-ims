@@ -1,20 +1,13 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
-import org.junit.Before;
 import org.junit.Test;
 import support.test.BaseTest;
 
 public class IssueTest extends BaseTest {
 
-    Issue issue1;
-    Issue issue2;
-
-    @Before
-    public void setUp() throws Exception {
-        issue1 = new Issue("테스트제목1", "테스트내용1", UserTest.JAVAJIGI);
-        issue2 = new Issue("테스트제목2", "테스트내용2", UserTest.SANJIGI);
-    }
+    public static Issue issue1 = new Issue("테스트제목1", "테스트내용1", UserTest.JAVAJIGI);
+    public static Issue issue2 = new Issue("테스트제목2", "테스트내용2", UserTest.SANJIGI);
 
     @Test
     public void create() {
