@@ -1,12 +1,10 @@
-package codesquad.web;
+package codesquad.web.issue;
 
 import codesquad.domain.issue.Issue;
 import codesquad.domain.User;
 import codesquad.domain.issue.IssueBody;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
-import codesquad.service.MilestoneService;
-import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

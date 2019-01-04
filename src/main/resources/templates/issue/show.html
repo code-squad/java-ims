@@ -82,6 +82,7 @@
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
             <p>{{ issueBody.comment }}</p>
         </div>
+
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
 
             <!-- comments start -->
@@ -93,59 +94,16 @@
                     <div class="comment__author">
                         <strong>
                             <a>javajigi</a>
-
-
                             <span>changed milestone 1 on 2017-01-14</span>
-
-
                         </strong>
                     </div>
                 </header>
             </div>
             <hr>
-
-
-            <div class="comment mdl-color-text--grey-700">
-                <header class="comment__header">
-                    <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars1.githubusercontent.com/u/7744966?v=3&u=1bd7d2e72800c0d5a1a5a2e04da851d30b3c13c7&s=140"
-                         alt="cca-company">
-                    <div class="comment__author">
-                        <strong>
-                            <a>cca-company</a>
-
-
-                            <span>comment new issue! on 2017-01-14</span>
-
-
-                        </strong>
-                    </div>
-                </header>
-            </div>
-            <hr>
-
-
-            <div class="comment mdl-color-text--grey-700">
-                <header class="comment__header">
-                    <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars3.githubusercontent.com/u/14341811?v=3&s=400" alt="진저애비">
-                    <div class="comment__author">
-                        <strong>
-                            <a>진저애비</a>
-
-
-                            upload file <a href="upload file" target="_blank">[view]</a>
-
-
-                        </strong>
-                    </div>
-                </header>
-            </div>
-            <hr>
-
 
             <!-- comments end -->
         </div>
+
         <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
             <div style="margin:10px;">
                 <input type="file" name="file" id="file"/>
@@ -153,7 +111,7 @@
             </div>
         </form>
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-            <form action="/issue/1/addComment" method="POST">
+            <form action="/api/issues/{{ id }}/answers" method="POST">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                     <label for="comment" class="mdl-textfield__label">Leave a comment</label>
@@ -164,6 +122,7 @@
                 </button>
             </form>
         </div>
+
     </div>
 </div>
 {{/ issue }}

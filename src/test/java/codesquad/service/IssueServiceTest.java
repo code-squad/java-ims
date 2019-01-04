@@ -72,11 +72,6 @@ public class IssueServiceTest extends BaseTest {
         softly.assertThat(createdIssue.isOwner(BRAD)).isEqualTo(true);
     }
 
-    @Test
-    public void update() {
-        Issue updatedIssue = issueService.update(BRAD, ISSUE.getId(), UPDATE_ISSUE_BODY);
-    }
-
     @Test(expected = EntityNotFoundException.class)
     public void update_없는이슈() {
         issueService.update(BRAD, WRONG_ISSUE_ID, UPDATE_ISSUE_BODY);

@@ -1,4 +1,4 @@
-package codesquad.web;
+package codesquad.web.issue;
 
 import codesquad.domain.issue.Issue;
 import codesquad.domain.User;
@@ -50,19 +50,19 @@ public class ApiIssueController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("{issueId}/milestones/{milestoneId}")
+    @GetMapping("/{issueId}/milestones/{milestoneId}")
     public ResponseEntity<Void> setMilestone(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long milestoneId) {
         issueService.setMilestone(loginUser, issueId, milestoneId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("{issueId}/assignees/{assigneeId}")
+    @GetMapping("/{issueId}/assignees/{assigneeId}")
     public ResponseEntity<Void> setAssignee(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long assigneeId) {
         issueService.setAssignee(loginUser, issueId, assigneeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("{issueId}/labels/{labelId}")
+    @GetMapping("/{issueId}/labels/{labelId}")
     public ResponseEntity<Void> setLabel(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long labelId) {
         issueService.setLabel(loginUser, issueId, labelId);
         return new ResponseEntity<>(HttpStatus.OK);

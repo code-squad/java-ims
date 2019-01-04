@@ -1,4 +1,4 @@
-package codesquad.web;
+package codesquad.web.issue;
 
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueRepository;
