@@ -34,6 +34,12 @@ public class Issue extends AbstractEntity {
     }
 
     public Issue(String subject, String comment, User writer) {
+        this(subject, comment);
+        this.writer = writer;
+    }
+
+    public Issue(long id, String subject, String comment, User writer) {
+        super(id);
         contents.setComment(comment);
         contents.setSubject(subject);
         this.writer = writer;
@@ -92,5 +98,9 @@ public class Issue extends AbstractEntity {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public boolean isSameComment(Issue issue) {
+        return this.contents == issue.getContents();
     }
 }

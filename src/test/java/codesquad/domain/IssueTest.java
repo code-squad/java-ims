@@ -6,12 +6,12 @@ import support.test.BaseTest;
 
 public class IssueTest extends BaseTest {
 
-    public static Issue issue1 = new Issue("테스트제목1", "테스트내용1", UserTest.JAVAJIGI);
-    public static Issue issue2 = new Issue("테스트제목2", "테스트내용2", UserTest.SANJIGI);
+    public static Issue issue1 = new Issue(1L, "테스트제목1", "테스트내용1", UserTest.JAVAJIGI);
+    public static Issue issue2 = new Issue(2L, "테스트제목2", "테스트내용2", UserTest.SANJIGI);
 
     @Test
     public void create() {
-        Issue issue = new Issue("안녕하세요~~", "하하하", new User());
+        Issue issue = new Issue(3L, "안녕하세요~~", "하하하", new User());
         softly.assertThat(issue.getContents().getSubject()).isEqualTo("안녕하세요~~");
         softly.assertThat(issue.getContents().getComment()).isEqualTo("하하하");
     }
