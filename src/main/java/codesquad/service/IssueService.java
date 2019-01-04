@@ -33,9 +33,6 @@ public class IssueService {
 
     public List<Issue> findAllIssue() {
         List<Issue> issues = issueRepository.findByDeleted(false);
-        for(Issue issue : issues) {
-            System.out.println(issue.toString() + "~~~~");
-        }
         return issueRepository.findByDeleted(false);
     }
 

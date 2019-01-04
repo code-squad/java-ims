@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolationException;
 
 @ControllerAdvice(annotations = Controller.class)
 public class SecurityControllerAdvice {
@@ -30,8 +31,14 @@ public class SecurityControllerAdvice {
 
     @ExceptionHandler(UnAuthenticationException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public String unAuthentication(String msg) {
-        log.debug(msg);
+    public String unAuthentication(UnAuthenticationException e) {
+        log.debug(e.getMessage());
         return "/user/login";
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public void ConstraintViolation(ConstraintViolationException e) {
+        log.debug(e.getMessage());
     }
 }

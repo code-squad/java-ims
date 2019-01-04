@@ -28,13 +28,13 @@ public class IssueController {
     @Autowired
     private IssueService issueService;
 
+    private static final Logger logger = getLogger(IssueController.class);
+
     @GetMapping
     public String issueForm(@LoginUser User loginUser) throws UnAuthorizedException {
         logger.debug("Call issueForm Method()");
         return "/issue/form";
     }
-
-    private static final Logger logger = getLogger(IssueController.class);
 
     @GetMapping("/{id}")
     public String issueDetail(@PathVariable Long id, Model model) {

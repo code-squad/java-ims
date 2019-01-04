@@ -106,8 +106,6 @@ function deleteIssue(e) {
         contentType: 'application/json',
         error : function () {
             console.log("이슈삭제 실패");
-            //console.log(data);
-            //alert(data.responseJSON.message);
         },
         success : function () {
             console.log("이슈삭제 성공!");
