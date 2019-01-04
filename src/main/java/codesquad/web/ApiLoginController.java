@@ -9,6 +9,7 @@ import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +34,7 @@ public class ApiLoginController {
 
     @PostMapping("")
     public ResponseEntity<Void> login(HttpSession session, @Valid @RequestBody UserDto userDto) throws UnAuthenticationException {
+        log.debug("=#= login {}", userDto);
         User user = userService.login(userDto.getUserId(), userDto.getPassword());
         session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
 

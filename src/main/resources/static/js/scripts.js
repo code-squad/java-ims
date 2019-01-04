@@ -1,4 +1,4 @@
-$(".mdl-card__supporting-text button[type=submit]").click(login);
+$("#login button[type=submit]").click(login);
 
 function login(e) {
     console.log("click login");
@@ -21,14 +21,12 @@ function login(e) {
         url : url,
         data : JSON.stringify(json),
         contentType: 'application/json',
-        dataType : 'json',
-        error : function() {
-            console.log("error");
+        error : function(xhr, status, error) {
             alert("아이디 또는 비밀번호가 다릅니다.")
         },
         success : function() {
             console.log("success");
-            location.href = "/"
+            location.href = "/";
         }
     });
 }

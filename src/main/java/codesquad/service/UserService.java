@@ -5,14 +5,18 @@ import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Service
 public class UserService {
+    private static final Logger log = getLogger(UserService.class);
 
     @Resource(name = "userRepository")
     private UserRepository userRepository;
@@ -47,6 +51,8 @@ public class UserService {
         if (!user.matchPassword(password)) {
             throw new UnAuthenticationException();
         }
+
+        log.debug("=#= login Success ");
 
         return user;
     }
