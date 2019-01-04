@@ -44,8 +44,8 @@ public class IssueService {
         issue.setDeleted(true);
     }
 
-    public IssueDto findIssue(Long id) {
-        return issueRepository.findById(id).orElse(null)._toIssueDto();
+    public Issue findIssue(Long id) {
+        return issueRepository.findById(id).orElse(null);
     }
 
     public void confirmOneSelf(User loginUser, Long id) throws UnAuthenticationException {

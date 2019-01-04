@@ -2,6 +2,7 @@ package codesquad.dto;
 
 import codesquad.domain.Content;
 import codesquad.domain.Issue;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 
 import javax.persistence.Embedded;
@@ -14,6 +15,8 @@ public class IssueDto {
 
     private User writer;
 
+    private Milestone milestone;
+
     public IssueDto() {
 
     }
@@ -25,6 +28,11 @@ public class IssueDto {
     public IssueDto(Content content, User writer) {
         this(content);
         this.writer = writer;
+    }
+
+    public IssueDto(Content content, User writer, Milestone milestone) {
+        this(content, writer);
+        this.milestone = milestone;
     }
 
     public Issue _toIssue() {
@@ -46,6 +54,14 @@ public class IssueDto {
 
     public Content getContent() {
         return content;
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
     }
 
     public void setContent(Content content) {
