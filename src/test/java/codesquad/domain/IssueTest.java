@@ -12,6 +12,7 @@ import java.util.List;
 
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
+import static codesquad.domain.issue.CommentTest.COMMENT;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class IssueTest extends BaseTest {
@@ -75,5 +76,12 @@ public class IssueTest extends BaseTest {
     public void delete_다른유저() {
         ISSUE.delete(JUNGHYUN);
         softly.assertThat(ISSUE.isDeleted()).isEqualTo(false);
+    }
+
+    @Test
+    public void addComment() {
+        ISSUE.addComment(COMMENT);
+        softly.assertThat(ISSUE.getComments().contains(COMMENT)).isTrue();
+        softly.assertThat(COMMENT.getIssue()).isEqualTo(ISSUE);
     }
 }

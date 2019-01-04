@@ -86,20 +86,21 @@
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
 
             <!-- comments start -->
-
+            {{# comments }}
             <div class="comment mdl-color-text--grey-700">
                 <header class="comment__header">
                     <img class="comment__avatar2" height="48" width="48"
                          src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
                     <div class="comment__author">
                         <strong>
-                            <a>javajigi</a>
-                            <span>changed milestone 1 on 2017-01-14</span>
+                            <a>{{ writer.name }}</a>
+                            <span>{{ contents }}</span>
                         </strong>
                     </div>
                 </header>
             </div>
             <hr>
+            {{/ comments }}
 
             <!-- comments end -->
         </div>
@@ -113,8 +114,8 @@
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
             <form action="/api/issues/{{ id }}/answers" method="POST">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
-                    <label for="comment" class="mdl-textfield__label">Leave a comment</label>
+                    <textarea rows=5 class="mdl-textfield__input" id="contents" name="contents"></textarea>
+                    <label for="contents" class="mdl-textfield__label">Leave a comment</label>
                 </div>
                 <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
                     <i class="material-icons" role="presentation">check</i><span

@@ -11,7 +11,7 @@ public class Comment extends AbstractEntity {
 
     @Lob
     @Size(min = 4)
-    private String comment;
+    private String contents;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_issue"))
@@ -24,19 +24,30 @@ public class Comment extends AbstractEntity {
     public Comment() {
     }
 
-    public String getComment() {
-        return comment;
+    public Comment(String contents) {
+        this.contents = contents;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public Comment(long id, String contents, Issue issue, User writer) {
+        super(id);
+        this.contents = contents;
+        this.issue = issue;
+        this.writer = writer;
+    }
+
+    public String getContents() {
+        return contents;
+    }
+
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 
     public Issue getIssue() {
         return issue;
     }
 
-    public void setIssue(Issue issue) {
+    public void toIssue(Issue issue) {
         this.issue = issue;
     }
 
@@ -50,6 +61,6 @@ public class Comment extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "Comment[comment=" + comment + ", issue=" + issue + ", writer=" + writer + "]";
+        return "Comment[contents=" + contents + ", issue=" + issue + ", writer=" + writer + "]";
     }
 }

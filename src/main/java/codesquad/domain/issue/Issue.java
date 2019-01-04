@@ -6,11 +6,15 @@ import codesquad.domain.DeleteHistory;
 import codesquad.domain.User;
 import codesquad.domain.label.Label;
 import codesquad.domain.milestone.Milestone;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 import support.domain.UrlGeneratable;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -36,6 +40,10 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
     private Label label;
+
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Comment> comments = new ArrayList<>();
 
     private boolean deleted = false;
 
@@ -78,6 +86,12 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
 
     public boolean hasSameLabel(Label target) {
         return this.label.equals(target);
+    }
+
+    public Issue addComment(Comment comment) {
+        this.comments.add(comment);
+        comment.toIssue(this);
+        return this;
     }
 
     public User getWriter() {
@@ -140,6 +154,14 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         if(!isOwner(loginUser)) throw new UnAuthorizedException();
         this.label = label;
         return this;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override
