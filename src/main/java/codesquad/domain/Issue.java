@@ -6,6 +6,10 @@ import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Entity
@@ -19,6 +23,8 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    private Boolean deleted = false;
+
     public Issue() {
     }
 
@@ -26,6 +32,20 @@ public class Issue extends AbstractEntity {
         contents.setComment(comment);
         contents.setSubject(subject);
         this.writer = writer;
+    }
+
+    public boolean isOwner(User loginUser) {
+        return writer.equals(loginUser);
+    }
+
+    public Issue update(User loginUser, Contents updateIssueContents) {
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.contents.setSubject(updateIssueContents.getSubject());
+        this.contents.setComment(updateIssueContents.getComment());
+        return this;
     }
 
     public Contents getContents() {
@@ -44,19 +64,24 @@ public class Issue extends AbstractEntity {
         this.writer = writer;
     }
 
-    public boolean isOwner(User loginUser) {
-        logger.debug("같냐l : " + loginUser.toString());
-        logger.debug("같냐w : " + writer.toString());
-        return writer.equals(loginUser);
+    public Boolean getDeleted() {
+        return deleted;
     }
 
-    public Issue update(User loginUser, Contents updateIssueContents) {
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public List<DeleteHistory> delete(User loginUser) {
         if (!isOwner(loginUser)) {
-            throw new UnAuthorizedException();
+            throw new UnAuthorizedException("로그인 유저가 이슈 작성자와 달라 삭제할 수 없습니다");
         }
 
-        this.contents.setSubject(updateIssueContents.getSubject());
-        this.contents.setComment(updateIssueContents.getComment());
-        return this;
+        List<DeleteHistory> histories = new ArrayList<>();
+
+        this.deleted = true;
+
+        histories.add(new DeleteHistory(ContentType.ISSUE, getId(), writer, LocalDateTime.now()));
+        return histories;
     }
 }

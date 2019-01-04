@@ -2,6 +2,7 @@ console.log("main.js start");
 
 $("#login-submit").on("click", login);
 $("#issue_update").on("click", issue_update);
+$("#issues-menu-lower-right").on("click", issue_delete);
 
 function login(e) {
     e.preventDefault();
@@ -49,6 +50,20 @@ function issue_update(e) {
     })
 }
 
+function issue_delete(e) {
+    var url = $("#issues-menu-lower-right").attr('href');
+
+    console.log("delete url : " + url);
+
+    $.ajax({
+        type : 'delete',
+        url : url,
+        dataType : 'text',
+        error : issue_update_onError,
+        success : issue_update_onSuccess
+    })
+}
+
 function issue_update_onError(xhr, status) {
     console.log('error');
     console.log(xhr);
@@ -59,3 +74,5 @@ function issue_update_onError(xhr, status) {
 function issue_update_onSuccess(data) {
     console.log(data);
 }
+
+

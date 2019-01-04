@@ -53,4 +53,11 @@ public class IssueController {
         issueService.update(loginUser, id, updateIssueContents);
         return "redirect:/";
     }
+
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User loginUser, @PathVariable long id) {
+        log.debug("삭제");
+        issueService.delete(loginUser, id);
+        return "redirect:/";
+    }
 }
