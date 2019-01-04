@@ -49,10 +49,10 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
 //    상세보기 가는 것은 자꾸 FORBIDEN으로  NullPoint로 되어서 문제가 자꾸 발생...
-//    @Test
-//    public void show() {
-//        ResponseEntity<String> response = template.getForEntity("/issues/" + 1, String.class);
-//        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/issue/show");
-//    }
+    @Test
+    public void show() {
+        ResponseEntity<Void> response = template.getForEntity("/issues/1", Void.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+//      softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/issue/show");
+    }
 }

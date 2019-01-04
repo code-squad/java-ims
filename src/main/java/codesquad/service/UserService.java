@@ -7,6 +7,7 @@ import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -18,14 +19,16 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class UserService {
 
     private static final Logger log = getLogger(UserService.class);
+
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
     public User add(UserDto userDto) {
-        log.debug("asdfsag : {}" , userDto._toUser());
+        log.debug("userDto add : {}" , userDto._toUser());
         return userRepository.save(userDto._toUser());
     }
 
+    @Transactional
     public User update(User loginUser, long id, UserDto updatedUser) {
         User original = findById(loginUser, id);
         original.update(loginUser, updatedUser._toUser());
@@ -53,10 +56,13 @@ public class UserService {
         }
 
         User user = maybeUser.get();
+        log.debug("User : {}~~~~~~~", user.toString());
+        log.debug("User : {}~~~~~~~{}", password, user.getPassword());
         if (!user.matchPassword(password)) {
             throw new UnAuthenticationException();
         }
-
+        log.debug("User tes : {}", user.toString());
         return user;
     }
+
 }

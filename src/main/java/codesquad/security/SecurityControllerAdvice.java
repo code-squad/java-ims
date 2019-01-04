@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.persistence.EntityNotFoundException;
+import javax.security.auth.login.LoginException;
 
 @ControllerAdvice
 public class SecurityControllerAdvice {
@@ -32,4 +33,8 @@ public class SecurityControllerAdvice {
     public void unAuthentication() {
         log.debug("UnAuthenticationException is happened!");
     }
+
+    @ExceptionHandler(LoginException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public void loginFail() {log.debug("login fail");}
 }
