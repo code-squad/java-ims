@@ -26,7 +26,7 @@ public class IssueService {
     private DeleteHistoryService deleteHistoryService;
 
     public Issue findById(long id) {
-        return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return issueRepository.findById(id).filter(issue -> !issue.getDeleted()).orElseThrow(EntityNotFoundException::new);
     }
 
     public Issue add(IssueDto issueDto, User loginUser) {
