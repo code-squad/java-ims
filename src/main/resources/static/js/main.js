@@ -14,8 +14,9 @@ function setIssueAttribute(e) {
 }
 
 function onError(jqXhr, textStatus, errorThrown) {
-    alert("지정에 실패하였습니다");
+    var errorMessage = jqXhr.responseJSON.message;
+    alert(errorMessage);
 }
 function onSuccess(data, textStatus, jqXhr) {
-    alert("지정에 성공하였습니다");
+    alert("지정에 성공하였습니다!");
 }

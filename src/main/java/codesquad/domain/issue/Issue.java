@@ -116,7 +116,8 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         return milestone;
     }
 
-    public Issue setMilestone(Milestone milestone) {
+    public Issue setMilestone(User loginUser, Milestone milestone) {
+        if(!isOwner(loginUser)) throw new UnAuthorizedException();
         this.milestone = milestone;
         return this;
     }
@@ -125,7 +126,8 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         return assignee;
     }
 
-    public Issue setAssignee(User assignee) {
+    public Issue setAssignee(User loginUser, User assignee) {
+        if(!isOwner(loginUser)) throw new UnAuthorizedException();
         this.assignee = assignee;
         return this;
     }
@@ -134,7 +136,8 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         return label;
     }
 
-    public Issue setLabel(Label label) {
+    public Issue setLabel(User loginUser, Label label) {
+        if(!isOwner(loginUser)) throw new UnAuthorizedException();
         this.label = label;
         return this;
     }

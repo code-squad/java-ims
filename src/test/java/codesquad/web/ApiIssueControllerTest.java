@@ -80,19 +80,37 @@ public class ApiIssueControllerTest extends AcceptanceTest {
 
     @Test
     public void setMilestone() {
-        ResponseEntity<String> response = template.getForEntity(String.format("/api/issues/%d/milestones/%d", ISSUE.getId(), MILESTONE.getId()), String.class);
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/api/issues/%d/milestones/%d", ISSUE.getId(), MILESTONE.getId()), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void setMilestone_Issue_작성자_아닐때() {
+        ResponseEntity<String> response = basicAuthTemplate(JUNGHYUN).getForEntity(String.format("/api/issues/%d/milestones/%d", ISSUE.getId(), MILESTONE.getId()), String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
     public void setAssignee() {
-        ResponseEntity<String> response = template.getForEntity(String.format("/api/issues/%d/assignees/%d", ISSUE.getId(), BRAD.getId()), String.class);
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/api/issues/%d/assignees/%d", ISSUE.getId(), BRAD.getId()), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
+    public void setAssignee_Issue_작성자_아닐때() {
+        ResponseEntity<String> response = basicAuthTemplate(JUNGHYUN).getForEntity(String.format("/api/issues/%d/milestones/%d", ISSUE.getId(), MILESTONE.getId()), String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
     public void setLabel() {
-        ResponseEntity<String> response = template.getForEntity(String.format("/api/issues/%d/labels/%d", ISSUE.getId(), LABEL.getId()), String.class);
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity(String.format("/api/issues/%d/labels/%d", ISSUE.getId(), LABEL.getId()), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void setLabel_Issue_작성자_아닐때() {
+        ResponseEntity<String> response = basicAuthTemplate(JUNGHYUN).getForEntity(String.format("/api/issues/%d/milestones/%d", ISSUE.getId(), MILESTONE.getId()), String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 }

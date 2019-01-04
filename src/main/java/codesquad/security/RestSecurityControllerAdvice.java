@@ -25,8 +25,9 @@ public class RestSecurityControllerAdvice {
 
     @ExceptionHandler(UnAuthorizedException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    public void unAuthorized() {
+    public ErrorMessage unAuthorized() {
         log.debug("UnAuthorizedException is happened!");
+        return new ErrorMessage("접근 권한이 없습니다!!");
     }
 
     @ExceptionHandler(UnAuthenticationException.class)
