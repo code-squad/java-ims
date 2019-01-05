@@ -42,8 +42,6 @@ public class IssueController {
 
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
-        log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//        if (!issueService.findById(id).isOwner(loginUser)) throw new CannotUpdateException("!!"); //밑에얘가 대신 하는 일
         model.addAttribute("issue", issueService.findById(id, loginUser));
         return "/issue/updateForm";
     }
@@ -54,4 +52,9 @@ public class IssueController {
         return String.format("redirect:/issues/%d", id);
     }
 
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User loginUser, @PathVariable long id) {
+        issueService.delete(loginUser,id);
+        return "redirect:/";
+    }
 }

@@ -1,10 +1,10 @@
 package codesquad.service;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -12,9 +12,13 @@ import java.util.List;
 
 @Service
 public class IssueService {
+    private static final Logger log = LoggerFactory.getLogger(IssueService.class);
 
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
+
+    @Resource(name = "deleteHistoryRepository")
+    private DeleteHistoryRepository deleteHistoryRepository;
 
     public Issue add(User loginUser, IssueDto issueDto) {
         issueDto.setWriter(loginUser);
@@ -40,7 +44,13 @@ public class IssueService {
 
     public void update(User loginUser, long id, IssueDto updatedIssue) {
         Issue originalIssue = this.findById(id, loginUser);
-        originalIssue.update(loginUser,updatedIssue._toIssue());
+        originalIssue.update(loginUser, updatedIssue._toIssue());
         issueRepository.save(originalIssue);
+    }
+
+    public void delete(User loginUser, long id) {
+        Issue originalIssue = this.findById(id, loginUser);
+        List<DeleteHistory> histories = originalIssue.delete(loginUser);
+        deleteHistoryRepository.saveAll(histories);
     }
 }

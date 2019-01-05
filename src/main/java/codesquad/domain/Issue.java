@@ -6,6 +6,8 @@ import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -104,8 +106,11 @@ public class Issue extends AbstractEntity {
         this.comment = updatedIssue.comment;
     }
 
-    public void delete(User loginUser) {
+    public List<DeleteHistory> delete(User loginUser) {
+        List<DeleteHistory> histories = new ArrayList<>();
         if (!this.isOwner(loginUser)) throw new CannotDeleteException("you can't delete this issue");
         this.deleted = true;
+        histories.add(new DeleteHistory(ContentType.ISSUE, this.getId(), this.getWriter()));
+        return histories;
     }
 }

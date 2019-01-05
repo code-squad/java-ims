@@ -92,12 +92,38 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = update(basicAuthTemplate());
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath())
-                .isEqualTo(String.format("/issues/%d",originalIssue.getId()));
+                .isEqualTo(String.format("/issues/%d", originalIssue.getId()));
     }
 
     @Test
     public void update_other_user() throws Exception {
         ResponseEntity<String> response = update(basicAuthTemplate(SANJIGI));
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    private ResponseEntity<String> delete(TestRestTemplate template) throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .delete()
+                .build();
+        return template.postForEntity(String.format("/issues/%d", originalIssue.getId()), request, String.class);
+    }
+
+    @Test
+    public void delete_no_login() throws Exception {
+        ResponseEntity<String> response = delete(template());
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    public void delete_login() throws Exception {
+        ResponseEntity<String> response = delete(basicAuthTemplate());
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
+    }
+
+    @Test
+    public void delete_other_user() throws Exception {
+        ResponseEntity<String> response = delete(basicAuthTemplate(SANJIGI));
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 }

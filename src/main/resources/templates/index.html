@@ -56,6 +56,7 @@
                 <div class="mdl-card__supporting-text">
                     <ul class="issue-list mdl-list">
 						{{#issues}}
+                        {{^deleted}}
                         <li class="mdl-list__item mdl-list__item--two-line">
 								<span class="mdl-list__item-primary-content">
 								    <a> 
@@ -79,7 +80,8 @@
                                           data-badge="1">comment</span>
 								</span>
                         </li>
-						{{/issues}}
+                        {{/deleted}}
+                        {{/issues}}
                     </ul>
                 </div>
             </div>
