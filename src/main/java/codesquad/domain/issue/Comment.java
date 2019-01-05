@@ -1,5 +1,6 @@
 package codesquad.domain.issue;
 
+import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 import support.domain.AbstractEntity;
 
@@ -13,13 +14,15 @@ public class Comment extends AbstractEntity {
     @Size(min = 4)
     private String contents;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_issue"))
     private Issue issue;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
     private User writer;
+
+    private boolean isDeleted = false;
 
     public Comment() {
     }
@@ -33,6 +36,15 @@ public class Comment extends AbstractEntity {
         this.contents = contents;
         this.issue = issue;
         this.writer = writer;
+    }
+
+    // todo issue 매개변수가 필요없을까요?
+    public Comment delete(User loginUser, Issue issue) {
+        if (!writer.equals(loginUser)) {
+            new UnAuthorizedException();
+        }
+        this.issue = null;
+        return this;
     }
 
     public String getContents() {
@@ -57,6 +69,14 @@ public class Comment extends AbstractEntity {
 
     public void setWriter(User writer) {
         this.writer = writer;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     @Override

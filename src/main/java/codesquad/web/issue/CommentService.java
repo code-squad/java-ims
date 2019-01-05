@@ -7,6 +7,7 @@ import codesquad.service.IssueService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 @Service
@@ -23,5 +24,15 @@ public class CommentService {
         comment.setWriter(loginUser);
         issueService.findById(issueId).addComment(comment);
         return comment;
+    }
+
+    public Comment findById(long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public Comment delete(User loginUser, long issueId, long commentId) {
+        Comment comment = findById(commentId);
+        return comment.delete(loginUser, issueService.findById(issueId));
     }
 }

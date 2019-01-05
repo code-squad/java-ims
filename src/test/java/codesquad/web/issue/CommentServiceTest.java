@@ -11,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import support.test.BaseTest;
 
+import java.util.Optional;
+
 import static codesquad.domain.IssueTest.ISSUE;
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.issue.CommentTest.COMMENT;
@@ -32,6 +34,7 @@ public class CommentServiceTest extends BaseTest {
     @Before
     public void setUp() throws Exception {
         when(issueService.findById(ISSUE.getId())).thenReturn(ISSUE);
+        when(commentRepository.findById(COMMENT.getId())).thenReturn(Optional.of(COMMENT));
     }
 
     @Test
@@ -40,5 +43,11 @@ public class CommentServiceTest extends BaseTest {
         softly.assertThat(savedComment.getWriter()).isEqualTo(BRAD);
         softly.assertThat(savedComment.getIssue()).isEqualTo(ISSUE);
         softly.assertThat(savedComment.getContents()).isEqualTo(CONTENTS);
+    }
+
+    @Test
+    public void delete() {
+        Comment comment = commentService.delete(BRAD, ISSUE.getId(), COMMENT.getId());
+        softly.assertThat(comment.isDeleted()).isTrue();
     }
 }
