@@ -13,6 +13,6 @@ INSERT INTO label (id, name, explanation, create_date) values (1, 'Label1', 'Lab
 INSERT INTO label (id, name, explanation, create_date) values (2, 'Label2', 'Label2에 대한 설명입니다', CURRENT_TIMESTAMP());
 INSERT INTO label (id, name, explanation, create_date) values (3, 'Label3', 'Label3에 대한 설명입니다', CURRENT_TIMESTAMP());
 
-INSERT INTO comment (id, contents, issue_id, writer_id, create_date) values (1, '답변내용입니다1', 1, 1, CURRENT_TIMESTAMP());
-INSERT INTO comment (id, contents, issue_id, writer_id, create_date) values (2, '답변내용입니다2', 1, 1, CURRENT_TIMESTAMP());
-INSERT INTO comment (id, contents, issue_id, writer_id, create_date) values (3, '답변내용입니다3', 1, 1, CURRENT_TIMESTAMP());
+INSERT INTO comment (id, contents, issue_id, writer_id, create_date, deleted) values (1, '답변내용입니다1', 1, 1, CURRENT_TIMESTAMP(), false);
+INSERT INTO comment (id, contents, issue_id, writer_id, create_date, deleted) values (2, '답변내용입니다2', 1, 1, CURRENT_TIMESTAMP(), false);
+INSERT INTO comment (id, contents, issue_id, writer_id, create_date, deleted) values (3, '답변내용입니다3', 1, 1, CURRENT_TIMESTAMP(), false);

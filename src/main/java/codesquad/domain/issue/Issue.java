@@ -7,6 +7,7 @@ import codesquad.domain.User;
 import codesquad.domain.label.Label;
 import codesquad.domain.milestone.Milestone;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.action.internal.OrphanRemovalAction;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 import support.domain.UrlGeneratable;

@@ -22,7 +22,7 @@ public class Comment extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
     private User writer;
 
-    private boolean isDeleted = false;
+    private boolean deleted = false;
 
     public Comment() {
     }
@@ -38,12 +38,12 @@ public class Comment extends AbstractEntity {
         this.writer = writer;
     }
 
-    // todo issue 매개변수가 필요없을까요?
     public Comment delete(User loginUser, Issue issue) {
         if (!writer.equals(loginUser)) {
             new UnAuthorizedException();
         }
-        this.issue = null;
+        this.deleted = true;
+//        issue.delete(this);  issue에서 delete메시지 넘기는 것이 필요
         return this;
     }
 
@@ -72,11 +72,11 @@ public class Comment extends AbstractEntity {
     }
 
     public boolean isDeleted() {
-        return isDeleted;
+        return deleted;
     }
 
     public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+        this.deleted = deleted;
     }
 
     @Override
