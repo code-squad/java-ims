@@ -117,9 +117,9 @@
                     <textarea rows=5 class="mdl-textfield__input" id="contents" name="contents"></textarea>
                     <label for="contents" class="mdl-textfield__label">Leave a comment</label>
                 </div>
-                <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-                    <i class="material-icons" role="presentation">check</i><span
-                        class="visuallyhidden">add comment</span>
+                <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon issue-comment-ims">
+                    <i class="material-icons" role="presentation">check</i>
+                    <span class="visuallyhidden">add comment</span>
                 </button>
             </form>
         </div>
@@ -127,6 +127,23 @@
     </div>
 </div>
 {{/ issue }}
+
+<script type="text/template" id="commentTemplate">
+    <div class="comment mdl-color-text--grey-700">
+        <header class="comment__header">
+            <img class="comment__avatar2" height="48" width="48"
+                 src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
+            <div class="comment__author">
+                <strong>
+                    <a>{0}</a>
+                    <span>{1}</span>
+                </strong>
+            </div>
+        </header>
+    </div>
+    <hr>
+</script>
+
 {{/partial}}
 
 {{> base }}

@@ -25,12 +25,12 @@ public class ApiCommentController {
     private CommentService commentService;
 
     @PostMapping("")
-    public ResponseEntity<Void> create(@LoginUser User loginUser, @PathVariable long issueId, @Valid @RequestBody Comment comment) {
+    public ResponseEntity<Comment> create(@LoginUser User loginUser, @PathVariable long issueId, @Valid @RequestBody Comment comment) {
         Comment savedComment = commentService.create(loginUser, issueId, comment);
 
         HttpHeaders headers = new HttpHeaders();
         URI uri = URI.create(String.format("/api/issues/%d/answers", issueId));  //todo answer아이디
         headers.setLocation(uri);
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedComment, headers, HttpStatus.CREATED);
     }
 }
