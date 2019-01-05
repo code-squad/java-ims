@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,8 +47,11 @@ public class UserService {
                 .orElseThrow(UnAuthorizedException::new);
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserDto> findAll() {
+        List<UserDto> userDtos = new ArrayList<>();
+        userRepository.findAll().stream().forEach(u -> userDtos.add(u._toUserDto()));
+        logger.debug("userDtos : {}", userDtos.toString());
+        return userDtos;
     }
 
     public User login(String userId, String password) throws UnAuthenticationException {

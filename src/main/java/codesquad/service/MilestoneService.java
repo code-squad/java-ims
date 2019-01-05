@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -33,8 +34,10 @@ public class MilestoneService {
         return milestoneRepository.save(milestoneDto._toMilestone(loginUser));
     }
 
-    public List<Milestone> findAllMilestone() {
-        return milestoneRepository.findAll();
+    public List<MilestoneDto> findAllMilestone() {
+        List<MilestoneDto> milestoneDtos = new ArrayList<>();
+        milestoneRepository.findAll().stream().forEach(m -> milestoneDtos.add(m._toMilestoneDto()));
+        return milestoneDtos;
     }
 
     @Transactional

@@ -16,20 +16,18 @@ public class Issue extends AbstractEntity {
     private User writer;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"), nullable = true)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
 
-    /*@ManyToOne
+    @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
     private Label label;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
-    private Assignee assignee;*/
+    private User assignee;
 
     private boolean deleted = false;
-
-    private boolean hasMilestone = false;
 
     public Issue() {
 
@@ -54,10 +52,9 @@ public class Issue extends AbstractEntity {
 
     public void setMilestone(Milestone milestone) {
         this.milestone = milestone;
-        this.hasMilestone = true;
     }
 
-    /*public Label getLabel() {
+    public Label getLabel() {
         return label;
     }
 
@@ -65,13 +62,13 @@ public class Issue extends AbstractEntity {
         this.label = label;
     }
 
-    public Assignee getAssignee() {
+    public User getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(Assignee assignee) {
+    public void setAssignee(User assignee) {
         this.assignee = assignee;
-    }*/
+    }
 
     public boolean isDeleted() {
         return deleted;
@@ -82,7 +79,7 @@ public class Issue extends AbstractEntity {
     }
 
     public IssueDto _toIssueDto() {
-        return new IssueDto(this.content, this.writer, this.milestone);
+        return new IssueDto(this.content, this.writer, this.milestone, this.assignee);
     }
 
     public boolean isOneSelf(User loginUser) {
@@ -102,20 +99,28 @@ public class Issue extends AbstractEntity {
         this.content = content;
     }
 
-    public boolean getHasMilestone() {
-        return hasMilestone;
-    }
-
-    public void setHasMilestone(boolean hasMilestone) {
-        this.hasMilestone = hasMilestone;
-    }
-
     @Override
     public String toString() {
         return "Issue{" +
                 "content=" + content +
                 ", writer=" + writer +
+                ", milestone=" + milestone +
+                ", assignee=" + assignee +
                 ", deleted=" + deleted +
                 '}';
     }
+
+    public boolean isAssignee() {
+        return assignee != null;
+    }
+
+    public boolean isMilestone() {
+        return milestone != null;
+    }
+
+    public boolean isLabel() {
+        return label != null;
+    }
+
+
 }

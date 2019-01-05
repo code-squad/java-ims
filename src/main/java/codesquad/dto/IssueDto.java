@@ -1,9 +1,6 @@
 package codesquad.dto;
 
-import codesquad.domain.Content;
-import codesquad.domain.Issue;
-import codesquad.domain.Milestone;
-import codesquad.domain.User;
+import codesquad.domain.*;
 
 import javax.persistence.Embedded;
 import javax.validation.Valid;
@@ -16,6 +13,10 @@ public class IssueDto {
     private User writer;
 
     private Milestone milestone;
+
+    private User assignee;
+
+    private Label label;
 
     public IssueDto() {
 
@@ -30,9 +31,10 @@ public class IssueDto {
         this.writer = writer;
     }
 
-    public IssueDto(Content content, User writer, Milestone milestone) {
+    public IssueDto(Content content, User writer, Milestone milestone, User assignee) {
         this(content, writer);
         this.milestone = milestone;
+        this.assignee = assignee;
     }
 
     public Issue _toIssue() {
@@ -66,6 +68,22 @@ public class IssueDto {
 
     public void setContent(Content content) {
         this.content = content;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
     }
 
     @Override

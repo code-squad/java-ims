@@ -26,8 +26,8 @@ public class Milestone extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_milestone_writer"))
     private User writer;
 
-    @OneToMany
-    private List<Issue> issues = new ArrayList<>();
+    @Embedded
+    private Issues issues = new Issues();
 
     public Milestone() {
 
@@ -77,8 +77,15 @@ public class Milestone extends AbstractEntity {
     }
 
     public void addIssue(Issue issue) {
-        issues.add(issue);
-        issue.setMilestone(this);
+        issues.addIssue(issue, this);
+    }
+
+    public Issues getIssues() {
+        return issues;
+    }
+
+    public void setIssues(Issues issues) {
+        this.issues = issues;
     }
 
     @Override
