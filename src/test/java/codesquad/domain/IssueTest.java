@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.CannotDeleteException;
 import codesquad.CannotUpdateException;
 import org.junit.Test;
 import support.test.BaseTest;
@@ -21,5 +22,16 @@ public class IssueTest extends BaseTest {
     @Test(expected = CannotUpdateException.class)
     public void update_fail() {
         originalIssue.update(SANJIGI, updatedIssue);
+    }
+
+    @Test
+    public void delete_success() {
+        originalIssue.delete(JAVAJIGI);
+        softly.assertThat(originalIssue.isDeleted()).isTrue();
+    }
+
+    @Test(expected = CannotDeleteException.class)
+    public void delete_fail() {
+        originalIssue.delete(SANJIGI);
     }
 }

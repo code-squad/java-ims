@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.CannotDeleteException;
 import codesquad.CannotUpdateException;
 import support.domain.AbstractEntity;
 
@@ -22,6 +23,12 @@ public class Issue extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
+
+    private boolean deleted = false;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
 
     public Issue() {
     }
@@ -95,5 +102,10 @@ public class Issue extends AbstractEntity {
         if (!this.writer.equals(loginUser)) throw new CannotUpdateException("you can't update this issue");
         this.subject = updatedIssue.subject;
         this.comment = updatedIssue.comment;
+    }
+
+    public void delete(User loginUser) {
+        if (!this.isOwner(loginUser)) throw new CannotDeleteException("you can't delete this issue");
+        this.deleted = true;
     }
 }
