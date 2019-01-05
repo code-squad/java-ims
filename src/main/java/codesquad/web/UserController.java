@@ -47,7 +47,7 @@ public class UserController {
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
             return "redirect:/";
         } catch (UnAuthenticationException e) {
-            return "user/login_failed";
+            return "/user/login_failed";
         }
     }
 
