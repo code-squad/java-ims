@@ -1,5 +1,8 @@
 package codesquad.web;
 
+import codesquad.CannotUpdateException;
+import codesquad.UnAuthorizedException;
+import codesquad.domain.Issue;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
@@ -8,10 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -39,4 +39,19 @@ public class IssueController {
         model.addAttribute("issue", issueService.findById(id));
         return "/issue/show";
     }
+
+    @GetMapping("/{id}/form")
+    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+        log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//        if (!issueService.findById(id).isOwner(loginUser)) throw new CannotUpdateException("!!"); //밑에얘가 대신 하는 일
+        model.addAttribute("issue", issueService.findById(id, loginUser));
+        return "/issue/updateForm";
+    }
+
+    @PutMapping("/{id}")
+    public String update(@LoginUser User loginUser, @PathVariable long id, IssueDto updatedIssue) {
+        issueService.update(loginUser, id, updatedIssue);
+        return String.format("redirect:/issues/%d", id);
+    }
+
 }

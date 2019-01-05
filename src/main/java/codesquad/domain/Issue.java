@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.CannotUpdateException;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -25,8 +26,8 @@ public class Issue extends AbstractEntity {
     public Issue() {
     }
 
-    public Issue(String subject, String comment, User writer){
-        this(0L,subject,comment,writer);
+    public Issue(String subject, String comment, User writer) {
+        this(0L, subject, comment, writer);
     }
 
     public Issue(long id, String subject, String comment, User writer) {
@@ -88,5 +89,11 @@ public class Issue extends AbstractEntity {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), subject, comment, writer);
+    }
+
+    public void update(User loginUser, Issue updatedIssue) {
+        if (!this.writer.equals(loginUser)) throw new CannotUpdateException("you can't update this issue");
+        this.subject = updatedIssue.subject;
+        this.comment = updatedIssue.comment;
     }
 }
