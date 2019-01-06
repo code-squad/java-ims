@@ -16,8 +16,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("issues", issueService.findAllDeleted());
+        model.addAttribute("issues", issueService.findAll());
         return "index";
     }
-
 }

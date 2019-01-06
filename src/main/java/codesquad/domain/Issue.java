@@ -7,6 +7,8 @@ import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Issue extends AbstractEntity {
@@ -100,16 +102,9 @@ public class Issue extends AbstractEntity {
         return this.writer.getUserId().equals(loginUser.getUserId());
     }
 
-//    ApiIssueController에서 사용할 것이지만 일단은 만들어 보았다.
     public IssueDto _toIssueDto() {
         return new IssueDto(this.subject, this.comment, this.writer);
     }
 
-    public DeleteHIstory delete(User loginUser) {
-        if (!this.writer.equals(loginUser)) {
-            throw new CannotDeleteException("본인외의 정보는 삭제할수 없습니다.");
-        }
-        this.deleted = true;
-        return new DeleteHIstory(ContentType.Issue, getId(), loginUser);
-    }
+
 }

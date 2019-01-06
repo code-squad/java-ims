@@ -22,8 +22,8 @@ public class IssueService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
-    @Resource(name = "deleteHistoryService")
-    private DeleteHistoryService deleteHistoryService;
+//    @Resource(name = "deleteHistoryService")
+//    private DeleteHistoryService deleteHistoryService;
     public Issue add(User user, IssueDto issueDto) {
         issueDto.writeBy(user);
         return issueRepository.save(issueDto._toIssue());
@@ -50,18 +50,9 @@ public class IssueService {
                 .orElseThrow(UnAuthorizedException::new);
     }
 
-    @Transactional
-    public void delete(User loginUser, long id) {
-        Issue original = issueRepository.findById(id).filter(user -> user.isOwner(loginUser))
-                .orElseThrow(UnAuthorizedException::new);
-        original.delete(loginUser);
-
-    }
-
-
-    public Iterable<Issue> findAllDeleted() {
-        return issueRepository.findByDelete(false);
-    }
+//    public Iterable<Issue> findAllDeleted() {
+//        return issueRepository.findByDelete(false);
+//    }
 
 
 }
