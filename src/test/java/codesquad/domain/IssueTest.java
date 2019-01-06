@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import codesquad.domain.issue.Comment;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueBody;
 import org.junit.Test;
@@ -12,7 +13,7 @@ import java.util.List;
 
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
-import static codesquad.domain.issue.CommentTest.COMMENT;
+import static codesquad.domain.issue.CommentTest.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class IssueTest extends BaseTest {
@@ -46,6 +47,7 @@ public class IssueTest extends BaseTest {
         issues.add(ISSUE);
         issues.add(ISSUE2);
         issues.add(ISSUE3);
+        ISSUE.getComments().addAll(COMMENTS);
     }
 
     @Test
@@ -80,8 +82,16 @@ public class IssueTest extends BaseTest {
 
     @Test
     public void addComment() {
-        ISSUE.addComment(COMMENT);
+        Comment newComment = new Comment(NEW_CONTENTS);
+        ISSUE.addComment(newComment);
+        softly.assertThat(ISSUE.getComments().contains(newComment)).isTrue();
+        softly.assertThat(newComment.getIssue()).isEqualTo(ISSUE);
+    }
+
+    @Test
+    public void deleteComment() {
         softly.assertThat(ISSUE.getComments().contains(COMMENT)).isTrue();
-        softly.assertThat(COMMENT.getIssue()).isEqualTo(ISSUE);
+        ISSUE.deleteAnswer(COMMENT);
+        softly.assertThat(ISSUE.getComments().contains(COMMENT)).isFalse();
     }
 }

@@ -1,5 +1,6 @@
 package codesquad.web.issue;
 
+import codesquad.domain.DeleteHistoryRepository;
 import codesquad.domain.User;
 import codesquad.domain.issue.Comment;
 import codesquad.domain.issue.CommentRepository;
@@ -19,6 +20,9 @@ public class CommentService {
     @Resource(name = "commentRepository")
     private CommentRepository commentRepository;
 
+    @Resource(name = "deleteHistoryRepository")
+    private DeleteHistoryRepository deleteHistoryRepository;
+
     @Transactional
     public Comment create(User loginUser, long issueId, Comment comment) {
         comment.setWriter(loginUser);
@@ -33,6 +37,7 @@ public class CommentService {
 
     public Comment delete(User loginUser, long issueId, long commentId) {
         Comment comment = findById(commentId);
-        return comment.delete(loginUser, issueService.findById(issueId));
+        deleteHistoryRepository.save(comment.delete(loginUser, issueService.findById(issueId)));
+        return comment;
     }
 }

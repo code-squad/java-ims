@@ -373,3 +373,13 @@ a {
   border-radius: 5px;
   background:rgb(255,171,64);
 }
+
+.nostylebutton {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}

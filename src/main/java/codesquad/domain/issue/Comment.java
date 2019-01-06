@@ -1,6 +1,8 @@
 package codesquad.domain.issue;
 
 import codesquad.UnAuthorizedException;
+import codesquad.domain.ContentType;
+import codesquad.domain.DeleteHistory;
 import codesquad.domain.User;
 import support.domain.AbstractEntity;
 
@@ -38,13 +40,13 @@ public class Comment extends AbstractEntity {
         this.writer = writer;
     }
 
-    public Comment delete(User loginUser, Issue issue) {
+    public DeleteHistory delete(User loginUser, Issue issue) {
         if (!writer.equals(loginUser)) {
             new UnAuthorizedException();
         }
         this.deleted = true;
-//        issue.delete(this);  issue에서 delete메시지 넘기는 것이 필요
-        return this;
+        issue.deleteAnswer(this);
+        return new DeleteHistory(ContentType.COMMENT, getId(), loginUser);
     }
 
     public String getContents() {

@@ -101,11 +101,16 @@
                         <i class="material-icons">edit</i>
                     </div>
                     <div>
-                        <i class="material-icons">delete</i>
+                        <form action="/api/issues/{{ issue.id }}/comments/{{ id }}" class="comment-delete" method="post">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="nostylebutton">
+                                <i class="material-icons">delete</i>
+                            </button>
+                        </form>
                     </div>
                 </header>
+                <hr>
             </div>
-            <hr>
             {{/ comments }}
 
             <!-- comments end -->
