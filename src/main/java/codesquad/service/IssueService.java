@@ -4,6 +4,7 @@ import java.util.List;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
+import codesquad.domain.IssueBody;
 import codesquad.domain.IssueRepository;
 import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,9 @@ public class IssueService {
     private IssueRepository issueRepository;
 
 
-    public void add(IssueDto issueDto) {
-        issueRepository.save(issueDto._toIssue());
+    public void add(IssueBody issueBody) {
+        Issue issue = new Issue(issueBody);
+        issueRepository.save(issue);
     }
 
     public Iterable<Issue> findAll() {

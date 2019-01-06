@@ -1,7 +1,10 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
+import codesquad.domain.IssueBody;
+import codesquad.domain.User;
 import codesquad.dto.IssueDto;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +29,14 @@ public class IssueController {
     private IssueService issueService;
 
     @GetMapping("/form")
-    public String form () {
+    public String form (@LoginUser User loginUser) {
+        log.debug("GetMapping");
         return "/issue/form";
     }
 
     @PostMapping("")
-    public String create(@Valid IssueDto issueDto) {
-        issueService.add(issueDto);
+    public String create(@LoginUser User loginUser, @Valid IssueBody issueBody) {
+        issueService.add(issueBody);
         return "redirect:/";
     }
 

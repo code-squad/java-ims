@@ -1,44 +1,34 @@
 package codesquad.dto;
 
 import codesquad.domain.Issue;
+import codesquad.domain.IssueBody;
 
+import javax.persistence.Embedded;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class IssueDto {
-    @Size(min = 3, max = 80)
-    private String subject;
-
-    @Size(min = 3)
-    private String comment;
+    @Embedded
+    private IssueBody issueBody;
 
     public IssueDto() {
     }
 
-    public IssueDto(String subject, String comment) {
+    public IssueDto(IssueBody issueBody) {
         super();
-        this.subject = subject;
-        this.comment = comment;
+        this.issueBody = issueBody;
     }
 
-    public String getSubject() {
-        return subject;
+    public IssueBody getIssueBody() {
+        return issueBody;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setIssueBody(IssueBody issueBody) {
+        this.issueBody = issueBody;
     }
 
     public Issue _toIssue() {
-        return new Issue(this.subject, this.comment);
+        return new Issue(this.issueBody);
     }
 
     @Override
@@ -46,20 +36,18 @@ public class IssueDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IssueDto issueDto = (IssueDto) o;
-        return Objects.equals(subject, issueDto.subject) &&
-                Objects.equals(comment, issueDto.comment);
+        return Objects.equals(issueBody, issueDto.issueBody);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(subject, comment);
+        return Objects.hash(issueBody);
     }
 
     @Override
     public String toString() {
         return "IssueDto{" +
-                "subject='" + subject + '\'' +
-                ", comment='" + comment + '\'' +
+                "issueBody=" + issueBody +
                 '}';
     }
 }

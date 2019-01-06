@@ -1,7 +1,6 @@
 package codesquad.web;
 
 import codesquad.domain.Issue;
-import codesquad.domain.IssueFixture;
 import codesquad.domain.IssueRepository;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -13,7 +12,6 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
-import static codesquad.domain.IssueFixture.ISSUE1;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
@@ -25,6 +23,13 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void createForm() {
         ResponseEntity<String> response = template.getForEntity("/issues/form", String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        log.debug("body : {}", response.getBody());
+    }
+
+    @Test
+    public void createForm_no_login() {
+        ResponseEntity<String> response = basicAuthTemplate().getForEntity("/issues/form", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         log.debug("body : {}", response.getBody());
     }
@@ -33,16 +38,13 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void create() {
         HttpEntity<MultiValueMap<String, Object>> request =
                 HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "subject1")
-                .addParameter("comment", "comment1")
-                .build();
+                        .addParameter("subject", "subject1")
+                        .addParameter("comment", "comment1")
+                        .build();
 
-        ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
-
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-        softly.assertThat(response.getHeaders().getLocation().getPath()).startsWith("/users/login/form");
-
-        log.debug("bodyy : {}", response.getBody());
+        ResponseEntity<String> responseEntity = basicAuthTemplate().postForEntity("/issues", request, String.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(responseEntity.getHeaders().getLocation().getPath()).startsWith("/");
     }
 
     @Test
@@ -52,6 +54,11 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("subject", "subject1")
                 .addParameter("comment", "comment1")
                 .build();
+
+        ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        log.debug("bodyy : {}", response.getBody());
     }
 
     @Test
@@ -62,13 +69,44 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("comment", "comment_showTest")
                 .build();
 
-        ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues", request, String.class);
+        log.debug("response : {}", response.getBody());
 
+        /*
         Issue issue = issueRepository.findBySubject("subject_showTest").orElse(null);
 
         ResponseEntity<String> responseEntity = template.getForEntity(String.format("/issues/%d", issue.getId()), String.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        softly.assertThat(responseEntity.getBody()).contains(issue.getComment());
+        softly.assertThat(responseEntity.getBody()).contains(issue.getIssueBody().getComment());
         log.debug("body : {}", responseEntity.getBody());
+        */
     }
+
+    @Test
+    public void updateForm_login() {
+
+    }
+
+    @Test
+    public void updateForm_no_login() {
+
+    }
+
+
+
+    @Test
+    public void update_login() {
+
+    }
+
+    @Test
+    public void update_no_login() {
+
+    }
+
+    @Test
+    public void update_other_login() {
+
+    }
+
 }
