@@ -1,5 +1,6 @@
 package codesquad.dto;
 
+import codesquad.domain.Contents;
 import codesquad.domain.Issue;
 import codesquad.domain.User;
 
@@ -29,7 +30,7 @@ public class IssueDto {
     }
 
     public Issue _toIssue() {
-        return new Issue(this.subject, this.comment, this.writer);
+        return new Issue(0L, new Contents(subject, comment), this.writer);
     }
 
     public String getSubject() {

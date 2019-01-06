@@ -28,20 +28,13 @@ public class Issue extends AbstractEntity {
     public Issue() {
     }
 
-    public Issue(String subject, String comment) {
-        contents.setComment(comment);
-        contents.setSubject(subject);
+    public Issue(Contents contents) {
+        this.contents = contents;
     }
 
-    public Issue(String subject, String comment, User writer) {
-        this(subject, comment);
-        this.writer = writer;
-    }
-
-    public Issue(long id, String subject, String comment, User writer) {
+    public Issue(long id, Contents contents, User writer) {
         super(id);
-        contents.setComment(comment);
-        contents.setSubject(subject);
+        this.contents = contents;
         this.writer = writer;
     }
 
@@ -58,8 +51,7 @@ public class Issue extends AbstractEntity {
             throw new UnAuthorizedException();
         }
 
-        this.contents.setSubject(updateIssueContents.getSubject());
-        this.contents.setComment(updateIssueContents.getComment());
+        this.contents = updateIssueContents;
         return this;
     }
 

@@ -44,8 +44,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .postForEntity("/issue", request, String.class);
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-//        softly.assertThat(issueRepository.findBySubject("제목").isPresent()).isTrue();
-//        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
+        softly.assertThat(issueRepository.findById(3L).isPresent()).isTrue();
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 
     @Test
