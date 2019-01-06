@@ -46,7 +46,7 @@ public class UserController {
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
             log.info("userId : " + userId + ", password : " + password);
         } catch (UnAuthenticationException e) {
-            model.addAttribute("errorMessage", e.toString());
+            model.addAttribute("errorMessage", e.getMessage());
             return "/user/login";
         }
         return "redirect:/";

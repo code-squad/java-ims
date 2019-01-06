@@ -8,7 +8,7 @@
     <div class="issues__posts mdl-grid">
         <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
             {{#errorMessage}}
-            <div class="alert alert-danger" role="alert">아이디 또는 비밀번호가 틀립니다. 다시 로그인 해주세요.</div>
+            <div class="alert alert-danger" role="alert">{{this}}</div>
             {{/errorMessage}}
             <form action="/users/login" method="post">
                 <div class="mdl-card__title mdl-color-text--grey-50" style="height:100px;">

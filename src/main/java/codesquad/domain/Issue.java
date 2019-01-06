@@ -3,9 +3,7 @@ package codesquad.domain;
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -19,18 +17,24 @@ public class Issue extends AbstractEntity {
     @Column(nullable = false)
     private String comment;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
+    private User writer;
+
     public Issue() {
     }
 
-    public Issue(String subject, String comment) {
+    public Issue(String subject, String comment, User writer) {
         this.subject = subject;
         this.comment = comment;
+        this.writer = writer;
     }
 
-    public Issue(long id, String subject, String comment) {
+    public Issue(long id, String subject, String comment, User writer) {
         super(id);
         this.subject = subject;
         this.comment = comment;
+        this.writer = writer;
     }
 
     public String getSubject() {
@@ -49,7 +53,15 @@ public class Issue extends AbstractEntity {
         this.comment = comment;
     }
 
+    public User getWriter() {
+        return writer;
+    }
+
+    public void setWriter(User writer) {
+        this.writer = writer;
+    }
+
     public IssueDto _toIssueDto() {
-        return new IssueDto(this.subject, this.comment);
+        return new IssueDto(this.subject, this.comment, this.writer);
     }
 }

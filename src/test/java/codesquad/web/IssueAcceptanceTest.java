@@ -14,6 +14,7 @@ import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 import static codesquad.domain.IssueTest.ISSUES;
+import static codesquad.domain.UserTest.JAVAJIGI;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
@@ -22,21 +23,43 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     private IssueRepository issueRepository;
 
     @Test
-    public void createForm() throws Exception {
+    public void createForm_no_login() throws Exception {
         ResponseEntity<String> response = template.getForEntity("/issues/form", String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        log.debug("body : {}", response.getBody());
+    }
+
+    @Test
+    public void createForm() throws Exception {
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity("/issues/form", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         log.debug("body : {}", response.getBody());
+    }
+
+    @Test
+    public void create_no_login() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request =
+                HtmlFormDataBuilder.urlEncodedForm()
+                        .addParameter("subject", "testSubject")
+                        .addParameter("comment", "testComment")
+                        .addParameter("writer", JAVAJIGI.getId())
+                        .build();
+
+        ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
     public void create() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request =
                 HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "testSubject")
-                .addParameter("comment", "testComment")
-                .build();
+                        .addParameter("subject", "testSubject")
+                        .addParameter("comment", "testComment")
+                        .addParameter("writer", JAVAJIGI.getId())
+                        .build();
 
-        ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
+        ResponseEntity<String> response = basicAuthTemplate.postForEntity("/issues", request, String.class);
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(issueRepository.findBySubject("testSubject")).isNotNull();
