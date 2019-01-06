@@ -1,11 +1,6 @@
-$('.mdl-js-menu li').on("click", setIssueAttribute);
-$('.issue-comment-ims[type=submit]').on('click', addComment);
+$(".mdl-js-menu li").on("click", setIssueAttribute);
+$(".issue-comment-ims[type=submit]").on("click", addComment);
 $('.comments').on('click', '.comment-delete button[type=submit]', deleteComment);
-
-function onError(jqXhr, textStatus, errorThrown) {
-    var errorMessage = jqXhr.responseJSON.message;
-    alert(errorMessage);
-}
 
 function setIssueAttribute(e) {
     e.preventDefault();
@@ -14,7 +9,6 @@ function setIssueAttribute(e) {
             type : 'get',
             url : url,
             error: onError,
-            dataType : 'json',
             success : function onSuccess(data, textStatus, jqXhr) {
                           alert("지정에 성공하였습니다!");
                       }
@@ -33,11 +27,11 @@ function addComment(e) {
             contentType : 'application/json',
             error: onError,
             success : function onSuccess(data, textStatus, jqXhr) {
-                        var commentTemplate = $('#commentTemplate').html();
-                        var template = commentTemplate.format(data.writer.name, data.contents);
-                        $('.comments').append(template);
-                        $("textarea[name=contents]").val("");
-                    }
+                          var commentTemplate = $('#commentTemplate').html();
+                          var template = commentTemplate.format(data.writer.name, data.contents);
+                          $('.comments').append(template);
+                          $("textarea[name=contents]").val("");
+                      }
         });
 }
 
@@ -45,17 +39,19 @@ function deleteComment(e) {
     e.preventDefault();
     var deleteBtn = $(this);
     var url = deleteBtn.parent().attr('action');
-    console.log(deleteBtn);
-    console.log(url);
     $.ajax({
             type : 'delete',
             url : url,
-            dataType : 'json',
             error : onError,
             success : function onSuccess(data, textStatus, jqXhr) {
                         deleteBtn.closest('div.comment').remove();
                     }
         });
+}
+
+function onError(jqXhr, textStatus, errorThrown) {
+    var errorMessage = jqXhr.responseJSON.message;
+    alert(errorMessage);
 }
 
 String.prototype.format = function() {
