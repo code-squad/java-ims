@@ -1,6 +1,8 @@
 $(".mdl-js-menu li").on("click", setIssueAttribute);
 $(".issue-comment-ims[type=submit]").on("click", addComment);
 $('.comments').on('click', '.comment-delete button[type=submit]', deleteComment);
+$('.comments').on('click', '.comment-edit button[type=submit]', editRequest);
+$('.comments').on('click', '.comment-edit-ims[type=submit]', editComment);
 
 function setIssueAttribute(e) {
     e.preventDefault();
@@ -46,6 +48,35 @@ function deleteComment(e) {
             success : function onSuccess(data, textStatus, jqXhr) {
                         deleteBtn.closest('div.comment').remove();
                     }
+        });
+}
+
+function editRequest(e) {
+    e.preventDefault();
+    var url = $(this).parent().attr('action');
+    var commentBody = $(this).closest('.comment-body');
+    var contents = commentBody.find('.comment-contents').html();
+    var commentEditTemplate = $('#commentEditTemplate').html().format(url, contents);
+    console.log(commentEditTemplate);
+    commentBody.html(commentEditTemplate);
+}
+
+function editComment(e) {
+    e.preventDefault();
+    var url = $(this).parent().attr('action');
+    var comment = new Object();
+    comment.contents = $('#edit-contents').val();
+    $.ajax({
+            type : 'put',
+            url : url,
+            data : JSON.stringify(comment),
+            contentType : 'application/json',
+            error: onError,
+            success : function onSuccess(data, textStatus, jqXhr) {
+                        // todo 새로 바꿔줘야함
+                          var commentTemplate = $('#commentTemplate').html();
+                          var template = commentTemplate.format(data.writer.name, data.contents);
+                      }
         });
 }
 

@@ -91,22 +91,29 @@
                 <header class="comment__header">
                     <img class="comment__avatar2" height="48" width="48"
                          src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
-                    <div class="comment__author">
-                        <strong>
-                            <a>{{ writer.name }}</a>
-                            <span>{{ contents }}</span>
-                        </strong>
-                    </div>
-                    <div>
-                        <i class="material-icons">edit</i>
-                    </div>
-                    <div>
-                        <form action="/api/issues/{{ issue.id }}/comments/{{ id }}" class="comment-delete" method="post">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="nostylebutton">
-                                <i class="material-icons">delete</i>
-                            </button>
-                        </form>
+                    <div style="width: 100%;" class="comment-body">
+                        <span class="comment__author">
+                            <strong>
+                                <a>{{ writer.name }}</a>
+                                <span class="comment-contents">{{ contents }}</span>
+                            </strong>
+                        </span>
+                        <span>
+                            <form style="display: inline;" action="/api/issues/{{ issue.id }}/comments/{{ id }}" class="comment-edit" method="post">
+                                <input type="hidden" name="_method" value="PUT">
+                                <button type="submit" class="nostylebutton">
+                                    <i class="material-icons">edit</i>
+                                </button>
+                            </form>
+                        </span>
+                        <span>
+                            <form style="display: inline;" action="/api/issues/{{ issue.id }}/comments/{{ id }}" class="comment-delete" method="post">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="nostylebutton">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </form>
+                        </span>
                     </div>
                 </header>
                 <hr>
@@ -150,9 +157,39 @@
                     <span>{1}</span>
                 </strong>
             </div>
+            <div>
+                <form action="/api/issues/{{ issue.id }}/comments/{{ id }}" class="comment-edit" method="post">
+                    <button type="submit" class="nostylebutton">
+                        <i class="material-icons">edit</i>
+                    </button>
+                </form>
+            </div>
+            <div>
+                <form action="/api/issues/{{ issue.id }}/comments/{{ id }}" class="comment-delete" method="post">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="nostylebutton">
+                        <i class="material-icons">delete</i>
+                    </button>
+                </form>
+            </div>
         </header>
+        <hr>
     </div>
-    <hr>
+</script>
+
+<script type="text/template" id="commentEditTemplate">
+    <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+        <form action="{0}" method="POST">
+            <input type="hidden" name="_method" value="PUT">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <textarea rows=5 class="mdl-textfield__input" id="edit-contents" name="contents">{1}</textarea>
+            </div>
+            <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon comment-edit-ims">
+                <i class="material-icons" role="presentation">check</i>
+                <span class="visuallyhidden">edit comment</span>
+            </button>
+        </form>
+    </div>
 </script>
 
 {{/partial}}
