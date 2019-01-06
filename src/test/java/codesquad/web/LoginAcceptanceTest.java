@@ -28,9 +28,9 @@ public class LoginAcceptanceTest extends BasicAuthAcceptanceTest {
     public void login() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("userId", "kuro")
-                .addParameter("password", "test")
+                .addParameter("password", "eogks369 ")
                 .build();
-        ResponseEntity<String> response = template().postForEntity("/logined", request, String.class);
+        ResponseEntity<String> response = template().postForEntity("/login", request, String.class);
 
         log.debug("login ~~~~~~: {}" , response.getBody());
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);

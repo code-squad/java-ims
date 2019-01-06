@@ -35,13 +35,13 @@ public class ApiUserController {
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public UserDto show(@LoginUser User loginUser, @PathVariable long id) {
         User user = userService.findById(loginUser, id);
         return user._toUserDto();
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public void update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody UserDto updatedUser) {
         userService.update(loginUser, id, updatedUser);
     }

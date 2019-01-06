@@ -2,6 +2,7 @@ package codesquad.web;
 
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.UserTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Before
     public void setUp() throws Exception {
-        Issue issue = new Issue(1L, "new test", "new comment");
+        Issue issue = new Issue(1L, "new test", "new comment", UserTest.USER, false);
         this.issue = issue;
     }
 
@@ -54,5 +55,37 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<Void> response = template.getForEntity("/issues/1", Void.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 //      softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/issue/show");
+    }
+
+    @Test
+    public void update() {
+        ResponseEntity<String> response = basicAuthTemplate(UserTest.USER)
+                .getForEntity("/issues/1/update", String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void update_no_login() {
+        ResponseEntity<String> response = template.getForEntity("/issues/1/update", String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    public void update_Other_login() {
+        ResponseEntity<String> responseEntity = basicAuthTemplate(UserTest.OTHER_USER)
+                .getForEntity("/issues/1/update", String.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    public void delete() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .delete()
+                .build();
+        ResponseEntity<String> response = basicAuthTemplate(UserTest.USER)
+                .postForEntity("/issues/1", request, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+//        softly.assertThat(response.getHeaders().getLocation().getPath()).startsWith("/");
+
     }
 }

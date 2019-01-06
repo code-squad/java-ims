@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class AcceptanceTest extends BaseTest {
-    private static final String DEFAULT_LOGIN_USER = "javajigi";
+    private static final String DEFAULT_LOGIN_USER = "dsoop";
 
     @Autowired
     protected TestRestTemplate template;
@@ -52,7 +52,7 @@ public abstract class AcceptanceTest extends BaseTest {
     }
 
     protected String createResource(String path, Object bodyPayload) {
-        ResponseEntity<String> response = template().postForEntity(path, bodyPayload, String.class);
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity(path, bodyPayload, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         return response.getHeaders().getLocation().getPath();
     }

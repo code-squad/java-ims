@@ -3,6 +3,5 @@ package codesquad.domain;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IssueRepository extends JpaRepository<Issue, Long> {
-
-   Iterable<Issue> findByDelete(boolean b);
+   Iterable<Issue> findByDeleted(boolean b);
 }

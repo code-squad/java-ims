@@ -65,4 +65,10 @@ public class IssueController {
         issueService.update(loginUser, id, target);
         return "redirect:/";
     }
+
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User loginUser, @PathVariable long id) {
+        issueService.deleteIssue(loginUser, id);
+        return "redirect:/";
+    }
 }

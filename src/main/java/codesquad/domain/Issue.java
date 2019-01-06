@@ -35,15 +35,22 @@ public class Issue extends AbstractEntity {
         this.comment = content;
     }
 
-    public Issue(String subject, String comment, User writer) {
-        this(0L, subject, comment, writer);
+    public Issue(long id, String subject, String comment) {
+        super(id);
+        this.subject = subject;
+        this.comment = comment;
     }
 
-    public Issue(long id, String subject, String content, User writer) {
+    public Issue(String subject, String comment, User writer, boolean deleted) {
+        this(0L, subject, comment, writer, deleted);
+    }
+
+    public Issue(long id, String subject, String content, User writer, boolean deleted) {
         super(id);
         this.subject = subject;
         this.comment = content;
         this.writer = writer;
+        this.deleted = deleted;
     }
 
     public String getSubject() {
@@ -102,9 +109,18 @@ public class Issue extends AbstractEntity {
         return this.writer.getUserId().equals(loginUser.getUserId());
     }
 
+//    ApiIssueController에서 사용할 것이지만 일단은 만들어 보았다.
     public IssueDto _toIssueDto() {
         return new IssueDto(this.subject, this.comment, this.writer);
     }
 
-
+    public List<DeleteHistory> delete(User loginUser) {
+        if (!matchWriter(loginUser)) {
+            throw new CannotDeleteException("작성자가 아니면 지울수 없습니다.");
+        }
+        this.deleted = true;
+        List<DeleteHistory> deletes = new ArrayList<>();
+        deletes.add(new DeleteHistory(ContentType.ISSUE, getId(), writer));
+        return deletes;
+    }
 }
