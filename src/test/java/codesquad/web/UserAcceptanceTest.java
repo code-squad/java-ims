@@ -13,6 +13,8 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import static codesquad.domain.UserTest.SANJIGI;
+
 public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(UserAcceptanceTest.class);
 
@@ -68,6 +70,13 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 
+    @Test
+    public void profile() {
+        ResponseEntity<String> response = template
+                .getForEntity(String.format("/users/%d", SANJIGI.getId()), String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        softly.assertThat(response.getBody().contains(SANJIGI.getName())).isTrue();
+    }
 
     @Test
     public void updateForm_no_login() throws Exception {

@@ -42,4 +42,9 @@ public class UserService {
                 .filter(user -> user.matchPassword(password))
                 .orElseThrow(UnAuthenticationException::new);
     }
+
+    public User findById(long id) {
+        return userRepository.findById(id)
+                .orElseThrow(UnAuthorizedException::new);
+    }
 }

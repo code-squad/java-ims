@@ -41,6 +41,10 @@ public class IssueDto {
         this.comment = comment;
     }
 
+    public User getWriter() {
+        return writer;
+    }
+
     public void writeBy(User loginUser) {
         this.writer = loginUser;
     }

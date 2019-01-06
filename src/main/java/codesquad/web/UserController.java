@@ -46,10 +46,16 @@ public class UserController {
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
             log.info("userId : " + userId + ", password : " + password);
         } catch (UnAuthenticationException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("errorMessage", "아이디 또는 비밀번호가 틀립니다. 다시 로그인 해주세요.");
             return "/user/login";
         }
         return "redirect:/";
+    }
+
+    @GetMapping("{id}")
+    public String profile(@PathVariable long id, Model model) {
+        model.addAttribute("user", userService.findById(id));
+        return "/user/profile";
     }
 
     @GetMapping("/{id}/form")
