@@ -16,6 +16,7 @@ import javax.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -163,6 +164,13 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
 
     public List<Comment> getComments() {
         return comments;
+    }
+
+    @JsonIgnore
+    public List<Comment> getNotDeletedComments() {
+        return comments.stream()
+                .filter(comment -> !comment.isDeleted())
+                .collect(Collectors.toList());
     }
 
     public void setComments(List<Comment> comments) {
