@@ -1,4 +1,4 @@
-package codesquad;
+package codesquad.web;
 
 import codesquad.service.IssueService;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("issues", issueService.findAll());
+        model.addAttribute("issues", issueService.findAllDeleted());
         return "index";
     }
 

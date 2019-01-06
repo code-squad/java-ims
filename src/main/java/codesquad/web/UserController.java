@@ -28,17 +28,15 @@ public class UserController {
     @PostMapping("")
     public String create(UserDto userDto) {
         userService.add(userDto);
-        return "redirect:/users";
-    }
-
-    @GetMapping("")
-    public String login() {
-        return "/user/login";
+        return "redirect:/login";
     }
 
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
         log.debug("LoginUser : {}", loginUser);
+        log.debug("login id : {}", id);
+        log.debug("user test :",userService.findById(loginUser, id));
+
         model.addAttribute("user", userService.findById(loginUser, id));
         return "/user/updateForm";
     }
@@ -46,7 +44,7 @@ public class UserController {
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
         userService.update(loginUser, id, target);
-        return "redirect:/users";
+        return "redirect:/";
     }
 
 }

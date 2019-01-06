@@ -8,6 +8,7 @@ import support.domain.AbstractEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 public class User extends AbstractEntity {
@@ -29,13 +30,8 @@ public class User extends AbstractEntity {
     public User() {
     }
 
-    /*    public User(String userId, String password, String name) {
-            this(0L, userId, password, name);
-        }*/
     public User(String userId, String password, String name) {
-        this.userId = userId;
-        this.password = password;
-        this.name = name;
+        this(0L, userId, password, name);
     }
 
     public User(long id, String userId, String password, String name) {
@@ -82,7 +78,7 @@ public class User extends AbstractEntity {
         }
 
         if (!matchPassword(target.getPassword())) {
-            return;
+            throw new UnAuthorizedException();
         }
 
         this.name = target.name;
@@ -110,6 +106,26 @@ public class User extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "User [userId=" + userId + ", password=" + password + ", name=" + name + "]";
+        return "User{" +
+                "userId='" + userId + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(name, user.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), userId, password, name);
     }
 }
