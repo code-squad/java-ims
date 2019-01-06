@@ -4,7 +4,6 @@ import codesquad.UnAuthorizedException;
 import codesquad.domain.DeleteHistoryRepository;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueRepository;
-import codesquad.domain.milestone.MilestoneRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,11 +72,6 @@ public class IssueServiceTest extends BaseTest {
         softly.assertThat(createdIssue.isOwner(BRAD)).isEqualTo(true);
     }
 
-    @Test
-    public void update() {
-        Issue updatedIssue = issueService.update(BRAD, ISSUE.getId(), UPDATE_ISSUE_BODY);
-    }
-
     @Test(expected = EntityNotFoundException.class)
     public void update_없는이슈() {
         issueService.update(BRAD, WRONG_ISSUE_ID, UPDATE_ISSUE_BODY);
@@ -113,19 +107,19 @@ public class IssueServiceTest extends BaseTest {
 
     @Test
     public void setMilestone() {
-        Issue issue = issueService.setMilestone(ISSUE.getId(), MILESTONE.getId());
+        Issue issue = issueService.setMilestone(BRAD, ISSUE.getId(), MILESTONE.getId());
         softly.assertThat(issue.hasSameMilestone(MILESTONE)).isTrue();
     }
 
     @Test
     public void setAssignee() {
-        Issue issue = issueService.setAssignee(ISSUE.getId(), BRAD.getId());
+        Issue issue = issueService.setAssignee(BRAD, ISSUE.getId(), BRAD.getId());
         softly.assertThat(issue.isAssignee(BRAD)).isTrue();
     }
 
     @Test
     public void setLabel() {
-        Issue issue = issueService.setLabel(ISSUE.getId(), LABEL.getId());
+        Issue issue = issueService.setLabel(BRAD, ISSUE.getId(), LABEL.getId());
         softly.assertThat(issue.hasSameLabel(LABEL)).isTrue();
     }
 }

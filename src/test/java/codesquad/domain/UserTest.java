@@ -9,6 +9,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 
 public class UserTest extends BaseTest {
+    public static final String DEFAULT_USER_ID = "testuser";
     public static final User BRAD = new User(1L, "brad903", "password", "Brad");
     public static final User JUNGHYUN = new User(2L, "leejh903", "password", "이정현");
 

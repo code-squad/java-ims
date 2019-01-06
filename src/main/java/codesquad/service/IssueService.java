@@ -76,20 +76,20 @@ public class IssueService {
     }
 
     @Transactional
-    public Issue setMilestone(long issueId, long milestoneId) {
+    public Issue setMilestone(User loginUser, long issueId, long milestoneId) {
         Milestone milestone = milestoneService.findById(milestoneId);
-        return findById(issueId).setMilestone(milestone);
+        return findById(issueId).setMilestone(loginUser, milestone);
     }
 
     @Transactional
-    public Issue setAssignee(long issueId, long assigneeId) {
+    public Issue setAssignee(User loginUser, long issueId, long assigneeId) {
         User assignee = userService.findById(assigneeId);
-        return findById(issueId).setAssignee(assignee);
+        return findById(issueId).setAssignee(loginUser, assignee);
     }
 
     @Transactional
-    public Issue setLabel(long issueId, long labelId) {
+    public Issue setLabel(User loginUser, long issueId, long labelId) {
         Label label = labelService.findById(labelId);
-        return findById(issueId).setLabel(label);
+        return findById(issueId).setLabel(loginUser, label);
     }
 }

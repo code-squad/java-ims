@@ -6,11 +6,17 @@ import codesquad.domain.DeleteHistory;
 import codesquad.domain.User;
 import codesquad.domain.label.Label;
 import codesquad.domain.milestone.Milestone;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.action.internal.OrphanRemovalAction;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 import support.domain.UrlGeneratable;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -25,17 +31,21 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
     private User assignee;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
     private Label label;
+
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Comment> comments = new ArrayList<>();
 
     private boolean deleted = false;
 
@@ -80,6 +90,21 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         return this.label.equals(target);
     }
 
+    public Issue addComment(Comment comment) {
+        this.comments.add(comment);
+        comment.toIssue(this);
+        return this;
+    }
+
+    public void deleteComment(Comment comment) {
+        this.comments.remove(comment);
+    }
+
+    public void updateComment(Comment updateComment) {
+        this.comments.stream().filter(comment -> comment.equals(updateComment))
+                .forEach(comment -> comment = updateComment);
+    }
+
     public User getWriter() {
         return writer;
     }
@@ -116,7 +141,8 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         return milestone;
     }
 
-    public Issue setMilestone(Milestone milestone) {
+    public Issue setMilestone(User loginUser, Milestone milestone) {
+        if(!isOwner(loginUser)) throw new UnAuthorizedException();
         this.milestone = milestone;
         return this;
     }
@@ -125,7 +151,8 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         return assignee;
     }
 
-    public Issue setAssignee(User assignee) {
+    public Issue setAssignee(User loginUser, User assignee) {
+        if(!isOwner(loginUser)) throw new UnAuthorizedException();
         this.assignee = assignee;
         return this;
     }
@@ -134,9 +161,25 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         return label;
     }
 
-    public Issue setLabel(Label label) {
+    public Issue setLabel(User loginUser, Label label) {
+        if(!isOwner(loginUser)) throw new UnAuthorizedException();
         this.label = label;
         return this;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    @JsonIgnore
+    public List<Comment> getNotDeletedComments() {
+        return comments.stream()
+                .filter(comment -> !comment.isDeleted())
+                .collect(Collectors.toList());
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override
