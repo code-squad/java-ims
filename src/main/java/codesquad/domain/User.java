@@ -76,8 +76,11 @@ public class User extends AbstractEntity {
             throw new UnAuthorizedException();
         }
 
+        if (!matchPassword(target.password)) {
+            return;
+        }
+
         this.name = target.name;
-        this.password = target.password;
     }
 
     public boolean matchPassword(String password) {

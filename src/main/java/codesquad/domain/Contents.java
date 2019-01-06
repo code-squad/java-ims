@@ -15,6 +15,14 @@ public class Contents {
     @Column(nullable = false)
     private String comment;
 
+    public Contents() {
+    }
+
+    public Contents(String subject, String comment) {
+        this.subject = subject;
+        this.comment = comment;
+    }
+
     public String getSubject() {
         return subject;
     }
@@ -30,4 +38,5 @@ public class Contents {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
 }
