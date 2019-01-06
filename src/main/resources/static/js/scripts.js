@@ -4,8 +4,8 @@ function login(e) {
     console.log("click login");
     e.preventDefault();
 
-    var queryString = $("#login").serialize();
-    console.log(queryString);
+//    var queryString = $("#login").serialize();
+//    console.log(queryString);
 
     var url = $('#login').attr("action");
     console.log(url);

@@ -39,11 +39,19 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
         ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
 
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        softly.assertThat(issueRepository.findBySubject("subject1").isPresent()).isTrue();
-        softly.assertThat(response.getHeaders().getLocation().getPath()).startsWith("/");
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).startsWith("/users/login/form");
 
         log.debug("bodyy : {}", response.getBody());
+    }
+
+    @Test
+    public void create_no_login() {
+        HttpEntity<MultiValueMap<String, Object>> request =
+                HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "subject1")
+                .addParameter("comment", "comment1")
+                .build();
     }
 
     @Test

@@ -7,21 +7,22 @@
         </div>
         <div class="issues__posts mdl-grid">
             <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
-                <form action="/join" enctype="multipart/form-data" method="post">
+                <form action="/users/{{id}}" enctype="multipart/form-data" method="post">
+                    <input type="hidden" name="_method" value="PUT" />
                     <div class="mdl-card__title mdl-color-text--grey-50" style="height:100px;">
-                        <h4>Join Member</h4>
+                        <h4>개인 정보 수정</h4>
                     </div>
                     {{#user}}
                     <div class="mdl-card__supporting-text">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
                             <input class="mdl-textfield__input" type="text" id="userId" name="userId" required disabled>
-                            <label class="mdl-textfield__label" for="userId">User ID</label>
+                            <label class="mdl-textfield__label" for="userId">{{userId}}</label>
                         </div>
                     </div>
                     <div class="mdl-card__supporting-text">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
-                            <input class="mdl-textfield__input" type="text" id="name" name="name" required>
-                            <label class="mdl-textfield__label" for="name">{{name}}</label>
+                            <input class="mdl-textfield__input" type="text" id="name" name="name" required value="{{name}}">
+                            <label class="mdl-textfield__label" for="name">Name</label>
                         </div>
                     </div>
                     <div class="mdl-card__supporting-text">

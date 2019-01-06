@@ -22,6 +22,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 @RestController
 @RequestMapping("/api/users")
 public class ApiUserController {
+
+
+
     private static final Logger log = getLogger(ApiUserController.class);
     @Resource(name = "userService")
     private UserService userService;
@@ -56,4 +59,9 @@ public class ApiUserController {
         headers.setLocation(URI.create("/"));
         return new ResponseEntity<Void>(headers, HttpStatus.OK);
     }
+
+
+
+
+
 }
