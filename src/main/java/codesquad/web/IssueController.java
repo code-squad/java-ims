@@ -1,15 +1,14 @@
 package codesquad.web;
 
+import codesquad.UnAuthorizedException;
+import codesquad.domain.Issue;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -34,5 +33,21 @@ public class IssueController {
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
         return "/issue/show";
+    }
+
+    @GetMapping("/{id}/form")
+    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+        try {
+            model.addAttribute("issue", issueService.findById(loginUser, id));
+            return "/issue/updateForm";
+        } catch (UnAuthorizedException e) {
+            return "redirect:/issues/{id}";
+        }
+    }
+
+    @PutMapping("/{id}")
+    public String update(@LoginUser User loginUser, @PathVariable long id, IssueDto updatedIssue) {
+        issueService.update(loginUser, id, updatedIssue);
+        return "redirect:/issues/{id}";
     }
 }
