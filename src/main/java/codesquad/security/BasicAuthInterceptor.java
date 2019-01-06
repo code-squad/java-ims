@@ -28,7 +28,7 @@ public class BasicAuthInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-        String base64Credentials = authorization.substring("Basic".length()).trim();
+        String base64Credentials = authorization.substring("Basic" .length()).trim();
         String credentials = new String(Base64.getDecoder().decode(base64Credentials), Charset.forName("UTF-8"));
         final String[] values = credentials.split(":", 2);
         log.debug("username : {}", values[0]);

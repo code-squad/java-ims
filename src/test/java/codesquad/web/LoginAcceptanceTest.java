@@ -40,7 +40,8 @@ public class LoginAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = template().postForEntity("/login", request, String.class);
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        softly.assertThat(response.getBody().contains("아이디 또는 비밀번호가 틀립니다. 다시 로그인 해주세요.")).isTrue();
+        log.debug(response.getBody());
+        softly.assertThat(response.getBody().contains("패스워드가 다릅니다.")).isTrue();
     }
 
     @Test

@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueBody;
 import codesquad.domain.User;
@@ -35,19 +36,22 @@ public class IssueController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
-        Issue issue = issueService.findById(id).get();
+        Issue issue = issueService.findById(id).orElseThrow(UnAuthorizedException::new);
         model.addAttribute("issue",issue);
         return "/issue/show";
     }
 
     @GetMapping("/{id}/form")
-    public String updateForm(@LoginUser User loginUser) {
+    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+        log.debug("업데이트폼");
+        model.addAttribute("issue",issueService.findById(id));
         return "/issue/updateForm";
     }
 
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, Model model, IssueBody issueBody) {
         Issue issue = issueService.update(id,loginUser,issueBody);
+        log.debug("이슈데이터: {}",issue);
         model.addAttribute("issue",issue);
         return "redirect:/issue/{id}";
     }

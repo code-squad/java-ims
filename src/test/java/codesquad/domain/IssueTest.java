@@ -13,7 +13,7 @@ public class IssueTest extends BaseTest {
 
     @Before
     public void setUp() {
-        issue1 = new Issue(JAVAJIGI,new IssueBody("제목입니다.","내용 입니다."));;
+        issue1 = new Issue(JAVAJIGI,new IssueBody("제목입니다.","내용 입니다."));
     }
 
 

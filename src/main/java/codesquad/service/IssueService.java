@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,14 +20,16 @@ public class IssueService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
+    @Resource(name = "deleteHistoryService")
+    private DeleteHistoryService deleteHistoryService;
 
     public Optional<Issue> findById(long id) {
         return issueRepository.findById(id);
     }
 
-    public List<Issue> findAll() {
+    public Iterable<Issue> findAll() {
         log.debug("findAll");
-        return issueRepository.findAll();
+        return issueRepository.findByDeleted(false);
     }
 
     public void add(User loginUser, IssueBody issueBody) {
@@ -44,8 +45,7 @@ public class IssueService {
 
     @Transactional
     public void deleted(long id, User loginUser) {
-        issueRepository.findById(id)
-                .map(issue -> issue.deleted(loginUser))
-                .orElseThrow(UnAuthorizedException::new);
+        Issue issue = issueRepository.findById(id).orElseThrow(UnAuthorizedException::new);
+        deleteHistoryService.save(issue.deleted(loginUser));
     }
 }

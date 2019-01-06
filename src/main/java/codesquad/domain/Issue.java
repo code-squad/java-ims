@@ -1,16 +1,12 @@
 package codesquad.domain;
 
-import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.util.Objects;
 
 @Entity
-public class Issue extends AbstractEntity{
+public class Issue extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
@@ -30,7 +26,7 @@ public class Issue extends AbstractEntity{
     }
 
     public static Issue ofBody(User loginUser, IssueBody issueBody) {
-        return new Issue(loginUser,issueBody);
+        return new Issue(loginUser, issueBody);
     }
 
     public Issue update(User loginUser, IssueBody issueBody) {
@@ -41,7 +37,7 @@ public class Issue extends AbstractEntity{
         return this;
     }
 
-    public String getWriter() {
+    public String getUserId() {
         return writer.getName();
     }
 
@@ -65,15 +61,26 @@ public class Issue extends AbstractEntity{
         this.issueBody.setComment(comment);
     }
 
-    public Issue deleted(User loginUser) {
+    public DeleteHistory deleted(User loginUser) {
         if (!writer.matchUser(loginUser)) {
             throw new UnAuthorizedException("작성자가 아닙니다.");
         }
         deleted = true;
-        return this;
+        return new DeleteHistory(getId(), loginUser);
     }
+
 
     public boolean isDeleted() {
         return !deleted;
+    }
+
+    @Override
+    public String toString() {
+        return "Issue{" +
+                "writer=" + writer +
+                ", sbject=" + getSubject() +
+                ", comment" + getComment() +
+                ", deleted=" + deleted +
+                '}';
     }
 }
