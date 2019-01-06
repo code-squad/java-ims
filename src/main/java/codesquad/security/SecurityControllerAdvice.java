@@ -1,5 +1,6 @@
 package codesquad.security;
 
+import codesquad.CannotUpdateException;
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import org.slf4j.Logger;
@@ -31,5 +32,11 @@ public class SecurityControllerAdvice {
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public void unAuthentication() {
         log.debug("UnAuthenticationException is happened!");
+    }
+
+    @ExceptionHandler(CannotUpdateException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public void cannotUpdateException(){
+        log.debug("cannotUpdateException is happened!");
     }
 }

@@ -32,16 +32,11 @@ public class UserController {
     @PostMapping("")
     public String create(UserDto userDto) {
         userService.add(userDto);
-        return "redirect:/users";
-    }
-
-    @GetMapping("")
-    public String list() {
-        return "/index";
+        return "redirect:/";
     }
 
     @GetMapping("/login/form")
-    public String loginForm(){
+    public String loginForm() {
         return "/user/login";
     }
 
@@ -50,9 +45,9 @@ public class UserController {
         try {
             User user = userService.login(userId, password);
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
-            return "redirect:/users";
+            return "redirect:/";
         } catch (UnAuthenticationException e) {
-            return "user/login_failed";
+            return "/user/login_failed";
         }
     }
 
@@ -66,6 +61,12 @@ public class UserController {
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
         userService.update(loginUser, id, target);
-        return "redirect:/users";
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+        return "redirect:/";
     }
 }
