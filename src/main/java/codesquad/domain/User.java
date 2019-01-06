@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import codesquad.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -8,6 +9,7 @@ import support.domain.AbstractEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 public class User extends AbstractEntity {
@@ -40,55 +42,38 @@ public class User extends AbstractEntity {
         this.name = name;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public User setUserId(String userId) {
-        this.userId = userId;
+    public User updateUser(User loginUser, User updatingUser) {
+        isOwner(loginUser);
+        this.password = updatingUser.password;
+        this.name = updatingUser.name;
         return this;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public User setPassword(String password) {
-        this.password = password;
-        return this;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public User setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    private boolean matchUserId(String userId) {
-        return this.userId.equals(userId);
-    }
-
-    public void update(User loginUser, User target) {
-        if (!matchUserId(loginUser.getUserId())) {
-            throw new UnAuthorizedException();
-        }
-
-        if (!matchPassword(target.getPassword())) {
-            return;
-        }
-
-        this.name = target.name;
     }
 
     public boolean matchPassword(String password) {
         return this.password.equals(password);
     }
 
+    public boolean isLogin(User loginUser) {
+        if (Objects.isNull(loginUser)) {
+            throw new UnAuthenticationException();
+        }
+        return true;
+    }
+
+    public boolean isOwner(User accessor) {
+        isLogin(accessor);
+        if (!this.equals(accessor)) {
+            throw new UnAuthorizedException();
+        }
+        return true;
+    }
+
     public UserDto _toUserDto() {
         return new UserDto(this.userId, this.password, this.name);
+    }
+
+    public UserDto getUserDto() {
+        return this._toUserDto();
     }
 
     @JsonIgnore
@@ -99,12 +84,29 @@ public class User extends AbstractEntity {
     public static class GuestUser extends User {
         @Override
         public boolean isGuestUser() {
+
             return true;
         }
     }
 
     @Override
     public String toString() {
-        return "User [userId=" + userId + ", password=" + password + ", name=" + name + "]";
+        return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", id = "+ getId() +"]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        if (!super.equals(o)) return false;
+        User user = (User) o;
+        return _toUserDto().getUserId().equals(user._toUserDto().getUserId()) &&
+                _toUserDto().getPassword().equals(user._toUserDto().getPassword()) &&
+                getId() == user.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), _toUserDto().getUserId(), _toUserDto().getPassword());
     }
 }

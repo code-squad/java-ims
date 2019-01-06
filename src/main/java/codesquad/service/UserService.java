@@ -1,37 +1,39 @@
 package codesquad.service;
 
 import codesquad.UnAuthenticationException;
-import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
 public class UserService {
+    private static final Logger log = getLogger(UserService.class);
 
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
-    public User add(UserDto userDto) {
+    public User create(UserDto userDto) {
+        log.debug("user:{}",userDto);
         return userRepository.save(userDto._toUser());
     }
 
-    public User update(User loginUser, long id, UserDto updatedUser) {
-        User original = findById(loginUser, id);
-        original.update(loginUser, updatedUser._toUser());
-        return userRepository.save(original);
+    @Transactional
+    public User update(User loginUser, long id, UserDto updatingUser) {
+        return findById(id).updateUser(loginUser, updatingUser._toUser());
     }
 
-    public User findById(User loginUser, long id) {
+    public User findById(long id) {
         return userRepository.findById(id)
-                .filter(user -> user.equals(loginUser))         //본인이 맞는지
-                .orElseThrow(UnAuthorizedException::new);
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     public List<User> findAll() {
@@ -40,7 +42,7 @@ public class UserService {
 
     public User login(String userId, String password) throws UnAuthenticationException {
         return userRepository.findByUserId(userId)
-                .filter(user -> user.matchPassword(password))
+                .filter(userDto -> userDto.matchPassword(password))
                 .orElseThrow(UnAuthenticationException::new);
     }
 }

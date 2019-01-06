@@ -91,6 +91,6 @@ public class UserDto {
 
     @Override
     public String toString() {
-        return "UserDto [userId=" + userId + ", password=" + password + ", name=" + name + "]";
+        return "UserDto [userId=" + userId + ", password=" + password + ", name=" + name + ",id=" + getUserId() + "]";
     }
 }

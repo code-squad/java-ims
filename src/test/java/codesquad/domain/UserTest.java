@@ -2,69 +2,40 @@ package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
 import org.junit.Test;
+import org.slf4j.Logger;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class UserTest {
+    private static final Logger log = getLogger(UserTest.class);
+
     public static final User JAVAJIGI = new User(1L, "javajigi", "password", "name");
     public static final User SANJIGI = new User(2L, "sanjigi", "password", "name");
 
-    public static User newUser(Long id) {
-        return new User(id, "userId", "pass", "name");
-    }
-
-    public static User newUser(String userId) {
-        return newUser(userId, "password");
-    }
-
-    public static User newUser(String userId, String password) {
-        return new User(1L, userId, password, "name");
-    }
+    public static final User UPDATING_USER = new User("javajigi", "password2", "name2");
 
     @Test
     public void update_owner() throws Exception {
-        User origin = newUser("sanjigi");
-        User loginUser = origin;
-        User target = new User("sanjigi", "password", "name2");
-        origin.update(loginUser, target);
-        assertThat(origin.getName(), is(target.getName()));
+        UserTest.JAVAJIGI.updateUser(UserTest.JAVAJIGI, UPDATING_USER);
+        assertThat(UserTest.JAVAJIGI._toUserDto().getName(), is(UPDATING_USER._toUserDto().getName()));
     }
 
     @Test(expected = UnAuthorizedException.class)
-    public void update_not_owner() throws Exception {
-        User origin = newUser("sanjigi");
-        User loginUser = newUser("javajigi");
-        User target = new User("sanjigi", "password", "name2");
-        origin.update(loginUser, target);
-    }
+    public void update_by_other_user() throws Exception {
+        UserTest.SANJIGI.updateUser(UserTest.JAVAJIGI, UPDATING_USER);
 
-    @Test
-    public void update_match_password() {
-        User origin = newUser("sanjigi");
-        User target = new User("sanjigi", "password", "name2");
-        origin.update(origin, target);
-        assertThat(origin.getName(), is(target.getName()));
-    }
-
-    @Test
-    public void update_mismatch_password() {
-        User origin = newUser("sanjigi", "password");
-        User target = new User("sanjigi", "password2", "name2");
-        origin.update(origin, target);
-        assertThat(origin.getName(), is(not(target.getName())));
+//      sanjigi의 유저정보를 javajigi가 updagingUser정보로 변경하려고 한다.
     }
 
     @Test
     public void match_password() throws Exception {
-        User user = newUser("sanjigi");
-        assertTrue(user.matchPassword(user.getPassword()));
+        assertTrue(JAVAJIGI.matchPassword(JAVAJIGI._toUserDto().getPassword()));
     }
 
     @Test
     public void mismatch_password() throws Exception {
-        User user = newUser("sanjigi");
-        assertFalse(user.matchPassword(user.getPassword() + "2"));
+        assertFalse(UPDATING_USER.matchPassword(SANJIGI._toUserDto().getPassword()));
     }
 }
