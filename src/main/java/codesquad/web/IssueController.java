@@ -2,15 +2,13 @@ package codesquad.web;
 
 import codesquad.domain.Issue;
 import codesquad.domain.User;
+import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -26,25 +24,46 @@ public class IssueController {
     @Resource(name = "issueService")
     private IssueService issueService;
 
-    @GetMapping("/form")
-    public String form(@LoginUser User loginUser) {
+    @GetMapping("")
+    public String createForm(@LoginUser User loginUser) {
         return "/issue/form";
     }
 
     @PostMapping("")
-    public String create(@LoginUser User loginUser, Issue issue) {
+    public String create(@LoginUser User loginUser, IssueDto newIssue) {
         if (Objects.isNull(loginUser)) {
-            return "redirect:/users/login";
+            return "redirect:/login";
         }
         log.debug("loginUser:{}",loginUser);
-        issueService.add(loginUser, issue);
+        issueService.create(loginUser, newIssue);
         return "redirect:/";
     }
 
     @GetMapping("/{id}")
-    public String show(@LoginUser User loginUser, @PathVariable long id, Model model) {
-        model.addAttribute("issue", issueService.findByIssueId(id));
+    public String show(@PathVariable long id, Model model) {
+        model.addAttribute("issue", issueService.findByIssueId(id)._toIssueDto());
         return "/issue/show";
     }
 
+    @GetMapping("/{id}/form")
+    public String modifyForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+        Issue issue = issueService.findByIssueId(id);
+        if (issue.isOwner(loginUser)) {
+            model.addAttribute("issue", issue._toIssueDto());
+            return "/issue/updateForm";
+        }
+        return String.format("redirect:/issues/%d",id);
+    }
+
+    @PutMapping("/{id}")
+    public String modify(@LoginUser User loginUser, @PathVariable long id, IssueDto updateIssue) {
+        issueService.update(loginUser, id, updateIssue);
+        return "redirect:/";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User loginUSer, @PathVariable long id) {
+        issueService.deleteIssue(loginUSer, id);
+        return "redirect:/";
+    }
 }

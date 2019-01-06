@@ -1,17 +1,20 @@
 package codesquad.domain;
 
+import codesquad.UnAuthenticationException;
+import codesquad.UnAuthorizedException;
+import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-
 import java.util.Objects;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Entity
 public class Issue extends AbstractEntity {
+    private static final Logger log = getLogger(Issue.class);
     @Size(min = 3, max = 100)
     @Column(length = 100, nullable = false)
     private String subject;
@@ -24,41 +27,71 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    private boolean deleted = false;
 
-    public void writtenBy(User loginUser) {
-        if (isLogin(loginUser)) {
-            this.writer = loginUser;
-        }
+    public Issue(){
     }
 
-    private boolean isLogin(User loginUser) {
+    public Issue(String subject, String comment) {
+        this.subject = subject;
+        this.comment = comment;
+    }
+
+    public Issue(String subject, String comment, User writer) {
+        this(0L, subject, comment, writer);
+    }
+
+    public Issue(long id, String subject, String comment, User writer) {
+        super(id);
+        this.subject = subject;
+        this.comment = comment;
+        this.writer = writer;
+    }
+
+    public boolean isLogin(User loginUser) {
         if (Objects.isNull(loginUser)) {
-            return false;
+            throw new UnAuthenticationException();
         }
         return true;
     }
 
-    public String getSubject() {
-        return subject;
+    public IssueDto _toIssueDto() {
+        return new IssueDto(this.subject, this.comment, this.writer, this.deleted);
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public IssueDto getIssueDto() {
+        return this._toIssueDto();
     }
 
-    public String getComment() {
-        return comment;
+    public boolean isOwner(User loginUser) {
+        isLogin(loginUser);
+        if (!writer.equals(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        return true;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public Issue modify(IssueDto updateIssue, User loginUser) {
+        isOwner(loginUser);
+        subject = updateIssue.getSubject();
+        comment = updateIssue.getComment();
+        return this;
     }
 
-    public User getWriter() {
-        return writer;
+    public Issue delete(User loginUSer) {
+        isOwner(loginUSer);
+        deleted = true;
+        return this;
     }
 
-    public void setWriter(User writer) {
-        this.writer = writer;
+    @Override
+    public String toString() {
+        return "Issue{" +
+                "subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
+                ", writer=" + writer +
+                ", deleted=" + deleted +
+                ", id=" + getId() +
+                '}';
     }
 }

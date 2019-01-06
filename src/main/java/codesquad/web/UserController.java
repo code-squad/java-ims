@@ -27,41 +27,25 @@ public class UserController {
         return "/user/join";
     }
 
-    @GetMapping("/login")
-    public String loginForm() {
-        return "/user/login";
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
-        return "redirect:/";
-    }
-
     @PostMapping("")
-    public String create(UserDto userDto,HttpSession session) {
-        User loginUser = userService.add(userDto);
-        session.setAttribute(HttpSessionUtils.USER_SESSION_KEY,loginUser);
+    public String create(UserDto userDto, HttpSession session) {
+        User loginUser = userService.create(userDto);
+        session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, loginUser);
         return "redirect:/";
     }
 
-    @PostMapping("/login")
-    public String login(String userId, String password,HttpSession session) {
-        User loginUser = userService.login(userId,password);
-        session.setAttribute(HttpSessionUtils.USER_SESSION_KEY,loginUser);
-        return "redirect:/";
-    }
-
-    @GetMapping("/{id}/form")
+    @GetMapping("/{id}")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
         log.debug("LoginUser : {}", loginUser);
-        model.addAttribute("user", userService.findById(loginUser, id));
+        UserDto userDto = userService.findById(id)._toUserDto();
+        log.debug("userDto : {}", userDto);
+        model.addAttribute("user", userDto);
         return "/user/updateForm";
     }
 
     @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
-        userService.update(loginUser, id, target);
+    public String update(@LoginUser User loginUser, @PathVariable long id, UserDto updatingUser) {
+        userService.update(loginUser, id, updatingUser);
         return "redirect:/";
     }
 

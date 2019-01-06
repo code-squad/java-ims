@@ -3,27 +3,45 @@ package codesquad.service;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
+import codesquad.dto.IssueDto;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
-@Service
+import static org.slf4j.LoggerFactory.getLogger;
+
+@Service("issueService")
 public class IssueService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
-    public Issue add(User loginUser, Issue issue) {
-        issue.writtenBy(loginUser);
-        return issueRepository.save(issue);
+    private static final Logger log = getLogger(IssueService.class);
+
+    public Issue create(User loginUser, IssueDto issueDto) {
+        issueDto.setWriter(loginUser);
+        log.debug("newIssue : {}" , issueDto._toIssue());
+        return issueRepository.save(issueDto._toIssue());
     }
 
-    public List<Issue> print() {
-        return issueRepository.findAll();
+    public Iterable<Issue> findAll() {
+        return issueRepository.findByDeleted(false);
     }
 
     public Issue findByIssueId(long id) {
         return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional
+    public Issue update(User loginUser, long id, IssueDto updateIssue) {
+        return findByIssueId(id).modify(updateIssue, loginUser);
+    }
+
+    @Transactional
+    public Issue deleteIssue(User loginUSer, long id) {
+       return findByIssueId(id).delete(loginUSer);
     }
 }

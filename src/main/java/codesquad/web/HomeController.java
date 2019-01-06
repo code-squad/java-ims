@@ -1,6 +1,5 @@
 package codesquad.web;
 
-import codesquad.domain.IssueRepository;
 import codesquad.service.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("issues", issueService.print());
+        model.addAttribute("issues", issueService.findAll());
         return "/index";
     }
 }
