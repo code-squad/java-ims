@@ -1,16 +1,16 @@
 package codesquad.web;
 
+import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
-import codesquad.dto.IssueDto;
+import codesquad.domain.IssueBody;
+import codesquad.domain.User;
+import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -23,20 +23,42 @@ public class IssueController {
     private IssueService issueService;
 
     @GetMapping("/form")
-    public String createForm() {
+    public String createForm(@LoginUser User loginUser) {
+
         return "/issue/form";
     }
 
     @PostMapping("")
-    public String create(IssueDto issueDto) {
-        issueService.add(issueDto);
+    public String create(@LoginUser User loginUser, IssueBody issueBody) {
+        issueService.add(loginUser, issueBody);
         return "redirect:/";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
-        Issue issue = issueService.findById(id).get();
-        model.addAttribute("issue",issue._toIssueDto());
+        Issue issue = issueService.findById(id).orElseThrow(UnAuthorizedException::new);
+        model.addAttribute("issue",issue);
         return "/issue/show";
+    }
+
+    @GetMapping("/{id}/form")
+    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+        log.debug("업데이트폼");
+        model.addAttribute("issue",issueService.findById(id));
+        return "/issue/updateForm";
+    }
+
+    @PutMapping("/{id}")
+    public String update(@LoginUser User loginUser, @PathVariable long id, Model model, IssueBody issueBody) {
+        Issue issue = issueService.update(id,loginUser,issueBody);
+        log.debug("이슈데이터: {}",issue);
+        model.addAttribute("issue",issue);
+        return "redirect:/issue/{id}";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User loginUser, @PathVariable long id) {
+        issueService.deleted(id,loginUser);
+        return "redirect:/";
     }
 }

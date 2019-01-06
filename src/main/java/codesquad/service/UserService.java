@@ -40,12 +40,12 @@ public class UserService {
     public User login(String userId, String password) throws UnAuthenticationException {
         Optional<User> maybeUser = userRepository.findByUserId(userId);
         if (!maybeUser.isPresent()) {
-            throw new UnAuthenticationException();
+            throw new UnAuthenticationException("아이디가 존제하지 않습니다.");
         }
 
         User user = maybeUser.get();
         if (!user.matchPassword(password)) {
-            throw new UnAuthenticationException();
+            throw new UnAuthenticationException("패스워드가 다릅니다.");
         }
 
         return user;

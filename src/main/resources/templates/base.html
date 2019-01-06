@@ -8,6 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <subject>Issue Tracking System</subject>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
@@ -35,8 +36,15 @@
             <nav class="mdl-navigation">
                 <a class="mdl-navigation__link" href="/">Issues</a>
                 <a class="mdl-navigation__link" href="/milestone/list">Milestones</a>
-                <a class="mdl-navigation__link" href="/users/login">login</a>
+
+                {{^loginedUser}}
+                <a class="mdl-navigation__link" href="/login">login</a>
                 <a class="mdl-navigation__link" href="/users/form">join</a>
+                {{/loginedUser}}
+                {{#loginedUser}}
+                <a class="mdl-navigation__link" href="/logout">logout</a>
+                <a class="mdl-navigation__link" href="/users/form">myInfo</a>
+                {{/loginedUser}}
             </nav>
         </div>
     </header>
