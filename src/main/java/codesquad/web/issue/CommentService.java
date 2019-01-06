@@ -35,9 +35,16 @@ public class CommentService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
+    @Transactional
     public Comment delete(User loginUser, long issueId, long commentId) {
         Comment comment = findById(commentId);
         deleteHistoryRepository.save(comment.delete(loginUser, issueService.findById(issueId)));
         return comment;
+    }
+
+    @Transactional
+    public Comment update(User loginUser, long issueId, long commentId, Comment updateComment) {
+        Comment comment = findById(commentId);
+        return comment.update(loginUser, issueService.findById(issueId), updateComment);
     }
 }

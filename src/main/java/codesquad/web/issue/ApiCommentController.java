@@ -29,7 +29,6 @@ public class ApiCommentController {
                                           @PathVariable long issueId,
                                           @Valid @RequestBody Comment comment) {
         Comment savedComment = commentService.create(loginUser, issueId, comment);
-
         HttpHeaders headers = new HttpHeaders();
         URI uri = URI.create(String.format("/api/issues/%d/comments/%d", issueId, savedComment.getId()));  //todo answer아이디
         headers.setLocation(uri);
@@ -45,5 +44,14 @@ public class ApiCommentController {
     public ResponseEntity<Void> delete(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long commentId) {
         Comment comment = commentService.delete(loginUser, issueId, commentId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/{commentId}")
+    public ResponseEntity<Comment> update(@LoginUser User loginUser,
+                                       @PathVariable long issueId,
+                                       @PathVariable long commentId,
+                                       @Valid @RequestBody Comment updateComment) {
+        Comment updatedComment = commentService.update(loginUser, issueId, commentId, updateComment);
+        return new ResponseEntity<>(updatedComment, HttpStatus.OK);
     }
 }

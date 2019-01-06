@@ -45,7 +45,7 @@ public class Comment extends AbstractEntity {
             new UnAuthorizedException();
         }
         this.deleted = true;
-        issue.deleteAnswer(this);
+        issue.deleteComment(this);
         return new DeleteHistory(ContentType.COMMENT, getId(), loginUser);
     }
 
@@ -84,5 +84,12 @@ public class Comment extends AbstractEntity {
     @Override
     public String toString() {
         return "Comment[contents=" + contents + ", issue=" + issue + ", writer=" + writer + "]";
+    }
+
+    public Comment update(User loginUser, Issue issue, Comment updateComment) {
+        if(!writer.equals(loginUser)) throw new UnAuthorizedException();
+        this.contents = updateComment.contents;
+        issue.updateComment(this);
+        return this;
     }
 }

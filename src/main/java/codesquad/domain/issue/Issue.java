@@ -96,8 +96,13 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
         return this;
     }
 
-    public void deleteAnswer(Comment comment) {
+    public void deleteComment(Comment comment) {
         this.comments.remove(comment);
+    }
+
+    public void updateComment(Comment updateComment) {
+        this.comments.stream().filter(comment -> comment.equals(updateComment))
+                .forEach(comment -> comment = updateComment);
     }
 
     public User getWriter() {

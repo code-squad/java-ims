@@ -91,7 +91,17 @@ public class IssueTest extends BaseTest {
     @Test
     public void deleteComment() {
         softly.assertThat(ISSUE.getComments().contains(COMMENT)).isTrue();
-        ISSUE.deleteAnswer(COMMENT);
+        ISSUE.deleteComment(COMMENT);
         softly.assertThat(ISSUE.getComments().contains(COMMENT)).isFalse();
+    }
+
+    @Test
+    public void updateComment() {
+        Issue newIssue = newIssue();
+        Comment beforeComment = new Comment(RANDOM_COMMENT_ID, NEW_CONTENTS, ISSUE, BRAD);
+        Comment updateComment = new Comment(RANDOM_COMMENT_ID, UPDATE_CONTENTS, ISSUE, BRAD);
+        newIssue.getComments().add(beforeComment);
+        newIssue.updateComment(updateComment);
+        softly.assertThat(newIssue.getComments().get(0).getContents()).isEqualTo(UPDATE_CONTENTS);
     }
 }

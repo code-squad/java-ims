@@ -57,4 +57,13 @@ public class CommentServiceTest extends BaseTest {
         commentService.delete(BRAD, ISSUE.getId(), newComment.getId());
         softly.assertThat(newComment.isDeleted()).isTrue();
     }
+
+    @Test
+    public void update() {
+        Comment beforeComment = new Comment(++RANDOM_COMMENT_ID, NEW_CONTENTS, ISSUE, BRAD);
+        Comment updateComment = new Comment(UPDATE_CONTENTS);
+        when(commentRepository.findById(beforeComment.getId())).thenReturn(Optional.of(beforeComment));
+        Comment updatedcomment = commentService.update(BRAD, ISSUE.getId(), beforeComment.getId(), updateComment);
+        softly.assertThat(updatedcomment.getContents()).isEqualTo(UPDATE_CONTENTS);
+    }
 }
