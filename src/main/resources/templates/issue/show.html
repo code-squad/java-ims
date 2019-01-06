@@ -151,26 +151,29 @@
         <header class="comment__header">
             <img class="comment__avatar2" height="48" width="48"
                  src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
-            <div class="comment__author">
-                <strong>
-                    <a>{0}</a>
-                    <span>{1}</span>
-                </strong>
-            </div>
-            <div>
-                <form action="/api/issues/{{ issue.id }}/comments/{{ id }}" class="comment-edit" method="post">
-                    <button type="submit" class="nostylebutton">
-                        <i class="material-icons">edit</i>
-                    </button>
-                </form>
-            </div>
-            <div>
-                <form action="/api/issues/{{ issue.id }}/comments/{{ id }}" class="comment-delete" method="post">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" class="nostylebutton">
-                        <i class="material-icons">delete</i>
-                    </button>
-                </form>
+            <div style="width: 100%;" class="comment-body">
+                <span class="comment__author">
+                    <strong>
+                        <a>{0}</a>
+                        <span class="comment-contents">{1}</span>
+                    </strong>
+                </span>
+                 <span>
+                    <form style="display: inline;" action="/api/issues/{2}/comments/{3}" class="comment-edit" method="post">
+                        <input type="hidden" name="_method" value="PUT">
+                        <button type="submit" class="nostylebutton">
+                            <i class="material-icons">edit</i>
+                        </button>
+                    </form>
+                </span>
+                <span>
+                    <form style="display: inline;" action="/api/issues/{2}/comments/{3}" class="comment-delete" method="post">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="nostylebutton">
+                            <i class="material-icons">delete</i>
+                        </button>
+                    </form>
+                </span>
             </div>
         </header>
         <hr>

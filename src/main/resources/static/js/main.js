@@ -30,7 +30,7 @@ function addComment(e) {
             error: onError,
             success : function onSuccess(data, textStatus, jqXhr) {
                           var commentTemplate = $('#commentTemplate').html();
-                          var template = commentTemplate.format(data.writer.name, data.contents);
+                          var template = commentTemplate.format(data.writer.name, data.contents, data.issue.id, data.id);
                           $('.comments').append(template);
                           $("textarea[name=contents]").val("");
                       }
@@ -57,7 +57,6 @@ function editRequest(e) {
     var commentBody = $(this).closest('.comment-body');
     var contents = commentBody.find('.comment-contents').html();
     var commentEditTemplate = $('#commentEditTemplate').html().format(url, contents);
-    console.log(commentEditTemplate);
     commentBody.html(commentEditTemplate);
 }
 
@@ -66,6 +65,7 @@ function editComment(e) {
     var url = $(this).parent().attr('action');
     var comment = new Object();
     comment.contents = $('#edit-contents').val();
+    var targetComment = $(this).closest('div.comment');
     $.ajax({
             type : 'put',
             url : url,
@@ -73,9 +73,10 @@ function editComment(e) {
             contentType : 'application/json',
             error: onError,
             success : function onSuccess(data, textStatus, jqXhr) {
-                        // todo 새로 바꿔줘야함
+                          console.log(data);
                           var commentTemplate = $('#commentTemplate').html();
-                          var template = commentTemplate.format(data.writer.name, data.contents);
+                          var template = commentTemplate.format(data.writer.name, data.contents, data.issue.id, data.id);
+                          targetComment.replaceWith(template);
                       }
         });
 }
