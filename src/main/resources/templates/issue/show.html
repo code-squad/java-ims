@@ -12,10 +12,6 @@
             <a href="/issue/{{id}}/form" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
                 <i class="material-icons">edit</i>
             </a>
-            <!--<a href="/deleteIssue/1" id="issues-menu-lower-right"
-               class="mdl-button mdl-js-button mdl-button&#45;&#45;icon">
-                <i class="material-icons">delete</i>
-            </a>-->
             <form style="display:inline-block" class="form-delete" action="/issue/{{id}}" method="POST">
                 <input type="hidden" name="_method" value="DELETE">
                 <button class="mdl-button mdl-js-button mdl-button--icon" type="submit">
@@ -52,13 +48,13 @@
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="milestone-menu">
                 <li class="mdl-menu__item mdl-button--accent">
-                    <a href="/issue/1/setMilestone/0">Milestone1</a>
+                    <a href="/issue/{{id}}/setMilestone/0">Milestone1</a>
                 </li>
                 <li class="mdl-menu__item">
-                    <a href="/issue/1/setMilestone/2">Milestone2</a>
+                    <a href="/issue/{{id}}/setMilestone/2">Milestone2</a>
                 </li>
                 <li class="mdl-menu__item">
-                    <a href="/issue/1/setMilestone/3">Milestone3</a>
+                    <a href="/issue/{{id}}/setMilestone/3">Milestone3</a>
                 </li>
             </ul>
 

@@ -44,7 +44,8 @@ public class IssueController {
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
         log.debug("업데이트폼");
-        model.addAttribute("issue",issueService.findById(id));
+        Issue issue = issueService.findById(id).orElseThrow(UnAuthorizedException::new);
+        model.addAttribute("issue",issue);
         return "/issue/updateForm";
     }
 
