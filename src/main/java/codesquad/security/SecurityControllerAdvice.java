@@ -23,21 +23,22 @@ public class SecurityControllerAdvice {
         log.debug("EntityNotFoundException is happened!");
     }
 
+    @ExceptionHandler(UnAuthenticationException.class)
+    @ResponseStatus(value = HttpStatus.FOUND)
+    public String unAuthentication(UnAuthenticationException e, RedirectAttributes redirectAttributes) {
+        log.debug("UnAuthenticationException is happened! And redirect to /users/login");
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        return "redirect:/users/login";
+    }
+
     @ExceptionHandler(UnAuthorizedException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public void unAuthorized() {
         log.debug("UnAuthorizedException is happened!");
     }
 
-    @ExceptionHandler(UnAuthenticationException.class)
-    @ResponseStatus(value = HttpStatus.FOUND)
-    public String unAuthentication(UnAuthenticationException e, RedirectAttributes redirectAttributes) {
-        log.debug("UnAuthenticationException is happened!");
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return "redirect:/users/login";
-    }
     @ExceptionHandler(CannotDeleteException.class)
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public void canNotDelete() {
         log.debug("CannotDeleteException is happened!");
     }
