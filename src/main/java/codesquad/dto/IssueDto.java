@@ -15,14 +15,17 @@ public class IssueDto {
 
     private User writer;
 
+    private boolean deleted;
+
     public IssueDto() {
     }
 
-    public IssueDto(String subject, String comment, User writer) {
+    public IssueDto(String subject, String comment, User writer, boolean deleted) {
         super();
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
+        this.deleted = deleted;
     }
 
     public String getSubject() {
@@ -49,8 +52,16 @@ public class IssueDto {
         this.writer = loginUser;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public Issue _toIssue() {
-        return new Issue(this.subject, this.comment, this.writer);
+        return new Issue(this.subject, this.comment, this.writer, this.deleted);
     }
 
     @Override

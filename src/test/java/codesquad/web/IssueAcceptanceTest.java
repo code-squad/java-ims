@@ -27,7 +27,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void createForm_no_login() throws Exception {
         ResponseEntity<String> response = template.getForEntity("/issues/form", String.class);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         log.debug("body : {}", response.getBody());
     }
 
@@ -49,7 +49,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
         ResponseEntity<String> response = template.postForEntity("/issues", request, String.class);
 
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
     }
 
     @Test
@@ -81,9 +81,10 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
             ResponseEntity<String> response = template().getForEntity(String.format("/issues/%d", issue.getId()), String.class);
 
             softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+            log.debug("kkk body : {}", response.getBody());
             softly.assertThat(response.getBody()).contains(issueRepository.findById(issue.getId()).get().getSubject());
             softly.assertThat(response.getBody()).contains(issueRepository.findById(issue.getId()).get().getComment());
-            log.debug("body : {}", response.getBody());
         }
     }
 
@@ -92,7 +93,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = template()
                 .getForEntity(String.format("/issues/%d/form", ISSUE1.getId()), String.class);
 
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
     }
 
     @Test
@@ -100,13 +101,13 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = basicAuthTemplate(SANJIGI)
                 .getForEntity(String.format("/issues/%d/form", ISSUE1.getId()), String.class);
 
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
     }
 
     @Test
     public void updateForm() {
         ResponseEntity<String> response = basicAuthTemplate
-                .getForEntity(String.format("/issues/%d/form", ISSUE1.getId()), String.class);
+                .getForEntity(String.format("/issues/%d/form", 1), String.class);
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         softly.assertThat(response.getBody().contains(ISSUE1.getSubject())).isTrue();
@@ -115,13 +116,14 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void update_not_owner() {
-        ResponseEntity<String> response = update(template);
+        ResponseEntity<String> response = update(basicAuthTemplate(SANJIGI));
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     private ResponseEntity<String> update(TestRestTemplate template) {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().put()
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .put()
                 .addParameter("subject", "updatedTestSubject")
                 .addParameter("comment", "updatedTestComment")
                 .addParameter("writer", JAVAJIGI.getId())
@@ -136,5 +138,37 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE2.getId()));
+    }
+
+    @Test
+    public void delete_no_login() {
+        ResponseEntity<String> response = delete(template);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users/login");
+    }
+
+    private ResponseEntity<String> delete(TestRestTemplate template) {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                        .delete()
+                        .build();
+
+        return template.postForEntity(String.format("/issues/%d", ISSUE3.getId()), request, String.class);
+    }
+
+    @Test
+    public void delete_not_owner() {
+        ResponseEntity<String> response = delete(basicAuthTemplate(JAVAJIGI));
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE3.getId()));
+    }
+
+    @Test
+    public void delete() {
+        ResponseEntity<String> response = delete(basicAuthTemplate(SANJIGI));
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 }

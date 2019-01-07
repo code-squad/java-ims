@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface IssueRepository extends JpaRepository<Issue, Long> {
     Optional<Issue> findBySubject(String subject);
+    Iterable<Issue> findByDeleted(boolean deleted);
 }

@@ -35,7 +35,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("userId", userId)
                 .addParameter("password", "password")
                 .addParameter("name", "자바지기")
-                .addParameter("email", "javajigi@slipp.net").build();
+                .build();
 
         ResponseEntity<String> response = template().postForEntity("/users", request, String.class);
 
@@ -48,7 +48,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void login_failed() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("userId", "javajigi")
-                .addParameter("password", "1234")
+                .addParameter("password", "123456")
                 .build();
 
         ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
@@ -61,7 +61,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void login() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("userId", "javajigi")
-                .addParameter("password", "test")
+                .addParameter("password", "password")
                 .build();
 
         ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
@@ -82,7 +82,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void updateForm_no_login() throws Exception {
         ResponseEntity<String> response = template().getForEntity(String.format("/users/%d/form", loginUser.getId()),
                 String.class);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
     }
 
     @Test
@@ -96,14 +96,14 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void update_no_login() throws Exception {
         ResponseEntity<String> response = update(template());
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
     }
 
     private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().put()
-                .addParameter("password", "pass2")
-                .addParameter("name", "재성2")
-                .addParameter("email", "javajigi@slipp.net").build();
+                .addParameter("password", "password2")
+                .addParameter("name", "자바지기2")
+                .build();
 
         return template.postForEntity(String.format("/users/%d", loginUser.getId()), request, String.class);
     }
