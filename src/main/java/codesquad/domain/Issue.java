@@ -31,10 +31,7 @@ public class Issue extends AbstractEntity {
     private Milestone milestone;
 
     private boolean deleted = false;
-
-    public boolean isDeleted() {
-        return deleted;
-    }
+    private boolean closed = false;
 
     public Issue() {
     }
@@ -78,6 +75,30 @@ public class Issue extends AbstractEntity {
         this.writer = writer;
     }
 
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
 
     @Override
     public String toString() {

@@ -20,6 +20,8 @@ public class Milestone extends AbstractEntity {
 
     private String endDate;
 
+    private int open, closed;
+
     @OneToMany(mappedBy = "milestone")
     @OrderBy("id ASC")
     private List<Issue> issues;
@@ -54,5 +56,21 @@ public class Milestone extends AbstractEntity {
 
     public void setIssues(List<Issue> issues) {
         this.issues = issues;
+    }
+
+    public int getOpen() {
+        return open;
+    }
+
+    public void setOpen(int open) {
+        this.open = open;
+    }
+
+    public int getClosed() {
+        return closed;
+    }
+
+    public void setClosed(int closed) {
+        this.closed = closed;
     }
 }

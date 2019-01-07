@@ -6,6 +6,7 @@ import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -19,6 +20,9 @@ public class IssueService {
 
     @Resource(name = "deleteHistoryRepository")
     private DeleteHistoryRepository deleteHistoryRepository;
+
+    @Resource(name = "milestoneRepository")
+    private MilestoneRepository milestoneRepository;
 
     public Issue add(User loginUser, IssueDto issueDto) {
         issueDto.setWriter(loginUser);
@@ -52,5 +56,13 @@ public class IssueService {
         Issue originalIssue = this.findById(id, loginUser);
         List<DeleteHistory> histories = originalIssue.delete(loginUser);
         deleteHistoryRepository.saveAll(histories);
+    }
+
+    @Transactional
+    public void setMilestone(User loginUser, long issueId, long milestoneId) {
+        //loginUser가 필요한가?? 로그인 했는지 체크를 여기서 해야하는가?
+        Issue currentIssue = issueRepository.findById(issueId).get();
+        currentIssue.setMilestone(milestoneRepository.findById(milestoneId).get());
+        log.debug("currentIssue!!!!!!!!!!!!!!!!!!!!!!!!! :{}", currentIssue.getMilestone());
     }
 }

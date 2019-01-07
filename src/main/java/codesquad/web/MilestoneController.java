@@ -4,7 +4,6 @@ import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.MilestoneService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,5 +35,5 @@ public class MilestoneController {
         milestoneService.add(milestone);
         return "redirect:/milestones/list";
     }
-    
+
 }
