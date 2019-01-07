@@ -58,6 +58,6 @@ public class IssueController {
     public String delete(@LoginUser User loginUser, @PathVariable long id) {
         log.debug("삭제");
         issueService.delete(loginUser, id);
-        return "index";
+        return "redirect:/";
     }
 }

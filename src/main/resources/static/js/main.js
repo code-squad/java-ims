@@ -35,8 +35,6 @@ function onSuccess(data, status, xhr) {
 }
 
 function issue_update(e) {
-
-
     var url = $('#issue_update').attr('href');
 
     console.log("url : " + url);
@@ -45,8 +43,7 @@ function issue_update(e) {
         type : 'get',
         url : url,
         dataType : 'text',
-        error : issue_update_onError,
-        success : issue_update_onSuccess
+        error : issue_update_onError
     })
 }
 
@@ -61,7 +58,7 @@ function issue_delete(e) {
         url : url,
         dataType : 'json',
         error : issue_update_onError,
-        success : issue_update_onSuccess
+        success : issue_delete_onSuccess
     })
 }
 
@@ -71,7 +68,7 @@ function issue_update_onError(xhr, status) {
     alert("이슈 작성자와 로그인 아이디가 다릅니다.");
 }
 
-function issue_update_onSuccess(data) {
+function issue_delete_onSuccess(data) {
     if(data.valid){
         console.log(data);
         window.location.href= "/";

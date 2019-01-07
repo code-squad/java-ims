@@ -37,6 +37,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginForm() {
+        log.debug("로그인 폼");
         return "user/login";
     }
 
