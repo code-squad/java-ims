@@ -32,7 +32,6 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    // TODO 어플리케이션 오류 해결하기
     @Test
     public void create() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()

@@ -24,7 +24,7 @@ function login(e) {
 
 function onError(xhr, status) {
     console.log('error');
-    console.log(xhr)
+    console.log(xhr);
     alert("아이디 또는 비밀번호가 다릅니다.");
 }
 
@@ -35,7 +35,7 @@ function onSuccess(data, status, xhr) {
 }
 
 function issue_update(e) {
-//    e.preventDefault();
+
 
     var url = $('#issue_update').attr('href');
 
@@ -51,6 +51,7 @@ function issue_update(e) {
 }
 
 function issue_delete(e) {
+    e.preventDefault();
     var url = $("#issues-menu-lower-right").attr('href');
 
     console.log("delete url : " + url);
@@ -58,7 +59,7 @@ function issue_delete(e) {
     $.ajax({
         type : 'delete',
         url : url,
-        dataType : 'text',
+        dataType : 'json',
         error : issue_update_onError,
         success : issue_update_onSuccess
     })
@@ -68,11 +69,17 @@ function issue_update_onError(xhr, status) {
     console.log('error');
     console.log(xhr);
     alert("이슈 작성자와 로그인 아이디가 다릅니다.");
-    window.location.href= "/";
 }
 
 function issue_update_onSuccess(data) {
-    console.log(data);
+    if(data.valid){
+        console.log(data);
+        window.location.href= "/";
+    }
+    else {
+        alert(data.errorMessage);
+    }
+
 }
 
 
