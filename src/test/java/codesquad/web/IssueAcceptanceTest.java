@@ -106,7 +106,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void delete_삭제불가_타인의이슈() throws Exception {
         ResponseEntity<String> response = delete(basicAuthTemplate(SANJIGI));
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         log.debug("body : {}", response.getBody());
     }
 
