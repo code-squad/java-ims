@@ -26,6 +26,10 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
+
     private boolean deleted = false;
 
     public boolean isDeleted() {

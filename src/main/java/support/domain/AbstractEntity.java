@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@MappedSuperclass
+@MappedSuperclass       //나는 저장안하되, 나를 상속받은 애들은 디비에 저장
 @EntityListeners(AuditingEntityListener.class)
 public class AbstractEntity {
     @Id

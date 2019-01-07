@@ -68,7 +68,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void createIssueUpdateForm_other_user() throws Exception {
         ResponseEntity<String> response =
                 basicAuthTemplate(SANJIGI).getForEntity(String.format("/issues/%d/form", originalIssue.getId()), String.class);
-//        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);     //basicAuthTemplate에서 FORBIDDEN에러 뜨는 듯 한데 구체적으로 어느 부분에서 나는지 모르겠음.
+//        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);     //basicAuthTemplate에서 FORBIDDEN에러 뜨는 듯 한데 구체적으로 어느 부분에서 나는지 모르겠음. -->UserService 클래스의 findById에서 UnAuthorizedException 뜸
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
