@@ -15,7 +15,13 @@ public class Issue extends AbstractEntity {
     @Embedded
     private IssueBody issueBody;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
+    private Milestone milestone;
+
     private boolean deleted = false;
+
+    private boolean closed = false;
 
     public Issue() {
     }
@@ -35,6 +41,14 @@ public class Issue extends AbstractEntity {
         }
         this.issueBody.update(issueBody);
         return this;
+    }
+
+    public void toClose() {
+        this.closed = true;
+    }
+
+    public void toMilestone(Milestone milestone) {
+        this.milestone = milestone;
     }
 
     public String getUserId() {
@@ -61,6 +75,14 @@ public class Issue extends AbstractEntity {
         this.issueBody.setComment(comment);
     }
 
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
     public DeleteHistory deleted(User loginUser) {
         if (!writer.matchUser(loginUser)) {
             throw new UnAuthorizedException("작성자가 아닙니다.");
@@ -71,7 +93,11 @@ public class Issue extends AbstractEntity {
 
 
     public boolean isDeleted() {
-        return !deleted;
+        return deleted;
+    }
+
+    public boolean isClosed() {
+        return closed;
     }
 
     @Override

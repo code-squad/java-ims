@@ -43,15 +43,15 @@ public class IssueTest extends BaseTest {
 
     @Test
     public void delete() {
-        softly.assertThat(issue1.isDeleted()).isTrue();
-        issue1.deleted(JAVAJIGI);
         softly.assertThat(issue1.isDeleted()).isFalse();
+        issue1.deleted(JAVAJIGI);
+        softly.assertThat(issue1.isDeleted()).isTrue();
     }
 
     @Test(expected = UnAuthorizedException.class)
     public void delete_no() {
-        softly.assertThat(issue1.isDeleted()).isTrue();
+        softly.assertThat(issue1.isDeleted()).isFalse();
         issue1.deleted(SANJIGI);
-        softly.assertThat(issue1.isDeleted()).isTrue();
+        softly.assertThat(issue1.isDeleted()).isFalse();
     }
 }
