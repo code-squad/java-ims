@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity
-public class MileStone extends AbstractEntity {
+public class Milestone extends AbstractEntity {
     @Size(min = 1, max = 20)
     @Column(nullable = false, length = 20)
     private String subject;
@@ -18,11 +18,11 @@ public class MileStone extends AbstractEntity {
 
     private LocalDateTime endDate;
 
-    public MileStone() {
+    public Milestone() {
 
     }
 
-    public MileStone(String subject, LocalDateTime startDate, LocalDateTime endDate) {
+    public Milestone(String subject, LocalDateTime startDate, LocalDateTime endDate) {
         this.subject = subject;
         this.startDate = startDate;
         this.endDate = endDate;
