@@ -13,6 +13,8 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
+import static codesquad.domain.UserTest.SANJIGI;
+
 public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(UserAcceptanceTest.class);
 
@@ -21,7 +23,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void createForm() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/users/form", String.class);
+        ResponseEntity<String> response = template().getForEntity("/users/form", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         log.debug("body : {}", response.getBody());
     }
@@ -33,9 +35,9 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("userId", userId)
                 .addParameter("password", "password")
                 .addParameter("name", "자바지기")
-                .addParameter("email", "javajigi@slipp.net").build();
+                .build();
 
-        ResponseEntity<String> response = template.postForEntity("/users", request, String.class);
+        ResponseEntity<String> response = template().postForEntity("/users", request, String.class);
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(userRepository.findByUserId(userId)).isNotNull();
@@ -43,24 +45,44 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
+    public void login_failed() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("userId", "javajigi")
+                .addParameter("password", "123456")
+                .build();
+
+        ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        softly.assertThat(response.getBody()).contains("아이디 또는 비밀번호가 틀립니다. 다시 로그인 해주세요.");
+    }
+
+    @Test
     public void login() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("userId", "javajigi")
-                .addParameter("password", "test")
+                .addParameter("password", "password")
                 .build();
 
-        ResponseEntity<String> response = template.postForEntity("/users/login", request, String.class);
+        ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 
+    @Test
+    public void profile() {
+        ResponseEntity<String> response = template
+                .getForEntity(String.format("/users/%d", SANJIGI.getId()), String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        softly.assertThat(response.getBody().contains(SANJIGI.getName())).isTrue();
+    }
 
     @Test
     public void updateForm_no_login() throws Exception {
-        ResponseEntity<String> response = template.getForEntity(String.format("/users/%d/form", loginUser.getId()),
+        ResponseEntity<String> response = template().getForEntity(String.format("/users/%d/form", loginUser.getId()),
                 String.class);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
     }
 
     @Test
@@ -73,16 +95,15 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Test
     public void update_no_login() throws Exception {
-        ResponseEntity<String> response = update(template);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        ResponseEntity<String> response = update(template());
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
     }
 
     private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("_method", "put")
-                .addParameter("password", "pass2")
-                .addParameter("name", "재성2")
-                .addParameter("email", "javajigi@slipp.net").build();
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm().put()
+                .addParameter("password", "password2")
+                .addParameter("name", "자바지기2")
+                .build();
 
         return template.postForEntity(String.format("/users/%d", loginUser.getId()), request, String.class);
     }
@@ -92,5 +113,12 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = update(basicAuthTemplate);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users");
+    }
+
+    @Test
+    public void logout() throws Exception {
+        ResponseEntity<String> response = basicAuthTemplate.getForEntity("/users/logout", String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 }

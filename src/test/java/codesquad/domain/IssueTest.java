@@ -1,16 +1,24 @@
 package codesquad.domain;
 
+import codesquad.CannotDeleteException;
+import codesquad.UnAuthorizedException;
+import codesquad.dto.IssueDto;
+import org.junit.Before;
 import org.junit.Test;
 import support.test.BaseTest;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static codesquad.domain.UserTest.JAVAJIGI;
+import static codesquad.domain.UserTest.SANJIGI;
+
 public class IssueTest extends BaseTest {
     public static final List<Issue> ISSUES = new ArrayList<>();
-    public static final Issue ISSUE1 = new Issue(1L,"testSubject1", "testComment1");
-    public static final Issue ISSUE2 = new Issue(2L, "testSubject2", "testComment2");
-    public static final Issue ISSUE3 = new Issue(3L, "testSubject3", "testComment3");
+    public static final Issue ISSUE1 = new Issue(1,"testSubject1", "testComment1", JAVAJIGI, false);
+    public static final Issue ISSUE2 = new Issue(2, "testSubject2", "testComment2", JAVAJIGI, false);
+    public static final Issue ISSUE3 = new Issue(3, "testSubject3", "testComment3", SANJIGI, false);
+    public static final IssueDto UPDATEDISSUE1 = new IssueDto("testSubject1", "testComment1", JAVAJIGI, false);
 
     static {
         ISSUES.add(ISSUE1);
@@ -22,5 +30,38 @@ public class IssueTest extends BaseTest {
     public void create() {
         softly.assertThat(ISSUE1.getSubject()).isEqualTo("testSubject1");
         softly.assertThat(ISSUE1.getComment()).isEqualTo("testComment1");
+    }
+
+    @Test(expected = UnAuthorizedException.class)
+    public void update_no_login() {
+        ISSUE1.update(null, UPDATEDISSUE1);
+    }
+
+    @Test(expected = UnAuthorizedException.class)
+    public void update_not_owner() {
+        ISSUE1.update(SANJIGI, UPDATEDISSUE1);
+    }
+
+    @Test
+    public void update() {
+        ISSUE1.update(JAVAJIGI, UPDATEDISSUE1);
+        softly.assertThat(ISSUE1.getSubject()).isEqualTo(UPDATEDISSUE1.getSubject());
+        softly.assertThat(ISSUE1.getComment()).isEqualTo(UPDATEDISSUE1.getComment());
+    }
+
+    @Test(expected = CannotDeleteException.class)
+    public void delete_no_login() throws CannotDeleteException  {
+        ISSUE2.delete(null);
+    }
+
+    @Test(expected = CannotDeleteException.class)
+    public void delete_not_owner() throws CannotDeleteException  {
+        ISSUE2.delete(SANJIGI);
+    }
+
+    @Test
+    public void delete() throws CannotDeleteException {
+        ISSUE2.delete(JAVAJIGI);
+        softly.assertThat(ISSUE2.isDeleted()).isEqualTo(true);
     }
 }

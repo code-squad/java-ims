@@ -11,6 +11,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
+import static codesquad.domain.UserTest.JAVAJIGI;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -27,7 +28,7 @@ public class IssueValidationTest {
 
     @Test
     public void subjectWhenIsEmpty() throws Exception {
-        Issue issue = new Issue("", "testComment1");
+        Issue issue = new Issue("", "testComment1", JAVAJIGI, false);
         Set<ConstraintViolation<Issue>> constraintViolcations = validator.validate(issue);
         assertThat(constraintViolcations.size(), is(1));
 
@@ -38,7 +39,7 @@ public class IssueValidationTest {
 
     @Test
     public void subjectWhenIsShort() throws Exception {
-        Issue issue = new Issue("s", "testComment1");
+        Issue issue = new Issue("s", "testComment1", JAVAJIGI, false);
         Set<ConstraintViolation<Issue>> constraintViolcations = validator.validate(issue);
         assertThat(constraintViolcations.size(), is(1));
 
@@ -49,7 +50,7 @@ public class IssueValidationTest {
 
     @Test
     public void commentWhenIsEmpty() throws Exception {
-        Issue issue = new Issue("testSubject1", "");
+        Issue issue = new Issue("testSubject1", "", JAVAJIGI, false);
         Set<ConstraintViolation<Issue>> constraintViolcations = validator.validate(issue);
         assertThat(constraintViolcations.size(), is(1));
 
@@ -60,7 +61,7 @@ public class IssueValidationTest {
 
     @Test
     public void commentWhenIsShort() throws Exception {
-        Issue issue = new Issue("testSubject1", "c");
+        Issue issue = new Issue("testSubject1", "c", JAVAJIGI, false);
         Set<ConstraintViolation<Issue>> constraintViolcations = validator.validate(issue);
         assertThat(constraintViolcations.size(), is(1));
 
@@ -71,7 +72,7 @@ public class IssueValidationTest {
 
     @Test
     public void bothWhenIsEmpty() throws Exception {
-        Issue issue = new Issue("", "");
+        Issue issue = new Issue("", "", JAVAJIGI, false);
         Set<ConstraintViolation<Issue>> constraintViolcations = validator.validate(issue);
         assertThat(constraintViolcations.size(), is(2));
 
@@ -82,7 +83,7 @@ public class IssueValidationTest {
 
     @Test
     public void bothWhenIsShort() throws Exception {
-        Issue issue = new Issue("s", "c");
+        Issue issue = new Issue("s", "c", JAVAJIGI, false);
         Set<ConstraintViolation<Issue>> constraintViolcations = validator.validate(issue);
         assertThat(constraintViolcations.size(), is(2));
 

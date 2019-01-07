@@ -1,6 +1,7 @@
 package codesquad.dto;
 
 import codesquad.domain.Issue;
+import codesquad.domain.User;
 
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -12,13 +13,19 @@ public class IssueDto {
     @Size(min = 3)
     private String comment;
 
+    private User writer;
+
+    private boolean deleted;
+
     public IssueDto() {
     }
 
-    public IssueDto(String subject, String comment) {
+    public IssueDto(String subject, String comment, User writer, boolean deleted) {
         super();
         this.subject = subject;
         this.comment = comment;
+        this.writer = writer;
+        this.deleted = deleted;
     }
 
     public String getSubject() {
@@ -37,8 +44,24 @@ public class IssueDto {
         this.comment = comment;
     }
 
+    public User getWriter() {
+        return writer;
+    }
+
+    public void writeBy(User loginUser) {
+        this.writer = loginUser;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public Issue _toIssue() {
-        return new Issue(this.subject, this.comment);
+        return new Issue(this.subject, this.comment, this.writer, this.deleted);
     }
 
     @Override

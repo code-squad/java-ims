@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -28,8 +29,9 @@ public class SecurityControllerAdvice {
     }
 
     @ExceptionHandler(UnAuthenticationException.class)
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public void unAuthentication() {
+    public String unAuthentication(UnAuthenticationException e, RedirectAttributes redirectAttrs) {
         log.debug("UnAuthenticationException is happened!");
+        redirectAttrs.addFlashAttribute("errorMessage", e.getMessage());
+        return "redirect:/users/login";
     }
 }
