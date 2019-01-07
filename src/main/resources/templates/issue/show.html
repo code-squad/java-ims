@@ -99,7 +99,7 @@
                             </strong>
                         </span>
                         <span>
-                            <form style="display: inline;" action="/api/issues/{{ issue.id }}/comments/{{ id }}" class="comment-edit" method="post">
+                            <form action="/api/issues/{{ issue.id }}/comments/{{ id }}" class="comment-edit" method="post">
                                 <input type="hidden" name="_method" value="PUT">
                                 <button type="submit" class="nostylebutton">
                                     <i class="material-icons">edit</i>
@@ -107,7 +107,7 @@
                             </form>
                         </span>
                         <span>
-                            <form style="display: inline;" action="/api/issues/{{ issue.id }}/comments/{{ id }}" class="comment-delete" method="post">
+                            <form action="/api/issues/{{ issue.id }}/comments/{{ id }}" class="comment-delete" method="post">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button type="submit" class="nostylebutton">
                                     <i class="material-icons">delete</i>
