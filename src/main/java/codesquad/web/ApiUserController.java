@@ -59,7 +59,6 @@ public class ApiUserController {
         User user = userService.update(loginUser, id, updatedUser);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create("/"));
-        // 질문1) 개인정보수정후, 세션값도 변경 --> 세션의 객체는 참조이기 떄문에 참조에 있는 값만 변경하면 된다! 이와같이 하는게 맞는건가?! //
         HttpSessionUtils.updateUserSession(httpSession, updatedUser);
         return new ResponseEntity<User>(user, httpHeaders, HttpStatus.OK);
     }

@@ -1,8 +1,8 @@
 package codesquad.web;
 
-import org.antlr.v4.runtime.misc.MultiMap;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -33,7 +33,6 @@ public class LabelAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void 라벨생성_로그인X_실패() {
         HttpEntity<MultiValueMap<String, Object>> httpEntity = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("writer", UserFixture.DOBY)
                 .addParameter("subject", "Label Subject")
                 .build();
         ResponseEntity<Void> responseEntity = template.postForEntity("/labels", httpEntity, Void.class);
@@ -43,7 +42,6 @@ public class LabelAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void 라벨생성_로그인O_글자수_초과_실패() {
         HttpEntity<MultiValueMap<String, Object>> httpEntity = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("writer", UserFixture.DOBY)
                 .addParameter("subject", "Label Subject Over 20 Character")
                 .build();
         ResponseEntity<Void> responseEntity = basicAuthTemplate(UserFixture.DOBY).postForEntity("/labels", httpEntity, Void.class);
@@ -53,10 +51,9 @@ public class LabelAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void 라벨생성_로그인O_글자수_정상_성공() {
         HttpEntity<MultiValueMap<String, Object>> httpEntity = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("writer", UserFixture.DOBY)
                 .addParameter("subject", "Label Subject")
                 .build();
-        ResponseEntity<Void> responseEntity = template.postForEntity("/labels", httpEntity, Void.class);
+        ResponseEntity<Void> responseEntity = basicAuthTemplate().postForEntity("/labels", httpEntity, Void.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/labels");
     }

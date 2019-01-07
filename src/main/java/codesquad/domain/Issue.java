@@ -11,6 +11,9 @@ public class Issue extends AbstractEntity {
     @Embedded
     private Content content;
 
+    @Embedded
+    private Answers answers = new Answers();
+
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
@@ -123,4 +126,8 @@ public class Issue extends AbstractEntity {
     }
 
 
+    public Answer addAnswer(Answer answer) {
+        answers.addAnswer(answer);
+        return answer;
+    }
 }

@@ -13,3 +13,8 @@ INSERT INTO milestone (id, subject, start_date, end_date, writer_id) values (3, 
 INSERT INTO milestone (id, subject, start_date, end_date, writer_id) values (4, 'milestone-4', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 1);
 INSERT INTO milestone (id, subject, start_date, end_date, writer_id) values (5, 'milestone-5', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 3);
 
+
+INSERT INTO label (id, subject, writer_id) values (1, 'label - 1', 1);
+INSERT INTO label (id, subject, writer_id) values (2, 'label - 2', 1);
+INSERT INTO label (id, subject, writer_id) values (3, 'label - 3', 1);
+

@@ -47,11 +47,8 @@ public class UserService {
                 .orElseThrow(UnAuthorizedException::new);
     }
 
-    public List<UserDto> findAll() {
-        List<UserDto> userDtos = new ArrayList<>();
-        userRepository.findAll().stream().forEach(u -> userDtos.add(u._toUserDto()));
-        logger.debug("userDtos : {}", userDtos.toString());
-        return userDtos;
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     public User login(String userId, String password) throws UnAuthenticationException {

@@ -1,11 +1,14 @@
 package codesquad.web;
 
 import codesquad.UnAuthenticationException;
+import codesquad.UnsupportedFormatException;
+import codesquad.domain.Answer;
 import codesquad.domain.Issue;
+import codesquad.domain.Label;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
-import codesquad.service.IssueService;
+import codesquad.service.*;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,8 +35,20 @@ public class ApiIssueController {
     @Autowired
     private IssueService issueService;
 
+    @Autowired
+    private LabelService labelService;
+
     @Value("${error.not.supported}")
     private String errorMessage;
+
+    @Autowired
+    private AssigneeService assigneeService;
+
+    @Autowired
+    private MilestoneService milestoneService;
+
+    @Autowired
+    private AnswerService answerService;
 
     private static final Logger logger = getLogger(ApiIssueController.class);
 
@@ -50,10 +65,10 @@ public class ApiIssueController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> issueDelete(@LoginUser User loginUser, @PathVariable Long id) throws UnAuthenticationException {
+    public ResponseEntity issueDelete(@LoginUser User loginUser, @PathVariable Long id) throws UnAuthenticationException {
         logger.debug("Call Method issueDelete");
         issueService.deleteIssue(loginUser, id);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity("success", HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -75,6 +90,42 @@ public class ApiIssueController {
         String location = String.format("/issues/%s/updateForm", String.valueOf(id));
         logger.debug("Location : {}" , location);
         return location;
+    }
+
+    @PostMapping("/{id}/labels/{labelId}")
+    public ResponseEntity<String> registerLabel(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long labelId) throws UnAuthenticationException {
+        Issue issue = issueService.findIssue(id);
+        logger.debug("Call method register label, issue : {}", issue);
+        labelService.registerLabel(loginUser, issue, labelId);
+        return new ResponseEntity("success", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/assignees/{assigneeId}")
+    public ResponseEntity<String> registerAssignee(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long assigneeId) throws UnAuthenticationException {
+        Issue issue = issueService.findIssue(id);
+        logger.debug("Call registerAssignee Method(), issue : {}", issue);
+        assigneeService.registerAssignee(loginUser, issue, assigneeId);
+        return new ResponseEntity("success", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/milestones/{milestoneId}")
+    public ResponseEntity<String> registerMilestone(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long milestoneId) {
+        Issue issue = issueService.findIssue(id);
+        logger.debug("Call registerMilestone Method(), issue : {}", issue);
+        milestoneService.registerMilestone(loginUser, issue, milestoneId);
+        return new ResponseEntity("success", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/answers")
+    public ResponseEntity createAnswer(@LoginUser User loginUser, @PathVariable Long id, @RequestBody @Valid Answer answer, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new UnsupportedFormatException(errorMessage);
+        }
+        Issue issue = issueService.findIssue(id);
+        Answer createdAnswer = answerService.createAnswer(loginUser, issue, answer);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(URI.create(String.format("/api/answers/%s", Long.valueOf(createdAnswer.getId()))));
+        return new ResponseEntity("success", httpHeaders, HttpStatus.CREATED);
     }
 
     public HttpHeaders createHeader(String location) {

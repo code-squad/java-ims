@@ -38,13 +38,13 @@
             </button>
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="milestone-menu">
                 {{# milestones }}
-                <li class="mdl-menu__item">
-                    <a href="/issues/{{issueId}}/milestones/{{id}}">{{ subject }}</a>
+                <li class="mdl-menu__item" value="/api/issues/{{issueId}}/milestones/{{id}}">
+                    {{ subject }}
                 </li>
                 {{/ milestones }}
                 {{# milestone }}
                 <li class="mdl-menu__item">
-                    <a href="/issues/{{issueId}}/milestones/{{id}}">{{ subject }}</a>
+                    {{ subject }}
                 </li>
                 {{/ milestone }}
             </ul>
@@ -56,12 +56,12 @@
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="label-menu">
                 {{# label }}
                 <li class="mdl-menu__item">
-                    <a href="/issue/{{issueId}}/labels/{{id}}">{{ subject }}</a>
+                    {{ subject }}
                 </li>
                 {{/ label }}
                 {{# labels }}
-                <li class="mdl-menu__item">
-                    <a href="/issue/{{issueId}}/labels/{{id}}">{{ subject }}</a>
+                <li class="mdl-menu__item" value="/api/issues/{{issueId}}/labels/{{id}}">
+                    {{ subject }}
                 </li>
                 {{/ labels }}
             </ul>
@@ -73,12 +73,12 @@
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="assignee-menu">
                 {{# assignee }}
                 <li class="mdl-menu__item">
-                    <a href="/issues/{{issueID}}/assignees/{{id}}">{{ userId }}</a>
+                    {{ userId }}
                 </li>
                 {{/ assignee }}
                 {{# assignees }}
-                <li class="mdl-menu__item">
-                    <a href="/issues/{{issueId}}/assignees/{{id}}">{{ userId }} </a>
+                <li class="mdl-menu__item" value="/api/issues/{{issueId}}/assignees/{{id}}">
+                    {{ userId }}
                 </li>
                 {{/ assignees }}
             </ul>
@@ -88,9 +88,7 @@
         </div>
         {{/ issue }}
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
-
             <!-- comments start -->
-
             <div class="comment mdl-color-text--grey-700">
                 <header class="comment__header">
                     <img class="comment__avatar2" height="48" width="48"
@@ -98,57 +96,12 @@
                     <div class="comment__author">
                         <strong>
                             <a>javajigi</a>
-
-
                             <span>changed milestone 1 on 2017-01-14</span>
-
-
                         </strong>
                     </div>
                 </header>
             </div>
             <hr>
-
-
-            <div class="comment mdl-color-text--grey-700">
-                <header class="comment__header">
-                    <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars1.githubusercontent.com/u/7744966?v=3&u=1bd7d2e72800c0d5a1a5a2e04da851d30b3c13c7&s=140"
-                         alt="cca-company">
-                    <div class="comment__author">
-                        <strong>
-                            <a>cca-company</a>
-
-
-                            <span>comment new issue! on 2017-01-14</span>
-
-
-                        </strong>
-                    </div>
-                </header>
-            </div>
-            <hr>
-
-
-            <div class="comment mdl-color-text--grey-700">
-                <header class="comment__header">
-                    <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars3.githubusercontent.com/u/14341811?v=3&s=400" alt="진저애비">
-                    <div class="comment__author">
-                        <strong>
-                            <a>진저애비</a>
-
-
-                            upload file <a href="upload file" target="_blank">[view]</a>
-
-
-                        </strong>
-                    </div>
-                </header>
-            </div>
-            <hr>
-
-
             <!-- comments end -->
         </div>
         <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">

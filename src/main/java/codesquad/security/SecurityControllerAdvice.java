@@ -2,6 +2,7 @@ package codesquad.security;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
+import codesquad.UnsupportedFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -41,5 +42,12 @@ public class SecurityControllerAdvice {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public void ConstraintViolation(ConstraintViolationException e) {
         log.debug(e.getMessage());
+    }
+
+    @ExceptionHandler(UnsupportedFormatException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public String UnsupportedLabelFormatException(UnsupportedFormatException e) {
+        log.debug(e.getMessage());
+        return "redirect:/labels/form";
     }
 }

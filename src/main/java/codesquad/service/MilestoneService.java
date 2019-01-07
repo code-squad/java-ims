@@ -34,10 +34,8 @@ public class MilestoneService {
         return milestoneRepository.save(milestoneDto._toMilestone(loginUser));
     }
 
-    public List<MilestoneDto> findAllMilestone() {
-        List<MilestoneDto> milestoneDtos = new ArrayList<>();
-        milestoneRepository.findAll().stream().forEach(m -> milestoneDtos.add(m._toMilestoneDto()));
-        return milestoneDtos;
+    public List<Milestone> findAllMilestone() {
+        return milestoneRepository.findAll();
     }
 
     @Transactional

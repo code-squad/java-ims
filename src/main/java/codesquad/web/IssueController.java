@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -70,13 +72,6 @@ public class IssueController {
         return "/issue/show";
     }
 
-    @GetMapping("/{id}/updateForm")
-    public String updateForm(@LoginUser User loginUser, @PathVariable Long id, Model model) {
-        model.addAttribute("issue", issueService.findIssue(id)._toIssueDto());
-        model.addAttribute("id", id);
-        return "/issue/updateForm";
-    }
-
     @GetMapping("/{id}/milestones/{milestoneId}")
     public String registerMilestone(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long milestoneId) {
         Issue issue = issueService.findIssue(id);
@@ -85,11 +80,20 @@ public class IssueController {
         return "redirect:/issues/" + Long.valueOf(id);
     }
 
+    @GetMapping("/{id}/updateForm")
+    public String updateForm(@LoginUser User loginUser, @PathVariable Long id, Model model) {
+        model.addAttribute("issue", issueService.findIssue(id)._toIssueDto());
+        model.addAttribute("id", id);
+        return "/issue/updateForm";
+    }
+
     @GetMapping("/{id}/assignees/{assigneeId}")
-    public String registerAssignee(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long assigneeId) {
+    public String registerAssignee(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long assigneeId) throws UnAuthenticationException {
         Issue issue = issueService.findIssue(id);
         logger.debug("Call registerAssignee Method(), issue : {}", issue);
         assigneeService.registerAssignee(loginUser, issue, assigneeId);
         return "redirect:/issues/" + Long.valueOf(id);
     }
+
+
 }

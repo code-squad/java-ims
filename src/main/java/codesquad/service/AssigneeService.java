@@ -1,5 +1,6 @@
 package codesquad.service;
 
+import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.User;
@@ -24,10 +25,10 @@ public class AssigneeService {
     private static final Logger logger = getLogger(AssigneeService.class);
 
     @Transactional
-    public void registerAssignee(User loginUser, Issue issue, Long assigneeId) {
+    public void registerAssignee(User loginUser, Issue issue, Long assigneeId) throws UnAuthenticationException {
         if(!issue.isOneSelf(loginUser)) {
             logger.debug(oneSelfErrorMessage);
-            throw new UnAuthorizedException(oneSelfErrorMessage);
+            throw new UnAuthenticationException(oneSelfErrorMessage);
         }
         issue.setAssignee(userRepository.findById(assigneeId).orElse(null));
     }
