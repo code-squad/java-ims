@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -29,10 +30,9 @@ public class SecurityControllerAdvice {
     }
 
     @ExceptionHandler(UnAuthenticationException.class)
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public String unAuthentication(Exception ex, Model model) {
+    public String unAuthentication(Exception ex, RedirectAttributes redirectAttributes) {
         log.debug("UnAuthenticationException is happened!");
-        model.addAttribute("errorMessage", ex.getMessage());
-        return "/user/login";
+        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        return "redirect:/login";
     }
 }

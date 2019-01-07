@@ -30,8 +30,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void createForm_no_login() throws Exception {
         ResponseEntity<String> response = template.getForEntity("/issue/form", String.class);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-        log.debug("body : {}", response.getBody());
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/login");
     }
 
 
@@ -56,7 +56,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void create_not_login() throws Exception {
         ResponseEntity<String> response = getStringResponseEntity(HtmlFormDataBuilder.urlEncodedForm(), "제목입니다.", "내용입니다.", template, ISSUE_URL);
         log.debug(response.getStatusCode());
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/login");
     }
 
     @Test
@@ -85,7 +86,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void update_not_login() {
         ResponseEntity<String> response = getStringResponseEntity(HtmlFormDataBuilder.urlEncodedForm()
                 .put(), "나는 바뀐 제목입니다.", "나는 바뀐 내용입니다.", template, ISSUE_URL + "/1");
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/login");
     }
 
     @Test
@@ -111,8 +113,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .delete()
                 .build();
         ResponseEntity<String> response = template.postForEntity(ISSUE_URL + "/1", request, String.class);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-    }
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/login");    }
 
     @Test
     public void delete_no_others() {
