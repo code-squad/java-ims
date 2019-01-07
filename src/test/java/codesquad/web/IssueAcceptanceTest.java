@@ -64,8 +64,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void updateForm_no_login() throws Exception {
         ResponseEntity<String> response = template.getForEntity(String.format("/issues/%d/form", 1),
                 String.class);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-    }
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).startsWith("/users/login");    }
 
     @Test
     public void update() throws Exception {
@@ -77,7 +77,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void update_no_login() throws Exception {
         ResponseEntity<String> response = update(template);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).startsWith("/users/login");
     }
 
     private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
@@ -99,7 +100,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void delete_삭제불가_비로그인() throws Exception {
         ResponseEntity<String> response = delete(template);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).startsWith("/users/login");
         log.debug("body : {}", response.getBody());
     }
 
