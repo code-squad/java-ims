@@ -1,5 +1,6 @@
 package codesquad.web.issue;
 
+import codesquad.UnAuthorizedException;
 import codesquad.domain.DeleteHistoryRepository;
 import codesquad.domain.User;
 import codesquad.domain.issue.Comment;
@@ -33,6 +34,12 @@ public class CommentService {
     public Comment findById(long id) {
         return commentRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public Comment findById(User loginUser, long commentId) {
+        Comment comment = findById(commentId);
+        if(!comment.isOwner(loginUser)) throw new UnAuthorizedException();
+        return comment;
     }
 
     @Transactional

@@ -69,6 +69,10 @@ public class Comment extends AbstractEntity {
         return writer;
     }
 
+    public boolean isOwner(User target) {
+        return this.writer.equals(target);
+    }
+
     public void setWriter(User writer) {
         this.writer = writer;
     }

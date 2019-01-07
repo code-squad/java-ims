@@ -47,4 +47,9 @@ public class CommentTest extends BaseTest {
         Comment comment = new Comment(RANDOM_COMMENT_ID, NEW_CONTENTS, ISSUE, BRAD);
         Comment updatedCommnet = comment.update(JUNGHYUN, ISSUE, new Comment(UPDATE_CONTENTS));
     }
+
+    @Test
+    public void isOwner() {
+        softly.assertThat(COMMENT.isOwner(BRAD)).isTrue();
+    }
 }

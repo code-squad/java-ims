@@ -36,8 +36,8 @@ public class ApiCommentController {
     }
 
     @GetMapping("/{commentId}")
-    public Comment show(@PathVariable long commentId) {
-        return commentService.findById(commentId);
+    public Comment show(@LoginUser User loginUser, @PathVariable long commentId) {
+        return commentService.findById(loginUser, commentId);
     }
 
     @DeleteMapping("/{commentId}")
