@@ -1,10 +1,8 @@
 package codesquad.web;
 
-import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.User;
-import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
@@ -29,8 +27,8 @@ public class IssueController {
     }
 
     @PostMapping("")
-    public String create(@LoginUser User loginUser, IssueDto issueDto) {
-        issueService.create(loginUser, issueDto);
+    public String create(@LoginUser User loginUser, Issue issue) {
+        issueService.create(loginUser, issue);
         return "redirect:/";
     }
 
@@ -59,7 +57,7 @@ public class IssueController {
     }
 
     @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, IssueDto target) {
+    public String update(@LoginUser User loginUser, @PathVariable long id, Issue target) {
         log.debug("***** update issue id : {}", id);
 
         issueService.update(loginUser, id, target);

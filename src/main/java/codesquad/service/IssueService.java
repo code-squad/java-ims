@@ -4,7 +4,6 @@ import codesquad.CannotDeleteException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
-import codesquad.dto.IssueDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,21 +34,20 @@ public class IssueService {
         return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    public Issue add(IssueDto issueDto) {
-        return issueRepository.save(issueDto._toIssue());
+    public Issue add(Issue issue) {
+        return issueRepository.save(issue);
     }
 
     @Transactional
-    public Issue create(User loginUser, IssueDto issueDto) {
-        issueDto.writeBy(loginUser);
-        add(issueDto);
-        return issueDto._toIssue();
+    public Issue create(User loginUser, Issue issue) {
+        issue.writeBy(loginUser);
+        return add(issue);
     }
 
     @Transactional
-    public Issue update(User loginUser, long id, IssueDto updatedIssueDto) {
+    public Issue update(User loginUser, long id, Issue updatedIssue) {
         Issue original = findById(id);
-        original.update(loginUser, updatedIssueDto._toIssue());
+        original.update(loginUser, updatedIssue);
         return issueRepository.save(original);
     }
 

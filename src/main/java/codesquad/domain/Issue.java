@@ -2,7 +2,6 @@ package codesquad.domain;
 
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
-import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -83,10 +82,6 @@ public class Issue extends AbstractEntity {
 
     public void writeBy(User loginUser) {
         this.writer = loginUser;
-    }
-
-    public IssueDto _toIssueDto() {
-        return new IssueDto(this.subject, this.comment, this.writer);
     }
 
     @Override
