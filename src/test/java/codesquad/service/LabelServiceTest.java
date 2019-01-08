@@ -10,8 +10,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import support.test.BaseTest;
 
-import static codesquad.domain.label.LabelTest.LABEL;
-import static codesquad.domain.label.LabelTest.LABEL_BODY;
+import static codesquad.domain.LabelTest.LABEL;
+import static codesquad.domain.LabelTest.LABEL_BODY;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)

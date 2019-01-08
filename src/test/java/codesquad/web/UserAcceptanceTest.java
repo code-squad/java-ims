@@ -1,13 +1,12 @@
 package codesquad.web;
 
-import codesquad.domain.User;
-import codesquad.domain.UserRepository;
+import codesquad.domain.user.User;
+import codesquad.domain.user.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -17,8 +16,6 @@ import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 import javax.persistence.EntityNotFoundException;
-
-import java.util.zip.DataFormatException;
 
 import static codesquad.domain.UserTest.BRAD;
 import static org.junit.Assert.assertEquals;

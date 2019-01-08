@@ -1,7 +1,7 @@
 package codesquad.service;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.DeleteHistoryRepository;
+import codesquad.domain.history.DeleteHistoryRepository;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueRepository;
 import org.junit.Before;
@@ -19,8 +19,8 @@ import java.util.Optional;
 import static codesquad.domain.IssueTest.*;
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
-import static codesquad.domain.label.LabelTest.LABEL;
-import static codesquad.domain.milestone.MilestoneTest.MILESTONE;
+import static codesquad.domain.LabelTest.LABEL;
+import static codesquad.domain.MilestoneTest.MILESTONE;
 import static org.mockito.Mockito.when;
 import static org.slf4j.LoggerFactory.getLogger;
 

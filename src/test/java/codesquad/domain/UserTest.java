@@ -1,6 +1,8 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import codesquad.domain.user.Avatar;
+import codesquad.domain.user.User;
 import org.junit.Test;
 import support.test.BaseTest;
 

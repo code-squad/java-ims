@@ -1,4 +1,4 @@
-package codesquad.domain;
+package codesquad.domain.user;
 
 import codesquad.UnAuthorizedException;
 import codesquad.dto.UserDto;
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.validation.constraints.Size;

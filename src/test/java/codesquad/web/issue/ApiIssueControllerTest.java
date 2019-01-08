@@ -12,8 +12,8 @@ import support.test.AcceptanceTest;
 import static codesquad.domain.IssueTest.*;
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
-import static codesquad.domain.label.LabelTest.LABEL;
-import static codesquad.domain.milestone.MilestoneTest.MILESTONE;
+import static codesquad.domain.LabelTest.LABEL;
+import static codesquad.domain.MilestoneTest.MILESTONE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ApiIssueControllerTest extends AcceptanceTest {

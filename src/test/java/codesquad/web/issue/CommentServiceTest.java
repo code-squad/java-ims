@@ -1,6 +1,6 @@
 package codesquad.web.issue;
 
-import codesquad.domain.DeleteHistoryRepository;
+import codesquad.domain.history.DeleteHistoryRepository;
 import codesquad.domain.issue.Comment;
 import codesquad.domain.issue.CommentRepository;
 import codesquad.service.IssueService;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 import static codesquad.domain.IssueTest.ISSUE;
 import static codesquad.domain.UserTest.BRAD;
-import static codesquad.domain.issue.CommentTest.*;
+import static codesquad.domain.CommentTest.*;
 import static org.mockito.Mockito.when;
 import static org.slf4j.LoggerFactory.getLogger;
 

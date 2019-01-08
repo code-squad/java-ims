@@ -1,4 +1,4 @@
-package codesquad.domain;
+package codesquad.domain.user;
 
 import codesquad.DataFormatErrorException;
 import org.apache.commons.io.FilenameUtils;

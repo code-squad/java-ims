@@ -1,6 +1,7 @@
-package codesquad.domain.issue;
+package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import codesquad.domain.issue.Comment;
 import org.junit.Test;
 import support.test.BaseTest;
 

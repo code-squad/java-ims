@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import codesquad.domain.history.DeleteHistory;
 import codesquad.domain.issue.Comment;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueBody;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
-import static codesquad.domain.issue.CommentTest.*;
+import static codesquad.domain.CommentTest.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class IssueTest extends BaseTest {

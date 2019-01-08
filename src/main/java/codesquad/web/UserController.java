@@ -1,11 +1,10 @@
 package codesquad.web;
 
 import codesquad.UnAuthenticationException;
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import codesquad.dto.UserDto;
 import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
-import codesquad.service.FileService;
 import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

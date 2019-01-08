@@ -13,7 +13,7 @@ import support.test.AcceptanceTest;
 import static codesquad.domain.IssueTest.ISSUE;
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
-import static codesquad.domain.issue.CommentTest.*;
+import static codesquad.domain.CommentTest.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ApiCommentAcceptanceTest extends AcceptanceTest {

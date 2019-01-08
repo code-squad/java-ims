@@ -1,7 +1,7 @@
 package codesquad.web.issue;
 
 import codesquad.domain.issue.Issue;
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import codesquad.domain.issue.IssueBody;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;

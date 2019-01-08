@@ -1,4 +1,7 @@
-package codesquad.domain.label;
+package codesquad.domain;
+
+import codesquad.domain.label.Label;
+import codesquad.domain.label.LabelBody;
 
 public class LabelTest {
     public static final LabelBody LABEL_BODY = new LabelBody("Label1", "Label1에 대한 설명입니다");

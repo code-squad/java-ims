@@ -1,9 +1,9 @@
 package codesquad.domain.issue;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.ContentType;
-import codesquad.domain.DeleteHistory;
-import codesquad.domain.User;
+import codesquad.domain.history.ContentType;
+import codesquad.domain.history.DeleteHistory;
+import codesquad.domain.user.User;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;

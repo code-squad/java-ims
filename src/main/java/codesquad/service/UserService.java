@@ -2,9 +2,9 @@ package codesquad.service;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
-import codesquad.domain.Avatar;
-import codesquad.domain.User;
-import codesquad.domain.UserRepository;
+import codesquad.domain.user.Avatar;
+import codesquad.domain.user.User;
+import codesquad.domain.user.UserRepository;
 import codesquad.dto.UserDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +14,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {

@@ -1,7 +1,7 @@
 package support.domain;
 
-import codesquad.domain.Avatar;
-import codesquad.domain.User;
+import codesquad.domain.user.Avatar;
+import codesquad.domain.user.User;
 import org.junit.Test;
 import support.test.BaseTest;
 

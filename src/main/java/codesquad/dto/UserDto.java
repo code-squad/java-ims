@@ -1,7 +1,7 @@
 package codesquad.dto;
 
-import codesquad.domain.Avatar;
-import codesquad.domain.User;
+import codesquad.domain.user.Avatar;
+import codesquad.domain.user.User;
 
 import javax.validation.constraints.Size;
 

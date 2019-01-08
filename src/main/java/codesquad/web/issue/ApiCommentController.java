@@ -1,6 +1,6 @@
 package codesquad.web.issue;
 
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import codesquad.domain.issue.Comment;
 import codesquad.security.LoginUser;
 import org.slf4j.Logger;

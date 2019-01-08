@@ -1,7 +1,7 @@
 package codesquad.security;
 
 import codesquad.UnAuthenticationException;
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;

@@ -17,7 +17,7 @@ import support.test.HtmlFormDataBuilder;
 import static codesquad.domain.IssueTest.*;
 import static codesquad.domain.UserTest.BRAD;
 import static codesquad.domain.UserTest.JUNGHYUN;
-import static codesquad.domain.milestone.MilestoneTest.MILESTONES;
+import static codesquad.domain.MilestoneTest.MILESTONES;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {

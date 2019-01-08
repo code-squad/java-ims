@@ -1,8 +1,8 @@
 package codesquad.web.issue;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.DeleteHistoryRepository;
-import codesquad.domain.User;
+import codesquad.domain.history.DeleteHistoryRepository;
+import codesquad.domain.user.User;
 import codesquad.domain.issue.Comment;
 import codesquad.domain.issue.CommentRepository;
 import codesquad.service.IssueService;
