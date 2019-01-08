@@ -47,15 +47,16 @@
             <!-- milestone list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="milestone-menu">
+                {{#milestone}}
                 <li class="mdl-menu__item mdl-button--accent">
-                    <a href="/issue/{{id}}/setMilestone/0">Milestone1</a>
+                    <a href="/issue/{{id}}/setMilestone/{{milestone.id}}">{{milestone.subject}}</a>
                 </li>
+                {{/milestone}}
+                {{#milestones}}
                 <li class="mdl-menu__item">
-                    <a href="/issue/{{id}}/setMilestone/2">Milestone2</a>
+                    <a href="/issue/{{issue.id}}/setMilestone/{{id}}">{{subject}}</a>
                 </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/{{id}}/setMilestone/3">Milestone3</a>
-                </li>
+                {{/milestones}}
             </ul>
 
             <button id="label-menu" class="mdl-button mdl-js-button">
@@ -64,21 +65,16 @@
             <!-- label list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="label-menu">
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setLabel/1">label1</a>
+                {{#label}}
+                <li class="mdl-menu__item mdl-button--accent">
+                    <a href="/issue/{{id}}/setMilestone/{{label.id}}">{{label.subject}}</a>
                 </li>
+                {{/label}}
+                {{#labels}}
                 <li class="mdl-menu__item">
-                    <a href="/issue/1/setLabel/2">label2</a>
+                    <a href="/issue/{{issue.id}}/setLabel/{{id}}">{{subject}}</a>
                 </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setLabel/3">label3</a>
-                </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setLabel/4">label4</a>
-                </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setLabel/5">label5</a>
-                </li>
+                {{/labels}}
             </ul>
 
             <button id="assignee-menu" class="mdl-button mdl-js-button">
@@ -87,21 +83,16 @@
             <!-- label list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="assignee-menu">
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/1">javajigi</a>
+                {{#assignee}}
+                <li class="mdl-menu__item mdl-button--accent">
+                    <a href="/issue/{{id}}/setMilestone/{{assignee.id}}">{{assignee.name}}</a>
                 </li>
+                {{/assignee}}
+                {{#assignees}}
                 <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/2">cca-company</a>
+                    <a href="/issue/{{issue.id}}/setAssignee/{{id}}">{{name}}</a>
                 </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/3">진저애비</a>
-                </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/4">신영</a>
-                </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/5">전용우</a>
-                </li>
+                {{/assignees}}
             </ul>
         </div>
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text">

@@ -124,5 +124,33 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = basicAuthTemplate(findByUserId("jar100")).postForEntity(ISSUE_URL + "/1", request, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
+
+    @Test
+    public void setMilestone() {
+        ResponseEntity<String> response = template.getForEntity("/issue/1/setMilestone/1",String.class);
+        log.debug(response.getStatusCode());
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(issueRepository.findById(1L).get().getMilestone().getSubject()).isEqualTo("취업");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/issue/1");
+    }
+
+    @Test
+    public void setLabel() {
+        ResponseEntity<String> response = template.getForEntity("/issue/1/setLabel/1",String.class);
+        log.debug(response.getStatusCode());
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(issueRepository.findById(1L).get().getLabel().getSubject()).isEqualTo("라벨");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/issue/1");
+    }
+
+
+    @Test
+    public void setAssignee() {
+        ResponseEntity<String> response = template.getForEntity("/issue/1/setAssignee/3",String.class);
+        log.debug(response.getStatusCode());
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(issueRepository.findById(1L).get().getAssignee().getName()).isEqualTo("Peter");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/issue/1");
+    }
 }
 

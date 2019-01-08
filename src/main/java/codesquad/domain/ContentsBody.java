@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Embeddable
-public class IssueBody {
+public class ContentsBody {
     @Size(min = 3, max = 20)
     @Column(nullable = false, length = 20)
     private String subject;
@@ -15,17 +15,17 @@ public class IssueBody {
     @Column(nullable = false, length = 100)
     private String comment;
 
-    public IssueBody() {
+    public ContentsBody() {
     }
 
-    public IssueBody(String subject, String comment) {
+    public ContentsBody(String subject, String comment) {
         this.subject = subject;
         this.comment = comment;
     }
 
-    public void update(IssueBody issueBody) {
-        this.comment = issueBody.comment;
-        this.subject = issueBody.subject;
+    public void update(ContentsBody contentsBody) {
+        this.comment = contentsBody.comment;
+        this.subject = contentsBody.subject;
     }
 
     public String getSubject() {
@@ -48,9 +48,9 @@ public class IssueBody {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IssueBody issueBody = (IssueBody) o;
-        return Objects.equals(subject, issueBody.subject) &&
-                Objects.equals(comment, issueBody.comment);
+        ContentsBody contentsBody = (ContentsBody) o;
+        return Objects.equals(subject, contentsBody.subject) &&
+                Objects.equals(comment, contentsBody.comment);
     }
 
     @Override

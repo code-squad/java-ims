@@ -13,7 +13,7 @@ public class MilestoneTest extends BaseTest {
     public void create() {
         String startDate = "";
         String endDate = "";
-        Milestone milestone = new Milestone(startDate, endDate);
+        Milestone milestone = new Milestone();
 
     }
 
@@ -21,7 +21,7 @@ public class MilestoneTest extends BaseTest {
     public void addIssue() {
         String startDate = "";
         String endDate = "";
-        Milestone milestone = new Milestone(startDate, endDate);
+        Milestone milestone = new Milestone();
         milestone.addIssue(ISSUE_NO1);
         milestone.addIssue(ISSUE_NO2);
         softly.assertThat(ISSUE_NO1.getMilestone()).isEqualTo(milestone);
@@ -33,7 +33,7 @@ public class MilestoneTest extends BaseTest {
     public void openIssue() {
         String startDate = "";
         String endDate = "";
-        Milestone milestone = new Milestone(startDate, endDate);
+        Milestone milestone = new Milestone();
         milestone.addIssue(ISSUE_NO1);
         softly.assertThat(milestone.getOpenIssue()).isEqualTo(1L);
         ISSUE_NO1.toClose();
@@ -44,7 +44,7 @@ public class MilestoneTest extends BaseTest {
     public void closeIssue() {
         String startDate = "";
         String endDate = "";
-        Milestone milestone = new Milestone(startDate, endDate);
+        Milestone milestone = new Milestone();
         milestone.addIssue(ISSUE_NO2);
         softly.assertThat(milestone.getCloseIssue()).isEqualTo(0L);
         ISSUE_NO2.toClose();

@@ -10,20 +10,19 @@ import org.springframework.util.MultiValueMap;
 import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
-
-public class MilestoneAcceptanceTest extends AcceptanceTest {
-    private static final Logger log = LogManager.getLogger(MilestoneAcceptanceTest.class);
+public class LabelAcceptanceTest extends AcceptanceTest {
+    private static final Logger log = LogManager.getLogger(LabelAcceptanceTest.class);
 
     @Test
     public void listShow() {
-        ResponseEntity<String> response = template.getForEntity("/milestone/list", String.class);
+        ResponseEntity<String> response = template.getForEntity("/label/list", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         log.debug("body : {}", response.getBody());
     }
 
     @Test
     public void createForm() {
-        ResponseEntity<String> response = template.getForEntity("/milestone/form", String.class);
+        ResponseEntity<String> response = template.getForEntity("/label/form", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         log.debug("body : {}", response.getBody());
     }
@@ -31,11 +30,11 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
     @Test
     public void create() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
-                .addParameter("subject", "나는 마일스톤 제목입니다.")
+                .addParameter("subject", "나는 라벨입니다.")
+                .addParameter("comment","치명적인 버그")
                 .build();
-        ResponseEntity<String> response = template.postForEntity("/milestone", request, String.class);
+        ResponseEntity<String> response = template.postForEntity("/label", request, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/milestone/list");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/label/list");
     }
-
 }
