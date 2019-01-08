@@ -156,8 +156,8 @@ public class Issue extends AbstractEntity {
     }
 
     public List<DeleteHistory> delete(User loginUser) {
-        List<DeleteHistory> histories = new ArrayList<>();
         if (!this.isOwner(loginUser)) throw new CannotDeleteException("you can't delete this issue");
+        List<DeleteHistory> histories = new ArrayList<>();
         this.deleted = true;
         histories.add(new DeleteHistory(ContentType.ISSUE, this.getId(), this.getWriter()));
         return histories;

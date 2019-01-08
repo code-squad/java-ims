@@ -17,8 +17,7 @@ public class MilestoneService {
         return milestoneRepository.findAll();
     }
 
-    public void add(Milestone milestone) {
-        milestoneRepository.save(milestone);
+    public Milestone add(Milestone milestone) {
+        return milestoneRepository.save(milestone);
     }
-
 }

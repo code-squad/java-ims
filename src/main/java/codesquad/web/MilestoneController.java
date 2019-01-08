@@ -32,7 +32,7 @@ public class MilestoneController {
 
     @PostMapping("")
     public String create(@LoginUser User loginUser, Milestone milestone) {
-        milestoneService.add(milestone);
+        milestoneService.add(milestone);        //add메소드가 리턴값이 존재하는데, 여기선 받는게 없어도 에러가 안뜨네???
         return "redirect:/milestones/list";
     }
 
