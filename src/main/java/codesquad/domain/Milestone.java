@@ -26,6 +26,20 @@ public class Milestone extends AbstractEntity {
     @OrderBy("id ASC")
     private List<Issue> issues;
 
+    public Milestone() {
+    }
+
+    public Milestone(String subject, String startDate, String endDate) {
+        this(0L, subject, startDate, endDate);
+    }
+
+    public Milestone(long id, String subject, String startDate, String endDate) {
+        super(id);
+        this.subject = subject;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     public String getSubject() {
         return subject;
     }

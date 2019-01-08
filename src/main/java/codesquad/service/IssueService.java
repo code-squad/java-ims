@@ -66,6 +66,7 @@ public class IssueService {
         //loginUser가 필요한가?? 로그인 했는지 체크를 여기서 해야하는가?
         Issue currentIssue = issueRepository.findById(issueId).get();
         currentIssue.setMilestone(milestoneRepository.findById(milestoneId).get());
+        issueRepository.save(currentIssue);     //@Transactional를 하면 굳이 save할 필요가 없지 않음?? 그래도 해야하는게 맞을까??
         log.debug("currentIssue!!!!!!!!!!!!!!!!!!!!!!!!! :{}", currentIssue.getMilestone());
     }
 
@@ -73,5 +74,6 @@ public class IssueService {
     public void setAssignee(User loginUser, long issueId, long assigneeId) {
         Issue currentIssue = issueRepository.findById(issueId).get();
         currentIssue.setAssignee(userRepository.findById(assigneeId).get());
+        issueRepository.save(currentIssue);
     }
 }

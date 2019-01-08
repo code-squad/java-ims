@@ -26,11 +26,15 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)      //지연로딩을 하면, milestone에서 OneToMany관계를 안맺어도 됨?
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
+    private Label label;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
     private User assignee;
 
@@ -102,6 +106,14 @@ public class Issue extends AbstractEntity {
 
     public void setClosed(boolean closed) {
         this.closed = closed;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
     }
 
     public User getAssignee() {
