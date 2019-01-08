@@ -89,19 +89,29 @@
         {{/ issue }}
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
             <!-- comments start -->
+            {{# answers }}
             <div class="comment mdl-color-text--grey-700">
                 <header class="comment__header">
                     <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
+                         src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="{{writer.userId}}">
                     <div class="comment__author">
                         <strong>
-                            <a>javajigi</a>
-                            <span>changed milestone 1 on 2017-01-14</span>
+                            <a>{{ writer.userId }}</a>
+                            <span>{{comment}}/></span>
                         </strong>
                     </div>
                 </header>
+                <div align="right">
+                    <a class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" id="showCommentBtn">
+                        <i class="material-icons">edit</i>
+                    </a>
+                    <a href="/api/issues/{{issueId}}/answers/{{id}}" class="mdl-button mdl-js-button mdl-button--icon">
+                        <i class="material-icons">delete</i>
+                    </a>
+                </div>
             </div>
             <hr>
+            {{/ answers }}
             <!-- comments end -->
         </div>
         <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
@@ -111,7 +121,7 @@
             </div>
         </form>
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-            <form action="/issue/1/addComment" method="POST">
+            <form action="/api/issues/{{issueId}}/answers" method="POST">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                     <label for="comment" class="mdl-textfield__label">Leave a comment</label>
@@ -124,6 +134,26 @@
         </div>
     </div>
 </div>
+<script type="text/template" id="commentTemplate">
+    <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
+        <div style="margin:10px;">
+            <input type="file" name="file" id="updateFile"/>
+            <button class="mdl-button" type="submit">upload file</button>
+        </div>
+    </form>
+    <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+        <form action="/api/issues/{{issueId}}/answers//{0}" method="POST">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <textarea rows=5 class="mdl-textfield__input" id="updateComment" name="comment">{1}</textarea>
+                <label for="comment" class="mdl-textfield__label">Leave a comment</label>
+            </div>
+            <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                <i class="material-icons" role="presentation">check</i>
+                <span class="visuallyhidden">add comment</span>
+            </button>
+        </form>
+    </div>
+</script>
 {{/partial}}
 {{> main }}
 

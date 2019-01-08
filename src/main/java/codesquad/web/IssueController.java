@@ -57,6 +57,7 @@ public class IssueController {
         Issue issue = issueService.findIssue(id);
         model.addAttribute("issue", issue._toIssueDto());
         model.addAttribute("issueId", id);
+        model.addAttribute("answers", issue.obtainAnswerDtos());
 
         if(!issue.isMilestone()) {
             model.addAttribute("milestones", milestoneService.findAllMilestone());
@@ -94,6 +95,4 @@ public class IssueController {
         assigneeService.registerAssignee(loginUser, issue, assigneeId);
         return "redirect:/issues/" + Long.valueOf(id);
     }
-
-
 }

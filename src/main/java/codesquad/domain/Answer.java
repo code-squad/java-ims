@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.dto.AnswerDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -18,6 +19,8 @@ public class Answer extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_issue"))
     private Issue issue;
+
+    private boolean deleted = false;
 
     public Answer() {
 
@@ -44,8 +47,40 @@ public class Answer extends AbstractEntity {
         this.writer = writer;
     }
 
+    public Issue getIssue() {
+        return issue;
+    }
+
+    public void setIssue(Issue issue) {
+        this.issue = issue;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public Answer applyWriter(User loginUser) {
         this.writer = loginUser;
         return this;
+    }
+
+    public boolean isOneSelf(User loginUser) {
+        if(!this.writer.equals(loginUser)) {
+            return false;
+        }
+        return true;
+    }
+
+    public Answer update(Answer updatedAnswer) {
+        this.comment = updatedAnswer.comment;
+        return this;
+    }
+
+    public AnswerDto _toAnswerDto() {
+        return new AnswerDto(this.getId(), this.comment, this.writer);
     }
 }

@@ -18,3 +18,8 @@ INSERT INTO label (id, subject, writer_id) values (1, 'label - 1', 1);
 INSERT INTO label (id, subject, writer_id) values (2, 'label - 2', 1);
 INSERT INTO label (id, subject, writer_id) values (3, 'label - 3', 1);
 
+
+INSERT INTO answer (id, comment, writer_id, issue_id, deleted) values (1, 'answer - 1', 1, 1, 0);
+INSERT INTO answer (id, comment, writer_id, issue_id, deleted) values (2, 'answer - 2', 2, 1, 0);
+INSERT INTO answer (id, comment, writer_id, issue_id, deleted) values (3, 'answer - 3', 1, 1, 0);
+

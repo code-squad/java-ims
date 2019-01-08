@@ -217,3 +217,11 @@ function exceptionProcessor(request) {
         alert(request.responseText);
     }
 }
+
+/* 댓글 수정 */
+$('#showCommentBtn').click(showComment);
+function showComment(e) {
+    var commentTemplate = $('#commentTemplate').html();
+    var template = commentTemplate.format(data.user.id, data.user.userId, data.reportingDate, data.contents,
+                               data.question.id, data.commentId);
+}

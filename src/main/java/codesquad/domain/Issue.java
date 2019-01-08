@@ -1,9 +1,11 @@
 package codesquad.domain;
 
+import codesquad.dto.AnswerDto;
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Issue extends AbstractEntity {
@@ -125,9 +127,15 @@ public class Issue extends AbstractEntity {
         return label != null;
     }
 
-
-    public Answer addAnswer(Answer answer) {
+    public void addAnswer(Answer answer) {
         answers.addAnswer(answer);
-        return answer;
+    }
+
+    public Answer updateAnswer(Answer originAnswer, Answer updatedAnswer) {
+        return answers.updateAnswer(originAnswer, updatedAnswer);
+    }
+
+    public List<AnswerDto> obtainAnswerDtos() {
+        return answers.obtainAnswerDtos();
     }
 }

@@ -56,9 +56,9 @@ public abstract class AcceptanceTest extends BaseTest {
         return basicAuthTemplate(loginUser).getForEntity(location, String.class);
     }
 
-    protected ResponseEntity<Void> exchangeResource(TestRestTemplate restTemplate, String location, HttpMethod httpMethod, Object obj) {
+    protected ResponseEntity<String> exchangeResource(TestRestTemplate restTemplate, String location, HttpMethod httpMethod, Object obj) {
         return restTemplate
-                .exchange(location, httpMethod, new HttpEntity(new HttpHeaders()), Void.class, obj);
+                .exchange(location, httpMethod, new HttpEntity(obj, new HttpHeaders()),String.class);
     }
 
 }

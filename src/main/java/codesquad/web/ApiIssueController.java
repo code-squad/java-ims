@@ -6,6 +6,7 @@ import codesquad.domain.Answer;
 import codesquad.domain.Issue;
 import codesquad.domain.Label;
 import codesquad.domain.User;
+import codesquad.dto.AnswerDto;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.*;
@@ -56,7 +57,7 @@ public class ApiIssueController {
     public ResponseEntity<Issue> createIssue(@LoginUser User loginUser, @RequestBody @Valid IssueDto issueDto, BindingResult bindingResult) {
         logger.debug("Call Method createIssue Issue Dto createIssue {}", issueDto.toString());
         if(bindingResult.hasErrors()) {
-            logger.debug("Exception is Occurred Because Unsupported Data Format");
+            logger.debug(errorMessage);
             return new ResponseEntity(new ErrorMessage(errorMessage)
                     , HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -114,18 +115,6 @@ public class ApiIssueController {
         logger.debug("Call registerMilestone Method(), issue : {}", issue);
         milestoneService.registerMilestone(loginUser, issue, milestoneId);
         return new ResponseEntity("success", HttpStatus.OK);
-    }
-
-    @PostMapping("/{id}/answers")
-    public ResponseEntity createAnswer(@LoginUser User loginUser, @PathVariable Long id, @RequestBody @Valid Answer answer, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            throw new UnsupportedFormatException(errorMessage);
-        }
-        Issue issue = issueService.findIssue(id);
-        Answer createdAnswer = answerService.createAnswer(loginUser, issue, answer);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create(String.format("/api/answers/%s", Long.valueOf(createdAnswer.getId()))));
-        return new ResponseEntity("success", httpHeaders, HttpStatus.CREATED);
     }
 
     public HttpHeaders createHeader(String location) {
