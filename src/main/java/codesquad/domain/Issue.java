@@ -1,26 +1,36 @@
 package codesquad.domain;
 
-import codesquad.UnAuthenticationException;
+import codesquad.dto.AnswerDto;
 import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 public class Issue extends AbstractEntity {
 
-    @Size(min = 5, max = 200)
-    @Column(nullable = false)
-    private String subject;
+    @Embedded
+    private Content content;
 
-    @Size(min = 5, max = 1000)
-    @Column(nullable = false)
-    private String comment;
+    @Embedded
+    private Answers answers = new Answers();
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
+    private Label label;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
 
     private boolean deleted = false;
 
@@ -28,26 +38,9 @@ public class Issue extends AbstractEntity {
 
     }
 
-    public Issue(String subject, String comment, User writer) {
-        this.subject = subject;
-        this.comment = comment;
+    public Issue(Content content, User writer) {
         this.writer = writer;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
+        this.content = content;
     }
 
     public User getWriter() {
@@ -56,6 +49,30 @@ public class Issue extends AbstractEntity {
 
     public void setWriter(User writer) {
         this.writer = writer;
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
     }
 
     public boolean isDeleted() {
@@ -67,7 +84,7 @@ public class Issue extends AbstractEntity {
     }
 
     public IssueDto _toIssueDto() {
-        return new IssueDto(this.subject, this.comment, this.writer);
+        return new IssueDto(this.content, this.writer, this.milestone, this.assignee);
     }
 
     public boolean isOneSelf(User loginUser) {
@@ -75,17 +92,50 @@ public class Issue extends AbstractEntity {
     }
 
     public Issue update(Issue issue) {
-        this.subject = issue.subject;
-        this.comment = issue.comment;
+        this.content = issue.content;
         return this;
+    }
+
+    public Content getContent() {
+        return content;
+    }
+
+    public void setContent(Content content) {
+        this.content = content;
     }
 
     @Override
     public String toString() {
         return "Issue{" +
-                "subject='" + subject + '\'' +
-                ", comment='" + comment + '\'' +
+                "content=" + content +
                 ", writer=" + writer +
+                ", milestone=" + milestone +
+                ", assignee=" + assignee +
+                ", deleted=" + deleted +
                 '}';
+    }
+
+    public boolean isAssignee() {
+        return assignee != null;
+    }
+
+    public boolean isMilestone() {
+        return milestone != null;
+    }
+
+    public boolean isLabel() {
+        return label != null;
+    }
+
+    public void addAnswer(Answer answer) {
+        answers.addAnswer(answer);
+    }
+
+    public Answer updateAnswer(Answer originAnswer, Answer updatedAnswer) {
+        return answers.updateAnswer(originAnswer, updatedAnswer);
+    }
+
+    public List<AnswerDto> obtainAnswerDtos() {
+        return answers.obtainAnswerDtos();
     }
 }

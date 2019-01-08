@@ -1,19 +1,19 @@
-{{#partial "contents"}}
+{{#partial "content"}}
 <div class="issues__posts mdl-grid">
     <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
         {{# issue }}
         <div class="mdl-card__menu">
-            <a href="/api/issues/{{id}}/updateForm" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" id="issues-menu-lower-left">
+            <a href="/api/issues/{{issueId}}/updateForm" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" id="issues-menu-lower-left">
                 <i class="material-icons">edit</i>
             </a>
-            <a href="/api/issues/{{id}}" id="issues-menu-lower-right"
+            <a href="/api/issues/{{issueId}}" id="issues-menu-lower-right"
                class="mdl-button mdl-js-button mdl-button--icon">
                 <i class="material-icons">delete</i>
             </a>
         </div>
         <div class="mdl-card__title mdl-color-text--grey-50">
             <i class="material-icons">check_circle</i>
-            <h2 class="mdl-card__title-text">{{ subject }}</h2>
+            <h2 class="mdl-card__title-text">{{ content.subject }}</h2>
         </div>
 
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
@@ -36,132 +36,82 @@
             <button id="milestone-menu" class="mdl-button mdl-js-button">
                 Milestone
             </button>
-            <!-- issue list -->
-            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                for="milestone-menu">
-                <li class="mdl-menu__item mdl-button--accent">
-                    <a href="/issue/1/setMilestone/0">Milestone1</a>
+            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="milestone-menu">
+                {{# milestones }}
+                <li class="mdl-menu__item" value="/api/issues/{{issueId}}/milestones/{{id}}">
+                    {{ subject }}
                 </li>
+                {{/ milestones }}
+                {{# milestone }}
                 <li class="mdl-menu__item">
-                    <a href="/issue/1/setMilestone/2">Milestone2</a>
+                    {{ subject }}
                 </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setMilestone/3">Milestone3</a>
-                </li>
+                {{/ milestone }}
             </ul>
 
             <button id="label-menu" class="mdl-button mdl-js-button">
                 Label
             </button>
             <!-- label list -->
-            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                for="label-menu">
+            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="label-menu">
+                {{# label }}
                 <li class="mdl-menu__item">
-                    <a href="/issue/1/setLabel/1">label1</a>
+                    {{ subject }}
                 </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setLabel/2">label2</a>
+                {{/ label }}
+                {{# labels }}
+                <li class="mdl-menu__item" value="/api/issues/{{issueId}}/labels/{{id}}">
+                    {{ subject }}
                 </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setLabel/3">label3</a>
-                </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setLabel/4">label4</a>
-                </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setLabel/5">label5</a>
-                </li>
+                {{/ labels }}
             </ul>
 
             <button id="assignee-menu" class="mdl-button mdl-js-button">
                 Assignee
             </button>
             <!-- label list -->
-            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                for="assignee-menu">
+            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="assignee-menu">
+                {{# assignee }}
                 <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/1">javajigi</a>
+                    {{ userId }}
                 </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/2">cca-company</a>
+                {{/ assignee }}
+                {{# assignees }}
+                <li class="mdl-menu__item" value="/api/issues/{{issueId}}/assignees/{{id}}">
+                    {{ userId }}
                 </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/3">진저애비</a>
-                </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/4">신영</a>
-                </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/5">전용우</a>
-                </li>
+                {{/ assignees }}
             </ul>
         </div>
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
-            <p>{{ comment }}</p>
+            <p>{{ content.comment }}</p>
         </div>
         {{/ issue }}
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
-
             <!-- comments start -->
-
+            {{# answers }}
             <div class="comment mdl-color-text--grey-700">
                 <header class="comment__header">
                     <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
+                         src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="{{writer.userId}}">
                     <div class="comment__author">
                         <strong>
-                            <a>javajigi</a>
-
-
-                            <span>changed milestone 1 on 2017-01-14</span>
-
-
+                            <a>{{ writer.userId }}</a>
+                            <span>{{comment}}</span>
                         </strong>
                     </div>
                 </header>
+                <div align="right" id="commentButtonArea">
+                    <a class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" href="/api/issues/{{issueId}}/answers/{{id}}">
+                        <i class="material-icons">edit</i>
+                    </a>
+                    <a href="/api/issues/{{issueId}}/answers/{{id}}" class="mdl-button mdl-js-button mdl-button--icon">
+                        <i class="material-icons">delete</i>
+                    </a>
+                </div>
             </div>
             <hr>
-
-
-            <div class="comment mdl-color-text--grey-700">
-                <header class="comment__header">
-                    <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars1.githubusercontent.com/u/7744966?v=3&u=1bd7d2e72800c0d5a1a5a2e04da851d30b3c13c7&s=140"
-                         alt="cca-company">
-                    <div class="comment__author">
-                        <strong>
-                            <a>cca-company</a>
-
-
-                            <span>comment new issue! on 2017-01-14</span>
-
-
-                        </strong>
-                    </div>
-                </header>
-            </div>
-            <hr>
-
-
-            <div class="comment mdl-color-text--grey-700">
-                <header class="comment__header">
-                    <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars3.githubusercontent.com/u/14341811?v=3&s=400" alt="진저애비">
-                    <div class="comment__author">
-                        <strong>
-                            <a>진저애비</a>
-
-
-                            upload file <a href="upload file" target="_blank">[view]</a>
-
-
-                        </strong>
-                    </div>
-                </header>
-            </div>
-            <hr>
-
-
+            {{/ answers }}
             <!-- comments end -->
         </div>
         <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
@@ -171,7 +121,7 @@
             </div>
         </form>
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-            <form action="/issue/1/addComment" method="POST">
+            <form action="/api/issues/{{issueId}}/answers" method="POST">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                     <label for="comment" class="mdl-textfield__label">Leave a comment</label>
@@ -184,6 +134,26 @@
         </div>
     </div>
 </div>
+<script type="text/template" id="commentTemplate">
+    <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
+        <div style="margin:10px;">
+            <input type="file" name="file" id="updateFile"/>
+            <button class="mdl-button" type="submit">upload file</button>
+        </div>
+    </form>
+    <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+        <form action="/api/issues/{{issueId}}/answers/{0}" method="POST">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <textarea rows=5 class="mdl-textfield__input" id="updateComment" name="comment">{1}</textarea>
+                <label for="comment" class="mdl-textfield__label">Leave a comment</label>
+            </div>
+            <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                <i class="material-icons" role="presentation">check</i>
+                <span class="visuallyhidden">add comment</span>
+            </button>
+        </form>
+    </div>
+</script>
 {{/partial}}
 {{> main }}
 

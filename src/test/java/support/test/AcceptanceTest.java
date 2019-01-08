@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -55,4 +55,10 @@ public abstract class AcceptanceTest extends BaseTest {
     protected ResponseEntity<String> getResource(String location, User loginUser) {
         return basicAuthTemplate(loginUser).getForEntity(location, String.class);
     }
+
+    protected ResponseEntity<String> exchangeResource(TestRestTemplate restTemplate, String location, HttpMethod httpMethod, Object obj) {
+        return restTemplate
+                .exchange(location, httpMethod, new HttpEntity(obj, new HttpHeaders()),String.class);
+    }
+
 }

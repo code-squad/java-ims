@@ -4,7 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Embeddable
-public class Contents {
+public class Content {
     @Size(min = 5, max = 200)
     @Column(nullable = false)
     private String subject;
@@ -13,7 +13,11 @@ public class Contents {
     @Column(nullable = false)
     private String comment;
 
-    public Contents(String subject, String comment) {
+    public Content() {
+
+    }
+
+    public Content(String subject, String comment) {
         this.subject = subject;
         this.comment = comment;
     }
@@ -34,9 +38,17 @@ public class Contents {
         this.comment = comment;
     }
 
-    public Contents update(Contents contents) {
-        this.subject = contents.subject;
-        this.comment = contents.comment;
+    public Content update(Content content) {
+        this.subject = content.subject;
+        this.comment = content.comment;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Content{" +
+                "subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
+                '}';
     }
 }

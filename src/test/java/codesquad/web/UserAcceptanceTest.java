@@ -1,8 +1,6 @@
 package codesquad.web;
 
-import codesquad.domain.User;
 import codesquad.domain.UserRepository;
-import codesquad.dto.UserDto;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +20,8 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     private UserRepository userRepository;
 
     @Test
-    public void createForm() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/user/form", String.class);
+    public void createForm() {
+        ResponseEntity<String> response = template.getForEntity("/user/join", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         log.debug("body : {}", response.getBody());
     }
@@ -65,7 +63,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
-    private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
+    private ResponseEntity<String> update(TestRestTemplate template)  {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("_method", "put")
                 .addParameter("password", "pass2")
@@ -76,10 +74,17 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
-    public void update() throws Exception {
-        ResponseEntity<String> response = update(basicAuthTemplate);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/user");
+    public void update() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("_method", "put")
+                .addParameter("password", "password")
+                .addParameter("name", "재성222")
+                .addParameter("email", "javajigi@slipp.net").build();
+
+        ResponseEntity<String> responseEntity = template
+                .postForEntity(String.format("/user/%d", loginUser.getId()), request, String.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 
     @Test

@@ -1,57 +1,49 @@
 package codesquad.dto;
 
-import codesquad.domain.Issue;
-import codesquad.domain.User;
+import codesquad.domain.*;
 
-import javax.validation.constraints.Size;
+import javax.persistence.Embedded;
+import javax.validation.Valid;
 
 public class IssueDto {
 
-    @Size(min = 5, max = 200)
-    private String subject;
-
-    @Size(min = 5, max = 1000)
-    private String comment;
+    @Embedded @Valid
+    private Content content;
 
     private User writer;
+
+    private Milestone milestone;
+
+    private User assignee;
+
+    private Label label;
 
     public IssueDto() {
 
     }
 
-    public IssueDto(String subject, String comment) {
-        this.subject = subject;
-        this.comment = comment;
+    public IssueDto(Content content) {
+        this.content = content;
     }
 
-    public IssueDto(String subject, String comment, User writer) {
-        this(subject, comment);
+    public IssueDto(Content content, User writer) {
+        this(content);
         this.writer = writer;
     }
 
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
+    public IssueDto(Content content, User writer, Milestone milestone, User assignee) {
+        this(content, writer);
+        this.milestone = milestone;
+        this.assignee = assignee;
     }
 
     public Issue _toIssue() {
-        return new Issue(this.subject, this.comment, this.writer);
+        return new Issue(this.content, this.writer);
     }
 
     public Issue _toIssue(User writer) {
         this.writer = writer;
-        return new Issue(this.subject, this.comment, this.writer);
+        return new Issue(content, this.writer);
     }
 
     public User getWriter() {
@@ -62,11 +54,42 @@ public class IssueDto {
         this.writer = writer;
     }
 
+    public Content getContent() {
+        return content;
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public void setContent(Content content) {
+        this.content = content;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
+    }
+
     @Override
     public String toString() {
         return "IssueDto{" +
-                "subject='" + subject + '\'' +
-                ", comment='" + comment + '\'' +
+                "content=" + content +
                 ", writer=" + writer +
                 '}';
     }

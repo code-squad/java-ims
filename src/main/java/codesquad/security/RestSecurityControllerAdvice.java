@@ -2,10 +2,9 @@ package codesquad.security;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
+import codesquad.UnsupportedFormatException;
 import org.slf4j.Logger;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -34,18 +33,21 @@ public class RestSecurityControllerAdvice {
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public ResponseEntity<ErrorMessage> UnAuthentication(UnAuthenticationException e) {
         logger.debug(e.getMessage());
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        return new ResponseEntity(new ErrorMessage(e.getMessage()), httpHeaders, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity(new ErrorMessage(e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UnAuthorizedException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public ResponseEntity<ErrorMessage> UnAuthorizedException(UnAuthorizedException e) {
         logger.debug("UnAuthorizedException is happened!");
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        return new ResponseEntity(new ErrorMessage(e.getMessage()), httpHeaders, HttpStatus.FORBIDDEN);
+        return new ResponseEntity(new ErrorMessage(e.getMessage()), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(UnsupportedFormatException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorMessage> UnsupportedLabelFormatException(UnsupportedFormatException e) {
+        logger.debug(e.getMessage());
+        return new ResponseEntity<>(new ErrorMessage(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

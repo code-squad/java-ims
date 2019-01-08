@@ -1,7 +1,5 @@
 package codesquad.web;
 
-import codesquad.domain.User;
-import codesquad.security.HttpSessionUtils;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ public class MainController {
     public String home(Model model, HttpSession httpSession) {
         logger.debug("Call Method home()");
         model.addAttribute("issues", issueService.findAllIssue());
-
         return "index";
     }
 }

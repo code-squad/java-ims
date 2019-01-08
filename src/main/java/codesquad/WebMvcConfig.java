@@ -2,6 +2,7 @@ package codesquad;
 
 import codesquad.security.BasicAuthInterceptor;
 import codesquad.security.LoginUserHandlerMethodArgumentResolver;
+import org.slf4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,16 +17,23 @@ import support.converter.LocalDateTimeConverter;
 
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    private static final Logger logger = getLogger(WebMvcConfig.class);
+
     @Override
     public void addFormatters(FormatterRegistry registry) {
+        logger.debug("Call Method addFormatters");
         registry.addConverter(new LocalDateConverter("yyyy-MM-dd"));
-        registry.addConverter(new LocalDateTimeConverter("yyyy-MM-dd HH:mm:ss.SSS"));
+        registry.addConverter(new LocalDateTimeConverter());
     }
 
     @Bean
     public MessageSource messageSource() {
+        logger.debug("Call Method messageSource");
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:messages");
         messageSource.setDefaultEncoding("UTF-8");
@@ -35,6 +43,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
     public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource) {
+        logger.debug("Call Method messageSourceAccessor");
         return new MessageSourceAccessor(messageSource);
     }
 

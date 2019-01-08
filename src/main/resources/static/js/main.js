@@ -1,6 +1,21 @@
 /* 뒤로가기 */
 $('.back-btn').on('click',function(){history.back();})
 
+/* 댓글 수정 */
+$('.mdl-button, .mdl-button--icon, .mdl-js-button, .mdl-js-ripple-effect').click(showAnswer);
+function showAnswer(e) {
+    e.preventDefault();
+    console.log('call showAnswer');
+    var id = $(this).attr('href');
+    console.log(id);
+}
+
+/* 댓글 삭제 */
+$('.mdl-button, .mdl-js-button, .mdl-button--icon').click(deleteAnswer);
+function deleteAnswer(e) {
+    e.preventDefault();
+}
+
 /* 이슈등록 */
 $('#issue-submit').click(createIssue);
 
@@ -20,9 +35,9 @@ function createIssue(e) {
         data : JSON.stringify(json),
         dataType : 'json',
         contentType: 'application/json',
-        error : function (data, xhr) {
+        error : function (request) {
             console.log("이슈등록 실패");
-            alert(data.responseJSON.message);
+            exceptionProcessor(request);
         },
         success : function () {
             console.log("이슈등록 성공!");
@@ -47,9 +62,9 @@ function login(e) {
         url : url,
         data : queryString,
         dataType : 'json',
-        error : function (data, xhr) {
+        error : function (request) {
             console.log("로그인 실패");
-            alert(data.responseJSON.message);
+            exceptionProcessor(request);
         },
         success : function (data, status, xhr) {
             console.log("로그인 성공!");
@@ -79,9 +94,8 @@ function editPrivacy(e) {
         data : JSON.stringify(json),
         dataType : 'json',
         contentType: 'application/json',
-        error : function (data, xhr) {
-            console.log("개인정보수정 실패");
-            alert(data.responseJSON.message);
+        error : function (request) {
+            exceptionProcessor(request);
         },
         success : function (data, status, xhr) {
             console.log("개인정보수정 성공!");
@@ -104,10 +118,9 @@ function deleteIssue(e) {
         type : 'delete',
         url : url,
         contentType: 'application/json',
-        error : function () {
+        error : function (request) {
             console.log("이슈삭제 실패");
-            //console.log(data);
-            //alert(data.responseJSON.message);
+            exceptionProcessor(request);
         },
         success : function () {
             console.log("이슈삭제 성공!");
@@ -131,9 +144,9 @@ function goUpdateForm(e) {
         url : url,
         dataType : 'text',
         contentType: 'application/json',
-        error : function (data, xhr, status) {
+        error : function (request) {
             console.log("이슈 수정화면이동 실패");
-            alert(data.responseText.message);
+            exceptionProcessor(request);
         },
         success : function (data) {
             console.log("이슈수정화면이동 성공!");
@@ -163,14 +176,59 @@ function updateIssue(e) {
         data : JSON.stringify(json),
         dataType : 'json',
         contentType: 'application/json',
-        error : function (data, xhr) {
+        error : function (request) {
             console.log("이슈수정 실패");
-            console.log(data);
-            alert(data.responseText.message);
+            exceptionProcessor(request);
         },
         success : function () {
             console.log("이슈수정 성공!");
             location.href = '/';
         }
     });
+}
+
+/* 라벨, 담당자, 마일스톤 등록 */
+$('.mdl-menu__item').click(register);
+function register(e) {
+    e.preventDefault();
+
+    var url = $(this).attr('value');
+    console.log(url);
+
+    var selected = $(this).attr('value');
+    parent = $(this).closest('ul').children();
+
+    $.ajax({
+        type : 'post',
+        url : url,
+        contentType: 'application/json',
+        error : function (request) {
+            console.log("등록 실패");
+            exceptionProcessor(request);
+        },
+        success : function () {
+            console.log("등록 성공!");
+            $.each(parent, function( index, value ) {
+                console.log(value);
+                if(value.attributes.value.nodeValue != selected) {
+                    value.remove();
+                }
+            });
+        }
+    });
+}
+
+/* 예외처리 */
+function exceptionProcessor(request) {
+    if(request.status == '403') {
+        location.href = '/user/login';
+    }
+
+    if(request.status == '401') {
+        alert(request.responseText);
+    }
+
+    if(request.status == '400') {
+        alert(request.responseText);
+    }
 }
