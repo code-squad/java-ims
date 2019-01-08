@@ -68,4 +68,11 @@ public class ApiAnswerController {
         answerService.deleteAnswer(loginUser, answerId);
         return new ResponseEntity("success", HttpStatus.OK);
     }
+
+    @GetMapping("/{answerId}")
+    public ResponseEntity<AnswerDto> detailAnswer(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long answerId) throws UnAuthenticationException {
+        logger.debug("Call detailAnswer Method");
+        AnswerDto answerDto = answerService.detailAnswer(loginUser, answerId);
+        return new ResponseEntity(answerDto, HttpStatus.OK);
+    }
 }

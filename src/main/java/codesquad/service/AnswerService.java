@@ -45,4 +45,12 @@ public class AnswerService {
         /* 확인 필요) issue가 answer를 가지고 있긴 하지만, answer 참조를 가지고 있는것이기 때문에 answer만 바꾸면 되지 않을까?! */
         answer.setDeleted(true);
     }
+
+    public AnswerDto detailAnswer(User loginUser, Long answerId) throws UnAuthenticationException {
+        Answer answer = answerRepository.findById(answerId).orElse(null);
+        if(!answer.isOneSelf(loginUser)) {
+            throw new UnAuthenticationException(notOneSelfErrorMessage);
+        }
+        return answer._toAnswerDto();
+    }
 }

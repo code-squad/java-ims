@@ -1,6 +1,21 @@
 /* 뒤로가기 */
 $('.back-btn').on('click',function(){history.back();})
 
+/* 댓글 수정 */
+$('.mdl-button, .mdl-button--icon, .mdl-js-button, .mdl-js-ripple-effect').click(showAnswer);
+function showAnswer(e) {
+    e.preventDefault();
+    console.log('call showAnswer');
+    var id = $(this).attr('href');
+    console.log(id);
+}
+
+/* 댓글 삭제 */
+$('.mdl-button, .mdl-js-button, .mdl-button--icon').click(deleteAnswer);
+function deleteAnswer(e) {
+    e.preventDefault();
+}
+
 /* 이슈등록 */
 $('#issue-submit').click(createIssue);
 
@@ -216,12 +231,4 @@ function exceptionProcessor(request) {
     if(request.status == '400') {
         alert(request.responseText);
     }
-}
-
-/* 댓글 수정 */
-$('#showCommentBtn').click(showComment);
-function showComment(e) {
-    var commentTemplate = $('#commentTemplate').html();
-    var template = commentTemplate.format(data.user.id, data.user.userId, data.reportingDate, data.contents,
-                               data.question.id, data.commentId);
 }

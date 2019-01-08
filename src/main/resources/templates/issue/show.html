@@ -97,12 +97,12 @@
                     <div class="comment__author">
                         <strong>
                             <a>{{ writer.userId }}</a>
-                            <span>{{comment}}/></span>
+                            <span>{{comment}}</span>
                         </strong>
                     </div>
                 </header>
-                <div align="right">
-                    <a class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" id="showCommentBtn">
+                <div align="right" id="commentButtonArea">
+                    <a class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" href="/api/issues/{{issueId}}/answers/{{id}}">
                         <i class="material-icons">edit</i>
                     </a>
                     <a href="/api/issues/{{issueId}}/answers/{{id}}" class="mdl-button mdl-js-button mdl-button--icon">
@@ -142,7 +142,7 @@
         </div>
     </form>
     <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-        <form action="/api/issues/{{issueId}}/answers//{0}" method="POST">
+        <form action="/api/issues/{{issueId}}/answers/{0}" method="POST">
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <textarea rows=5 class="mdl-textfield__input" id="updateComment" name="comment">{1}</textarea>
                 <label for="comment" class="mdl-textfield__label">Leave a comment</label>
