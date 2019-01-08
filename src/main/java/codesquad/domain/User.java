@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.validation.constraints.Size;
 
@@ -26,18 +28,22 @@ public class User extends AbstractEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
+    @Embedded
+    private Avatar avatar;
+
     public User() {
     }
 
-    public User(String userId, String password, String name) {
-        this(0L, userId, password, name);
+    public User(String userId, String password, String name, Avatar avatar) {
+        this(0L, userId, password, name, avatar);
     }
 
-    public User(long id, String userId, String password, String name) {
+    public User(long id, String userId, String password, String name, Avatar avatar) {
         super(id);
         this.userId = userId;
         this.password = password;
         this.name = name;
+        this.avatar = avatar;
     }
 
     public String getUserId() {

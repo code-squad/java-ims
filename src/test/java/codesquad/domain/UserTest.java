@@ -10,11 +10,11 @@ import static org.junit.Assert.*;
 
 public class UserTest extends BaseTest {
     public static final String DEFAULT_USER_ID = "testuser";
-    public static final User BRAD = new User(1L, "brad903", "password", "Brad");
-    public static final User JUNGHYUN = new User(2L, "leejh903", "password", "이정현");
+    public static final User BRAD = new User(1L, "brad903", "password", "Brad", Avatar.DEFAULT_AVATAR);
+    public static final User JUNGHYUN = new User(2L, "leejh903", "password", "이정현", Avatar.DEFAULT_AVATAR);
 
     public static User newUser(Long id) {
-        return new User(id, "userId", "password", "name");
+        return new User(id, "userId", "password", "name", Avatar.DEFAULT_AVATAR);
     }
 
     public static User newUser(String userId) {
@@ -22,14 +22,14 @@ public class UserTest extends BaseTest {
     }
 
     public static User newUser(String userId, String password) {
-        return new User(1L, userId, password, "name");
+        return new User(1L, userId, password, "name", Avatar.DEFAULT_AVATAR);
     }
 
     @Test
     public void update_owner() throws Exception {
         User origin = newUser("brad");
         User loginUser = origin;
-        User target = new User("brad", "password", "name2");
+        User target = new User("brad", "password", "name2", Avatar.DEFAULT_AVATAR);
         origin.update(loginUser, target);
         assertThat(origin.getName(), is(target.getName()));
     }
@@ -38,14 +38,14 @@ public class UserTest extends BaseTest {
     public void update_not_owner() throws Exception {
         User origin = newUser("leejh903");
         User loginUser = newUser("brad903");
-        User target = new User("leejh903", "password", "name2");
+        User target = new User("leejh903", "password", "name2", Avatar.DEFAULT_AVATAR);
         origin.update(loginUser, target);
     }
 
     @Test
     public void update_match_password() {
         User origin = newUser("leejh903");
-        User target = new User("leejh903", "password", "name2");
+        User target = new User("leejh903", "password", "name2", Avatar.DEFAULT_AVATAR);
         origin.update(origin, target);
         assertThat(origin.getName(), is(target.getName()));
     }
@@ -53,7 +53,7 @@ public class UserTest extends BaseTest {
     @Test(expected = UnAuthorizedException.class)
     public void update_mismatch_password() {
         User origin = newUser("leejh903", "password2");
-        User target = new User("leejh903", "password3", "name2");
+        User target = new User("leejh903", "password3", "name2", Avatar.DEFAULT_AVATAR);
         BRAD.update(origin, target);
     }
 

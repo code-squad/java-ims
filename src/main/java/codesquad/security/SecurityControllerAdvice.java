@@ -1,5 +1,6 @@
 package codesquad.security;
 
+import codesquad.DataFormatErrorException;
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import org.slf4j.Logger;
@@ -35,5 +36,13 @@ public class SecurityControllerAdvice {
         log.debug("UnAuthenticationException is happened!");
         model.addAttribute("errorMessage", e.getMessage());
         return "/user/login_fail";
+    }
+
+    @ExceptionHandler(DataFormatErrorException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public String wrongDataType(DataFormatErrorException e, Model model) {
+        log.debug("DataFormatErrorException is happened!");
+        model.addAttribute("errorMessage", e.getMessage());
+        return "/user/join";
     }
 }

@@ -27,7 +27,7 @@ public class UserValidationTest {
 
     @Test
     public void userIdWhenIsEmpty() throws Exception {
-        User user = new User("", "password", "name");
+        User user = new User("", "password", "name", Avatar.DEFAULT_AVATAR);
         Set<ConstraintViolation<User>> constraintViolcations = validator.validate(user);
         assertThat(constraintViolcations.size(), is(1));
 
