@@ -1,8 +1,6 @@
 package codesquad.security;
 
-import codesquad.CannotUpdateException;
-import codesquad.UnAuthenticationException;
-import codesquad.UnAuthorizedException;
+import codesquad.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -38,5 +36,17 @@ public class SecurityControllerAdvice {
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public void cannotUpdateException(){
         log.debug("cannotUpdateException is happened!");
+    }
+
+    @ExceptionHandler(CannotDeleteException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public void CannotDeleteException(){
+        log.debug("cannotDeleteException is happened!");
+    }
+
+    @ExceptionHandler(CannotApplyException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public void CannotApplyException(){
+        log.debug("CannotApplyException is happened!");
     }
 }

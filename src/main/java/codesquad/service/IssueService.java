@@ -1,5 +1,7 @@
 package codesquad.service;
 
+import codesquad.CannotApplyException;
+import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.*;
 import codesquad.dto.IssueDto;
@@ -26,6 +28,9 @@ public class IssueService {
 
     @Resource(name = "userRepository")
     private UserRepository userRepository;
+
+    @Resource(name = "labelRepository")
+    private LabelRepository labelRepository;
 
     public Issue add(User loginUser, IssueDto issueDto) {
         issueDto.setWriter(loginUser);
@@ -72,8 +77,19 @@ public class IssueService {
 
     @Transactional
     public void setAssignee(User loginUser, long issueId, long assigneeId) {
+        if (loginUser.isGuestUser()) throw new CannotApplyException("you can't apply the assignee to this issue");
         Issue currentIssue = issueRepository.findById(issueId).get();
         currentIssue.setAssignee(userRepository.findById(assigneeId).get());
+        issueRepository.save(currentIssue);
+    }
+
+    @Transactional
+    public void setLabel(User loginUser, long issueId, long labelId) {
+        if (loginUser.isGuestUser()) throw new CannotApplyException("you can't apply the label to this issue");
+        Issue currentIssue = issueRepository.findById(labelId)
+                .orElseThrow(UnAuthorizedException::new);
+        currentIssue.setLabel(labelRepository.findById(issueId)
+                .orElseThrow(UnAuthorizedException::new));
         issueRepository.save(currentIssue);
     }
 }

@@ -8,6 +8,7 @@ import codesquad.domain.UserRepository;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.LabelService;
 import codesquad.service.MilestoneService;
 import codesquad.service.UserService;
 import org.slf4j.Logger;
@@ -32,6 +33,9 @@ public class IssueController {
     @Resource(name = "userService")
     private UserService userService;
 
+    @Resource(name = "labelService")
+    private LabelService labelService;
+
     @GetMapping("/form")
     public String form(@LoginUser User loginUser) {
         return "/issue/form";
@@ -47,8 +51,8 @@ public class IssueController {
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
         model.addAttribute("milestones", milestoneService.findAll());
-        model.addAttribute("assignees",userService.findAll());
-        log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!! :{}", milestoneService.findAll());
+        model.addAttribute("assignees", userService.findAll());
+        model.addAttribute("labels", labelService.findAll());
         return "/issue/show";
     }
 
@@ -82,4 +86,11 @@ public class IssueController {
         issueService.setAssignee(loginUser, issueId, assigneeId);
         return "redirect:/issues/{issueId}";
     }
+
+    @GetMapping("/{issueId}/setLabel/{labelId}")
+    public String setLabel(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long labelId) {
+        issueService.setLabel(loginUser, issueId, labelId);
+        return "redirect:/issues/{issueId}";
+    }
+
 }
