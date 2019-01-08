@@ -46,5 +46,4 @@ public class LabelService {
         List<DeleteHistory> histories = originalLabel.delete(loginUser);
         deleteHistoryRepository.saveAll(histories);
     }
-
 }
