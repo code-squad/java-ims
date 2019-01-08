@@ -130,6 +130,11 @@ public class Issue extends AbstractEntity {
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 ", writer=" + writer +
+                ", milestone=" + milestone +
+                ", label=" + label +
+                ", assignee=" + assignee +
+                ", deleted=" + deleted +
+                ", closed=" + closed +
                 '}';
     }
 

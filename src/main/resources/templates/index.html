@@ -68,7 +68,8 @@
                                               alt="javajigi">
 									</a>
 									<a href="/issues/{{id}}">
-									    <strong>{{subject}}</strong>
+									    <strong>{{subject}} {{#label.id}}({{label.name}}){{/label.id}}</strong>
+									    <!--<strong>{{subject}} {{#label}}({{label.name}}){{/label}}</strong> label이 없는데 왜 있다고 봄?? (참으로 보고 안의 값이 보여짐)-->
 									</a>
 									<span class="mdl-list__item-sub-title">
 									    #1 Open

@@ -40,6 +40,7 @@ public class LabelService {
         labelRepository.save(originalLabel);
     }
 
+    @Transactional
     public void delete(User loginUser, long id) {
         if(loginUser.isGuestUser()) throw new CannotDeleteException("you can't delete this label");
         Label originalLabel = this.findById(id);

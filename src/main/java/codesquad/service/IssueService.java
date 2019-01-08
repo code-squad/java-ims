@@ -86,9 +86,9 @@ public class IssueService {
     @Transactional
     public void setLabel(User loginUser, long issueId, long labelId) {
         if (loginUser.isGuestUser()) throw new CannotApplyException("you can't apply the label to this issue");
-        Issue currentIssue = issueRepository.findById(labelId)
+        Issue currentIssue = issueRepository.findById(issueId)
                 .orElseThrow(UnAuthorizedException::new);
-        currentIssue.setLabel(labelRepository.findById(issueId)
+        currentIssue.setLabel(labelRepository.findById(labelId)
                 .orElseThrow(UnAuthorizedException::new));
         issueRepository.save(currentIssue);
     }
