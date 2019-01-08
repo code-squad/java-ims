@@ -24,6 +24,9 @@ public class IssueService {
     @Resource(name = "milestoneRepository")
     private MilestoneRepository milestoneRepository;
 
+    @Resource(name = "userRepository")
+    private UserRepository userRepository;
+
     public Issue add(User loginUser, IssueDto issueDto) {
         issueDto.setWriter(loginUser);
         return issueRepository.save(issueDto._toIssue());
@@ -64,5 +67,11 @@ public class IssueService {
         Issue currentIssue = issueRepository.findById(issueId).get();
         currentIssue.setMilestone(milestoneRepository.findById(milestoneId).get());
         log.debug("currentIssue!!!!!!!!!!!!!!!!!!!!!!!!! :{}", currentIssue.getMilestone());
+    }
+
+    @Transactional
+    public void setAssignee(User loginUser, long issueId, long assigneeId) {
+        Issue currentIssue = issueRepository.findById(issueId).get();
+        currentIssue.setAssignee(userRepository.findById(assigneeId).get());
     }
 }

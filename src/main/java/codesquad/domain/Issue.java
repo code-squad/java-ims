@@ -30,6 +30,10 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
 
+    @OneToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
+
     private boolean deleted = false;
     private boolean closed = false;
 
@@ -98,6 +102,14 @@ public class Issue extends AbstractEntity {
 
     public void setClosed(boolean closed) {
         this.closed = closed;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
     }
 
     @Override

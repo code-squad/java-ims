@@ -4,10 +4,12 @@ import codesquad.CannotUpdateException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.User;
+import codesquad.domain.UserRepository;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,9 @@ public class IssueController {
     @Resource(name = "milestoneService")
     private MilestoneService milestoneService;
 
+    @Resource(name = "userService")
+    private UserService userService;
+
     @GetMapping("/form")
     public String form(@LoginUser User loginUser) {
         return "/issue/form";
@@ -42,6 +47,7 @@ public class IssueController {
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
         model.addAttribute("milestones", milestoneService.findAll());
+        model.addAttribute("assignees",userService.findAll());
         log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!! :{}", milestoneService.findAll());
         return "/issue/show";
     }
@@ -71,4 +77,9 @@ public class IssueController {
         return "redirect:/issues/{issueId}";
     }
 
+    @GetMapping("/{issueId}/setAssignee/{assigneeId}")
+    public String setAssignee(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long assigneeId) {
+        issueService.setAssignee(loginUser, issueId, assigneeId);
+        return "redirect:/issues/{issueId}";
+    }
 }
