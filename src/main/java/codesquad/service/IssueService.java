@@ -22,9 +22,7 @@ public class IssueService {
     private static final Logger log = getLogger(IssueService.class);
 
     public Issue create(User loginUser, IssueDto issueDto) {
-        issueDto.setWriter(loginUser);
-        log.debug("newIssue : {}" , issueDto._toIssue());
-        return issueRepository.save(issueDto._toIssue());
+        return issueRepository.save(issueDto._toIssue(loginUser));
     }
 
     public Iterable<Issue> findAll() {

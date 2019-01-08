@@ -35,7 +35,7 @@ public class IssueServiceTest extends BaseTest {
     }
 
     public Issue updatedIssue() {
-        Issue updatedIssue = new Issue("업데이트 제목", "업데이트 내용");
+        Issue updatedIssue = new Issue("업데이트 제목", "업데이트 내용",null);
         return updatedIssue;
     }
 

@@ -26,7 +26,7 @@ public class ApiUserController {
 
     @PostMapping("")        //1.데이터 만들어서
     public ResponseEntity<Void> create(@Valid @RequestBody UserDto user) {
-        User savedUser = userService.create(user);
+        User savedUser = userService.create(user._toUser());
         log.debug("user : {}", user);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/api/users/" + savedUser.getId()));
@@ -37,14 +37,12 @@ public class ApiUserController {
     public UserDto show(@LoginUser User loginUser, @PathVariable long id) {
         User user = userService.findById(id);
         user.isOwner(loginUser);
-        log.debug("user:{}",user._toUserDto());
+        log.debug("user:{}", user._toUserDto());
         return user._toUserDto();
     }
 
     @PutMapping("{id}")
-    public UserDto update(@LoginUser User loginUser,
-                       @PathVariable long id,
-                       @Valid @RequestBody UserDto updatedUser) {
+    public UserDto update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody UserDto updatedUser) {
         return userService.update(loginUser, id, updatedUser)._toUserDto();
     }
 }

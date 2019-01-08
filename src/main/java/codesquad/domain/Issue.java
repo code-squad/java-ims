@@ -32,17 +32,7 @@ public class Issue extends AbstractEntity {
     public Issue(){
     }
 
-    public Issue(String subject, String comment) {
-        this.subject = subject;
-        this.comment = comment;
-    }
-
     public Issue(String subject, String comment, User writer) {
-        this(0L, subject, comment, writer);
-    }
-
-    public Issue(long id, String subject, String comment, User writer) {
-        super(id);
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
@@ -56,7 +46,7 @@ public class Issue extends AbstractEntity {
     }
 
     public IssueDto _toIssueDto() {
-        return new IssueDto(this.subject, this.comment, this.writer, this.deleted);
+        return new IssueDto(this.subject, this.comment, this.writer._toUserDto(), this.deleted);
     }
 
     public IssueDto getIssueDto() {

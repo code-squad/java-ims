@@ -13,6 +13,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ApiIssueAcceptanceTest extends AcceptanceTest {
     private static final Logger log = getLogger(ApiIssueAcceptanceTest.class);
 
+    private IssueDto createIssueDto() {
+        return new IssueDto("제목입니다.", "내용입니다.", UserTest.JAVAJIGI._toUserDto(),false);
+    }
+
+    private IssueDto updatingIssueDto() {
+        return new IssueDto("업데이트 제목", "업데이트 내용",null,false);
+    }
+
     @Test
     public void create() {
         String location = createResource_login("/api/issues", createIssueDto()); //javajigi가 질문을 생성후 생성한 질문의 경로를 가져옴
@@ -27,14 +35,6 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
     public void crate_no_login() {
         ResponseEntity<Void> response = template.postForEntity("/api/issues", createIssueDto(), Void.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-    }
-
-    private IssueDto createIssueDto() {
-        return new IssueDto("제목입니다.", "내용입니다.");
-    }
-
-    private IssueDto updatingIssueDto() {
-        return new IssueDto("업데이트 제목", "업데이트 내용");
     }
 
     @Test

@@ -6,28 +6,20 @@ import codesquad.domain.User;
 import javax.validation.constraints.Size;
 
 public class IssueDto {
-
     @Size(min = 3, max = 100)
     private String subject;
 
     @Size(min = 3)
     private String comment;
 
-    private User writer;
+    private UserDto writer;
 
     private boolean deleted;
 
     public IssueDto() {
     }
 
-    public IssueDto(String subject, String comment) {
-        super();
-        this.subject = subject;
-        this.comment = comment;
-    }
-
-
-    public IssueDto(String subject, String comment, User writer, boolean deleted) {
+    public IssueDto(String subject, String comment, UserDto writer, boolean deleted) {
         super();
         this.subject = subject;
         this.comment = comment;
@@ -51,11 +43,11 @@ public class IssueDto {
         this.comment = comment;
     }
 
-    public User getWriter() {
+    public UserDto getWriter() {
         return writer;
     }
 
-    public void setWriter(User writer) {
+    public void setWriter(UserDto writer) {
         this.writer = writer;
     }
 
@@ -67,8 +59,8 @@ public class IssueDto {
         this.deleted = deleted;
     }
 
-    public Issue _toIssue() {
-        return new Issue(this.subject, this.comment, this.writer);
+    public Issue _toIssue(User loginUser) {
+        return new Issue(this.subject, this.comment, loginUser);
     }
 
     @Override

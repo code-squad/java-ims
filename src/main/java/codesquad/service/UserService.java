@@ -21,9 +21,10 @@ public class UserService {
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
-    public User create(UserDto userDto) {
-        log.debug("user:{}",userDto);
-        return userRepository.save(userDto._toUser());
+    public User create(User user) {
+        log.debug("user:{}",user);
+        userRepository.save(user);
+        return user;
     }
 
     @Transactional
