@@ -43,7 +43,7 @@ public class Avatar implements FileEntity {
         return extention;
     }
 
-    public String getCurrentFileNameWithExtention() {
+    public String getSavedFileNameWithExtention() {
         return savedFileName + "." + extention;
     }
 

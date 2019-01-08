@@ -25,8 +25,7 @@
         </div>
 
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
-            <img class="minilogo" height="48" width="48"
-                 src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
+            <img class="minilogo" height="48" width="48" src="http://localhost:7080/image/{{ writer.avatar.savedFileNameWithExtention }}" alt="{{ writer.name }}">
             <div style="margin-right:20px;">
                 <div class="author-text">
                     <strong>
@@ -89,8 +88,7 @@
             {{# notDeletedComments }}
             <div class="comment mdl-color-text--grey-700">
                 <header class="comment__header">
-                    <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
+                    <img class="comment__avatar2" height="48" width="48" src="http://localhost:7080/image/{{ writer.avatar.savedFileNameWithExtention }}" alt="{{ writer.name }}">
                     <div style="width: 100%;" class="comment-body">
                         <span class="comment__author">
                             <strong>

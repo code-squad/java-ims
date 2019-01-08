@@ -32,4 +32,8 @@ public class FileService {
         FileCopyUtils.copy(in, out);
         return savedFileName;
     }
+
+    public File serveFile(String fileName) {
+        return new File(defaultLocation + "/" + fileName);
+    }
 }
