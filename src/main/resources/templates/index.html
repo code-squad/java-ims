@@ -30,8 +30,17 @@
             <nav class="mdl-navigation">
                 <a class="mdl-navigation__link" href="/">Issues</a>
                 <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-                <a class="mdl-navigation__link" href="/user/login.html">login</a>
+
+                {{^loginedUser}}
+                <a class="mdl-navigation__link" href="/users/login/form">login</a>
                 <a class="mdl-navigation__link" href="/users/form">join</a>
+                {{/loginedUser}}
+
+                {{#loginedUser}}
+                <a class="mdl-navigation__link" href="/users/logout">logout</a>
+                <a class="mdl-navigation__link" href="/users/{{id}}/form">my(개인정보수정)</a>
+                {{/loginedUser}}
+
             </nav>
         </div>
     </header>
@@ -59,19 +68,19 @@
                                               alt="javajigi">
 									</a> 
 									<a href="/issues/{{id}}">
-									    <strong>{{subject}}</strong>
+									    <strong>{{issueBody.subject}}</strong>
 									</a>
 									<span class="mdl-list__item-sub-title"> 
 									    #1 Open
 									    <relative-time datetime="2017-01-14"
-                                                       title="2017-01-14">2017-01-14</relative-time>
+                                                       title="2017-01-14">{{createDate}}</relative-time>
 									    by <a href="" aria-label="View all issues opened by javajigi"
-                                              class="tooltipped tooltipped-s muted-link">javajigi</a>
+                                              class="tooltipped tooltipped-s muted-link">{{writer.name}}</a>
 									</span>
 								</span>
                             <span class="mdl-list__item-secondary-content">
 									<span class="material-icons mdl-badge mdl-badge--overlap"
-                                          data-badge="1">comment</span>
+                                          data-badge="1">issueBody.comment</span>
 								</span>
                         </li>
 						{{/issues}}

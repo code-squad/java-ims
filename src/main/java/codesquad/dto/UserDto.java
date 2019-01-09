@@ -1,6 +1,8 @@
 package codesquad.dto;
 
 import codesquad.domain.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -52,7 +54,7 @@ public class UserDto {
     public User _toUser() {
         return new User(this.userId, this.password, this.name);
     }
-
+/*
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -62,7 +64,6 @@ public class UserDto {
         result = prime * result + ((userId == null) ? 0 : userId.hashCode());
         return result;
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -89,6 +90,22 @@ public class UserDto {
         } else if (!userId.equals(other.userId))
             return false;
         return true;
+    }
+    */
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDto userDto = (UserDto) o;
+        return Objects.equals(userId, userDto.userId) &&
+                Objects.equals(password, userDto.password) &&
+                Objects.equals(name, userDto.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, password, name);
     }
 
     @Override

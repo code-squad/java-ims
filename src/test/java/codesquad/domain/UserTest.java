@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 public class UserTest {
     public static final User JAVAJIGI = new User(1L, "javajigi", "password", "name");
     public static final User SANJIGI = new User(2L, "sanjigi", "password", "name");
+    public static final User RED = new User(3L, "red", "password", "name");
 
     public static User newUser(Long id) {
         return new User(id, "userId", "pass", "name");
