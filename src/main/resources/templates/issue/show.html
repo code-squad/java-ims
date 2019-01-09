@@ -86,8 +86,11 @@
                     <!-- milestone list -->
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="milestone-menu">
+
+                        <!--TODO:지정 된 마일스톤은 노란색으로 표시되게..! 핸들바 if 쓰려했는데 잘 안됨-->
+
                         {{# milestones}}
-                        <li class="mdl-menu__item mdl-button--accent">
+                        <li class="mdl-menu__item">
                             <a href="/issues/{{issue.id}}/milestones/{{id}}">{{subject}}</a>
                         </li>
                         {{/ milestones}}
@@ -122,21 +125,11 @@
                     <!-- label list -->
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="assignee-menu">
+                        {{# users}}
                         <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/1">javajigi</a>
+                            <a href="/issues/{{issue.id}}/users/{{id}}">{{name}}</a>
                         </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/2">cca-company</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/3">진저애비</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/4">신영</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/5">전용우</a>
-                        </li>
+                        {{/ users}}
                     </ul>
                 </div>
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">

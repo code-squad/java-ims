@@ -25,6 +25,10 @@ public class Issue extends AbstractEntity {
     private User writer;
 
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
+
+    @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
     private Milestone milestone;
 
@@ -65,11 +69,19 @@ public class Issue extends AbstractEntity {
     }
 
     public void toMilestone(User loginUser, Milestone milestone) {
-        if (!isMatchWriter(loginUser)) {
+        if(!isMatchWriter(loginUser)) {
             throw new UnAuthorizedException();
         }
 
         this.milestone = milestone;
+    }
+
+    public void assignedBy(User loginUser, User assignee) {
+        if (!isMatchWriter(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.assignee = assignee;
     }
 
     public String getSubject() {
@@ -94,6 +106,14 @@ public class Issue extends AbstractEntity {
 
     public void writeBy(User loginUser) {
         this.writer = loginUser;
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
     }
 
     @Override

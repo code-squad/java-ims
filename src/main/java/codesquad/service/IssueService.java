@@ -22,6 +22,9 @@ public class IssueService {
     @Resource(name = "milestoneService")
     private MilestoneService milestoneService;
 
+    @Resource(name = "userService")
+    private UserService userService;
+
     @Resource(name = "deleteHistoryService")
     private DeleteHistoryService deleteHistoryService;
 
@@ -69,5 +72,14 @@ public class IssueService {
 
         milestone.addIssue(loginUser, issue);
         return milestoneService.add(milestone);
+    }
+
+    @Transactional
+    public Issue setAssignee(User loginUser, long id, long assigneeId) {
+        Issue issue = findById(id);
+        User assignee = userService.findById(assigneeId);
+
+        issue.assignedBy(loginUser, assignee);
+        return add(issue);
     }
 }
