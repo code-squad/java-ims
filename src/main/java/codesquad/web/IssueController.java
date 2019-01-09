@@ -7,9 +7,11 @@ import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 
@@ -18,6 +20,9 @@ import javax.annotation.Resource;
 public class IssueController {
     @Resource(name = "issueService")
     private IssueService issueService;
+
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
 
     @GetMapping("/form")
     public String form(@LoginUser User loginUser) {
@@ -33,6 +38,8 @@ public class IssueController {
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("milestones", milestoneService.findAll());
+
         return "/issue/show";
     }
 
@@ -58,6 +65,23 @@ public class IssueController {
             issueService.delete(loginUser, id);
             return "redirect:/";
         } catch (Exception e) {
+            return "redirect:/issues/{id}";
+        }
+    }
+
+    @GetMapping("/{issueId}/milestones/{milestoneId}")
+    public String setMilestone(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long milestoneId) {
+        issueService.setMilestone(issueId, milestoneId);
+        return "redirect:/issues/{issueId}";
+    }
+
+    @GetMapping("/{id}/closed")
+    public String close(@LoginUser User loginUser, @PathVariable long id , RedirectAttributes redirectAttrs) {
+        try {
+            issueService.close(id);
+            return "redirect:/";
+        } catch (RuntimeException e) {
+            redirectAttrs.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/issues/{id}";
         }
     }

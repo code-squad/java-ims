@@ -1,6 +1,7 @@
 package codesquad.dto;
 
 import codesquad.domain.Issue;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 
 import javax.validation.constraints.Size;
@@ -15,17 +16,22 @@ public class IssueDto {
 
     private User writer;
 
+    private Milestone milestone;
+
     private boolean deleted;
+
+    private boolean closed;
 
     public IssueDto() {
     }
 
-    public IssueDto(String subject, String comment, User writer, boolean deleted) {
+    public IssueDto(String subject, String comment, User writer, boolean deleted, boolean closed) {
         super();
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
         this.deleted = deleted;
+        this.closed = closed;
     }
 
     public String getSubject() {
@@ -52,6 +58,14 @@ public class IssueDto {
         this.writer = loginUser;
     }
 
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
     public boolean isDeleted() {
         return deleted;
     }
@@ -60,8 +74,16 @@ public class IssueDto {
         this.deleted = deleted;
     }
 
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
     public Issue _toIssue() {
-        return new Issue(this.subject, this.comment, this.writer, this.deleted);
+        return new Issue(this.subject, this.comment, this.writer, this.deleted, this.closed);
     }
 
     @Override

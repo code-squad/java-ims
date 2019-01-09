@@ -25,24 +25,32 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
+    private Milestone milestone;
+
     private boolean deleted = false;
+
+    private boolean closed = false;
 
     public Issue() {
     }
 
-    public Issue(String subject, String comment, User writer, boolean deleted) {
+    public Issue(String subject, String comment, User writer, boolean deleted, boolean closed) {
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
         this.deleted = deleted;
+        this.closed = closed;
     }
 
-    public Issue(long id, String subject, String comment, User writer, boolean deleted) {
+    public Issue(long id, String subject, String comment, User writer, boolean deleted, boolean closed) {
         super(id);
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
         this.deleted = deleted;
+        this.closed = closed;
     }
 
     public String getSubject() {
@@ -73,8 +81,25 @@ public class Issue extends AbstractEntity {
         return deleted;
     }
 
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public String getOpen() {
+        if (this.closed) return "Closed";
+        return "Open";
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
     public IssueDto _toIssueDto() {
-        return new IssueDto(this.subject, this.comment, this.writer, this.deleted);
+        return new IssueDto(this.subject, this.comment, this.writer, this.deleted, this.closed);
     }
 
     public boolean isOwner(User loginUser) {
@@ -94,5 +119,10 @@ public class Issue extends AbstractEntity {
         temp.add(new DeleteHistory(ContentType.ISSUE, getId(), loginUser));
 
         return temp;
+    }
+
+    public void close() throws RuntimeException {
+        if (this.closed) throw new RuntimeException("This issue was already closed");
+        this.closed = true;
     }
 }

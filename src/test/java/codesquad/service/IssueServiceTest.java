@@ -12,9 +12,7 @@ import support.test.BaseTest;
 
 import java.util.Optional;
 
-import static codesquad.domain.IssueTest.ISSUE1;
-import static codesquad.domain.IssueTest.ISSUE2;
-import static codesquad.domain.IssueTest.UPDATEDISSUE1;
+import static codesquad.domain.IssueTest.*;
 import static codesquad.domain.UserTest.JAVAJIGI;
 import static codesquad.domain.UserTest.SANJIGI;
 import static org.mockito.Mockito.when;
@@ -27,6 +25,9 @@ public class IssueServiceTest extends BaseTest {
     @Mock
     private DeleteHistoryService deleteHistoryService;
 
+    @Mock
+    private MilestoneService milestoneService;
+
     @InjectMocks
     private IssueService issueService;
 
@@ -34,6 +35,7 @@ public class IssueServiceTest extends BaseTest {
     public void setUp() throws Exception {
         when(issueRepository.findById(ISSUE1.getId())).thenReturn(Optional.of(ISSUE1));
         when(issueRepository.findById(ISSUE2.getId())).thenReturn(Optional.of(ISSUE2));
+        when(issueRepository.findById(ISSUE4.getId())).thenReturn(Optional.of(ISSUE4));
     }
 
     @Test
@@ -59,5 +61,26 @@ public class IssueServiceTest extends BaseTest {
         issueService.delete(JAVAJIGI, ISSUE2.getId());
         
         softly.assertThat(ISSUE2.isDeleted()).isTrue();
+    }
+
+//      어떻게 테스트해야하는가?
+//    @Test
+//    public void setMilestone() {
+//        issueService.setMilestone(ISSUE1.getId(), MILESTONE1.getId());
+//
+//        softly.assertThat(ISSUE1.getMilestone()).isEqualTo(MILESTONE1);
+//        softly.assertThat(MILESTONE1.getIssues().contains(ISSUE1)).isTrue();
+//    }
+
+    @Test(expected = RuntimeException.class)
+    public void close_already_closed() {
+        issueService.close(ISSUE4.getId());
+    }
+
+    @Test
+    public void close() {
+        issueService.close(ISSUE1.getId());
+
+        softly.assertThat(ISSUE1.isClosed()).isTrue();
     }
 }

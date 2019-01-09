@@ -15,15 +15,17 @@ import static codesquad.domain.UserTest.SANJIGI;
 
 public class IssueTest extends BaseTest {
     public static final List<Issue> ISSUES = new ArrayList<>();
-    public static final Issue ISSUE1 = new Issue(1,"testSubject1", "testComment1", JAVAJIGI, false);
-    public static final Issue ISSUE2 = new Issue(2, "testSubject2", "testComment2", JAVAJIGI, false);
-    public static final Issue ISSUE3 = new Issue(3, "testSubject3", "testComment3", SANJIGI, false);
-    public static final IssueDto UPDATEDISSUE1 = new IssueDto("testSubject1", "testComment1", JAVAJIGI, false);
+    public static final Issue ISSUE1 = new Issue(1,"testSubject1", "testComment1", JAVAJIGI, false, false);
+    public static final Issue ISSUE2 = new Issue(2, "testSubject2", "testComment2", JAVAJIGI, false, false);
+    public static final Issue ISSUE3 = new Issue(3, "testSubject3", "testComment3", SANJIGI, false, false);
+    public static final Issue ISSUE4 = new Issue(4, "testSubject4", "testComment4", SANJIGI, false, true);
+    public static final IssueDto UPDATEDISSUE1 = new IssueDto("testSubject1", "testComment1", JAVAJIGI, false, false);
 
     static {
         ISSUES.add(ISSUE1);
         ISSUES.add(ISSUE2);
         ISSUES.add(ISSUE3);
+        ISSUES.add(ISSUE4);
     }
 
     @Test
@@ -63,5 +65,16 @@ public class IssueTest extends BaseTest {
     public void delete() throws CannotDeleteException {
         ISSUE2.delete(JAVAJIGI);
         softly.assertThat(ISSUE2.isDeleted()).isEqualTo(true);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void close_already_closed() {
+        ISSUE4.close();
+    }
+
+    @Test
+    public void close() {
+        ISSUE1.close();
+        softly.assertThat(ISSUE1.isClosed()).isEqualTo(true);
     }
 }

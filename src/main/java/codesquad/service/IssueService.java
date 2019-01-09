@@ -4,6 +4,7 @@ import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ public class IssueService {
 
     @Resource(name = "deleteHistoryService")
     private DeleteHistoryService deleteHistoryService;
+
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
 
     @Transactional
     public Issue add(User loginUser, IssueDto issueDto) {
@@ -52,5 +56,20 @@ public class IssueService {
     public void delete(User loginUser, long id) throws Exception {
         Issue issue = findById(id);
         deleteHistoryService.saveAll(issue.delete(loginUser));
+    }
+
+    @Transactional
+    public void setMilestone(long issueId, long milestoneId) {
+        Issue issue = findById(issueId);
+        Milestone milestone = milestoneService.findById(milestoneId);
+
+        milestone.addIssue(issue);
+        issue.getMilestone().deleteIssue(issue);
+        issue.setMilestone(milestone);
+    }
+
+    @Transactional
+    public void close(long id) throws RuntimeException {
+        findById(id).close();
     }
 }
