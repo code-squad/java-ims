@@ -1,5 +1,6 @@
 package codesquad.service;
 
+import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 import java.util.Optional;
+import java.util.concurrent.CancellationException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -24,6 +26,7 @@ public class IssueService {
 
     @Resource(name = "deleteHistoryService")
     private DeleteHistoryService deleteHistoryService;
+
     public Issue add(User user, IssueDto issueDto) {
         issueDto.writeBy(user);
         return issueRepository.save(issueDto._toIssue());
@@ -38,10 +41,11 @@ public class IssueService {
     }
 
     @Transactional
-    public void update(User loginUser, long id, IssueDto target) {
+    public Issue update(User loginUser, long id, IssueDto target) {
         Issue original = issueRepository.findById(id).filter(user -> user.isOwner(loginUser))
                 .orElseThrow(UnAuthorizedException::new);
         original.update(loginUser, target._toIssue());
+        return original;
     }
 
     private Issue findById(User loginUser, long id) {
@@ -50,18 +54,15 @@ public class IssueService {
                 .orElseThrow(UnAuthorizedException::new);
     }
 
+
+    public Iterable<Issue> findAllByDelete() {
+        return issueRepository.findByDeleted(false);
+    }
+
     @Transactional
-    public void delete(User loginUser, long id) {
+    public void deleteIssue(User loginUser, long id) throws CannotDeleteException {
         Issue original = issueRepository.findById(id).filter(user -> user.isOwner(loginUser))
-                .orElseThrow(UnAuthorizedException::new);
-        original.delete(loginUser);
-
+                .orElseThrow(CancellationException::new);
+        deleteHistoryService.saveAll(original.delete(loginUser));
     }
-
-
-    public Iterable<Issue> findAllDeleted() {
-        return issueRepository.findByDelete(false);
-    }
-
-
 }

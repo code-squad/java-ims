@@ -16,6 +16,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 
         UserDto dbUser = getResource(location, UserDto.class, findByUserId(newUser.getUserId()));
         softly.assertThat(dbUser).isEqualTo(newUser);
+
     }
 
     @Test

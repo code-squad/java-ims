@@ -1,5 +1,6 @@
 package codesquad.service;
 
+import codesquad.domain.DeleteHistory;
 import codesquad.domain.DeleteHistoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -14,8 +15,10 @@ public class DeleteHistoryService {
     @Resource(name = "deleteHistoryRepository")
     private DeleteHistoryRepository deleteHistoryRepository;
 
-//    @Transactional(propagation = Propagation.REQUIRES_NEW)
-//    public void saveAll() {
-//        deleteHistoryRepository.save();
-//    }
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveAll(List<DeleteHistory> delete) {
+        for (DeleteHistory deleteHistory : delete) {
+            deleteHistoryRepository.save(deleteHistory);
+        }
+    }
 }
