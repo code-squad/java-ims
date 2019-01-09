@@ -4,6 +4,8 @@ $("#login-submit").on("click", login);
 $("#issue_update").on("click", issue_update);
 $("#issues-menu-lower-right").on("click", issue_delete);
 $("#milestone-menu").on("click", milestone_menu);
+$("#label_menu").on("click", label_menu);
+
 function login(e) {
     e.preventDefault();
 
@@ -80,31 +82,63 @@ function issue_delete_onSuccess(data) {
 
 function milestone_menu(e) {
     e.preventDefault();
-        var url = $("#milestone-menu").attr('value');
-        var li_list = "";
+    var url = $("#milestone-menu").attr('value');
+    var li_list = "";
 
-        $.ajax({
-            type : 'get',
-            url : url,
-            dataType : 'json',
-            error : function(data) {
-                console.log("에러");
-            },
-            success : function(data) {
-                console.log("성공");
-                console.log(data);
-                $(data).each(function(index, value) {
-                    console.log(value);
-                    console.log(value.id);
-                    console.log(value.subject);
-                    li_list += '<li class="mdl-menu__item mdl-button--accent">' +
-                        '<a href="' + url + '/' + value.id + '">' + value.subject + '</a></li>';
-                });
+    $.ajax({
+        type : 'get',
+        url : url,
+        dataType : 'json',
+        error : function(data) {
+            console.log("milestone_에러");
+        },
+        success : function(data) {
+            console.log("milestone_조회성공");
+            console.log(data);
+            $(data).each(function(index, value) {
+                console.log(value);
+                console.log(value.id);
+                console.log(value.subject);
+                li_list += '<li class="mdl-menu__item mdl-button--accent">' +
+                    '<a href="' + url + '/' + value.id + '">' + value.subject + '</a></li>';
+            });
 
-                console.log(li_list);
-                $("#milestone_menu").html(li_list);
-            }
-        })
+            console.log(li_list);
+            $("#milestone_menu").html(li_list);
+        }
+    })
+}
+
+function label_menu(e) {
+    e.preventDefault();
+    var url = $("#label_menu").attr('value');
+    var li_list = "";
+
+    console.log("실행됨 라벨");
+    $.ajax({
+        type : 'get',
+        url : url,
+        dataType : 'json',
+        error : function(data) {
+            console.log("label_에러");
+        },
+        success : function(data) {
+            console.log("label_조회성공");
+            console.log(data);
+
+            li_list += '<li class="mdl-menu__item">' +
+                                '<a href="/labels">' + "라벨 추가" + '</a></li>';
+
+            $(data).each(function(index, value) {
+                console.log(value);
+                li_list += '<li class="mdl-menu__item">' +
+                    '<a href="' + url + '/' + value.id + '">' + value.label + '</a></li>';
+            });
+
+            console.log(li_list);
+            $("#label_menu_ul").html(li_list);
+        }
+    })
 }
 
 

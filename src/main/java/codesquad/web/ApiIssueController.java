@@ -27,6 +27,5 @@ public class ApiIssueController {
         } catch (Exception e) {
             return Result.error("이슈 작성자와 로그인 아이디가 다릅니다.");
         }
-
     }
 }

@@ -70,18 +70,18 @@
                 <!--{{/milestones}}-->
             </ul>
 
-            <button id="label-menu" class="mdl-button mdl-js-button">
+            <button id="label_menu" class="mdl-button mdl-js-button" value="/api/issue/{{id}}/label">
                 Label
             </button>
             <!-- label list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                for="label-menu">
-                <li class="mdl-menu__item">
-                    <a href="/issue/{id}/label">label 추가</a>
-                </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/{id}/setLabel/1">label1</a>
-                </li>
+                for="label_menu" id="label_menu_ul">
+                <!--<li class="mdl-menu__item">-->
+                    <!--<a href="/issue/{id}/label">label 추가</a>-->
+                <!--</li>-->
+                <!--<li class="mdl-menu__item">-->
+                    <!--<a href="/issue/{id}/setLabel/1">label1</a>-->
+                <!--</li>-->
                 <!--<li class="mdl-menu__item">-->
                     <!--<a href="/issue/1/setLabel/2">label2</a>-->
                 <!--</li>-->

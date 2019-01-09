@@ -2,6 +2,7 @@ package codesquad.domain.issue;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.DeleteHistory;
+import codesquad.domain.label.Label;
 import codesquad.domain.milestone.Milestone;
 import codesquad.domain.user.User;
 import org.slf4j.Logger;
@@ -26,9 +27,17 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_milestone"))
     private Milestone milestone;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_label"))
+    private Label label;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_assignee"))
+    private List<User> assignee;
 
     private Boolean deleted = false;
 
@@ -109,5 +118,21 @@ public class Issue extends AbstractEntity {
 
     public void setMilestone(Milestone milestone) {
         this.milestone = milestone;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
+    }
+
+    public List<User> getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(List<User> assignee) {
+        this.assignee = assignee;
     }
 }
