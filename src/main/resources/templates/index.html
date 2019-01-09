@@ -24,13 +24,16 @@
     <header class="mdl-layout__header mdl-layout__header--waterfall">
         <div class="mdl-layout__header-row">
             <!-- Title -->
-            <span class="mdl-layout-title">Issue Tracking System</span>
+            <span class="mdl-layout-title">
+                <a href="/">Issue Tracking System</a>
+            </span>
             <div class="mdl-layout-spacer"></div>
             <!-- Tabs -->
             <nav class="mdl-navigation">
 				{{#loginedUser}}
 				<a class="mdl-navigation__link" href="/">Issues</a>
-				<a class="mdl-navigation__link" href="/milestone/list">Milestones</a>
+                <a class="mdl-navigation__link" href="/milestones/list">Milestones</a>
+                <a class="mdl-navigation__link" href="/labels/list">Labels</a>
 				<a class="mdl-navigation__link" href="/users/{{id}}/form">My</a>
                 <a class="mdl-navigation__link" href="/users/logout">Logout</a>
                 {{/loginedUser}}
@@ -59,13 +62,14 @@
                         {{^deleted}}
                         <li class="mdl-list__item mdl-list__item--two-line">
 								<span class="mdl-list__item-primary-content">
-								    <a> 
+								    <a>
 								         <img class="mdl-list__item-avatar" height="48" width="48"
                                               src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140"
                                               alt="javajigi">
-									</a> 
+									</a>
 									<a href="/issues/{{id}}">
-									    <strong>{{subject}}</strong>
+									    <strong>{{subject}} {{#label.id}}({{label.name}}){{/label.id}}</strong>
+									    <!--<strong>{{subject}} {{#label}}({{label.name}}){{/label}}</strong> label이 없는데 왜 있다고 봄?? (참으로 보고 안의 값이 보여짐)-->
 									</a>
 									<span class="mdl-list__item-sub-title">
 									    #1 Open

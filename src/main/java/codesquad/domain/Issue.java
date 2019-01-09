@@ -26,11 +26,20 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
-    private boolean deleted = false;
+    @ManyToOne(fetch = FetchType.LAZY)      //지연로딩을 하면, milestone에서 OneToMany관계를 안맺어도 됨?
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
 
-    public boolean isDeleted() {
-        return deleted;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
+    private Label label;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
+
+    private boolean deleted = false;
+    private boolean closed = false;
 
     public Issue() {
     }
@@ -74,6 +83,46 @@ public class Issue extends AbstractEntity {
         this.writer = writer;
     }
 
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
 
     @Override
     public String toString() {
@@ -81,6 +130,11 @@ public class Issue extends AbstractEntity {
                 "subject='" + subject + '\'' +
                 ", comment='" + comment + '\'' +
                 ", writer=" + writer +
+                ", milestone=" + milestone +
+                ", label=" + label +
+                ", assignee=" + assignee +
+                ", deleted=" + deleted +
+                ", closed=" + closed +
                 '}';
     }
 
@@ -107,8 +161,8 @@ public class Issue extends AbstractEntity {
     }
 
     public List<DeleteHistory> delete(User loginUser) {
-        List<DeleteHistory> histories = new ArrayList<>();
         if (!this.isOwner(loginUser)) throw new CannotDeleteException("you can't delete this issue");
+        List<DeleteHistory> histories = new ArrayList<>();
         this.deleted = true;
         histories.add(new DeleteHistory(ContentType.ISSUE, this.getId(), this.getWriter()));
         return histories;

@@ -4,9 +4,13 @@ import codesquad.CannotUpdateException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.User;
+import codesquad.domain.UserRepository;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.LabelService;
+import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -23,6 +27,15 @@ public class IssueController {
     @Resource(name = "issueService")
     private IssueService issueService;
 
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
+
+    @Resource(name = "userService")
+    private UserService userService;
+
+    @Resource(name = "labelService")
+    private LabelService labelService;
+
     @GetMapping("/form")
     public String form(@LoginUser User loginUser) {
         return "/issue/form";
@@ -37,6 +50,9 @@ public class IssueController {
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("milestones", milestoneService.findAll());
+        model.addAttribute("assignees", userService.findAll());
+        model.addAttribute("labels", labelService.findAll());
         return "/issue/show";
     }
 
@@ -54,7 +70,27 @@ public class IssueController {
 
     @DeleteMapping("/{id}")
     public String delete(@LoginUser User loginUser, @PathVariable long id) {
-        issueService.delete(loginUser,id);
+        issueService.delete(loginUser, id);
         return "redirect:/";
     }
+
+    @GetMapping("/{issueId}/setMilestone/{milestoneId}")
+    public String setMilestone(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long milestoneId) {
+        issueService.setMilestone(loginUser, issueId, milestoneId);
+        log.debug("마일스톤 클릭!!!!!!!!!!!!!!!!!!!!!!!!!");
+        return "redirect:/issues/{issueId}";
+    }
+
+    @GetMapping("/{issueId}/setAssignee/{assigneeId}")
+    public String setAssignee(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long assigneeId) {
+        issueService.setAssignee(loginUser, issueId, assigneeId);
+        return "redirect:/issues/{issueId}";
+    }
+
+    @GetMapping("/{issueId}/setLabel/{labelId}")
+    public String setLabel(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long labelId) {
+        issueService.setLabel(loginUser, issueId, labelId);
+        return "redirect:/issues/{issueId}";
+    }
+
 }

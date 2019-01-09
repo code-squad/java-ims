@@ -21,13 +21,16 @@
 <header class="mdl-layout__header mdl-layout__header--waterfall">
     <div class="mdl-layout__header-row">
         <!-- Title -->
-        <span class="mdl-layout-title" href="/">Issue Tracking System</span>
+        <span class="mdl-layout-title">
+            <a href="/">Issue Tracking System</a>
+        </span>
         <div class="mdl-layout-spacer"></div>
         <!-- Tabs -->
         <nav class="mdl-navigation">
             {{#loginedUser}}
             <a class="mdl-navigation__link" href="/">Issues</a>
-            <a class="mdl-navigation__link" href="/milestone/list">Milestones</a>
+            <a class="mdl-navigation__link" href="/milestones/list">Milestones</a>
+            <a class="mdl-navigation__link" href="/labels/list">Labels</a>
             <a class="mdl-navigation__link" href="/users/{{id}}/form">My</a>
             <a class="mdl-navigation__link" href="/users/logout">Logout</a>
             {{/loginedUser}}

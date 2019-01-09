@@ -90,6 +90,7 @@ public class User extends AbstractEntity {
         return new UserDto(this.userId, this.password, this.name);
     }
 
+    //얘 어떤 동작원리임??
     @JsonIgnore
     public boolean isGuestUser() {
         return false;
