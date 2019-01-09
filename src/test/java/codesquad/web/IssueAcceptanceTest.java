@@ -30,8 +30,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void createForm_no_login() throws Exception {
         ResponseEntity<String> response = template.getForEntity("/issue/form", String.class);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-        log.debug("body : {}", response.getBody());
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/login");
     }
 
 
@@ -56,7 +56,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void create_not_login() throws Exception {
         ResponseEntity<String> response = getStringResponseEntity(HtmlFormDataBuilder.urlEncodedForm(), "제목입니다.", "내용입니다.", template, ISSUE_URL);
         log.debug(response.getStatusCode());
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/login");
     }
 
     @Test
@@ -85,7 +86,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void update_not_login() {
         ResponseEntity<String> response = getStringResponseEntity(HtmlFormDataBuilder.urlEncodedForm()
                 .put(), "나는 바뀐 제목입니다.", "나는 바뀐 내용입니다.", template, ISSUE_URL + "/1");
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/login");
     }
 
     @Test
@@ -111,8 +113,8 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .delete()
                 .build();
         ResponseEntity<String> response = template.postForEntity(ISSUE_URL + "/1", request, String.class);
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-    }
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/login");    }
 
     @Test
     public void delete_no_others() {
@@ -121,6 +123,34 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .build();
         ResponseEntity<String> response = basicAuthTemplate(findByUserId("jar100")).postForEntity(ISSUE_URL + "/1", request, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    public void setMilestone() {
+        ResponseEntity<String> response = template.getForEntity("/issue/1/setMilestone/1",String.class);
+        log.debug(response.getStatusCode());
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(issueRepository.findById(1L).get().getMilestone().getSubject()).isEqualTo("취업");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/issue/1");
+    }
+
+    @Test
+    public void setLabel() {
+        ResponseEntity<String> response = template.getForEntity("/issue/1/setLabel/1",String.class);
+        log.debug(response.getStatusCode());
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(issueRepository.findById(1L).get().getLabel().getSubject()).isEqualTo("라벨");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/issue/1");
+    }
+
+
+    @Test
+    public void setAssignee() {
+        ResponseEntity<String> response = template.getForEntity("/issue/1/setAssignee/3",String.class);
+        log.debug(response.getStatusCode());
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(issueRepository.findById(1L).get().getAssignee().getName()).isEqualTo("Peter");
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/issue/1");
     }
 }
 

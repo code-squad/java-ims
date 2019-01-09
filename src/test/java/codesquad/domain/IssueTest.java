@@ -13,7 +13,7 @@ public class IssueTest extends BaseTest {
 
     @Before
     public void setUp() {
-        issue1 = new Issue(JAVAJIGI,new IssueBody("제목입니다.","내용 입니다."));
+        issue1 = new Issue(JAVAJIGI,new ContentsBody("제목입니다.","내용 입니다."));
     }
 
 
@@ -27,8 +27,8 @@ public class IssueTest extends BaseTest {
 
     @Test
     public void update() {
-        IssueBody issueBody = new IssueBody("수정됬습니다.","내용도 수정됬습니다.");
-        issue1.update(JAVAJIGI,issueBody);
+        ContentsBody contentsBody = new ContentsBody("수정됬습니다.","내용도 수정됬습니다.");
+        issue1.update(JAVAJIGI, contentsBody);
         softly.assertThat(issue1.getComment()).isEqualTo("내용도 수정됬습니다.");
         softly.assertThat(issue1.getSubject()).isEqualTo("수정됬습니다.");
 
@@ -36,22 +36,22 @@ public class IssueTest extends BaseTest {
 
     @Test(expected = UnAuthorizedException.class)
     public void update_not() {
-        IssueBody issueBody = new IssueBody("수정됬습니다.","내용도 수정됬습니다.");
-        issue1.update(SANJIGI,issueBody);
+        ContentsBody contentsBody = new ContentsBody("수정됬습니다.","내용도 수정됬습니다.");
+        issue1.update(SANJIGI, contentsBody);
     }
 
 
     @Test
     public void delete() {
-        softly.assertThat(issue1.isDeleted()).isTrue();
-        issue1.deleted(JAVAJIGI);
         softly.assertThat(issue1.isDeleted()).isFalse();
+        issue1.deleted(JAVAJIGI);
+        softly.assertThat(issue1.isDeleted()).isTrue();
     }
 
     @Test(expected = UnAuthorizedException.class)
     public void delete_no() {
-        softly.assertThat(issue1.isDeleted()).isTrue();
+        softly.assertThat(issue1.isDeleted()).isFalse();
         issue1.deleted(SANJIGI);
-        softly.assertThat(issue1.isDeleted()).isTrue();
+        softly.assertThat(issue1.isDeleted()).isFalse();
     }
 }
