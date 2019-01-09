@@ -59,9 +59,4 @@ public class ApiUserController {
         headers.setLocation(URI.create("/"));
         return new ResponseEntity<Void>(headers, HttpStatus.OK);
     }
-
-
-
-
-
 }
