@@ -1,4 +1,6 @@
-package codesquad.domain;
+package codesquad.domain.history;
+
+import codesquad.domain.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -2,16 +2,18 @@ package codesquad.service;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
-import codesquad.domain.User;
-import codesquad.domain.UserRepository;
+import codesquad.domain.user.Avatar;
+import codesquad.domain.user.User;
+import codesquad.domain.user.UserRepository;
 import codesquad.dto.UserDto;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -19,14 +21,19 @@ public class UserService {
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
-    public User add(UserDto userDto) {
-        return userRepository.save(userDto._toUser());
+    @Resource(name = "fileService")
+    private FileService fileService;
+
+    public User add(UserDto userDto, MultipartFile file) throws IOException {
+        Avatar avatar = Avatar.of(file);
+        if (!avatar.isDefaultAvatar()) fileService.upload(avatar, file);
+        return userRepository.save(userDto._toUser(avatar));
     }
 
     @Transactional
     public User update(User loginUser, long id, UserDto updatedUser) {
         User original = findById(loginUser, id);
-        original.update(loginUser, updatedUser._toUser());
+        original.update(loginUser, updatedUser._toUser(Avatar.DEFAULT_AVATAR));
         return userRepository.save(original);
     }
 

@@ -55,9 +55,15 @@ function editRequest(e) {
     e.preventDefault();
     var url = $(this).parent().attr('action');
     var commentBody = $(this).closest('.comment-body');
-    var contents = commentBody.find('.comment-contents').html();
-    var commentEditTemplate = $('#commentEditTemplate').html().format(url, contents);
-    commentBody.html(commentEditTemplate);
+    $.ajax({
+            type : 'get',
+            url : url,
+            error : onError,
+            success : function onSuccess(data, textStatus, jqXhr) {
+                var commentEditTemplate = $('#commentEditTemplate').html().format(url, data.contents);
+                commentBody.html(commentEditTemplate);
+            }
+    });
 }
 
 function editComment(e) {

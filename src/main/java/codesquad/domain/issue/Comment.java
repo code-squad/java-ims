@@ -1,9 +1,9 @@
 package codesquad.domain.issue;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.ContentType;
-import codesquad.domain.DeleteHistory;
-import codesquad.domain.User;
+import codesquad.domain.history.ContentType;
+import codesquad.domain.history.DeleteHistory;
+import codesquad.domain.user.User;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -67,6 +67,10 @@ public class Comment extends AbstractEntity {
 
     public User getWriter() {
         return writer;
+    }
+
+    public boolean isOwner(User target) {
+        return this.writer.equals(target);
     }
 
     public void setWriter(User writer) {

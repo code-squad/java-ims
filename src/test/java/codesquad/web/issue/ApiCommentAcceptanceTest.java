@@ -12,7 +12,8 @@ import support.test.AcceptanceTest;
 
 import static codesquad.domain.IssueTest.ISSUE;
 import static codesquad.domain.UserTest.BRAD;
-import static codesquad.domain.issue.CommentTest.*;
+import static codesquad.domain.UserTest.JUNGHYUN;
+import static codesquad.domain.CommentTest.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ApiCommentAcceptanceTest extends AcceptanceTest {
@@ -25,7 +26,7 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
     public void create() {
         String url = String.format("/api/issues/%d/comments", ISSUE.getId());
         String location = createResource(url, BRAD, new Comment(CONTENTS));
-        Comment comment = template().getForObject(location, Comment.class);
+        Comment comment = basicAuthTemplate().getForObject(location, Comment.class);
         softly.assertThat(comment.getContents()).isEqualTo(CONTENTS);
         softly.assertThat(comment.getWriter()).isEqualTo(BRAD);
         log.debug("comment : {}", comment);
@@ -46,5 +47,30 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
         ResponseEntity<Comment> response = basicAuthTemplate().exchange(location, HttpMethod.PUT, createHttpEntity(new Comment(UPDATE_CONTENTS)), Comment.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         log.debug("updateComment : {}", response.getBody());
+    }
+
+    @Test
+    public void updateRequest() {
+        String url = String.format("/api/issues/%d/comments", ISSUE.getId());
+        String location = createResource(url, BRAD, new Comment(CONTENTS));
+        ResponseEntity<Comment> response = basicAuthTemplate().getForEntity(location, Comment.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        log.debug("updateRequest Comment : {}", response.getBody());
+    }
+
+    @Test
+    public void updateRequest_no_login() {
+        String url = String.format("/api/issues/%d/comments", ISSUE.getId());
+        String location = createResource(url, BRAD, new Comment(CONTENTS));
+        ResponseEntity<Comment> response = template().getForEntity(location, Comment.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void updateRequest_other_login() {
+        String url = String.format("/api/issues/%d/comments", ISSUE.getId());
+        String location = createResource(url, BRAD, new Comment(CONTENTS));
+        ResponseEntity<Comment> response = basicAuthTemplate(JUNGHYUN).getForEntity(location, Comment.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 }

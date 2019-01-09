@@ -1,4 +1,7 @@
-package codesquad.domain.milestone;
+package codesquad.domain;
+
+import codesquad.domain.milestone.Milestone;
+import codesquad.domain.milestone.MilestoneBody;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

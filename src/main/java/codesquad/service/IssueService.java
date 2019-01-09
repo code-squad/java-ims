@@ -1,9 +1,9 @@
 package codesquad.service;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.DeleteHistoryRepository;
+import codesquad.domain.history.DeleteHistoryRepository;
 import codesquad.domain.issue.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueBody;
 import codesquad.domain.label.Label;

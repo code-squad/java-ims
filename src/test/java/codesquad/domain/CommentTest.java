@@ -1,6 +1,7 @@
-package codesquad.domain.issue;
+package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import codesquad.domain.issue.Comment;
 import org.junit.Test;
 import support.test.BaseTest;
 
@@ -46,5 +47,10 @@ public class CommentTest extends BaseTest {
     public void update_다른유저일때() {
         Comment comment = new Comment(RANDOM_COMMENT_ID, NEW_CONTENTS, ISSUE, BRAD);
         Comment updatedCommnet = comment.update(JUNGHYUN, ISSUE, new Comment(UPDATE_CONTENTS));
+    }
+
+    @Test
+    public void isOwner() {
+        softly.assertThat(COMMENT.isOwner(BRAD)).isTrue();
     }
 }

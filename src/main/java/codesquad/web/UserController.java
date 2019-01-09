@@ -1,7 +1,7 @@
 package codesquad.web;
 
 import codesquad.UnAuthenticationException;
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import codesquad.dto.UserDto;
 import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
@@ -11,10 +11,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/users")
@@ -40,16 +42,20 @@ public class UserController {
             User user = userService.login(userId, password);
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
             return "redirect:/";
-        } catch(UnAuthenticationException e) {
+        } catch (UnAuthenticationException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "/user/login_fail";
         }
     }
 
     @PostMapping("")
-    public String create(@Valid UserDto userDto) {
-        log.debug("UserDto : ", userDto.toString());
-        userService.add(userDto);
+    public String create(@Valid UserDto userDto, MultipartFile pic) throws IOException {
+        if(!pic.isEmpty()) {
+            log.debug("contentType : {}", pic.getContentType());
+            log.debug("originalFileName : {}", pic.getOriginalFilename());
+            log.debug("isEmpty : {}", pic.isEmpty());
+        }
+        userService.add(userDto, pic);
         return "redirect:/";
     }
 

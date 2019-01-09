@@ -14,7 +14,7 @@ import support.test.BaseTest;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
-import static codesquad.domain.milestone.MilestoneTest.*;
+import static codesquad.domain.MilestoneTest.*;
 import static org.mockito.Mockito.when;
 import static org.slf4j.LoggerFactory.getLogger;
 

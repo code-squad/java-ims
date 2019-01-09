@@ -383,3 +383,8 @@ a {
     cursor: pointer;
     outline: inherit;
 }
+
+.comment-edit, .comment-delete {
+    display: inline;
+    float: right;
+}

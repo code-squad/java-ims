@@ -1,6 +1,6 @@
 package codesquad.web.issue;
 
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import codesquad.domain.issue.Comment;
 import codesquad.security.LoginUser;
 import org.slf4j.Logger;
@@ -36,8 +36,8 @@ public class ApiCommentController {
     }
 
     @GetMapping("/{commentId}")
-    public Comment show(@PathVariable long commentId) {
-        return commentService.findById(commentId);
+    public Comment show(@LoginUser User loginUser, @PathVariable long commentId) {
+        return commentService.findById(loginUser, commentId);
     }
 
     @DeleteMapping("/{commentId}")

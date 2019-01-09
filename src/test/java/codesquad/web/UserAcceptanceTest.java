@@ -1,13 +1,13 @@
 package codesquad.web;
 
-import codesquad.domain.User;
-import codesquad.domain.UserRepository;
+import codesquad.domain.user.User;
+import codesquad.domain.user.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +18,7 @@ import support.test.HtmlFormDataBuilder;
 import javax.persistence.EntityNotFoundException;
 
 import static codesquad.domain.UserTest.BRAD;
+import static org.junit.Assert.assertEquals;
 
 public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(UserAcceptanceTest.class);
@@ -29,10 +30,11 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
 
     @Before
     public void setUp() throws Exception {
-        updateRequest = HtmlFormDataBuilder.urlEncodedForm()
+        updateRequest = HtmlFormDataBuilder.urlEncodedForm().put()
                     .addParameter("_method", "put")
                     .addParameter("password", "password")
-                    .addParameter("name", "정현2").build();
+                    .addParameter("name", "정현2")
+                    .build();
     }
 
     @Test
@@ -124,5 +126,17 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> responseEntity = basicAuthTemplate().getForEntity("/users/logout", String.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/");
+    }
+
+    @Test
+    public void upload() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> file = HtmlFormDataBuilder
+                .multipartFormData()
+                .addParameter("file", new ClassPathResource("logback.xml"))
+                .addParameter("userId", "mrboo7")
+                .addParameter("password", "password")
+                .addParameter("name", "브라드").build();
+        ResponseEntity<String> result = template.postForEntity("/users", file, String.class);
+        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
     }
 }

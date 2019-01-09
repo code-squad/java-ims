@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import codesquad.domain.user.Avatar;
+import codesquad.domain.user.User;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -27,7 +29,7 @@ public class UserValidationTest {
 
     @Test
     public void userIdWhenIsEmpty() throws Exception {
-        User user = new User("", "password", "name");
+        User user = new User("", "password", "name", Avatar.DEFAULT_AVATAR);
         Set<ConstraintViolation<User>> constraintViolcations = validator.validate(user);
         assertThat(constraintViolcations.size(), is(1));
 

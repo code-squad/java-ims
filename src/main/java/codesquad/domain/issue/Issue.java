@@ -1,13 +1,12 @@
 package codesquad.domain.issue;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.ContentType;
-import codesquad.domain.DeleteHistory;
-import codesquad.domain.User;
+import codesquad.domain.history.ContentType;
+import codesquad.domain.history.DeleteHistory;
+import codesquad.domain.user.User;
 import codesquad.domain.label.Label;
 import codesquad.domain.milestone.Milestone;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.action.internal.OrphanRemovalAction;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 import support.domain.UrlGeneratable;
@@ -31,15 +30,15 @@ public class Issue extends AbstractEntity implements UrlGeneratable {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
     private User assignee;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
     private Label label;
 
