@@ -1,12 +1,15 @@
 package codesquad.domain;
 
+import org.hibernate.annotations.Where;
 import support.domain.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @Entity
 public class Milestone extends AbstractEntity {
@@ -14,9 +17,16 @@ public class Milestone extends AbstractEntity {
     @Column(nullable = false, length = 20)
     private String subject;
 
+    @Column(nullable = false)
     private LocalDateTime startDate;
 
+    @Column(nullable = false)
     private LocalDateTime endDate;
+
+    @OneToMany(mappedBy = "milestone", cascade = CascadeType.ALL)
+    @Where(clause = "deleted = false")
+    @OrderBy("id ASC")
+    private List<Issue> issues = new ArrayList<>();
 
     public Milestone() {
 
@@ -26,6 +36,11 @@ public class Milestone extends AbstractEntity {
         this.subject = subject;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public void addIssue(User loginUser, Issue issue) {
+        issue.toMilestone(loginUser, this);
+        issues.add(issue);
     }
 
     public String getSubject() {
@@ -56,6 +71,6 @@ public class Milestone extends AbstractEntity {
         if (endDate == null) {
             return "";
         }
-        return endDate.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy"));
+        return endDate.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.US));
     }
 }

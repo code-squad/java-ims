@@ -86,15 +86,11 @@
                     <!-- milestone list -->
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="milestone-menu">
+                        {{# milestones}}
                         <li class="mdl-menu__item mdl-button--accent">
-                            <a href="/issue/1/setMilestone/0">Milestone1</a>
+                            <a href="/issues/{{issue.id}}/milestones/{{id}}">{{subject}}</a>
                         </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setMilestone/2">Milestone2</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setMilestone/3">Milestone3</a>
-                        </li>
+                        {{/ milestones}}
                     </ul>
 
                     <button id="label-menu" class="mdl-button mdl-js-button">

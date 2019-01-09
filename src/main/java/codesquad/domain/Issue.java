@@ -24,6 +24,10 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
+    private Milestone milestone;
+
     private boolean deleted = false;
 
     public Issue() {
@@ -58,6 +62,14 @@ public class Issue extends AbstractEntity {
         List<DeleteHistory> temp = new ArrayList<>();
         temp.add(new DeleteHistory(ContentType.ISSUE, getId(), writer));
         return temp;
+    }
+
+    public void toMilestone(User loginUser, Milestone milestone) {
+        if (!isMatchWriter(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.milestone = milestone;
     }
 
     public String getSubject() {

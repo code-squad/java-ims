@@ -2,9 +2,11 @@ package codesquad.web;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Controller
 @RequestMapping("/issues")
@@ -20,6 +23,9 @@ public class IssueController {
 
     @Resource(name = "issueService")
     private IssueService issueService;
+
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
 
     @GetMapping("/form")
     public String form() {
@@ -40,7 +46,8 @@ public class IssueController {
     @GetMapping("/{id}")
     public String read(@PathVariable long id, Model model) {
         Issue issue = issueService.findById(id);
-        model.addAttribute("issue", issue);
+        List<Milestone> milestones = milestoneService.findAll();
+        model.addAttribute("issue", issue).addAttribute("milestones", milestones);
         return "/issue/show";
     }
 
@@ -70,5 +77,15 @@ public class IssueController {
 
         issueService.delete(loginUser, id);
         return "redirect:/";
+    }
+
+    @GetMapping("/{id}/milestones/{milestoneId}")
+    public String addToMilestone(@LoginUser User loginUser,
+                                 @PathVariable long id,
+                                 @PathVariable long milestoneId) {
+        log.debug("***** add issue to milestone id : {} to {}", id, milestoneId);
+
+        issueService.addToMilestone(loginUser, id, milestoneId);
+        return "redirect:/issues/{id}";
     }
 }
