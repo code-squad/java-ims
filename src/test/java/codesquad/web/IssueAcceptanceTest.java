@@ -130,4 +130,31 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
         return template.postForEntity(String.format("/issues/%d", 1), request, String.class);
     }
+
+    @Test
+    public void delete_login(){
+        ResponseEntity<String> response = delete(basicAuthTemplate(RED));
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+    }
+
+    @Test
+    public void delete_no_login(){
+        ResponseEntity<String> response = delete(template);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    public void delete_login_othwerUser() {
+        ResponseEntity<String>  response = delete(basicAuthTemplate());
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    private ResponseEntity<String> delete(TestRestTemplate template) {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
+                .urlEncodedForm()
+                .delete()
+                .build();
+
+        return template.postForEntity(String.format("/issues/%d", 1), request, String.class);
+    }
 }

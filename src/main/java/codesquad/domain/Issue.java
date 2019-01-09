@@ -22,6 +22,8 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    private boolean deleted = false;
+
     public Issue() {
     }
 
@@ -51,6 +53,14 @@ public class Issue extends AbstractEntity {
         this.writer = writer;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public void writeBy(User loginUser) {
         this.writer = loginUser;
     }
@@ -68,5 +78,14 @@ public class Issue extends AbstractEntity {
             throw new UnAuthorizedException();
         }
         this.issueBody = target;
+    }
+
+    public void delete(User loginUser) {
+        log.debug("loginUser : {}", loginUser);
+        log.debug("writer : {}", writer);
+        if (!isOwner(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        this.deleted = true;
     }
 }

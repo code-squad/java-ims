@@ -27,31 +27,43 @@ public class IssueController {
 
     @GetMapping("/form")
     public String form (@LoginUser User loginUser) {
+        log.debug("### form");
         log.debug("GetMapping");
         return "/issue/form";
     }
 
     @PostMapping("")
     public String create(@LoginUser User loginUser, @Valid IssueBody issueBody) {
+        log.debug("### create");
         issueService.add(loginUser, issueBody);
         return "redirect:/";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
+        log.debug("### show");
         model.addAttribute("issue", issueService.findById(id));
         return "issue/show";
     }
 
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
+        log.debug("### updateForm");
         model.addAttribute("issue", issueService.findById(loginUser, id));
         return "/issue/updateForm";
     }
 
     @PutMapping("/{id}")
     public String update(@LoginUser User loginUser, @PathVariable long id, IssueBody updateIssueBody) {
+        log.debug("### update");
         issueService.update(loginUser, id, updateIssueBody);
+        return "redirect:/";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@LoginUser User loginUser, @PathVariable long id) {
+        log.debug("### delete");
+        issueService.delete(loginUser, id);
         return "redirect:/";
     }
 }

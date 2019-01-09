@@ -48,4 +48,13 @@ public class IssueService {
         issue.update(loginUser, target);
         return issue;
     }
+
+    @Transactional
+    public Issue delete(User loginUser, long id) {
+        Issue issue = issueRepository.findById(id)
+                .orElseThrow(UnAuthorizedException::new);
+
+        issue.delete(loginUser);
+        return issue;
+    }
 }
