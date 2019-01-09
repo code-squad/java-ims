@@ -1,10 +1,10 @@
 package codesquad.service;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.Contents;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.issue.Contents;
+import codesquad.domain.issue.Issue;
+import codesquad.domain.issue.IssueRepository;
+import codesquad.domain.user.User;
 import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;

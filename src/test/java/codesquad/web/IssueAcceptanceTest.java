@@ -1,6 +1,6 @@
 package codesquad.web;
 
-import codesquad.domain.IssueRepository;
+import codesquad.domain.issue.IssueRepository;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

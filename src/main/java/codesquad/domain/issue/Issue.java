@@ -1,6 +1,9 @@
-package codesquad.domain;
+package codesquad.domain.issue;
 
 import codesquad.UnAuthorizedException;
+import codesquad.domain.DeleteHistory;
+import codesquad.domain.milestone.Milestone;
+import codesquad.domain.user.User;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 
@@ -22,6 +25,10 @@ public class Issue extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_milestone"))
+    private Milestone milestone;
 
     private Boolean deleted = false;
 
@@ -94,5 +101,13 @@ public class Issue extends AbstractEntity {
 
     public boolean isSameComment(Issue issue) {
         return this.contents == issue.getContents();
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
     }
 }

@@ -1,9 +1,8 @@
 package codesquad.web;
 
 import codesquad.UnAuthenticationException;
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import codesquad.dto.UserDto;
-import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;
 import org.springframework.http.HttpHeaders;

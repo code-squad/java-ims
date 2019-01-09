@@ -24,13 +24,13 @@
         </a>
         <div class="mdl-card__supporting-text">
             <ul class="issue-list mdl-list">
-
-
+            {{#milestones}}
                 <li class="mdl-list__item mdl-list__item--two-line">
               <span class="mdl-list__item-primary-content">
-                <a href="/milestone/1"><strong>Milestone1</strong></a>
+                <a href="/milestone/1"><strong>{{subject}}</strong></a>
                 <span class="mdl-list__item-sub-title">
-                  Due by June 23, 2016
+                  <!--Due by June 23, 2016-->
+                    {{endDate}}
                 </span>
               </span>
 
@@ -43,42 +43,42 @@
                 </span>
               </span>
                 </li>
+            {{/milestones}}
+                <!--<li class="mdl-list__item mdl-list__item&#45;&#45;two-line">-->
+              <!--<span class="mdl-list__item-primary-content">-->
+                <!--<a href="/milestone/2"><strong>Milestone2</strong></a>-->
+                <!--<span class="mdl-list__item-sub-title">-->
+                  <!--Due by June 23, 2016-->
+                <!--</span>-->
+              <!--</span>-->
 
-                <li class="mdl-list__item mdl-list__item--two-line">
-              <span class="mdl-list__item-primary-content">
-                <a href="/milestone/2"><strong>Milestone2</strong></a>
-                <span class="mdl-list__item-sub-title">
-                  Due by June 23, 2016
-                </span>
-              </span>
+                    <!--<span class="mdl-list__item-secondary-content">-->
+                <!--<span class="progress-bar">-->
+                  <!--<span class="progress" style="width:200.0px"> </span>-->
+                <!--</span>-->
+                <!--<span class="mdl-list__item-sub-title" style="font-size:13px; color:#888">-->
+                <!--2 Open 1 Closed-->
+                <!--</span>-->
+              <!--</span>-->
+                <!--</li>-->
 
-                    <span class="mdl-list__item-secondary-content">
-                <span class="progress-bar">
-                  <span class="progress" style="width:200.0px"> </span>
-                </span>
-                <span class="mdl-list__item-sub-title" style="font-size:13px; color:#888">
-                2 Open 1 Closed
-                </span>
-              </span>
-                </li>
+                <!--<li class="mdl-list__item mdl-list__item&#45;&#45;two-line">-->
+              <!--<span class="mdl-list__item-primary-content">-->
+                <!--<a href="/milestone/3"><strong>Milestone3</strong></a>-->
+                <!--<span class="mdl-list__item-sub-title">-->
+                  <!--Due by June 23, 2016-->
+                <!--</span>-->
+              <!--</span>-->
 
-                <li class="mdl-list__item mdl-list__item--two-line">
-              <span class="mdl-list__item-primary-content">
-                <a href="/milestone/3"><strong>Milestone3</strong></a>
-                <span class="mdl-list__item-sub-title">
-                  Due by June 23, 2016
-                </span>
-              </span>
-
-                    <span class="mdl-list__item-secondary-content">
-                <span class="progress-bar">
-                  <span class="progress" style="width:150.0px"> </span>
-                </span>
-                <span class="mdl-list__item-sub-title" style="font-size:13px; color:#888">
-                1 Open 1 Closed
-                </span>
-              </span>
-                </li>
+                    <!--<span class="mdl-list__item-secondary-content">-->
+                <!--<span class="progress-bar">-->
+                  <!--<span class="progress" style="width:150.0px"> </span>-->
+                <!--</span>-->
+                <!--<span class="mdl-list__item-sub-title" style="font-size:13px; color:#888">-->
+                <!--1 Open 1 Closed-->
+                <!--</span>-->
+              <!--</span>-->
+                <!--</li>-->
 
 
             </ul>

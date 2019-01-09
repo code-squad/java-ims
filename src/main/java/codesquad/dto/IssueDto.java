@@ -1,8 +1,8 @@
 package codesquad.dto;
 
-import codesquad.domain.Contents;
-import codesquad.domain.Issue;
-import codesquad.domain.User;
+import codesquad.domain.issue.Contents;
+import codesquad.domain.issue.Issue;
+import codesquad.domain.user.User;
 
 import javax.persistence.Column;
 import javax.persistence.Lob;

@@ -3,7 +3,7 @@ console.log("main.js start");
 $("#login-submit").on("click", login);
 $("#issue_update").on("click", issue_update);
 $("#issues-menu-lower-right").on("click", issue_delete);
-
+$("#milestone-menu").on("click", milestone_menu);
 function login(e) {
     e.preventDefault();
 
@@ -76,7 +76,35 @@ function issue_delete_onSuccess(data) {
     else {
         alert(data.errorMessage);
     }
+}
 
+function milestone_menu(e) {
+    e.preventDefault();
+        var url = $("#milestone-menu").attr('value');
+        var li_list = "";
+
+        $.ajax({
+            type : 'get',
+            url : url,
+            dataType : 'json',
+            error : function(data) {
+                console.log("에러");
+            },
+            success : function(data) {
+                console.log("성공");
+                console.log(data);
+                $(data).each(function(index, value) {
+                    console.log(value);
+                    console.log(value.id);
+                    console.log(value.subject);
+                    li_list += '<li class="mdl-menu__item mdl-button--accent">' +
+                        '<a href="' + url + '/' + value.id + '">' + value.subject + '</a></li>';
+                });
+
+                console.log(li_list);
+                $("#milestone_menu").html(li_list);
+            }
+        })
 }
 
 

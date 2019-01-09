@@ -1,6 +1,6 @@
 package codesquad.web;
 
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import support.domain.Result;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;

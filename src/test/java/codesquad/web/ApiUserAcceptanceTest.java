@@ -1,6 +1,6 @@
 package codesquad.web;
 
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import codesquad.dto.UserDto;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;

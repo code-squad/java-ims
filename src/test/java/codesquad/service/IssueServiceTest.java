@@ -1,6 +1,7 @@
 package codesquad.service;
 
-import codesquad.domain.*;
+import codesquad.domain.issue.Issue;
+import codesquad.domain.issue.IssueRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

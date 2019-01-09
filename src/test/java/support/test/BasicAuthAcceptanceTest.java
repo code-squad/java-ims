@@ -1,6 +1,6 @@
 package support.test;
 
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import org.junit.Before;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
