@@ -1,21 +1,18 @@
 package codesquad.web;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
-import codesquad.dto.UserDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
-import com.sun.org.apache.xpath.internal.operations.Mod;
+import codesquad.service.LabelService;
+import codesquad.service.MilestoneService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.naming.CannotProceedException;
 import javax.validation.Valid;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -27,6 +24,12 @@ public class IssueController {
     private static final Logger log = getLogger(IssueController.class);
     @Resource(name = "issueService")
     private IssueService issueService;
+
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
+
+    @Resource(name = "labelService")
+    private LabelService labelService;
 
     @GetMapping("")
     public String createIssue(@LoginUser User user) {
@@ -45,6 +48,8 @@ public class IssueController {
         log.debug("호출되나?");
         model.addAttribute("issue", issueService.findById(id)
                 .orElseThrow(UnAuthorizedException::new));
+        model.addAttribute("milestone", milestoneService.findAll());
+        model.addAttribute("label", labelService.findAll());
         return "issue/show";
     }
 

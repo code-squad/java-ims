@@ -1,7 +1,5 @@
 package codesquad.domain;
 
-import support.domain.AbstractEntity;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 

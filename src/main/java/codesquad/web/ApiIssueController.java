@@ -29,12 +29,11 @@ public class ApiIssueController {
     private IssueService issueService;
 
     @PostMapping("")
-    public ResponseEntity<Void> create(@LoginUser User loginUser, @Valid @RequestBody IssueDto issueDto) {
-        Issue issue = issueService.add(loginUser, issueDto);
+    public ResponseEntity<Issue> create(@LoginUser User loginUser, @Valid @RequestBody IssueDto issueDto) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/"));
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<Issue>(issueService.add(loginUser, issueDto) ,headers, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

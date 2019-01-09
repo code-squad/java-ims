@@ -22,17 +22,26 @@ public class Issue extends AbstractEntity {
     private String comment;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_Issue_writter"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
+    private Label label;
+
 
     private boolean deleted = false;
 
     public Issue() {
     }
 
-    public Issue(String subject, String content) {
+    public Issue(String subject, String comment) {
         this.subject = subject;
-        this.comment = content;
+        this.comment = comment;
     }
 
     public Issue(long id, String subject, String comment) {
@@ -85,13 +94,29 @@ public class Issue extends AbstractEntity {
         this.deleted = deleted;
     }
 
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
+    }
+
     public void update(User loginUser, Issue toIssue) {
         if (!matchWriter(loginUser)) {
             throw new UnAuthorizedException();
         }
 
         if (!matchPassord(loginUser.getPassword())) {
-            return;
+            throw new UnAuthorizedException();
         }
         this.subject = toIssue.subject;
         this.comment = toIssue.comment;
@@ -122,5 +147,43 @@ public class Issue extends AbstractEntity {
         List<DeleteHistory> deletes = new ArrayList<>();
         deletes.add(new DeleteHistory(ContentType.ISSUE, getId(), writer));
         return deletes;
+    }
+
+    public boolean equalsQuestion(Issue issue) {
+        return this.subject.equals(issue.subject) && this.comment.equals(issue.comment);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Issue issue = (Issue) o;
+
+        if (deleted != issue.deleted) return false;
+        if (subject != null ? !subject.equals(issue.subject) : issue.subject != null) return false;
+        if (comment != null ? !comment.equals(issue.comment) : issue.comment != null) return false;
+        return writer != null ? writer.equals(issue.writer) : issue.writer == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (subject != null ? subject.hashCode() : 0);
+        result = 31 * result + (comment != null ? comment.hashCode() : 0);
+        result = 31 * result + (writer != null ? writer.hashCode() : 0);
+        result = 31 * result + (deleted ? 1 : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Issue{" +
+                "subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
+                ", writer=" + writer +
+                ", deleted=" + deleted +
+                '}';
     }
 }
