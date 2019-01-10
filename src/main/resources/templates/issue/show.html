@@ -87,12 +87,11 @@
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="milestone-menu">
 
-                        <!--TODO:지정 된 마일스톤은 노란색으로 표시되게..! 핸들바 if 쓰려했는데 잘 안됨-->
-
+                        <!--TODO:지정 된 마일스톤은 노란색으로 표시되게..! 핸들바 if, 헬퍼함수? 쓰려했는데 잘 안됨-->
                         {{# milestones}}
-                        <li class="mdl-menu__item">
-                            <a href="/issues/{{issue.id}}/milestones/{{id}}">{{subject}}</a>
-                        </li>
+                        <a href="/issues/{{issue.id}}/milestones/{{id}}">
+                        <li class="mdl-menu__item">{{subject}}</li>
+                        </a>
                         {{/ milestones}}
                     </ul>
 
@@ -102,21 +101,11 @@
                     <!-- label list -->
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="label-menu">
+                        {{# labels}}
                         <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/1">label1</a>
+                            <a href="/issues/{{issue.id}}/labels/{{id}}">{{name}}</a>
                         </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/2">label2</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/3">label3</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/4">label4</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/5">label5</a>
-                        </li>
+                        {{/ labels}}
                     </ul>
 
                     <button id="assignee-menu" class="mdl-button mdl-js-button">
@@ -125,11 +114,11 @@
                     <!-- label list -->
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="assignee-menu">
-                        {{# users}}
+                        {{# assignees}}
                         <li class="mdl-menu__item">
                             <a href="/issues/{{issue.id}}/users/{{id}}">{{name}}</a>
                         </li>
-                        {{/ users}}
+                        {{/ assignees}}
                     </ul>
                 </div>
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">

@@ -19,3 +19,9 @@ INSERT INTO issue (id, writer_id, milestone_id, subject, comment, create_date, m
 INSERT INTO issue (id, writer_id, milestone_id, subject, comment, create_date, modified_date, deleted, closed) values (7, 7, 1, '일곱째 이슈', '내용123', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), false, false);
 INSERT INTO issue (id, writer_id, milestone_id, subject, comment, create_date, modified_date, deleted, closed) values (8, 1, 2, '자바지기 두 번째 이슈', '내용123', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), false, false);
 
+INSERT INTO label (id, name) values (1, 'LABEL1');
+INSERT INTO label (id, name) values (2, 'LABEL2');
+INSERT INTO label (id, name) values (3, 'LABEL3');
+INSERT INTO label (id, name) values (4, 'LABEL4');
+INSERT INTO label (id, name) values (5, 'LABEL5');
+INSERT INTO label (id, name) values (6, 'LABEL6');

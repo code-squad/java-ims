@@ -1,10 +1,7 @@
 package codesquad.service;
 
 import codesquad.CannotDeleteException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.Milestone;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +12,11 @@ import java.util.List;
 
 @Service
 public class IssueService {
-
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
+
+    @Resource(name = "labelRepository")
+    private LabelRepository labelRepository;
 
     @Resource(name = "milestoneService")
     private MilestoneService milestoneService;
@@ -52,34 +51,38 @@ public class IssueService {
     }
 
     @Transactional
-    public Issue update(User loginUser, long id, Issue updatedIssue) {
+    public void update(User loginUser, long id, Issue updatedIssue) {
         Issue original = findById(id);
         original.update(loginUser, updatedIssue);
-        return add(original);
     }
 
     @Transactional
-    public Issue delete(User loginUser, long id) throws CannotDeleteException {
+    public void delete(User loginUser, long id) throws CannotDeleteException {
         Issue original = findById(id);
         deleteHistoryService.saveAll(original.delete(loginUser));
-        return add(original);
     }
 
     @Transactional
-    public Milestone addToMilestone(User loginUser, long id, long milestoneId) {
+    public void addToMilestone(User loginUser, long id, long milestoneId) {
         Issue issue = findById(id);
         Milestone milestone = milestoneService.findById(milestoneId);
 
         milestone.addIssue(loginUser, issue);
-        return milestoneService.add(milestone);
     }
 
     @Transactional
-    public Issue setAssignee(User loginUser, long id, long assigneeId) {
+    public void setAssignee(User loginUser, long id, long assigneeId) {
         Issue issue = findById(id);
         User assignee = userService.findById(assigneeId);
 
         issue.assignedBy(loginUser, assignee);
-        return add(issue);
+    }
+
+    @Transactional
+    public void addLabel(User loginUser, long id, long labelId) {
+        Issue issue = findById(id);
+        Label label = labelRepository.findById(labelId).orElseThrow(EntityNotFoundException::new);
+
+        issue.addLabel(loginUser, label);
     }
 }

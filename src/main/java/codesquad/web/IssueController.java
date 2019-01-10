@@ -1,9 +1,7 @@
 package codesquad.web;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.Issue;
-import codesquad.domain.Milestone;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import codesquad.service.MilestoneService;
@@ -31,6 +29,9 @@ public class IssueController {
     @Resource(name = "userService")
     private UserService userService;
 
+    @Resource(name = "labelRepository")
+    private LabelRepository labelRepository;
+
     @GetMapping("/form")
     public String form() {
         return "/issue/form";
@@ -51,11 +52,13 @@ public class IssueController {
     public String read(@PathVariable long id, Model model) {
         Issue issue = issueService.findById(id);
         List<Milestone> milestones = milestoneService.findAll();
-        List<User> users = userService.findAll();
+        List<User> assignees = userService.findAll();
+        List<Label> labels = labelRepository.findAll();
 
         model.addAttribute("issue", issue)
                 .addAttribute("milestones", milestones)
-                .addAttribute("users", users);
+                .addAttribute("assignees", assignees)
+                .addAttribute("labels", labels);
         return "/issue/show";
     }
 
@@ -88,9 +91,7 @@ public class IssueController {
     }
 
     @GetMapping("/{id}/milestones/{milestoneId}")
-    public String addToMilestone(@LoginUser User loginUser,
-                                 @PathVariable long id,
-                                 @PathVariable long milestoneId) {
+    public String addToMilestone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long milestoneId) {
         log.debug("***** add issue to milestone : {} to {}", id, milestoneId);
 
         //TODO: 이슈와 마일스톤 manytomany or manytoone?
@@ -100,11 +101,18 @@ public class IssueController {
     }
 
     @GetMapping("/{id}/users/{assigneeId}")
-    public String setAssignee(@LoginUser User loginUser, @PathVariable long id,
-                              @PathVariable long assigneeId) {
+    public String setAssignee(@LoginUser User loginUser, @PathVariable long id, @PathVariable long assigneeId) {
         log.debug("***** set assignee {} to issue {}", assigneeId, id);
 
         issueService.setAssignee(loginUser, id, assigneeId);
+        return "redirect:/issues/{id}";
+    }
+
+    @GetMapping("/{id}/labels/{labelId}")
+    public String addLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
+        log.debug("***** add label {} to issue {}", labelId, id);
+
+        issueService.addLabel(loginUser, id, labelId);
         return "redirect:/issues/{id}";
     }
 }

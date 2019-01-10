@@ -32,6 +32,9 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
     private Milestone milestone;
 
+    @ManyToMany
+    private List<Label> labels = new ArrayList<>();
+
     private boolean deleted = false;
 
     private boolean closed = false;
@@ -88,6 +91,14 @@ public class Issue extends AbstractEntity {
         }
 
         this.assignee = assignee;
+    }
+
+    public void addLabel(User loginUser, Label label) {
+        if(!isMatchWriter(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.labels.add(label);
     }
 
     public String getSubject() {
