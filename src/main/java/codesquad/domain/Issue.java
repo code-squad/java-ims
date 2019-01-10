@@ -1,9 +1,14 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.checkerframework.checker.units.qual.A;
+import org.hibernate.annotations.Where;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Issue extends AbstractEntity {
@@ -26,6 +31,12 @@ public class Issue extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_assignee"))
     private User assignee;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Where(clause = "deleted = false")
+    @OrderBy("id ASC")
+    private List<Answer> answers = new ArrayList<>();
 
     private boolean deleted = false;
 
@@ -65,6 +76,12 @@ public class Issue extends AbstractEntity {
 
     public void toAssignee(User user) {
         this.assignee = user;
+    }
+
+    public Answer addAnswer(Answer answer) {
+        answer.toIssue(this);
+        answers.add(answer);
+        return answer;
     }
 
     public String getUserId() {
@@ -120,7 +137,7 @@ public class Issue extends AbstractEntity {
             throw new UnAuthorizedException("작성자가 아닙니다.");
         }
         deleted = true;
-        return new DeleteHistory(getId(), loginUser);
+        return new DeleteHistory(ContentType.ISSUE, getId(), loginUser);
     }
 
 
@@ -140,5 +157,9 @@ public class Issue extends AbstractEntity {
                 ", comment" + getComment() +
                 ", deleted=" + deleted +
                 '}';
+    }
+
+    public List<Answer> getAnswers() {
+        return answers;
     }
 }

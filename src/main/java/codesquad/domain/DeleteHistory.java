@@ -9,7 +9,8 @@ public class DeleteHistory {
     @GeneratedValue
     private Long id;
 
-    private String contentType;
+    @Enumerated(EnumType.STRING)
+    private ContentType  contentType;
 
     private Long contentId;
 
@@ -22,8 +23,8 @@ public class DeleteHistory {
     public DeleteHistory() {
     }
 
-    public DeleteHistory(Long contentId, User deletedBy) {
-        this.contentType = "issue";
+    public DeleteHistory(ContentType contentType, Long contentId, User deletedBy) {
+        this.contentType = contentType;
         this.contentId = contentId;
         this.deletedBy = deletedBy;
     }

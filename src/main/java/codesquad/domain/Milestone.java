@@ -17,7 +17,7 @@ public class Milestone extends AbstractEntity {
     @Column
     private String subject;
 
-    @OneToMany(mappedBy = "milestone", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "milestone", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Where(clause = "deleted = false")
     @OrderBy("id ASC")
     private List<Issue> issues = new ArrayList<>();

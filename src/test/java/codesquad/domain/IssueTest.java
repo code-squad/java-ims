@@ -54,4 +54,12 @@ public class IssueTest extends BaseTest {
         issue1.deleted(SANJIGI);
         softly.assertThat(issue1.isDeleted()).isFalse();
     }
+
+    @Test
+    public void addAnswer() {
+        Answer answer = new Answer(JAVAJIGI,"하하하하");
+        issue1.addAnswer(answer);
+        softly.assertThat(answer.getUserId()).isEqualTo(JAVAJIGI.getUserId());
+        softly.assertThat(issue1.getAnswers()).isNotEmpty();
+    }
 }
