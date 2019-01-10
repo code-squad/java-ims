@@ -2,10 +2,7 @@ package codesquad.web;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnsupportedFormatException;
-import codesquad.domain.Answer;
-import codesquad.domain.Issue;
-import codesquad.domain.Label;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.AnswerDto;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;

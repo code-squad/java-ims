@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import codesquad.dto.IssueDto;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
@@ -42,6 +44,10 @@ public class Content {
         this.subject = content.subject;
         this.comment = content.comment;
         return this;
+    }
+
+    public IssueDto createIssueDto(Long id, User writer) {
+        return new IssueDto(id, this.subject, this.comment, writer);
     }
 
     @Override

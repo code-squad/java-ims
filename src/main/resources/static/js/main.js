@@ -34,7 +34,9 @@ function showMilestone(e) {
                 li += '<li class="mdl-menu__item" value="' + url + '/' + value.id + '">'
                     + value.subject + '</li>';
             });
+            console.log(li);
             $("#select-milestone").html(li);
+            $('#milestone-menu').unbind();
         }
     });
 }
@@ -62,6 +64,8 @@ function showLabel(e) {
                     + value.subject + '</li>';
             });
             $("#select-label").html(li);
+            $('#select-menu').unbind();
+
         }
     });
 }
@@ -89,6 +93,8 @@ function showAssignee(e) {
                     + value.userId + '</li>';
             });
             $("#select-assignee").html(li);
+            $('#assignee-menu').unbind();
+
         }
     });
 }
