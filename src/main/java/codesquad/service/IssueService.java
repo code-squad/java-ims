@@ -4,6 +4,7 @@ import codesquad.UnAuthorizedException;
 import codesquad.domain.issue.Contents;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueRepository;
+import codesquad.domain.milestone.Milestone;
 import codesquad.domain.user.User;
 import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
@@ -55,5 +56,14 @@ public class IssueService {
 
     public Iterable<Issue> findAll() {
         return issueRepository.findByDeleted(false);
+    }
+
+    @Transactional
+    public void registerMilestone(Milestone milestone, long id, User loginUser) {
+        issueRepository.findById(id)
+                .filter(issue -> issue.isOwner(loginUser))
+                .filter(issue -> !issue.getDeleted())
+                .orElseThrow(UnAuthorizedException::new)
+                .setMilestone(milestone);
     }
 }

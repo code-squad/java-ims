@@ -6,6 +6,7 @@ import codesquad.domain.user.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -22,5 +23,9 @@ public class MilestoneService {
 
     public List<Milestone> findAll() {
         return milestoneRepository.findAll();
+    }
+
+    public Milestone findById(long milestoneId) {
+        return milestoneRepository.findById(milestoneId).orElseThrow(EntityNotFoundException::new);
     }
 }
