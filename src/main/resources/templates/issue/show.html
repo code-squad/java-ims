@@ -23,7 +23,7 @@
             <!-- Tabs -->
             <nav class="mdl-navigation">
                 <a class="mdl-navigation__link" href="/">Issues</a>
-                <a class="mdl-navigation__link" href="/milestones/list">Milestones</a>
+                <a class="mdl-navigation__link" href="/milestones">Milestones</a>
                 {{^ loginedUser}}
                 <a class="mdl-navigation__link" href="/users/login">Login</a>
                 <a class="mdl-navigation__link" href="/users/form">Join</a>
@@ -50,7 +50,7 @@
                         <i class="material-icons">edit</i>
                     </a>
 
-                    <form action="/issues/{{issue.id}}" method="POST">
+                    <form action="/issues/{{issue.id}}" style="display:inline-block" method="POST">
                         <input type="hidden" name="_method" value="delete"/>
                         <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
                             <i class="material-icons">delete</i>
@@ -86,15 +86,13 @@
                     <!-- milestone list -->
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="milestone-menu">
-                        <li class="mdl-menu__item mdl-button--accent">
-                            <a href="/issue/1/setMilestone/0">Milestone1</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setMilestone/2">Milestone2</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setMilestone/3">Milestone3</a>
-                        </li>
+
+                        <!--TODO:지정 된 마일스톤은 노란색으로 표시되게..! 핸들바 if, 헬퍼함수? 쓰려했는데 잘 안됨-->
+                        {{# milestones}}
+                        <a href="/issues/{{issue.id}}/milestones/{{id}}">
+                        <li class="mdl-menu__item">{{subject}}</li>
+                        </a>
+                        {{/ milestones}}
                     </ul>
 
                     <button id="label-menu" class="mdl-button mdl-js-button">
@@ -103,21 +101,11 @@
                     <!-- label list -->
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="label-menu">
+                        {{# labels}}
                         <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/1">label1</a>
+                            <a href="/issues/{{issue.id}}/labels/{{id}}">{{name}}</a>
                         </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/2">label2</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/3">label3</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/4">label4</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/5">label5</a>
-                        </li>
+                        {{/ labels}}
                     </ul>
 
                     <button id="assignee-menu" class="mdl-button mdl-js-button">
@@ -126,21 +114,11 @@
                     <!-- label list -->
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="assignee-menu">
+                        {{# assignees}}
                         <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/1">javajigi</a>
+                            <a href="/issues/{{issue.id}}/users/{{id}}">{{name}}</a>
                         </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/2">cca-company</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/3">진저애비</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/4">신영</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/5">전용우</a>
-                        </li>
+                        {{/ assignees}}
                     </ul>
                 </div>
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">

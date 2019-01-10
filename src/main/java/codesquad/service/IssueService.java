@@ -1,10 +1,7 @@
 package codesquad.service;
 
 import codesquad.CannotDeleteException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
-import codesquad.dto.IssueDto;
+import codesquad.domain.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +12,17 @@ import java.util.List;
 
 @Service
 public class IssueService {
-
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
+
+    @Resource(name = "labelRepository")
+    private LabelRepository labelRepository;
+
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
+
+    @Resource(name = "userService")
+    private UserService userService;
 
     @Resource(name = "deleteHistoryService")
     private DeleteHistoryService deleteHistoryService;
@@ -31,32 +36,53 @@ public class IssueService {
     }
 
     public Issue findById(long id) {
-        //여기서 작성자일치여부 검증필요?
-        return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return issueRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
-    public Issue add(IssueDto issueDto) {
-        return issueRepository.save(issueDto._toIssue());
-    }
-
-    @Transactional
-    public Issue create(User loginUser, IssueDto issueDto) {
-        issueDto.writeBy(loginUser);
-        add(issueDto);
-        return issueDto._toIssue();
+    public Issue add(Issue issue) {
+        return issueRepository.save(issue);
     }
 
     @Transactional
-    public Issue update(User loginUser, long id, IssueDto updatedIssueDto) {
+    public Issue create(User loginUser, Issue issue) {
+        issue.writeBy(loginUser);
+        return add(issue);
+    }
+
+    @Transactional
+    public void update(User loginUser, long id, Issue updatedIssue) {
         Issue original = findById(id);
-        original.update(loginUser, updatedIssueDto._toIssue());
-        return issueRepository.save(original);
+        original.update(loginUser, updatedIssue);
     }
 
     @Transactional
-    public Issue delete(User loginUser, long id) throws CannotDeleteException {
+    public void delete(User loginUser, long id) throws CannotDeleteException {
         Issue original = findById(id);
         deleteHistoryService.saveAll(original.delete(loginUser));
-        return issueRepository.save(original);
+    }
+
+    @Transactional
+    public void addToMilestone(User loginUser, long id, long milestoneId) {
+        Issue issue = findById(id);
+        Milestone milestone = milestoneService.findById(milestoneId);
+
+        milestone.addIssue(loginUser, issue);
+    }
+
+    @Transactional
+    public void setAssignee(User loginUser, long id, long assigneeId) {
+        Issue issue = findById(id);
+        User assignee = userService.findById(assigneeId);
+
+        issue.assignedBy(loginUser, assignee);
+    }
+
+    @Transactional
+    public void addLabel(User loginUser, long id, long labelId) {
+        Issue issue = findById(id);
+        Label label = labelRepository.findById(labelId).orElseThrow(EntityNotFoundException::new);
+
+        issue.addLabel(loginUser, label);
     }
 }

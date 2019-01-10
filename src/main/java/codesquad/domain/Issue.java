@@ -2,7 +2,6 @@ package codesquad.domain;
 
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
-import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -25,7 +24,20 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
+    private Milestone milestone;
+
+    @ManyToMany
+    private List<Label> labels = new ArrayList<>();
+
     private boolean deleted = false;
+
+    private boolean closed = false;
 
     public Issue() {
 
@@ -39,6 +51,10 @@ public class Issue extends AbstractEntity {
 
     public boolean isMatchWriter(User loginUser) {
         return this.writer.equals(loginUser);
+    }
+
+    public boolean isClosed() {
+        return this.closed;
     }
 
     public void update(User loginUser, Issue target) {
@@ -59,6 +75,30 @@ public class Issue extends AbstractEntity {
         List<DeleteHistory> temp = new ArrayList<>();
         temp.add(new DeleteHistory(ContentType.ISSUE, getId(), writer));
         return temp;
+    }
+
+    public void toMilestone(User loginUser, Milestone milestone) {
+        if(!isMatchWriter(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.milestone = milestone;
+    }
+
+    public void assignedBy(User loginUser, User assignee) {
+        if (!isMatchWriter(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.assignee = assignee;
+    }
+
+    public void addLabel(User loginUser, Label label) {
+        if(!isMatchWriter(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.labels.add(label);
     }
 
     public String getSubject() {
@@ -85,8 +125,12 @@ public class Issue extends AbstractEntity {
         this.writer = loginUser;
     }
 
-    public IssueDto _toIssueDto() {
-        return new IssueDto(this.subject, this.comment, this.writer);
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
     }
 
     @Override
