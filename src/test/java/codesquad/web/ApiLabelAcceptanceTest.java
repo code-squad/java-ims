@@ -36,4 +36,11 @@ public class ApiLabelAcceptanceTest extends BasicAuthAcceptanceTest {
                 .postForEntity("/api/issues/1/labels/1", new HttpEntity(new HttpHeaders()),Void.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
+    @Test
+    public void 라벨_로그인O_본인O_성공() {
+        ResponseEntity<Void> responseEntity = basicAuthTemplate()
+                .postForEntity("/api/issues/1/labels/1", new HttpEntity(new HttpHeaders()),Void.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 }

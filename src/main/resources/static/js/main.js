@@ -1,19 +1,214 @@
+/* 템플릿 추가 */
+String.prototype.format = function() {
+  var args = arguments;
+       return this.replace(/{(\d+)}/g, function(match, number) {
+    return typeof args[number] != 'undefined'
+         ? args[number]
+             : match
+        ;
+  });
+};
+
 /* 뒤로가기 */
 $('.back-btn').on('click',function(){history.back();})
 
-/* 댓글 수정 */
-$('.mdl-button, .mdl-button--icon, .mdl-js-button, .mdl-js-ripple-effect').click(showAnswer);
+/* 마일스톤 select box load */
+$('#milestone-menu').click(showMilestone);
+function showMilestone(e) {
+    e.preventDefault();
+    console.log("call show Milestone!");
+    var url = $('#select-milestone').attr('value');
+    console.log(url);
+    var li = '';
+    $.ajax({
+        type : 'get',
+        url : url,
+        dataType : 'json',
+        error : function (request) {
+            console.log("마일스톤 목록 조회 실패");
+            console.log(request);
+        },
+        success : function (response) {
+            console.log("마일스톤 목록 조회 성공!");
+            $.each(response, function(index, value) {
+                li += '<li class="mdl-menu__item" value="' + url + '/' + value.id + '">'
+                    + value.subject + '</li>';
+            });
+            console.log(li);
+            $("#select-milestone").html(li);
+            $('#milestone-menu').unbind();
+        }
+    });
+}
+
+/* 라벨 select box load */
+$('#label-menu').click(showLabel);
+function showLabel(e) {
+    e.preventDefault();
+    console.log("call show Label!");
+    var url = $('#select-label').attr('value');
+    console.log(url);
+    var li = '';
+    $.ajax({
+        type : 'get',
+        url : url,
+        dataType : 'json',
+        error : function (request) {
+            console.log("라벨 목록 조회 실패");
+            console.log(request);
+        },
+        success : function (response) {
+            console.log("라벨 목록 조회 성공!");
+            $.each(response, function(index, value) {
+                li += '<li class="mdl-menu__item" value="' + url + '/' + value.id + '">'
+                    + value.subject + '</li>';
+            });
+            $("#select-label").html(li);
+            $('#select-menu').unbind();
+
+        }
+    });
+}
+
+/* 담당자 select box load */
+$('#assignee-menu').click(showAssignee);
+function showAssignee(e) {
+    e.preventDefault();
+    console.log("call show Assignee!");
+    var url = $('#select-assignee').attr('value');
+    console.log(url);
+    var li = '';
+    $.ajax({
+        type : 'get',
+        url : url,
+        dataType : 'json',
+        error : function (request) {
+            console.log("담당자 목록 조회 실패");
+            console.log(request);
+        },
+        success : function (response) {
+            console.log("담당자 목록 조회 성공!");
+            $.each(response, function(index, value) {
+                li += '<li class="mdl-menu__item" value="' + url + '/' + value.id + '">'
+                    + value.userId + '</li>';
+            });
+            $("#select-assignee").html(li);
+            $('#assignee-menu').unbind();
+
+        }
+    });
+}
+/* 댓글 수정 창 생성 */
+$('.showUpdateAnswerBtn').click(showAnswer);
 function showAnswer(e) {
     e.preventDefault();
-    console.log('call showAnswer');
-    var id = $(this).attr('href');
-    console.log(id);
+    var parent = $(this);
+    var url = parent.attr('href');
+
+    $.ajax({
+        type : 'get',
+        url : url,
+        dataType : 'json',
+        error : function (request) {
+            console.log("댓글 수정 창 실패");
+            exceptionProcessor(request);
+        },
+        success : function (response) {
+            console.log("댓글 수정 창 성공!");
+            var answerTemplate = $('#update-answer-template').html();
+            var template = answerTemplate.format(url, response.comment);
+            parent.closest('div div').append(template);
+            $('.updateAnswerBtn').click(updateAnswer);
+        }
+    });
+}
+
+/* 댓글 수정 */
+function updateAnswer(e) {
+    e.preventDefault();
+    var parent = $(this);
+    var url = parent.closest('form').attr('action');
+    console.log(url);
+
+    var json = new Object();
+    json.comment = $('#updateComment').val();
+
+    $.ajax({
+        type : 'put',
+        url : url,
+        data : JSON.stringify(json),
+        dataType : 'json',
+        contentType: 'application/json',
+        error : function (request) {
+            console.log("댓글 수정 실패");
+            console.log(request);
+            exceptionProcessor(request);
+        },
+        success : function (response) {
+            console.log("댓글 수정 성공!");
+            parent.closest('#answerDiv').html('');
+            console.log(response);
+            $('.answer-' + response.id).html(response.comment);
+        }
+    });
 }
 
 /* 댓글 삭제 */
-$('.mdl-button, .mdl-js-button, .mdl-button--icon').click(deleteAnswer);
+$('.deleteAnswerBtn').click(deleteAnswer);
 function deleteAnswer(e) {
     e.preventDefault();
+    parent = $(this);
+    var url = parent.attr('href');
+
+    $.ajax({
+        type : 'delete',
+        url : url,
+        contentType: 'application/json',
+        error : function (request) {
+            console.log("댓글 삭제 실패");
+            console.log(request);
+            exceptionProcessor(request);
+        },
+        success : function (response) {
+            console.log("댓글 삭제 성공!");
+            console.log(response);
+            $('.article-' + response.id).html('');
+        }
+    });
+}
+
+/* 댓글 등록 */
+$('#writeAnswerBtn').click(writeAnswer);
+function writeAnswer(e) {
+    e.preventDefault();
+    parent = $(this);
+    var url = parent.closest('form').attr('action');
+    console.log(url);
+
+    var json = new Object();
+    json.comment = $('#comment').val();
+
+    $.ajax({
+        type : 'post',
+        url : url,
+        data : JSON.stringify(json),
+        dataType : 'json',
+        contentType: 'application/json',
+        error : function (request) {
+            console.log("댓글 작성 실패");
+            console.log(request);
+            exceptionProcessor(request);
+        },
+        success : function (response) {
+            console.log("댓글 작성 성공!");
+            console.log(response);
+            var answerTemplate = $('#write-answer-template').html();
+            var template = answerTemplate.format(response.id, response.writer.userId, response.comment, url);
+            $('#answers').append(template);
+            $('.showUpdateAnswerBtn').click(showAnswer);
+            $('#comment').html('');
+        }
+    });
 }
 
 /* 이슈등록 */
@@ -150,7 +345,7 @@ function goUpdateForm(e) {
         },
         success : function (data) {
             console.log("이슈수정화면이동 성공!");
-            console.log(data);
+            alert(data);
             location.href = data;
         }
     });
@@ -188,7 +383,7 @@ function updateIssue(e) {
 }
 
 /* 라벨, 담당자, 마일스톤 등록 */
-$('.mdl-menu__item').click(register);
+$(document).on("click", '.mdl-menu__item', register);
 function register(e) {
     e.preventDefault();
 
@@ -229,6 +424,10 @@ function exceptionProcessor(request) {
     }
 
     if(request.status == '400') {
+        alert(request.responseText);
+    }
+
+    if(request.status == '500') {
         alert(request.responseText);
     }
 }

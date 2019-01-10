@@ -56,20 +56,7 @@ public class IssueController {
     public String issueDetail(@PathVariable Long id, Model model) {
         Issue issue = issueService.findIssue(id);
         model.addAttribute("issue", issue._toIssueDto());
-        model.addAttribute("issueId", id);
         model.addAttribute("answers", issue.obtainAnswerDtos());
-
-        if(!issue.isMilestone()) {
-            model.addAttribute("milestones", milestoneService.findAllMilestone());
-        }
-
-        if(!issue.isAssignee()) {
-            model.addAttribute("assignees", userService.findAll());
-        }
-
-        if(!issue.isLabel()) {
-            model.addAttribute("labels", labelService.findAll());
-        }
         return "/issue/show";
     }
 
@@ -83,8 +70,8 @@ public class IssueController {
 
     @GetMapping("/{id}/updateForm")
     public String updateForm(@LoginUser User loginUser, @PathVariable Long id, Model model) {
+        logger.debug("Call updateForm method");
         model.addAttribute("issue", issueService.findIssue(id)._toIssueDto());
-        model.addAttribute("id", id);
         return "/issue/updateForm";
     }
 

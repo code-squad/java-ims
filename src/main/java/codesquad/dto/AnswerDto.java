@@ -6,7 +6,9 @@ import codesquad.domain.User;
 public class AnswerDto {
 
     private String comment;
+
     private User writer;
+
     private Long id;
 
     public AnswerDto() {
@@ -49,5 +51,14 @@ public class AnswerDto {
 
     public Answer _toAnswer() {
         return new Answer(this.comment, this.writer);
+    }
+
+    @Override
+    public String toString() {
+        return "AnswerDto{" +
+                "comment='" + comment + '\'' +
+                ", writer=" + writer +
+                ", id=" + id +
+                '}';
     }
 }

@@ -84,7 +84,7 @@ public class Issue extends AbstractEntity {
     }
 
     public IssueDto _toIssueDto() {
-        return new IssueDto(this.content, this.writer, this.milestone, this.assignee);
+        return content.createIssueDto(getId(), writer);
     }
 
     public boolean isOneSelf(User loginUser) {

@@ -4,46 +4,43 @@ import codesquad.domain.*;
 
 import javax.persistence.Embedded;
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
 public class IssueDto {
 
-    @Embedded @Valid
-    private Content content;
+    private Long id;
+
+    @Size(min = 5, max = 200)
+    private String subject;
+
+    @Size(min = 5, max = 1000)
+    private String comment;
 
     private User writer;
-
-    private Milestone milestone;
-
-    private User assignee;
-
-    private Label label;
 
     public IssueDto() {
 
     }
 
-    public IssueDto(Content content) {
-        this.content = content;
-    }
-
-    public IssueDto(Content content, User writer) {
-        this(content);
+    public IssueDto(String subject, String comment, User writer) {
+        this.subject = subject;
+        this.comment = comment;
         this.writer = writer;
     }
 
-    public IssueDto(Content content, User writer, Milestone milestone, User assignee) {
-        this(content, writer);
-        this.milestone = milestone;
-        this.assignee = assignee;
+    public IssueDto(Long id, String subject, String comment, User writer) {
+        this(subject, comment, writer);
+        this.id = id;
+        this.writer = writer;
     }
 
     public Issue _toIssue() {
-        return new Issue(this.content, this.writer);
+        return new Issue(new Content(this.subject, this.comment), this.writer);
     }
 
     public Issue _toIssue(User writer) {
         this.writer = writer;
-        return new Issue(content, this.writer);
+        return _toIssue();
     }
 
     public User getWriter() {
@@ -54,42 +51,36 @@ public class IssueDto {
         this.writer = writer;
     }
 
-    public Content getContent() {
-        return content;
+    public Long getId() {
+        return id;
     }
 
-    public Milestone getMilestone() {
-        return milestone;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setMilestone(Milestone milestone) {
-        this.milestone = milestone;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setContent(Content content) {
-        this.content = content;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public User getAssignee() {
-        return assignee;
+    public String getComment() {
+        return comment;
     }
 
-    public void setAssignee(User assignee) {
-        this.assignee = assignee;
-    }
-
-    public Label getLabel() {
-        return label;
-    }
-
-    public void setLabel(Label label) {
-        this.label = label;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Override
     public String toString() {
         return "IssueDto{" +
-                "content=" + content +
+                "id=" + id +
+                ", subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
                 ", writer=" + writer +
                 '}';
     }

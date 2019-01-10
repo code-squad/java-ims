@@ -89,9 +89,9 @@ public class ApiIssueAcceptanceTest extends BasicAuthAcceptanceTest {
         logger.debug("Location : {}", location);
 
         /* 2. 이슈수정 */
-        IssueDto issue = IssueFixture.SUCCESS_ISSUE_JAVAJIGI;
-        issue.getContent().setSubject("Modified Subject");
-        responseEntity = basicAuthTemplate.exchange(location, HttpMethod.PUT, new HttpEntity<>(issue, new HttpHeaders()), Issue.class);
+        IssueDto issueDto = IssueFixture.SUCCESS_ISSUE_JAVAJIGI;
+        issueDto.setSubject("Modified Subject");
+        responseEntity = basicAuthTemplate.exchange(location, HttpMethod.PUT, new HttpEntity<>(issueDto, new HttpHeaders()), Issue.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         softly.assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
@@ -105,9 +105,9 @@ public class ApiIssueAcceptanceTest extends BasicAuthAcceptanceTest {
         logger.debug("Location : {}", location);
 
         /* 2. 이슈수정 */
-        IssueDto issue = IssueFixture.SUCCESS_ISSUE_JAVAJIGI;
-        issue.getContent().setSubject("Modified Subject");
-        responseEntity = template.exchange(location, HttpMethod.PUT, new HttpEntity<>(issue, new HttpHeaders()), Issue.class);
+        IssueDto issueDto = IssueFixture.SUCCESS_ISSUE_JAVAJIGI;
+        issueDto.setSubject("Modified Subject");
+        responseEntity = template.exchange(location, HttpMethod.PUT, new HttpEntity<>(issueDto, new HttpHeaders()), Issue.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
@@ -120,10 +120,10 @@ public class ApiIssueAcceptanceTest extends BasicAuthAcceptanceTest {
         logger.debug("Location : {}", location);
 
         /* 2. 이슈수정 */
-        IssueDto issue = IssueFixture.SUCCESS_ISSUE_JAVAJIGI;
-        issue.getContent().setSubject("Modified Subject");
+        IssueDto issueDto = IssueFixture.SUCCESS_ISSUE_JAVAJIGI;
+        issueDto.setComment("Modified Subject");
         responseEntity = basicAuthTemplate(UserFixture.DOBY)
-                .exchange(location, HttpMethod.PUT, new HttpEntity<>(issue, new HttpHeaders()), Issue.class);
+                .exchange(location, HttpMethod.PUT, new HttpEntity<>(issueDto, new HttpHeaders()), Issue.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
