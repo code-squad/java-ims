@@ -73,10 +73,6 @@ public class Milestone extends AbstractEntity {
         return endDate.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy"));
     }
 
-    public void deleteIssue(Issue targetIssue) {
-        if (issues.contains(targetIssue)) issues.remove(targetIssue);
-    }
-
     public void addIssue(Issue issue) {
         issues.add(issue);
     }

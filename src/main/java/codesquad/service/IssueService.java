@@ -64,7 +64,6 @@ public class IssueService {
         Milestone milestone = milestoneService.findById(milestoneId);
 
         milestone.addIssue(issue);
-        issue.getMilestone().deleteIssue(issue);
         issue.setMilestone(milestone);
     }
 

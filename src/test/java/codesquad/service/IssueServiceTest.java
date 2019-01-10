@@ -13,6 +13,7 @@ import support.test.BaseTest;
 import java.util.Optional;
 
 import static codesquad.domain.IssueTest.*;
+import static codesquad.domain.MilestoneTest.MILESTONE1;
 import static codesquad.domain.UserTest.JAVAJIGI;
 import static codesquad.domain.UserTest.SANJIGI;
 import static org.mockito.Mockito.when;
@@ -36,6 +37,8 @@ public class IssueServiceTest extends BaseTest {
         when(issueRepository.findById(ISSUE1.getId())).thenReturn(Optional.of(ISSUE1));
         when(issueRepository.findById(ISSUE2.getId())).thenReturn(Optional.of(ISSUE2));
         when(issueRepository.findById(ISSUE4.getId())).thenReturn(Optional.of(ISSUE4));
+
+        when(milestoneService.findById(MILESTONE1.getId())).thenReturn(MILESTONE1);
     }
 
     @Test
@@ -63,14 +66,13 @@ public class IssueServiceTest extends BaseTest {
         softly.assertThat(ISSUE2.isDeleted()).isTrue();
     }
 
-//      어떻게 테스트해야하는가?
-//    @Test
-//    public void setMilestone() {
-//        issueService.setMilestone(ISSUE1.getId(), MILESTONE1.getId());
-//
-//        softly.assertThat(ISSUE1.getMilestone()).isEqualTo(MILESTONE1);
-//        softly.assertThat(MILESTONE1.getIssues().contains(ISSUE1)).isTrue();
-//    }
+    @Test
+    public void setMilestone() {
+        issueService.setMilestone(ISSUE1.getId(), MILESTONE1.getId());
+
+        softly.assertThat(ISSUE1.getMilestone()).isEqualTo(MILESTONE1);
+        softly.assertThat(MILESTONE1.getIssues().contains(ISSUE1)).isTrue();
+    }
 
     @Test(expected = RuntimeException.class)
     public void close_already_closed() {
