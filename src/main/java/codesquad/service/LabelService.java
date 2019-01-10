@@ -2,7 +2,11 @@ package codesquad.service;
 
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
-import codesquad.domain.*;
+import codesquad.domain.deletehistory.DeleteHistory;
+import codesquad.domain.deletehistory.DeleteHistoryRepository;
+import codesquad.domain.label.Label;
+import codesquad.domain.label.LabelRepository;
+import codesquad.domain.user.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

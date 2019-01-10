@@ -1,4 +1,4 @@
-package codesquad.domain;
+package codesquad.domain.deletehistory;
 
 import org.springframework.data.repository.CrudRepository;
 

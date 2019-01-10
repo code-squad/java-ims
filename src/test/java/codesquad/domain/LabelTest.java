@@ -2,10 +2,11 @@ package codesquad.domain;
 
 import codesquad.CannotDeleteException;
 import codesquad.CannotUpdateException;
+import codesquad.domain.label.Label;
 import org.junit.Test;
 import support.test.BaseTest;
 
-import static codesquad.domain.User.GUEST_USER;
+import static codesquad.domain.user.User.GUEST_USER;
 import static codesquad.domain.UserTest.JAVAJIGI;
 
 public class LabelTest extends BaseTest {

@@ -1,6 +1,6 @@
-package codesquad.web;
+package codesquad.web.api;
 
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import codesquad.dto.UserDto;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;

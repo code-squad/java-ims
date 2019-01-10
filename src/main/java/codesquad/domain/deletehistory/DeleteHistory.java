@@ -1,5 +1,6 @@
-package codesquad.domain;
+package codesquad.domain.deletehistory;
 
+import codesquad.domain.user.User;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;

@@ -1,9 +1,15 @@
 package codesquad.service;
 
 import codesquad.CannotApplyException;
-import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
-import codesquad.domain.*;
+import codesquad.domain.deletehistory.DeleteHistory;
+import codesquad.domain.deletehistory.DeleteHistoryRepository;
+import codesquad.domain.issue.Issue;
+import codesquad.domain.issue.IssueRepository;
+import codesquad.domain.label.LabelRepository;
+import codesquad.domain.milestone.MilestoneRepository;
+import codesquad.domain.user.User;
+import codesquad.domain.user.UserRepository;
 import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

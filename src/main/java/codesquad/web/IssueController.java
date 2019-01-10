@@ -1,10 +1,6 @@
 package codesquad.web;
 
-import codesquad.CannotUpdateException;
-import codesquad.UnAuthorizedException;
-import codesquad.domain.Issue;
-import codesquad.domain.User;
-import codesquad.domain.UserRepository;
+import codesquad.domain.user.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;

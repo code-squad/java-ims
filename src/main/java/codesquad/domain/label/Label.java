@@ -1,7 +1,11 @@
-package codesquad.domain;
+package codesquad.domain.label;
 
 import codesquad.CannotDeleteException;
 import codesquad.CannotUpdateException;
+import codesquad.domain.deletehistory.ContentType;
+import codesquad.domain.deletehistory.DeleteHistory;
+import codesquad.domain.user.User;
+import codesquad.domain.issue.Issue;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;

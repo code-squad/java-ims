@@ -1,5 +1,6 @@
-package codesquad.domain;
+package codesquad.domain.milestone;
 
+import codesquad.domain.issue.Issue;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Column;

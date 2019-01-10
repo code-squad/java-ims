@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.domain.milestone.Milestone;
 import support.test.BaseTest;
 
 import java.util.ArrayList;

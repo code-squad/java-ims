@@ -2,6 +2,7 @@ package codesquad.domain;
 
 import codesquad.CannotDeleteException;
 import codesquad.CannotUpdateException;
+import codesquad.domain.issue.Issue;
 import org.junit.Test;
 import support.test.BaseTest;
 

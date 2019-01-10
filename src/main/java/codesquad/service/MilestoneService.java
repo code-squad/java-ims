@@ -1,7 +1,7 @@
 package codesquad.service;
 
-import codesquad.domain.Milestone;
-import codesquad.domain.MilestoneRepository;
+import codesquad.domain.milestone.Milestone;
+import codesquad.domain.milestone.MilestoneRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
