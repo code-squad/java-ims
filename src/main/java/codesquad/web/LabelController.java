@@ -25,7 +25,7 @@ public class LabelController {
     @Autowired
     private LabelService labelService;
 
-    @Value("$error.not.supported")
+    @Value("${error.not.supported}")
     private String errorMessage;
 
     private static final Logger logger = getLogger(LabelController.class);

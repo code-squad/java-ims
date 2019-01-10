@@ -17,33 +17,33 @@ public class AnswerService {
     @Autowired
     private AnswerRepository answerRepository;
 
-    @Value("$error.not.oneself")
+    @Value("${error.not.oneself}")
     private String notOneSelfErrorMessage;
 
     @Transactional
     public Answer createAnswer(User loginUser, Issue issue, AnswerDto answerDto) {
         Answer answer = answerDto._toAnswer();
         issue.addAnswer(answer);
-        return answer.applyWriter(loginUser);
+        return answer.applyAnswer(loginUser, issue);
     }
 
     @Transactional
-    public void updateAnswer(User loginUser, Issue issue, AnswerDto updatedAnswer, Long answerId) throws UnAuthenticationException {
+    public Answer updateAnswer(User loginUser, Issue issue, AnswerDto updatedAnswer, Long answerId) throws UnAuthenticationException {
         Answer originAnswer = answerRepository.findById(answerId).orElse(null);
         if(!originAnswer.isOneSelf(loginUser)) {
             throw new UnAuthenticationException(notOneSelfErrorMessage);
         }
-        issue.updateAnswer(originAnswer, updatedAnswer._toAnswer());
+        return issue.updateAnswer(originAnswer, updatedAnswer._toAnswer());
     }
 
     @Transactional
-    public void deleteAnswer(User loginUser, Long answerId) throws UnAuthenticationException {
+    public Answer deleteAnswer(User loginUser, Long answerId) throws UnAuthenticationException {
         Answer answer = answerRepository.findById(answerId).orElse(null);
         if(!answer.isOneSelf(loginUser)) {
             throw new UnAuthenticationException(notOneSelfErrorMessage);
         }
         /* 확인 필요) issue가 answer를 가지고 있긴 하지만, answer 참조를 가지고 있는것이기 때문에 answer만 바꾸면 되지 않을까?! */
-        answer.setDeleted(true);
+        return answer.applyDeleted();
     }
 
     public AnswerDto detailAnswer(User loginUser, Long answerId) throws UnAuthenticationException {

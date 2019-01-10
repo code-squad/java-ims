@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +11,7 @@ public class Issues {
 
     /* mapped by 관리자를 넣고 싶은데.. 이 부분은 다같이 사용하길레 공용해서 쓰려다보니 mappedby에 milestone, label 하고 싶음! How??! */
     @OneToMany
+    @JsonIgnore
     private List<Issue> issues = new ArrayList<>();
 
     public Issues() {

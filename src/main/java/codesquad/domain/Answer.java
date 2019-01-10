@@ -63,20 +63,23 @@ public class Answer extends AbstractEntity {
         this.deleted = deleted;
     }
 
-    public Answer applyWriter(User loginUser) {
+    public Answer applyAnswer(User loginUser, Issue issue) {
         this.writer = loginUser;
+        this.issue = issue;
         return this;
     }
 
     public boolean isOneSelf(User loginUser) {
-        if(!this.writer.equals(loginUser)) {
-            return false;
-        }
-        return true;
+        return this.writer.equals(loginUser);
     }
 
     public Answer update(Answer updatedAnswer) {
         this.comment = updatedAnswer.comment;
+        return this;
+    }
+
+    public Answer applyDeleted() {
+        this.deleted = true;
         return this;
     }
 

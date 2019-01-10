@@ -7,16 +7,12 @@ import javax.validation.Valid;
 
 public class IssueDto {
 
+    private Long id;
+
     @Embedded @Valid
     private Content content;
 
     private User writer;
-
-    private Milestone milestone;
-
-    private User assignee;
-
-    private Label label;
 
     public IssueDto() {
 
@@ -26,15 +22,10 @@ public class IssueDto {
         this.content = content;
     }
 
-    public IssueDto(Content content, User writer) {
+    public IssueDto(Long id, Content content, User writer) {
         this(content);
         this.writer = writer;
-    }
-
-    public IssueDto(Content content, User writer, Milestone milestone, User assignee) {
-        this(content, writer);
-        this.milestone = milestone;
-        this.assignee = assignee;
+        this.id = id;
     }
 
     public Issue _toIssue() {
@@ -58,32 +49,16 @@ public class IssueDto {
         return content;
     }
 
-    public Milestone getMilestone() {
-        return milestone;
+    public Long getId() {
+        return id;
     }
 
-    public void setMilestone(Milestone milestone) {
-        this.milestone = milestone;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setContent(Content content) {
         this.content = content;
-    }
-
-    public User getAssignee() {
-        return assignee;
-    }
-
-    public void setAssignee(User assignee) {
-        this.assignee = assignee;
-    }
-
-    public Label getLabel() {
-        return label;
-    }
-
-    public void setLabel(Label label) {
-        this.label = label;
     }
 
     @Override

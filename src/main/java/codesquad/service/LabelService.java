@@ -25,7 +25,7 @@ public class LabelService {
 
     private static final Logger logger = getLogger(LabelService.class);
 
-    @Value("$error.not.supported")
+    @Value("${error.not.supported}")
     private String errorMessage;
 
     public List<Label> findAll() {
