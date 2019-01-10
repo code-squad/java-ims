@@ -1,10 +1,7 @@
-package codesquad.web;
+package codesquad.web_api;
 
-import codesquad.domain.User;
-import codesquad.domain.UserTest;
 import codesquad.dto.IssueDto;
 import codesquad.dto.UserDto;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.springframework.http.HttpMethod;

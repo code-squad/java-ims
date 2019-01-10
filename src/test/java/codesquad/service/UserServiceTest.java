@@ -1,9 +1,9 @@
 package codesquad.service;
 
-import codesquad.UnAuthenticationException;
-import codesquad.UnAuthorizedException;
+import codesquad.exception.UnAuthenticationException;
+import codesquad.exception.UnAuthorizedException;
 import codesquad.domain.User;
-import codesquad.domain.UserRepository;
+import codesquad.repository.UserRepository;
 import codesquad.domain.UserTest;
 import org.junit.Before;
 import org.junit.Test;

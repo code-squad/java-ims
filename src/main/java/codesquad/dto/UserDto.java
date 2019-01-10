@@ -17,8 +17,7 @@ public class UserDto {
     public UserDto() {
     }
 
-    public
-    UserDto(String userId, String password, String name) {
+    public UserDto(String userId, String password, String name) {
         super();
         this.userId = userId;
         this.password = password;

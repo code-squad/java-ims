@@ -35,15 +35,22 @@ public class AbstractEntity {
 
     @JsonIgnore
     public String getFormattedCreateDate() {
-        return getFormattedDate(createDate, "yyyy.MM.dd HH:mm:ss");
+        return getFormattedDate(createDate, "yyyy-MM-dd");
     }
+
+//    @JsonIgnore
+//    public String getFormattedCreateDate() {
+//        return getFormattedDate(createDate, "yyyy-MM-dd");
+//    }
+
+
 
     @JsonIgnore
     public String getFormattedModifiedDate() {
         return getFormattedDate(modifiedDate, "yyyy.MM.dd HH:mm:ss");
     }
 
-    private String getFormattedDate(LocalDateTime dateTime, String format) {
+    protected String getFormattedDate(LocalDateTime dateTime, String format) {
         if (dateTime == null) {
             return "";
         }

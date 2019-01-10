@@ -1,7 +1,7 @@
 package codesquad.service;
 
 import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
+import codesquad.repository.IssueRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 

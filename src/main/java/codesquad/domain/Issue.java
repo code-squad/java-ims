@@ -1,7 +1,7 @@
 package codesquad.domain;
 
-import codesquad.UnAuthenticationException;
-import codesquad.UnAuthorizedException;
+import codesquad.exception.UnAuthenticationException;
+import codesquad.exception.UnAuthorizedException;
 import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
@@ -27,6 +27,10 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestones"))
+    private Milestone milestone;
+
     private boolean deleted = false;
 
     public Issue(){
@@ -36,6 +40,10 @@ public class Issue extends AbstractEntity {
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
+    }
+
+    public String getDate() {
+        return getFormattedCreateDate();
     }
 
     public boolean isLogin(User loginUser) {

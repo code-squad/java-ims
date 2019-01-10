@@ -1,10 +1,9 @@
 package codesquad.domain;
 
-import codesquad.UnAuthenticationException;
-import codesquad.UnAuthorizedException;
+import codesquad.exception.UnAuthenticationException;
+import codesquad.exception.UnAuthorizedException;
 import org.junit.Test;
 import org.slf4j.Logger;
-import support.test.AcceptanceTest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
