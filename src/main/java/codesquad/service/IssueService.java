@@ -46,7 +46,7 @@ public class IssueService {
     public Issue findById(User loginUser, long id) {
         return issueRepository.findById(id)
                 .filter(user -> user.isOwner(loginUser))
-                .orElseThrow(UnAuthorizedException::new);
+                .orElseThrow(() -> new UnAuthorizedException("You're Unauthorized User"));
     }
 
     @Transactional
@@ -57,13 +57,13 @@ public class IssueService {
 
     @Transactional
     public void delete(User loginUser, long id) throws Exception {
-        Issue issue = findById(id);
+        Issue issue = findById(loginUser, id);
         deleteHistoryService.saveAll(issue.delete(loginUser));
     }
 
     @Transactional
-    public void setMilestone(long issueId, long milestoneId) {
-        Issue issue = findById(issueId);
+    public void setMilestone(User loginUser, long issueId, long milestoneId) {
+        Issue issue = findById(loginUser, issueId);
         Milestone milestone = milestoneService.findById(milestoneId);
 
         milestone.addIssue(issue);
@@ -76,7 +76,7 @@ public class IssueService {
     }
 
     @Transactional
-    public void setAssignee(long issueId, long assigneeId) {
-        findById(issueId).setAssignee(userService.findById(assigneeId));
+    public void setAssignee(User loginUser, long issueId, long assigneeId) {
+        findById(loginUser, issueId).setAssignee(userService.findById(assigneeId));
     }
 }

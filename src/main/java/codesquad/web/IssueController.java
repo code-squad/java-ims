@@ -75,13 +75,18 @@ public class IssueController {
     }
 
     @GetMapping("/{issueId}/milestones/{milestoneId}")
-    public String setMilestone(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long milestoneId) {
-        issueService.setMilestone(issueId, milestoneId);
-        return "redirect:/issues/{issueId}";
+    public String setMilestone(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long milestoneId, RedirectAttributes redirectAttrs) {
+        try {
+            issueService.setMilestone(loginUser, issueId, milestoneId);
+            return "redirect:/issues/{issueId}";
+        } catch (Exception e) {
+            redirectAttrs.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/issues/{issueId}";
+        }
     }
 
     @GetMapping("/{id}/closed")
-    public String close(@LoginUser User loginUser, @PathVariable long id , RedirectAttributes redirectAttrs) {
+    public String close(@LoginUser User loginUser, @PathVariable long id, RedirectAttributes redirectAttrs) {
         try {
             issueService.close(loginUser, id);
             return "redirect:/";
@@ -91,9 +96,14 @@ public class IssueController {
         }
     }
 
-    @GetMapping("/{issueId}/assignee/{assigneeId}")
-    public String setAssignee(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long assigneeId) {
-        issueService.setAssignee(issueId, assigneeId);
-        return "redirect:/issues/{issueId}";
+    @GetMapping("/{issueId}/assignees/{assigneeId}")
+    public String setAssignee(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long assigneeId, RedirectAttributes redirectAttrs) {
+        try {
+            issueService.setAssignee(loginUser, issueId, assigneeId);
+            return "redirect:/issues/{issueId}";
+        } catch (Exception e) {
+            redirectAttrs.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/issues/{issueId}";
+        }
     }
 }

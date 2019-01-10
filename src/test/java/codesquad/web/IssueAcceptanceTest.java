@@ -184,6 +184,15 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
+    public void setMilestone_not_owner() {
+        ResponseEntity<String> response = basicAuthTemplate
+                .getForEntity(String.format("/issues/%d/milestones/%d", 3, 1), String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE3.getId()));
+    }
+
+    @Test
     public void setMilestone() {
         ResponseEntity<String> response = basicAuthTemplate
                 .getForEntity(String.format("/issues/%d/milestones/%d", ISSUE1.getId(), MILESTONE1.getId()), String.class);
@@ -226,5 +235,32 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
+    }
+
+    @Test
+    public void setAssignee_no_login() {
+        ResponseEntity<String> response = template
+                .getForEntity(String.format("/issues/%d/milestones/%d", 1, 1), String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users/login");
+    }
+
+    @Test
+    public void setAssignee_not_owner() {
+        ResponseEntity<String> response = basicAuthTemplate
+                .getForEntity(String.format("/issues/%d/milestones/%d", 3, 1), String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE3.getId()));
+    }
+
+    @Test
+    public void setAssignee() {
+        ResponseEntity<String> response = basicAuthTemplate
+                .getForEntity(String.format("/issues/%d/milestones/%d", ISSUE1.getId(), MILESTONE1.getId()), String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE1.getId()));
     }
 }
