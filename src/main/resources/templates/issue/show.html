@@ -56,7 +56,7 @@
                     for="milestone-menu">
                     {{#milestone}}
                     <li class="mdl-menu__item mdl-button--accent">
-                        <a href="/issues/{{id}}/milestones/{{milestone.id}}">{{milestone.subject}}</a>
+                        <a href="">{{milestone.subject}}</a>
                     </li>
                     {{/milestone}}
                     {{#milestones}}
@@ -96,21 +96,19 @@
                 <!-- label list -->
                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                     for="assignee-menu">
-                    <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/1">javajigi</a>
+
+                    {{#assignee}}
+                    <li class="mdl-menu__item mdl-button--accent">
+                        <a href="">{{userId}}</a>
                     </li>
+                    {{/assignee}}
+
+                    {{#assignees}}
                     <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/2">cca-company</a>
+                        <a href="/issues/{{issue.id}}/assignee/{{id}}">{{userId}}</a>
                     </li>
-                    <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/3">진저애비</a>
-                    </li>
-                    <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/4">신영</a>
-                    </li>
-                    <li class="mdl-menu__item">
-                        <a href="/issue/1/setAssignee/5">전용우</a>
-                    </li>
+                    {{/assignees}}
+
                 </ul>
             </div>
             <div class="mdl-color-text--grey-700 mdl-card__supporting-text">

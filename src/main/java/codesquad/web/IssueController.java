@@ -8,6 +8,7 @@ import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,9 @@ public class IssueController {
     @Resource(name = "milestoneService")
     private MilestoneService milestoneService;
 
+    @Resource(name = "userService")
+    private UserService userService;
+
     @GetMapping("/form")
     public String form(@LoginUser User loginUser) {
         return "/issue/form";
@@ -39,6 +43,7 @@ public class IssueController {
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
         model.addAttribute("milestones", milestoneService.findAll());
+        model.addAttribute("assignees", userService.findAll());
 
         return "/issue/show";
     }
@@ -78,11 +83,17 @@ public class IssueController {
     @GetMapping("/{id}/closed")
     public String close(@LoginUser User loginUser, @PathVariable long id , RedirectAttributes redirectAttrs) {
         try {
-            issueService.close(id);
+            issueService.close(loginUser, id);
             return "redirect:/";
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             redirectAttrs.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/issues/{id}";
         }
+    }
+
+    @GetMapping("/{issueId}/assignee/{assigneeId}")
+    public String setAssignee(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long assigneeId) {
+        issueService.setAssignee(issueId, assigneeId);
+        return "redirect:/issues/{issueId}";
     }
 }

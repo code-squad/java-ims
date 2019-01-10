@@ -29,6 +29,10 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
     private Milestone milestone;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_assignee"))
+    private User assignee;
+
     private boolean deleted = false;
 
     private boolean closed = false;
@@ -44,13 +48,14 @@ public class Issue extends AbstractEntity {
         this.closed = closed;
     }
 
-    public Issue(long id, String subject, String comment, User writer, boolean deleted, boolean closed) {
+    public Issue(long id, String subject, String comment, User writer, boolean deleted, boolean closed, User assignee) {
         super(id);
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
         this.deleted = deleted;
         this.closed = closed;
+        this.assignee = assignee;
     }
 
     public String getSubject() {
@@ -98,12 +103,24 @@ public class Issue extends AbstractEntity {
         this.milestone = milestone;
     }
 
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
+
     public IssueDto _toIssueDto() {
         return new IssueDto(this.subject, this.comment, this.writer, this.deleted, this.closed);
     }
 
     public boolean isOwner(User loginUser) {
         return writer.equals(loginUser);
+    }
+
+    public boolean isAsignee(User loginUser) {
+        return assignee.equals(loginUser);
     }
 
     public void update(User loginUser, IssueDto updatedIssue) {
@@ -121,8 +138,9 @@ public class Issue extends AbstractEntity {
         return temp;
     }
 
-    public void close() throws RuntimeException {
+    public void close(User loginUser) throws Exception {
         if (this.closed) throw new RuntimeException("This issue was already closed");
+        if (!isAsignee(loginUser)) throw new UnAuthorizedException("You're not assignee");
         this.closed = true;
     }
 }

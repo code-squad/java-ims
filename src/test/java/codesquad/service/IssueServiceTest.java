@@ -74,14 +74,21 @@ public class IssueServiceTest extends BaseTest {
         softly.assertThat(MILESTONE1.getIssues().contains(ISSUE1)).isTrue();
     }
 
-    @Test(expected = RuntimeException.class)
-    public void close_already_closed() {
-        issueService.close(ISSUE4.getId());
+    @Test(expected = Exception.class)
+    public void close_already_closed() throws Exception{
+        issueService.close(JAVAJIGI, ISSUE4.getId());
+    }
+
+    @Test(expected = Exception.class)
+    public void close_not_assginee() throws Exception{
+        issueService.close(JAVAJIGI, ISSUE2.getId());
+
+        softly.assertThat(ISSUE2.isClosed()).isTrue();
     }
 
     @Test
-    public void close() {
-        issueService.close(ISSUE1.getId());
+    public void close() throws Exception{
+        issueService.close(JAVAJIGI, ISSUE1.getId());
 
         softly.assertThat(ISSUE1.isClosed()).isTrue();
     }

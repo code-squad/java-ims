@@ -211,6 +211,15 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
+    public void close_not_assignee() {
+        ResponseEntity<String> response = basicAuthTemplate
+                .getForEntity(String.format("/issues/%d/closed", ISSUE2.getId()), String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE2.getId()));
+    }
+
+    @Test
     public void close() {
         ResponseEntity<String> response = basicAuthTemplate
                 .getForEntity(String.format("/issues/%d/closed", ISSUE1.getId()), String.class);

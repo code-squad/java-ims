@@ -25,6 +25,9 @@ public class IssueService {
     @Resource(name = "milestoneService")
     private MilestoneService milestoneService;
 
+    @Resource(name = "userService")
+    private UserService userService;
+
     @Transactional
     public Issue add(User loginUser, IssueDto issueDto) {
         issueDto.writeBy(loginUser);
@@ -68,7 +71,12 @@ public class IssueService {
     }
 
     @Transactional
-    public void close(long id) throws RuntimeException {
-        findById(id).close();
+    public void close(User loginUser, long id) throws Exception {
+        findById(id).close(loginUser);
+    }
+
+    @Transactional
+    public void setAssignee(long issueId, long assigneeId) {
+        findById(issueId).setAssignee(userService.findById(assigneeId));
     }
 }
