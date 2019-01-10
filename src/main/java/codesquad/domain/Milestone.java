@@ -43,6 +43,20 @@ public class Milestone extends AbstractEntity {
         issues.add(issue);
     }
 
+    public int getCountOfClosedIssue() {
+        int count = 0;
+        for (Issue issue : issues) {
+            if(issue.isClosed()) {
+                count ++;
+            }
+        }
+        return count;
+    }
+
+    public int getCountOfOpenedIssue() {
+        return issues.size() - getCountOfClosedIssue();
+    }
+
     public String getSubject() {
         return subject;
     }

@@ -34,6 +34,8 @@ public class Issue extends AbstractEntity {
 
     private boolean deleted = false;
 
+    private boolean closed = false;
+
     public Issue() {
 
     }
@@ -46,6 +48,10 @@ public class Issue extends AbstractEntity {
 
     public boolean isMatchWriter(User loginUser) {
         return this.writer.equals(loginUser);
+    }
+
+    public boolean isClosed() {
+        return this.closed;
     }
 
     public void update(User loginUser, Issue target) {
