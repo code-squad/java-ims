@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -25,5 +26,9 @@ public class LabelService {
     public void add(Label label, User loginUser) {
         label.setWriter(loginUser);
         labelRepository.save(label);
+    }
+
+    public Label findById(long labelId) {
+        return labelRepository.findById(labelId).orElseThrow(EntityNotFoundException::new);
     }
 }

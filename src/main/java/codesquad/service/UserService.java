@@ -22,12 +22,16 @@ public class UserService {
     }
 
     public User update(User loginUser, long id, UserDto updatedUser) {
-        User original = findById(loginUser, id);
+        User original = findByLoginId(loginUser, id);
         original.update(loginUser, updatedUser._toUser());
         return userRepository.save(original);
     }
 
-    public User findById(User loginUser, long id) {
+    public User findByid(long id) {
+        return userRepository.findById(id).orElseThrow(UnAuthorizedException::new);
+    }
+
+    public User findByLoginId(User loginUser, long id) {
         return userRepository.findById(id)
                 .filter(user -> user.equals(loginUser))
                 .orElseThrow(UnAuthorizedException::new);

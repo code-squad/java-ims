@@ -57,7 +57,7 @@ public class UserController {
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
         log.debug("LoginUser : {}", loginUser);
-        model.addAttribute("user", userService.findById(loginUser, id));
+        model.addAttribute("user", userService.findByLoginId(loginUser, id));
         return "/user/updateForm";
     }
 

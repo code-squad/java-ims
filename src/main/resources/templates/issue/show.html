@@ -84,21 +84,11 @@
             <!-- label list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="assignee-menu">
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/1">javajigi</a>
+                {{#users}}
+                <li class="mdl-menu__item" value="xxz">
+                    <a class="assignee" href="/issue/{{issue.id}}/assignees/{{id}}">{{userId}}</a>
                 </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/2">cca-company</a>
-                </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/3">진저애비</a>
-                </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/4">신영</a>
-                </li>
-                <li class="mdl-menu__item">
-                    <a href="/issue/1/setAssignee/5">전용우</a>
-                </li>
+                {{/users}}
             </ul>
         </div>
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text">

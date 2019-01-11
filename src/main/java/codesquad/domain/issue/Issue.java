@@ -35,9 +35,9 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_label"))
     private Label label;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_assignee"))
-    private List<User> assignee;
+    private User assignee;
 
     private Boolean deleted = false;
 
@@ -128,11 +128,11 @@ public class Issue extends AbstractEntity {
         this.label = label;
     }
 
-    public List<User> getAssignee() {
+    public User getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(List<User> assignee) {
+    public void setAssignee(User assignee) {
         this.assignee = assignee;
     }
 }

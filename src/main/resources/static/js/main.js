@@ -16,7 +16,8 @@ $("#issue_update").on("click", issue_update);
 $("#issues-menu-lower-right").on("click", issue_delete);
 $("#milestone-menu").on("click", milestone_menu);
 $("#label_menu").on("click", label_menu);
-$("#register_milestone").on("click", register);
+$(document).on("click", '.assignee', assignee);
+$(document).on("click", '.register a', register);
 
 function login(e) {
     e.preventDefault();
@@ -108,14 +109,13 @@ function milestone_menu(e) {
             console.log("milestone_조회성공");
             console.log(data);
             $(data).each(function(index, value) {
-                li_list += '<li class="mdl-menu__item mdl-button--accent" id="register_milestone">' +
+                li_list += '<li class="mdl-menu__item mdl-button--accent register">' +
                     '<a href="' + url + '/' + value.id + '">' + value.subject + '</a></li>';
             });
 
             console.log(li_list);
             $("#milestone_menu_ul").html(li_list);
             $("#milestone-menu").unbind();
-            $("#register_milestone").on("click", register);
         }
     })
 }
@@ -142,7 +142,7 @@ function label_menu(e) {
 
             $(data).each(function(index, value) {
                 console.log(value);
-                li_list += '<li class="mdl-menu__item">' +
+                li_list += '<li class="mdl-menu__item register">' +
                     '<a href="' + url + '/' + value.id + '">' + value.label + '</a></li>';
             });
 
@@ -153,11 +153,11 @@ function label_menu(e) {
     })
 }
 
+// 이슈에 마일스톤, 라벨, 담당자 적용
 function register(e) {
     e.preventDefault();
-    var url = $("#register_milestone a").attr("href");
 
-
+    var url = $(this).attr('href');
     console.log("register");
     console.log(url);
 
@@ -168,10 +168,31 @@ function register(e) {
         error : function(data) {
             console.log("register_에러");
             console.log(data);
+            alert("에러! 이슈 작성자와 아이디가 일치하지 않습니다.");
         },
         success : function(data) {
             console.log("register_조회성공");
             console.log(data);
+            alert("적용 되었습니다!");
+        }
+    })
+}
+
+function assignee(e) {
+    e.preventDefault();
+
+    var url = $(this).attr('href');
+    console.log(url);
+
+    $.ajax({
+        type : 'post',
+        url : url,
+        contentType : 'application/json',
+        error : function() {
+            alert("에러! 이슈 작성자와 아이디가 일치하지 않습니다.");
+        },
+        success : function() {
+            alert("적용 되었습니다!");
         }
     })
 }

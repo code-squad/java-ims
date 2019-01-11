@@ -7,6 +7,7 @@ import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,9 @@ public class IssueController {
     @Autowired
     IssueService issueService;
 
+    @Autowired
+    UserService userService;
+
     @GetMapping("")
     public String form(@LoginUser User loginUser) {
         return "issue/form";
@@ -39,6 +43,7 @@ public class IssueController {
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
+        model.addAttribute("users", userService.findAll());
         return "issue/show";
     }
 
