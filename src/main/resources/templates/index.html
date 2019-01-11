@@ -29,7 +29,7 @@
             <!-- Tabs -->
             <nav class="mdl-navigation">
                 <a class="mdl-navigation__link" href="/">Issues</a>
-                <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
+                <a class="mdl-navigation__link" href="/milestones/list">Milestones</a>
 
                 {{^loginedUser}}
                 <a class="mdl-navigation__link" href="/users/login/form">login</a>
@@ -80,7 +80,7 @@
 								</span>
                             <span class="mdl-list__item-secondary-content">
 									<span class="material-icons mdl-badge mdl-badge--overlap"
-                                          data-badge="1">issueBody.comment</span>
+                                          data-badge="1">{{issueBody.comment}}</span>
 								</span>
                         </li>
 						{{/issues}}
