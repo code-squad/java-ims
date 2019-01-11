@@ -98,7 +98,7 @@
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
             <p>{{comment}}</p>
         </div>
-        <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments" id="commentlist">
+        <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments" id="comment_list">
 
             <!-- comments start -->
             {{#answers}}
@@ -111,8 +111,17 @@
                             <a>{{userId}}</a>
 
 
-                            <span>{{comment}} on 2017-01-14</span>
+                            <span>{{comment}} on  {{formattedCreateDate}}</span>
 
+                            <a href="/api/issue/{{issue.id}}/answers/{{id}}" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect updateFrom_answer">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            <form style="display:inline-block" class="form-delete" action="/api/issue/{{issue.id}}/answers/{{id}}" method="POST">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button class="mdl-button mdl-js-button mdl-button--icon" type="submit">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </form>
 
                         </strong>
                     </div>
@@ -120,25 +129,6 @@
             </div>
             <hr>
             {{/answers}}
-
-            <div class="comment mdl-color-text--grey-700">
-                <header class="comment__header">
-                    <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars1.githubusercontent.com/u/7744966?v=3&u=1bd7d2e72800c0d5a1a5a2e04da851d30b3c13c7&s=140"
-                         alt="cca-company">
-                    <div class="comment__author">
-                        <strong>
-                            <a>cca-company</a>
-
-
-                            <span>comment new issue! on 2017-01-14</span>
-
-
-                        </strong>
-                    </div>
-                </header>
-            </div>
-            <hr>
 
             <!-- comments end -->
         </div>
@@ -171,13 +161,67 @@
                 <strong>
                     <a>{0}</a>
 
-                    <span>{1} on 2017-01-14</span>
+                    <span>{1} on {2}</span>
+
+                    <a href="/api/issue/{3}/answers/{4}" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect updateFrom_answer">
+                        <i class="material-icons">edit</i>
+                    </a>
+                    <form style="display:inline-block" class="form-delete" action="/api/issue/1/answers/1" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button class="mdl-button mdl-js-button mdl-button--icon" type="submit">
+                            <i class="material-icons">delete</i>
+                        </button>
+                    </form>
 
                 </strong>
             </div>
         </header>
     </div>
     <hr>
+</script>
+<!--<div style="background-color:white; margin-top:10px" id="answerDiv">
+    <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
+        <div style="margin:10px;">
+            <input type="file" name="file" id="updateFile"/>
+            <button class="mdl-button" type="submit">upload file</button>
+        </div>
+        <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button&#45;&#45;icon">
+            <i class="material-icons" role="presentation">check</i>
+            <span class="visuallyhidden">add comment</span>
+        </button>
+    </form>
+    <div class="mdl-color-text&#45;&#45;primary-contrast mdl-card__supporting-text new-comment">
+        <form action="{0}" method="POST">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield&#45;&#45;floating-label">
+                <textarea rows=5 class="mdl-textfield__input" id="updateComment" name="comment">{1}</textarea>
+                <label for="comment" class="mdl-textfield__label"> </label>
+            </div>
+            <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button&#45;&#45;icon updateAnswerBtn">
+                <i class="material-icons" role="presentation">check</i>
+                <span class="visuallyhidden">add comment</span>
+            </button>
+        </form>
+    </div>
+</div>-->
+
+<script type="text/template" id="answerUpdateTemplate">
+    <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
+        <div style="margin:10px;">
+            <input type="file" name="file" id="update_file"/>
+            <button class="mdl-button" type="submit">upload file</button>
+        </div>
+    </form>
+    <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+        <form class="submit-write" action="/api/issue/{{id}}/answers" method="POST">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <textarea rows=5 class="mdl-textfield__input" id="update_comment" name="comment"></textarea>
+                <label for="comment" class="mdl-textfield__label">Leave a comment</label>
+            </div>
+            <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="updateAnswerBtn">
+                <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">add comment</span>
+            </button>
+        </form>
+    </div>
 </script>
 
 {{/issue}}

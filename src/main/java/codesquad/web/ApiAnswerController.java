@@ -4,6 +4,8 @@ import codesquad.domain.Answer;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api/issue/{issueId}/answers")
 public class ApiAnswerController {
+    private static final Logger log = LogManager.getLogger(ApiAnswerController.class);
 
     @Resource(name = "issueService")
     IssueService issueService;
@@ -23,7 +26,7 @@ public class ApiAnswerController {
     @PostMapping("")
     public ResponseEntity<Answer> create(@LoginUser User loginUser, @PathVariable long issueId, String comment) {
         Answer savedAnswer = issueService.addAnswer(loginUser,issueId,comment);
-
+        log.debug("이슈 데이터 : {}", savedAnswer);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/api/issue/" + issueId + "/answers/" + savedAnswer.getId()));
         return new ResponseEntity<>(savedAnswer,headers, HttpStatus.CREATED);

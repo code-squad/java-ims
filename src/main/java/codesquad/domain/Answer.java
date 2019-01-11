@@ -10,6 +10,7 @@ import javax.persistence.*;
 public class Answer extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_to_issue"))
+    @JsonProperty
     private Issue issue;
 
     @ManyToOne
@@ -66,5 +67,15 @@ public class Answer extends AbstractEntity {
 
     public boolean isDeleted() {
         return deleted;
+    }
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "issue=" + issue +
+                ", user=" + user +
+                ", comment='" + comment + '\'' +
+                ", deleted=" + deleted +
+                '}';
     }
 }
