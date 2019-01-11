@@ -50,7 +50,8 @@ public class UserController {
 
     @PostMapping("")
     public String create(@Valid UserDto userDto, MultipartFile pic) throws IOException {
-        if(!pic.isEmpty()) {
+        log.debug("pic : " + pic);
+        if(pic != null && !pic.isEmpty()) {
             log.debug("contentType : {}", pic.getContentType());
             log.debug("originalFileName : {}", pic.getOriginalFilename());
             log.debug("isEmpty : {}", pic.isEmpty());

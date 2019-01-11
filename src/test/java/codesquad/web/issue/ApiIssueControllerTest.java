@@ -9,12 +9,8 @@ import org.springframework.http.ResponseEntity;
 import support.domain.ErrorMessage;
 import support.test.AcceptanceTest;
 
-import static codesquad.domain.IssueTest.*;
-import static codesquad.domain.UserTest.BRAD;
-import static codesquad.domain.UserTest.JUNGHYUN;
-import static codesquad.domain.LabelTest.LABEL;
-import static codesquad.domain.MilestoneTest.MILESTONE;
 import static org.slf4j.LoggerFactory.getLogger;
+import static support.test.Fixture.*;
 
 public class ApiIssueControllerTest extends AcceptanceTest {
     private static final Logger log = getLogger(ApiIssueControllerTest.class);

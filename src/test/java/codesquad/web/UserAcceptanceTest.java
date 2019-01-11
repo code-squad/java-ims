@@ -17,8 +17,8 @@ import support.test.HtmlFormDataBuilder;
 
 import javax.persistence.EntityNotFoundException;
 
-import static codesquad.domain.UserTest.BRAD;
 import static org.junit.Assert.assertEquals;
+import static support.test.Fixture.BRAD;
 
 public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(UserAcceptanceTest.class);
@@ -132,7 +132,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void upload() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> file = HtmlFormDataBuilder
                 .multipartFormData()
-                .addParameter("file", new ClassPathResource("logback.xml"))
+                .addParameter("pic", new ClassPathResource("logback.xml"))
                 .addParameter("userId", "mrboo7")
                 .addParameter("password", "password")
                 .addParameter("name", "브라드").build();

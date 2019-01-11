@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import support.test.AcceptanceTest;
 
-import static codesquad.domain.IssueTest.issues;
 import static org.slf4j.LoggerFactory.getLogger;
+import static support.test.Fixture.ISSUES;
 
 public class HomeControllerTest extends AcceptanceTest {
     private static final Logger log = getLogger(HomeControllerTest.class);
@@ -18,7 +18,7 @@ public class HomeControllerTest extends AcceptanceTest {
     public void home() {
         ResponseEntity<String> responseEntity = template.getForEntity("/", String.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        for (Issue issue : issues) {
+        for (Issue issue : ISSUES) {
             IssueBody issueBody = issue.getIssueBody();
             softly.assertThat(responseEntity.getBody().contains(issueBody.getSubject())).isTrue();
             softly.assertThat(responseEntity.getBody().contains(issue.getWriter().getName())).isTrue();

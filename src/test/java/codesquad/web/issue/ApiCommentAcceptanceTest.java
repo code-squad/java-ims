@@ -10,11 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import support.test.AcceptanceTest;
 
-import static codesquad.domain.IssueTest.ISSUE;
-import static codesquad.domain.UserTest.BRAD;
-import static codesquad.domain.UserTest.JUNGHYUN;
-import static codesquad.domain.CommentTest.*;
 import static org.slf4j.LoggerFactory.getLogger;
+import static support.test.Fixture.*;
 
 public class ApiCommentAcceptanceTest extends AcceptanceTest {
     private static final Logger log = getLogger(ApiCommentAcceptanceTest.class);

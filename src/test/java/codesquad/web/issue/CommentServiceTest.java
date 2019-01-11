@@ -15,11 +15,9 @@ import support.test.BaseTest;
 
 import java.util.Optional;
 
-import static codesquad.domain.IssueTest.ISSUE;
-import static codesquad.domain.UserTest.BRAD;
-import static codesquad.domain.CommentTest.*;
 import static org.mockito.Mockito.when;
 import static org.slf4j.LoggerFactory.getLogger;
+import static support.test.Fixture.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CommentServiceTest extends BaseTest {

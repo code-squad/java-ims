@@ -14,11 +14,8 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
-import static codesquad.domain.IssueTest.*;
-import static codesquad.domain.UserTest.BRAD;
-import static codesquad.domain.UserTest.JUNGHYUN;
-import static codesquad.domain.MilestoneTest.MILESTONES;
 import static org.slf4j.LoggerFactory.getLogger;
+import static support.test.Fixture.*;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = getLogger(IssueAcceptanceTest.class);
