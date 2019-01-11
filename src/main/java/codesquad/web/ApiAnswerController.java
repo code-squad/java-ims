@@ -21,12 +21,12 @@ public class ApiAnswerController {
     IssueService issueService;
 
     @PostMapping("")
-    public ResponseEntity<Void> create(@LoginUser User loginUser, @PathVariable long issueId, @RequestBody String comment) {
+    public ResponseEntity<Answer> create(@LoginUser User loginUser, @PathVariable long issueId, String comment) {
         Answer savedAnswer = issueService.addAnswer(loginUser,issueId,comment);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/api/issue/" + issueId + "/answers/" + savedAnswer.getId()));
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedAnswer,headers, HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
