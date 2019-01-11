@@ -1,0 +1,74 @@
+console.log("main.js 시작");
+
+//회원가입
+$("#join-submit").click(join);
+
+function join(e){
+    e.preventDefault();
+
+//    var queryString = $("#join").serialize();   //form태그의 id(join)에서 받은 데이터를 직렬화(키,밸류 형태) string타입임??
+//    console.log("query : " + queryString);
+    var json = new Object();
+    json.userId = $("#userId").val();
+    json.name = $("#name").val();
+    json.password = $("#password").val();
+    console.log("json : " + json);
+    console.log("json.name :" + json.name);
+    console.log("JSON.stringify(json) : " + JSON.stringify(json));
+
+    var url = $("#join").attr("action");
+    console.log("url : " + url);
+
+    //서버로 데이터 전송
+    $.ajax({
+        type : "post",
+        url : url,
+//        data : JSON.parse(json),        //JSON.parse() --> string 객체를 json 객체로
+        data : JSON.stringify(json),    //JSON.stringify() --> json 객체를 string 객체로
+        dataType : "json",              //서버로부터 받은 데이터 결과, 서버의 리턴값이 ResponseEntity<Void>라면 바디에 데이터가 없으므로, 400에러 발생
+        contentType : "application/json", //얘 안하면 415에러
+//        error : function(jqXHR, status, errorThrown){
+//            console.log("jqXHR status: " + jqXHR.status);
+//            console.log("jqXHR responseTest :" + jqXHR.responseTest);
+//            console.log(jqXHR.getResponseHeader);
+//            console.log("status : " + status);
+//            console.log("join fail!");
+//            alert("User Id, Name은 3자 이상, Password는 6자 이상입니다."); //size 예외처리는 security 에서 관리 하지 않는데,, 어떻게 메세지 전달을 할 수 있을까?
+//        },
+        error : onError,
+        success : function(data, status, xhr){
+            console.log(status);
+            console.log(data);
+            location.href = xhr.getResponseHeader("location");        //얘 역할을 정확히 모르겠음..
+        }
+    });
+}
+
+//로그인
+$("#login-submit").click(login);
+
+function login(e) {
+    e.preventDefault();
+    var json = new Object();
+    json.userId = $("#userId").val();
+    json.password = $("#password").val();
+    var url = $("#login").attr("action");
+
+    $.ajax({
+        type : "post",
+        url : url,
+        data : JSON.stringify(json),
+        dataType : "json",
+        contentType : "application/json",
+        error : onError,
+        success : function(data, status, jqXHR) {
+            console.log(data);
+            location.href = jqXHR.getResponseHeader("location");
+        }
+    })
+}
+
+function onError(jqXHR, status, errorThrown) {
+    console.log(jqXHR.responseText);    //json값 다 보여줌 (키,밸류 모두다) ex) {"message":"아이디 또는 비밀번호가 다릅니다."}
+    alert(jqXHR.responseJSON.message);  ////예외처리에서 받은 리턴값(responseEntity<ErrorMessage>)의 json객체의 키(message)값의 value를 가져온다.
+}

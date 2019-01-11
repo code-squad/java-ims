@@ -8,7 +8,7 @@ public class UserDto {
     @Size(min = 3, max = 20)
     private String userId;
 
-    @Size(min = 6, max = 20)
+    @Size(min = 3, max = 20)
     private String password;
 
     @Size(min = 3, max = 20)
