@@ -28,4 +28,15 @@ public class LabelAcceptanceTest extends AcceptanceTest {
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/labels");
     }
+
+    @Test
+    public void create_invalid() {
+        request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("name", "a")
+                .addParameter("explanation", "a")
+                .build();
+        ResponseEntity<String> response = template().postForEntity("/labels", request, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/labels/form");
+    }
 }

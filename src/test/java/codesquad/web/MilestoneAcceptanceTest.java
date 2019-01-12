@@ -23,4 +23,16 @@ public class MilestoneAcceptanceTest extends AcceptanceTest {
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/milestones");
     }
+
+    @Test
+    public void create_invalid() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "m")
+                .addParameter("startDate", LocalDateTime.now().toString())
+                .addParameter("endDate", LocalDateTime.now().toString())
+                .build();
+        ResponseEntity<String> response = template.postForEntity("/milestones", request, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/milestones/form");
+    }
 }
