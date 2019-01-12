@@ -5,13 +5,21 @@ import codesquad.domain.history.DeleteHistory;
 import codesquad.domain.issue.Comment;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueBody;
+import codesquad.domain.user.Avatar;
+import codesquad.domain.user.User;
 import org.junit.Test;
 import org.slf4j.Logger;
 import support.test.BaseTest;
 
+import javax.validation.ConstraintViolation;
+import java.util.Set;
+
 import static codesquad.domain.CommentTest.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 import static support.test.Fixture.*;
+import static support.test.ValidationTest.VALIDATOR;
 
 public class IssueTest extends BaseTest {
     private static final Logger log = getLogger(IssueTest.class);
@@ -32,6 +40,17 @@ public class IssueTest extends BaseTest {
     public void wirttenBy() {
         ISSUE.writtenBy(BRAD);
         softly.assertThat(ISSUE.isOwner(BRAD)).isEqualTo(true);
+    }
+
+    @Test
+    public void create_invalid() {
+        IssueBody issueBody = new IssueBody("a", "a");
+        Set<ConstraintViolation<IssueBody>> constraintViolcations = VALIDATOR.validate(issueBody);
+        assertThat(constraintViolcations.size(), is(2));
+
+        for (ConstraintViolation<IssueBody> constraintViolation : constraintViolcations) {
+            log.debug("violation error message : {}", constraintViolation.getMessage());
+        }
     }
 
     @Test

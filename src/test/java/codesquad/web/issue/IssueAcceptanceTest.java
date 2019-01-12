@@ -44,6 +44,17 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
+    public void create_invalid() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("subject", "테")
+                .addParameter("comment", "테")
+                .build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity("/issues", request, String.class);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/issues/form");
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+    }
+
+    @Test
     public void createForm_로그인안한유저() {
         ResponseEntity<String> response = template.getForEntity("/issues/form", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -116,6 +127,19 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         softly.assertThat(response.getBody().contains(UPDATE_ISSUE_BODY.getSubject())).isEqualTo(true);
         softly.assertThat(response.getBody().contains(UPDATE_ISSUE_BODY.getComment())).isEqualTo(true);
         log.debug("reponse : {}", response.getBody());
+    }
+
+    @Test
+    public void update_invalid() {
+        String location = createResource("/api/issues", BRAD, ISSUE_BODY);
+        Issue createdIssue = getResource(location, Issue.class, BRAD);
+        updateRequest = HtmlFormDataBuilder.urlEncodedForm().put()
+                .addParameter("subject", "a")
+                .addParameter("comment", "a")
+                .build();
+        ResponseEntity<String> response = basicAuthTemplate().postForEntity(createdIssue.generateUrl(), updateRequest, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(createdIssue.generateUrl() + "/form");
     }
 
     @Test

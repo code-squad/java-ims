@@ -15,22 +15,15 @@ import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static support.test.ValidationTest.VALIDATOR;
 
 public class UserValidationTest {
     private static final Logger log = LoggerFactory.getLogger(UserValidationTest.class);
 
-    private static Validator validator;
-
-    @BeforeClass
-    public static void setup() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
-
     @Test
     public void userIdWhenIsEmpty() throws Exception {
         User user = new User("", "password", "name", Avatar.DEFAULT_AVATAR);
-        Set<ConstraintViolation<User>> constraintViolcations = validator.validate(user);
+        Set<ConstraintViolation<User>> constraintViolcations = VALIDATOR.validate(user);
         assertThat(constraintViolcations.size(), is(1));
 
         for (ConstraintViolation<User> constraintViolation : constraintViolcations) {

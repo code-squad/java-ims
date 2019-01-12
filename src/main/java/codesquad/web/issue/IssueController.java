@@ -8,6 +8,7 @@ import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -29,8 +30,8 @@ public class IssueController {
     }
 
     @PostMapping("")
-    public String create(@LoginUser User loginUser, @Valid IssueBody issueBody) {
-        log.debug("issue : {}", issueBody);
+    public String create(@LoginUser User loginUser, @Valid IssueBody issueBody, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) return "redirect:/issues/form";
         issueService.create(loginUser, issueBody);
         return "redirect:/";
     }
@@ -53,7 +54,8 @@ public class IssueController {
     }
 
     @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, @Valid IssueBody updateIssueBody, Model model) {
+    public String update(@LoginUser User loginUser, @PathVariable long id, @Valid IssueBody updateIssueBody, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()) return "redirect:" + String.format("/issues/%d/form", id);
         model.addAttribute("issue", issueService.update(loginUser, id, updateIssueBody));
         return "issue/show";
     }
