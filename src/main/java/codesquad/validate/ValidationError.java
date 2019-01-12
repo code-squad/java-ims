@@ -5,6 +5,9 @@ public class ValidationError {
 
     private String errorMessage;
 
+    public ValidationError() {
+    }
+
     public ValidationError(String fieldName, String errorMessage) {
         this.fieldName = fieldName;
         this.errorMessage = errorMessage;

@@ -40,7 +40,6 @@ public class ValidationExceptionControllerAdvice {
         if (!code.isPresent()) {
             return null;
         }
-
         String errorMessage = msa.getMessage(code.get(), fieldError.getArguments(), fieldError.getDefaultMessage());
         log.info("error message: {}", errorMessage);
         return errorMessage;
@@ -48,6 +47,7 @@ public class ValidationExceptionControllerAdvice {
 
     private Optional<String> getFirstCode(FieldError fieldError) {
         String[] codes = fieldError.getCodes();
+        log.debug("codes : {}", codes);
         if (codes == null || codes.length == 0) {
             return Optional.empty();
         }
