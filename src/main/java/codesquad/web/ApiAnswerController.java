@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import codesquad.domain.Answer;
+import codesquad.domain.DeleteHistory;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
@@ -38,8 +39,14 @@ public class ApiAnswerController {
     }
 
     @PutMapping("{id}")
-    public Answer update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody String comment) {
+    public Answer update(@LoginUser User loginUser, @PathVariable long id, String comment) {
         return issueService.updateAnswer(loginUser, id, comment);
+    }
+
+    @DeleteMapping("{id}")
+    public DeleteHistory deleted(@LoginUser User loginUser, @PathVariable long id) {
+        return issueService.deletedAnswer(loginUser,id);
+
     }
 
 }

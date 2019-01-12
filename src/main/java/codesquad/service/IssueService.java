@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -91,6 +90,13 @@ public class IssueService {
     @Transactional
     public Answer updateAnswer(User loginUser, long id, String comment) {
         Answer answer = answerRepository.findById(id).orElseThrow(UnAuthorizedException::new);
-        return answer.update(loginUser,comment);
+        return answer.update(loginUser, comment);
+    }
+
+    @Transactional
+    public DeleteHistory deletedAnswer(User loginUser, long id) {
+        Answer answer = answerRepository.findById(id).orElseThrow(UnAuthorizedException::new);
+        answer.deleted(loginUser);
+        return new DeleteHistory(ContentType.ANSWER, id, loginUser);
     }
 }
