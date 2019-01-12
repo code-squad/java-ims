@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityExistsException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -24,5 +25,9 @@ public class MilestoneService {
 
     public Iterable<Milestone> findAll() {
         return milestoneRepository.findAll();
+    }
+
+    public Milestone findByMilestoneId(long id) {
+        return milestoneRepository.findById(id).orElseThrow(EntityExistsException::new);
     }
 }

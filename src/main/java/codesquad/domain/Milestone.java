@@ -6,6 +6,8 @@ import support.domain.AbstractEntity;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Milestone extends AbstractEntity {
@@ -22,6 +24,9 @@ public class Milestone extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_milestone_writer"))
     private User writer;
+
+    @OneToMany(mappedBy = "milestone")
+    private List<Issue> issues = new ArrayList<>();
 
     public Milestone() {
     }
@@ -41,10 +46,8 @@ public class Milestone extends AbstractEntity {
         return _toMilestoneDto();
     }
 
-    public String getDate() {
-        return getFormattedDate(endDate, "MMM dd, yyyy");
-    }
-
-
+//    public List<Issue> addIssue(Issue issue) {
+//        issues.add(issue);
+//    }
 
 }

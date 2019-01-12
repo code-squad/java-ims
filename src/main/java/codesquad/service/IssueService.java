@@ -1,6 +1,7 @@
 package codesquad.service;
 
 import codesquad.domain.Issue;
+import codesquad.domain.Milestone;
 import codesquad.repository.IssueRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
@@ -15,10 +16,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @Service("issueService")
 public class IssueService {
+    private static final Logger log = getLogger(IssueService.class);
+
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
-
-    private static final Logger log = getLogger(IssueService.class);
 
     public Issue create(User loginUser, IssueDto issueDto) {
         return issueRepository.save(issueDto._toIssue(loginUser));

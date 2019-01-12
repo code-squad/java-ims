@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.dto.MilestoneDto;
 import codesquad.exception.UnAuthenticationException;
 import codesquad.exception.UnAuthorizedException;
 import codesquad.dto.IssueDto;
@@ -28,8 +29,12 @@ public class Issue extends AbstractEntity {
     private User writer;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestones"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
+    private Label label;
 
     private boolean deleted = false;
 
@@ -42,8 +47,17 @@ public class Issue extends AbstractEntity {
         this.writer = writer;
     }
 
-    public String getDate() {
-        return getFormattedCreateDate();
+    public IssueDto _toIssueDto() {
+        return new IssueDto(this.subject, this.comment, this.writer._toUserDto(), this.deleted);
+    }
+
+    public IssueDto getIssueDto() {
+        return this._toIssueDto();
+    }
+
+    public Issue toMilestone(Milestone milestone) {
+        this.milestone = milestone;
+        return this;
     }
 
     public boolean isLogin(User loginUser) {
@@ -51,14 +65,6 @@ public class Issue extends AbstractEntity {
             throw new UnAuthenticationException();
         }
         return true;
-    }
-
-    public IssueDto _toIssueDto() {
-        return new IssueDto(this.subject, this.comment, this.writer._toUserDto(), this.deleted);
-    }
-
-    public IssueDto getIssueDto() {
-        return this._toIssueDto();
     }
 
     public boolean isOwner(User loginUser) {

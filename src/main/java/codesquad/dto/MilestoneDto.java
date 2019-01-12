@@ -4,6 +4,7 @@ import codesquad.domain.Milestone;
 import codesquad.domain.User;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class MilestoneDto {
     private String subject;
@@ -13,6 +14,10 @@ public class MilestoneDto {
     private LocalDateTime endDate;
 
     private UserDto writer;
+
+    private String modifier;
+
+    private LocalDateTime now;
 
     public MilestoneDto() {
     }
@@ -44,8 +49,8 @@ public class MilestoneDto {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
-        return endDate;
+    public String getEndDate() {
+        return endDate.format(DateTimeFormatter.ofPattern("MMM dd, yyy"));
     }
 
     public void setEndDate(LocalDateTime endDate) {
@@ -58,6 +63,18 @@ public class MilestoneDto {
 
     public void setWriter(UserDto writer) {
         this.writer = writer;
+    }
+
+    public String getNow() {
+        return now.format(DateTimeFormatter.ofPattern("yyyy-mm-dd"));
+    }
+
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(User loginUser) {
+        this.modifier = loginUser._toUserDto().getUserId();
     }
 
     @Override
