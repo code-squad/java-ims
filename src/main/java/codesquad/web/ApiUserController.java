@@ -1,9 +1,8 @@
 package codesquad.web;
 
 import codesquad.UnAuthenticationException;
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import codesquad.dto.UserDto;
-import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;
 import org.springframework.http.HttpHeaders;
@@ -45,7 +44,7 @@ public class ApiUserController {
 
     @GetMapping("/{id}")
     public UserDto show(@LoginUser User loginUser, @PathVariable long id) {
-        User user = userService.findById(loginUser, id);
+        User user = userService.findByLoginId(loginUser, id);
         return user._toUserDto();
     }
 

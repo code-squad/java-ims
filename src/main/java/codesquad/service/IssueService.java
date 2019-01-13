@@ -1,10 +1,12 @@
 package codesquad.service;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.Contents;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
+import codesquad.domain.issue.Contents;
+import codesquad.domain.issue.Issue;
+import codesquad.domain.issue.IssueRepository;
+import codesquad.domain.label.Label;
+import codesquad.domain.milestone.Milestone;
+import codesquad.domain.user.User;
 import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,7 @@ public class IssueService {
     public Issue oneself(User loginUser, long id) {
         return issueRepository.findById(id)
                 .filter(issue -> issue.isOwner(loginUser))
+                .filter(issue -> !issue.getDeleted())
                 .orElseThrow(UnAuthorizedException::new);
     }
 
@@ -55,5 +58,20 @@ public class IssueService {
 
     public Iterable<Issue> findAll() {
         return issueRepository.findByDeleted(false);
+    }
+
+    @Transactional
+    public void registerMilestone(Milestone milestone, long id, User loginUser) {
+        oneself(loginUser, id).setMilestone(milestone);
+    }
+
+    @Transactional
+    public void registerLabel(Label label, long id, User loginUser) {
+        oneself(loginUser, id).setLabel(label);
+    }
+
+    @Transactional
+    public void registerAssignee(User assignee, long id, User loginUser) {
+        oneself(loginUser, id).setAssignee(assignee);
     }
 }

@@ -1,6 +1,6 @@
 package codesquad.security;
 
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.WebRequest;
 

@@ -1,7 +1,7 @@
 package codesquad.web;
 
 import codesquad.UnAuthenticationException;
-import codesquad.domain.User;
+import codesquad.domain.user.User;
 import codesquad.dto.UserDto;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;
@@ -37,6 +37,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginForm() {
+        log.debug("로그인 폼");
         return "user/login";
     }
 
@@ -56,7 +57,7 @@ public class UserController {
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
         log.debug("LoginUser : {}", loginUser);
-        model.addAttribute("user", userService.findById(loginUser, id));
+        model.addAttribute("user", userService.findByLoginId(loginUser, id));
         return "/user/updateForm";
     }
 

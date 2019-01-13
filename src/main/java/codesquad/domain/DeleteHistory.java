@@ -1,5 +1,8 @@
 package codesquad.domain;
 
+import codesquad.domain.issue.ContentType;
+import codesquad.domain.user.User;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 

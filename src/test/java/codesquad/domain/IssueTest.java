@@ -1,6 +1,9 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import codesquad.domain.issue.Contents;
+import codesquad.domain.issue.Issue;
+import codesquad.domain.user.User;
 import org.junit.Test;
 import support.test.BaseTest;
 

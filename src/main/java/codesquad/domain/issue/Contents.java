@@ -1,4 +1,4 @@
-package codesquad.domain;
+package codesquad.domain.issue;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

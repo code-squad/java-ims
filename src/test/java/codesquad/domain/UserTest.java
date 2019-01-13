@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import codesquad.domain.user.User;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

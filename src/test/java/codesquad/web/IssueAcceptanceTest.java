@@ -1,6 +1,6 @@
 package codesquad.web;
 
-import codesquad.domain.IssueRepository;
+import codesquad.domain.issue.IssueRepository;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,6 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    // TODO 어플리케이션 오류 해결하기
     @Test
     public void create() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()

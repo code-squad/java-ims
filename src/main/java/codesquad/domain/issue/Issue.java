@@ -1,6 +1,10 @@
-package codesquad.domain;
+package codesquad.domain.issue;
 
 import codesquad.UnAuthorizedException;
+import codesquad.domain.DeleteHistory;
+import codesquad.domain.label.Label;
+import codesquad.domain.milestone.Milestone;
+import codesquad.domain.user.User;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 
@@ -22,6 +26,18 @@ public class Issue extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_milestone"))
+    private Milestone milestone;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_label"))
+    private Label label;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_assignee"))
+    private User assignee;
 
     private Boolean deleted = false;
 
@@ -94,5 +110,29 @@ public class Issue extends AbstractEntity {
 
     public boolean isSameComment(Issue issue) {
         return this.contents == issue.getContents();
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
     }
 }
