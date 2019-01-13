@@ -40,13 +40,6 @@ public class UserController {
         return "user/updateForm";
     }
 
-    @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
-        log.debug("Call updateMethod()");
-        userService.update(loginUser, id, target);
-        return "redirect:/";
-    }
-
     @GetMapping("/logout")
     public String logout(@LoginUser User loginUser, HttpSession httpSession) {
         httpSession.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);

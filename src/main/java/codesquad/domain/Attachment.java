@@ -1,21 +1,30 @@
 package codesquad.domain;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import support.converter.FileNameConverter;
 import support.domain.AbstractEntity;
-
 import javax.persistence.Entity;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @Entity
 public class Attachment extends AbstractEntity {
 
-    public static final DummyAttachment DUMMY_ATTACHMENT = new DummyAttachment("dummy.png", "dummy.png");
+    public static final Attachment DUMMY_AVATAR = new AttachmentDummy(0L);
 
     private String originFileName;
     private String targetFileName;
     private String path;
+    private boolean deleted = false;
 
     public Attachment() {
+
+    }
+
+    public Attachment(Long id) {
 
     }
 
@@ -25,12 +34,9 @@ public class Attachment extends AbstractEntity {
         this.path = path;
     }
 
-    public String getOrignFileName() {
-        return originFileName;
-    }
-
-    public void setOrignFileName(String originFileName) {
-        this.originFileName = originFileName;
+    public Attachment(String originFileName, String targetFileName, String path, boolean deleted) {
+        this(originFileName, targetFileName, path);
+        this.deleted = true;
     }
 
     public String getTargetFileName() {
@@ -53,25 +59,36 @@ public class Attachment extends AbstractEntity {
         return false;
     }
 
-    @Override
-    public String toString() {
-        return "Attachment{" +
-                "orignFileName='" + originFileName + '\'' +
-                ", targetFileName='" + targetFileName + '\'' +
-                ", path='" + path + '\'' +
-                '}';
+    public String getOriginFileName() {
+        return originFileName;
     }
 
-    @Component
-    private static class DummyAttachment extends Attachment {
+    public void setOriginFileName(String originFileName) {
+        this.originFileName = originFileName;
+    }
 
-        @Value("${file.avatar.path}")
-        private static String path;
+    public boolean isDeleted() {
+        return deleted;
+    }
 
-        public DummyAttachment(String originFileName, String targetFileName) {
-            super(originFileName, targetFileName, path);
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Attachment saveAttachment(MultipartFile multipartFile, String path, boolean deleted) throws IOException {
+        this.originFileName = multipartFile.getOriginalFilename();
+        this.targetFileName = FileNameConverter.convert(this.originFileName);
+        this.path = path;
+        this.deleted = deleted;
+        InputStream is = multipartFile.getInputStream();
+        Files.copy(is, Paths.get(path + this.targetFileName), StandardCopyOption.REPLACE_EXISTING);
+        return this;
+    }
+
+    private static class AttachmentDummy extends Attachment {
+        public AttachmentDummy(Long id) {
+            super(id);
         }
-
         @Override
         public boolean isDummyAttachment() {
             return true;

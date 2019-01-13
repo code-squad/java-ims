@@ -4,7 +4,6 @@ import codesquad.UnAuthorizedException;
 import codesquad.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -26,7 +25,7 @@ public class User extends AbstractEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_user_avatar"))
     private Attachment avatar;
 
@@ -89,12 +88,18 @@ public class User extends AbstractEntity {
         return this.userId.equals(userId);
     }
 
-    public void update(User loginUser, User target) {
+    public User update(User loginUser, User target, Attachment avatar) {
         if(!loginUser.userId.equals(target.userId)) {
             throw new UnAuthorizedException();
         }
+
+        if(!avatar.isDummyAttachment()) {
+            this.avatar = avatar;
+        }
+
         this.name = target.name;
         this.password = target.password;
+        return this;
     }
 
     public void update(UserDto target) {

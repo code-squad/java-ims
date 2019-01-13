@@ -63,6 +63,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return new LoginUserHandlerMethodArgumentResolver();
     }
 
+    @Bean
+    public String avatarDummyPath() {
+        return "/Users/lee_ki_hyun/Desktop/CodeSquad/Steps/img/avatar/";
+    }
+
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(loginUserArgumentResolver());

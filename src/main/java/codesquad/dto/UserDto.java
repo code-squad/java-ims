@@ -60,6 +60,7 @@ public class UserDto {
     }
 
     public User _toUser(Attachment avatar) {
+        System.out.println(avatar.toString()+"~~~~~~~~");
         return new User(this.userId, this.password, this.name, avatar);
     }
 

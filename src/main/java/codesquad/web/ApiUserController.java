@@ -42,7 +42,8 @@ public class ApiUserController {
     private static final Logger logger = getLogger(ApiUserController.class);
 
     @PostMapping(consumes = {"multipart/form-data"}, value = "")
-    public ResponseEntity create(@RequestPart("user") @Valid UserDto user, @RequestPart("file") MultipartFile file) throws IOException {
+    public ResponseEntity create(@RequestPart("user") @Valid UserDto user,
+                                 @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
         Attachment avatar = attachmentService.createAvatar(file);
         User savedUser = userService.add(user, avatar);
         HttpHeaders headers = new HttpHeaders();
@@ -56,14 +57,14 @@ public class ApiUserController {
         return user._toUserDto();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity update(@LoginUser User loginUser, @PathVariable long id, @RequestBody @Valid UserDto updatedUser,
-                                       BindingResult bindingResult, HttpSession httpSession) {
+    @PutMapping(consumes = {"multipart/form-data"}, value = "/{id}")
+    public ResponseEntity update(@LoginUser User loginUser, @PathVariable long id, @RequestPart("user") @Valid UserDto updatedUser,
+                                       BindingResult bindingResult, @RequestPart(value = "file", required = false) MultipartFile file, HttpSession httpSession) throws IOException {
         if(bindingResult.hasErrors()) {
             return new ResponseEntity(new ErrorMessage(errorMessage), HttpStatus.FORBIDDEN);
         }
-        logger.debug("Call update Method() -> loginUser : {}, updatedUser : {}", loginUser, updatedUser);
-        User user = userService.update(loginUser, id, updatedUser);
+        Attachment avatar = attachmentService.updateAvatar(file);
+        User user = userService.update(loginUser, id, updatedUser, avatar);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create("/"));
         HttpSessionUtils.updateUserSession(httpSession, updatedUser);

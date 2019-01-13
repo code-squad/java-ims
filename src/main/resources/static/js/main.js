@@ -327,12 +327,17 @@ function editPrivacy(e) {
     json.name = $('#name').val();
     json.password = $('#password').val();
 
+    var data = new FormData();
+    data.append('user', new Blob([JSON.stringify(json)], {type : "application/json"}));
+    data.append('file', $('input[name=pic]')[0].files[0])
+
     $.ajax({
         type : 'put',
         url : url,
-        data : JSON.stringify(json),
+        data : data,
         dataType : 'json',
-        contentType: 'application/json',
+        contentType : false,
+        processData : false,
         error : function (request) {
             exceptionProcessor(request);
         },

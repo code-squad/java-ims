@@ -28,13 +28,18 @@ public class AvatarService {
     private static final Logger logger = getLogger(AvatarService.class);
 
     public Attachment createAvatar(MultipartFile multipartFile) throws IOException {
-        if (!multipartFile.isEmpty()) {
-            String originFileName = multipartFile.getOriginalFilename();
-            String fileName = FileNameConverter.convert(originFileName);
-            InputStream is = multipartFile.getInputStream();
-            Files.copy(is, Paths.get(path + fileName), StandardCopyOption.REPLACE_EXISTING);
-            return attachmentRepository.save(new Attachment(originFileName, FileNameConverter.convert(originFileName), path));
+        if (multipartFile != null) {
+            Attachment attachment = new Attachment();
+            return attachmentRepository.save(attachment.saveAttachment(multipartFile, path, false));
         }
-        return Attachment.DUMMY_ATTACHMENT;
+        return attachmentRepository.findById(Attachment.DUMMY_AVATAR.getId()).orElse(null);
+    }
+
+    public Attachment updateAvatar(MultipartFile multipartFile) throws IOException {
+        if (multipartFile != null) {
+            Attachment attachment = new Attachment();
+            return attachmentRepository.save(attachment.saveAttachment(multipartFile, path, true));
+        }
+        return attachmentRepository.findById(Attachment.DUMMY_AVATAR.getId()).orElse(null);
     }
 }

@@ -8,6 +8,7 @@ import codesquad.dto.UserDto;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -39,10 +40,10 @@ public class UserService {
         return userRepository.save(userDto._toUser(avatar));
     }
 
-    public User update(User loginUser, long id, UserDto updatedUser) {
+    @Transactional
+    public User update(User loginUser, long id, UserDto updatedUser, Attachment avatar) {
         User original = findById(loginUser, id);
-        original.update(loginUser, updatedUser._toUser());
-        return userRepository.save(original);
+        return original.update(loginUser, updatedUser._toUser(), avatar);
     }
 
     public User findById(User loginUser, long id) {
