@@ -1,9 +1,15 @@
 package codesquad.domain;
 
+import org.junit.Test;
+import support.test.BaseTest;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class LabelTest {
+import static codesquad.domain.IssueTest.ISSUE1;
+
+public class LabelTest extends BaseTest {
     public static final List<Label> LABELS1 = new ArrayList<>();
     public static final List<Label> LABELS2 = new ArrayList<>();
     public static final List<Label> LABELS = new ArrayList<>();
@@ -24,5 +30,20 @@ public class LabelTest {
         LABELS.add(LABEL4);
         LABELS.add(LABEL5);
         LABELS.add(LABEL6);
+    }
+
+    @Test
+    public void setIssues_already_exist() {
+        LABEL2.setIssues(new ArrayList<>(Arrays.asList(ISSUE1)));
+        LABEL2.setIssues(ISSUE1);
+
+        softly.assertThat(LABEL2.getIssues().contains(ISSUE1)).isFalse();
+    }
+
+    @Test
+    public void setIssues() {
+        LABEL1.setIssues(ISSUE1);
+
+        softly.assertThat(LABEL1.getIssues().contains(ISSUE1)).isTrue();
     }
 }

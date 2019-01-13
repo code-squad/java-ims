@@ -13,6 +13,9 @@ public class LabelService {
     @Resource(name="labelRepository")
     private LabelRepository labelRepository;
 
+    @Resource(name="issueService")
+    private IssueService issueService;
+
     public Iterable<Label> findAll() {
         return labelRepository.findAll();
     }
@@ -37,5 +40,10 @@ public class LabelService {
     @Transactional
     public void delete(long id) {
         labelRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void setIssue(long issueId, long labelId) {
+        findById(labelId).setIssues(issueService.findById(issueId));
     }
 }

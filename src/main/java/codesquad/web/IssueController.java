@@ -114,6 +114,7 @@ public class IssueController {
     public String setLabel(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long labelId, RedirectAttributes redirectAttrs) {
         try {
             issueService.setLabel(loginUser, issueId, labelId);
+            labelService.setIssue(issueId, labelId);
             return "redirect:/issues/{issueId}";
         } catch (Exception e) {
             redirectAttrs.addFlashAttribute("errorMessage", e.getMessage());
