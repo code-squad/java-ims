@@ -70,11 +70,22 @@ public class IssueController {
         return "redirect:/";
     }
 
-//    @GetMapping("/{id}/{milestoneId}")      //이슈 상세보기에서 마일스톤1개를 눌렀을때
-//    public String showMilestoneComment(@LoginUser User loginUser, @PathVariable long id, @PathVariable long milestoneId) {
-//        Milestone milestone = milestoneService.findByMilestoneId(milestoneId);
-//        Issue issue = issueService.findByIssueId(id).toMilestone(milestone);
-//        issue.getMilestoneDto().setModifier(loginUser);
-//        return String.format("redirect:/issues/%d", id);
-//    }
+    @GetMapping("/{id}/close")
+    public String close(@LoginUser User loginUser, @PathVariable long id) {
+        issueService.close(loginUser, id);
+        return "redirect:/issues/{id}";
+    }
+
+    @GetMapping("/{id}/open")
+    public String open(@LoginUser User loginUser, @PathVariable long id) {
+        issueService.open(loginUser, id);
+        return "redirect:/issues/{id}";
+    }
+
+    @GetMapping("/{id}/{milestoneId}")
+    public String milestoneChoice(@LoginUser User loginUser, @PathVariable long id, @PathVariable long milestoneId) {
+        Issue issue = issueService.findByIssueId(id);
+        milestoneService.addIssue(milestoneId, issue);
+        return String.format("redirect:/issues/%d", id);
+    }
 }

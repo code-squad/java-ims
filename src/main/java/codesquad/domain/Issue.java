@@ -36,7 +36,13 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
     private Label label;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee                                                                                                                                                                                                        "))
+    private Assignee assignee;
+
     private boolean deleted = false;
+
+    private boolean closed = false;
 
     public Issue(){
     }
@@ -88,6 +94,27 @@ public class Issue extends AbstractEntity {
         return this;
     }
 
+    public Issue close(User loginUser) {
+        isOwner(loginUser);
+        closed = true;
+        return this;
+    }
+
+    public Issue open(User loginUser) {
+        isOwner(loginUser);
+        closed = false;
+        return this;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
+    public boolean getClosed() {
+        return closed;
+    }
+
+
     @Override
     public String toString() {
         return "Issue{" +
@@ -98,4 +125,5 @@ public class Issue extends AbstractEntity {
                 ", id=" + getId() +
                 '}';
     }
+
 }

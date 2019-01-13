@@ -40,6 +40,16 @@ public class IssueService {
 
     @Transactional
     public Issue deleteIssue(User loginUSer, long id) {
-       return findByIssueId(id).delete(loginUSer);
+        return findByIssueId(id).delete(loginUSer);
+    }
+
+    @Transactional
+    public Issue close(User loginUser, long id) {
+        return findByIssueId(id).close(loginUser);
+    }
+
+    @Transactional
+    public Issue open(User loginUser, long id) {
+        return findByIssueId(id).open(loginUser);
     }
 }

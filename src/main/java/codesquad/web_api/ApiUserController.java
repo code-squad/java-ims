@@ -42,7 +42,8 @@ public class ApiUserController {
     }
 
     @PutMapping("{id}")
-    public UserDto update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody UserDto updatedUser) {
+    public UserDto update(@LoginUser User loginUser, @PathVariable long id
+            , @Valid @RequestBody UserDto updatedUser) {
         return userService.update(loginUser, id, updatedUser)._toUserDto();
     }
 }

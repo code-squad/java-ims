@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import codesquad.dto.MilestoneDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Milestone extends AbstractEntity {
@@ -25,7 +27,8 @@ public class Milestone extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_milestone_writer"))
     private User writer;
 
-    @OneToMany(mappedBy = "milestone")
+    @OneToMany(mappedBy = "milestone" , fetch =FetchType.LAZY)
+    @JsonIgnore
     private List<Issue> issues = new ArrayList<>();
 
     public Milestone() {
@@ -46,8 +49,21 @@ public class Milestone extends AbstractEntity {
         return _toMilestoneDto();
     }
 
-//    public List<Issue> addIssue(Issue issue) {
-//        issues.add(issue);
-//    }
+    public List<Issue> addIssue(Issue issue) {
+         issue.toMilestone(this);
+         issues.add(issue);
+         return issues;
+    }
 
+    public long getOngoingIssues() {        //false가 진행 , true가  완료
+        return issues.stream().filter(issue -> !issue.getClosed()).count();
+    }
+
+    public long getCompleteIssues() {
+        return issues.stream().filter(Issue::getClosed).count();
+    }
+
+    public void setIssues(List<Issue> issues) {
+        this.issues = issues;
+    }
 }

@@ -36,9 +36,17 @@
                         </div>
                         <span>2017-01-14</span>
                     </div>
-                    <a href="/issue/1/setOpen" class="mdl-button mdl-button--colored mdl-js-button">
+                    {{^closed}}
+                    <a href="/issues/{{id}}/close" class="mdl-button mdl-button--colored mdl-js-button">
                         Close issue
                     </a>
+                    {{/closed}}
+
+                    {{#closed}}
+                    <a href="/issues/{{id}}/open" class="mdl-button mdl-button--colored mdl-js-button">
+                        open issue
+                    </a>
+                    {{/closed}}
 
                     <div class="section-spacer"></div>
 
@@ -58,9 +66,11 @@
                             <a href="/issue/1/setMilestone/3">Milestone3</a>
                         </li>
                         {{#milestones}}
+                        {{^issue.closed}}
                         <li class="mdl-menu__item">
                             <a href="/issues/{{issue.id}}/{{id}}">{{milestoneDto.subject}}</a>
                         </li>
+                        {{/issue.closed}}
                         {{/milestones}}
                     </ul>
 
