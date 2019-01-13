@@ -51,14 +51,13 @@ public class Issue extends AbstractEntity {
         this.closed = closed;
     }
 
-    public Issue(long id, String subject, String comment, User writer, boolean deleted, boolean closed, User assignee) {
+    public Issue(long id, String subject, String comment, User writer, boolean deleted, boolean closed) {
         super(id);
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
         this.deleted = deleted;
         this.closed = closed;
-        this.assignee = assignee;
     }
 
     public String getSubject() {

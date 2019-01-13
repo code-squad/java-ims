@@ -16,10 +16,10 @@ import static codesquad.domain.UserTest.SANJIGI;
 
 public class IssueTest extends BaseTest {
     public static final List<Issue> ISSUES = new ArrayList<>();
-    public static final Issue ISSUE1 = new Issue(1,"testSubject1", "testComment1", JAVAJIGI, false, false, JAVAJIGI);
-    public static final Issue ISSUE2 = new Issue(2, "testSubject2", "testComment2", JAVAJIGI, false, false, SANJIGI);
-    public static final Issue ISSUE3 = new Issue(3, "testSubject3", "testComment3", SANJIGI, false, false, SANJIGI);
-    public static final Issue ISSUE4 = new Issue(4, "testSubject4", "testComment4", SANJIGI, false, true, JAVAJIGI);
+    public static final Issue ISSUE1 = new Issue(1,"testSubject1", "testComment1", JAVAJIGI, false, false);
+    public static final Issue ISSUE2 = new Issue(2, "testSubject2", "testComment2", JAVAJIGI, false, false);
+    public static final Issue ISSUE3 = new Issue(3, "testSubject3", "testComment3", SANJIGI, false, false);
+    public static final Issue ISSUE4 = new Issue(4, "testSubject4", "testComment4", SANJIGI, false, true);
     public static final IssueDto UPDATEDISSUE1 = new IssueDto("testSubject1", "testComment1", JAVAJIGI, false, false);
 
     static {
@@ -33,6 +33,11 @@ public class IssueTest extends BaseTest {
     public void setUp() throws Exception {
         ISSUE1.setLabels(LABELS1);
         ISSUE2.setLabels(LABELS2);
+
+        ISSUE1.setAssignee(JAVAJIGI);
+        ISSUE2.setAssignee(SANJIGI);
+        ISSUE3.setAssignee(SANJIGI);
+        ISSUE4.setAssignee(JAVAJIGI);
     }
 
     @Test
