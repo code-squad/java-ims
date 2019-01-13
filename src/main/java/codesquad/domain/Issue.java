@@ -33,6 +33,9 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_assignee"))
     private User assignee;
 
+    @ManyToMany
+    private List<Label> labels = new ArrayList<>();
+
     private boolean deleted = false;
 
     private boolean closed = false;
@@ -111,6 +114,14 @@ public class Issue extends AbstractEntity {
         this.assignee = assignee;
     }
 
+    public List<Label> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<Label> labels) {
+        this.labels = labels;
+    }
+
     public IssueDto _toIssueDto() {
         return new IssueDto(this.subject, this.comment, this.writer, this.deleted, this.closed);
     }
@@ -139,8 +150,15 @@ public class Issue extends AbstractEntity {
     }
 
     public void close(User loginUser) throws Exception {
-        if (this.closed) throw new RuntimeException("This issue was already closed");
+        if (this.closed) throw new Exception("This issue was already closed");
         if (!isAsignee(loginUser)) throw new UnAuthorizedException("You're not assignee");
         this.closed = true;
+    }
+
+    public boolean setLabel(Label label) {
+        if (labels.contains(label)) {
+            return labels.remove(label);
+        }
+        return labels.add(label);
     }
 }

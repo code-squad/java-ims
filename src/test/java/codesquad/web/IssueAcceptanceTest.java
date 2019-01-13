@@ -15,6 +15,8 @@ import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 import static codesquad.domain.IssueTest.*;
+import static codesquad.domain.LabelTest.LABEL1;
+import static codesquad.domain.LabelTest.LABEL2;
 import static codesquad.domain.MilestoneTest.MILESTONE1;
 import static codesquad.domain.UserTest.JAVAJIGI;
 import static codesquad.domain.UserTest.SANJIGI;
@@ -259,6 +261,42 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void setAssignee() {
         ResponseEntity<String> response = basicAuthTemplate
                 .getForEntity(String.format("/issues/%d/milestones/%d", ISSUE1.getId(), MILESTONE1.getId()), String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE1.getId()));
+    }
+
+    @Test
+    public void setLabel_no_login() {
+        ResponseEntity<String> response = template
+                .getForEntity(String.format("/issues/%d/labels/%d", ISSUE1.getId(), LABEL2.getId()), String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/users/login");
+    }
+
+    @Test
+    public void setLabel_not_owner() {
+        ResponseEntity<String> response = basicAuthTemplate(SANJIGI)
+                .getForEntity(String.format("/issues/%d/labels/%d", ISSUE1.getId(), LABEL2.getId()), String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE1.getId()));
+    }
+
+    @Test
+    public void setLabel_when_already_have() {
+        ResponseEntity<String> response = basicAuthTemplate
+                .getForEntity(String.format("/issues/%d/labels/%d", ISSUE1.getId(), LABEL1.getId()), String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE1.getId()));
+    }
+
+    @Test
+    public void setLabel() {
+        ResponseEntity<String> response = basicAuthTemplate
+                .getForEntity(String.format("/issues/%d/labels/%d", ISSUE1.getId(), LABEL2.getId()), String.class);
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(String.format("/issues/%d", ISSUE1.getId()));

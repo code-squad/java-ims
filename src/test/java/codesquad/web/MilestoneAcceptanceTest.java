@@ -27,14 +27,12 @@ public class MilestoneAcceptanceTest extends BasicAuthAcceptanceTest {
     public void createForm_no_login() throws Exception {
         ResponseEntity<String> response = template.getForEntity("/milestones/form", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        log.debug("body : {}", response.getBody());
     }
 
     @Test
     public void createForm() throws Exception {
         ResponseEntity<String> response = basicAuthTemplate.getForEntity("/milestones/form", String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        log.debug("body : {}", response.getBody());
     }
 
     @Test

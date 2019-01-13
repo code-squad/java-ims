@@ -107,9 +107,9 @@ public class IssueServiceTest extends BaseTest {
 
     @Test
     public void close() throws Exception{
-        issueService.close(JAVAJIGI, ISSUE1.getId());
+        issueService.close(SANJIGI, ISSUE3.getId());
 
-        softly.assertThat(ISSUE1.isClosed()).isTrue();
+        softly.assertThat(ISSUE3.isClosed()).isTrue();
     }
 
     @Test(expected = UnAuthorizedException.class)

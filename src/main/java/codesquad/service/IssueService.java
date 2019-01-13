@@ -28,6 +28,9 @@ public class IssueService {
     @Resource(name = "userService")
     private UserService userService;
 
+    @Resource(name = "labelService")
+    private LabelService labelService;
+
     @Transactional
     public Issue add(User loginUser, IssueDto issueDto) {
         issueDto.writeBy(loginUser);
@@ -78,5 +81,10 @@ public class IssueService {
     @Transactional
     public void setAssignee(User loginUser, long issueId, long assigneeId) {
         findById(loginUser, issueId).setAssignee(userService.findById(assigneeId));
+    }
+
+    @Transactional
+    public void setLabel(User loginUser, long issueId, long labelId) {
+        findById(loginUser, issueId).setLabel(labelService.findById(labelId));
     }
 }

@@ -1,12 +1,11 @@
 package codesquad.web;
 
-import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
-import codesquad.domain.Issue;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.LabelService;
 import codesquad.service.MilestoneService;
 import codesquad.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -24,6 +23,9 @@ public class IssueController {
 
     @Resource(name = "milestoneService")
     private MilestoneService milestoneService;
+
+    @Resource(name = "labelService")
+    private LabelService labelService;
 
     @Resource(name = "userService")
     private UserService userService;
@@ -44,6 +46,7 @@ public class IssueController {
         model.addAttribute("issue", issueService.findById(id));
         model.addAttribute("milestones", milestoneService.findAll());
         model.addAttribute("assignees", userService.findAll());
+        model.addAttribute("allLabels", labelService.findAll());
 
         return "/issue/show";
     }
@@ -100,6 +103,17 @@ public class IssueController {
     public String setAssignee(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long assigneeId, RedirectAttributes redirectAttrs) {
         try {
             issueService.setAssignee(loginUser, issueId, assigneeId);
+            return "redirect:/issues/{issueId}";
+        } catch (Exception e) {
+            redirectAttrs.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/issues/{issueId}";
+        }
+    }
+
+    @GetMapping("/{issueId}/labels/{labelId}")
+    public String setLabel(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long labelId, RedirectAttributes redirectAttrs) {
+        try {
+            issueService.setLabel(loginUser, issueId, labelId);
             return "redirect:/issues/{issueId}";
         } catch (Exception e) {
             redirectAttrs.addFlashAttribute("errorMessage", e.getMessage());
