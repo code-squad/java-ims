@@ -53,7 +53,7 @@ public class UserTest {
         User origin = newUser("sanjigi", "password");
         User target = new User("sanjigi", "password2", "name2");
         origin.update(origin, target);
-        assertThat(origin.getName(), is(not(target.getName())));
+        assertTrue(origin.getName().equals(target.getName()));
     }
 
     @Test

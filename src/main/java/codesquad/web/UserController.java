@@ -1,13 +1,14 @@
 package codesquad.web;
 
-import codesquad.UnAuthenticationException;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
 import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
+import codesquad.service.AvatarService;
 import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,16 +24,13 @@ public class UserController {
     @Resource(name = "userService")
     private UserService userService;
 
+    @Autowired
+    private AvatarService attachmentService;
+
     @GetMapping("/join")
     public String form() {
         log.debug("Call form() Method!");
         return "/user/join";
-    }
-
-    @PostMapping("")
-    public String create(UserDto userDto) {
-        userService.add(userDto);
-        return "redirect:/user";
     }
 
     @GetMapping("/{id}/form")

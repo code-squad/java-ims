@@ -5,8 +5,7 @@ import codesquad.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -27,12 +26,16 @@ public class User extends AbstractEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
+    @OneToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_user_avatar"))
+    private Attachment avatar;
+
     public User() {
 
     }
 
-    public User(String userId, String password, String name) {
-        this(0L, userId, password, name);
+    public User(String userId, String password, String name, Attachment avatar) {
+        this(0L, userId, password, name, avatar);
     }
 
     public User(long id, String userId, String password, String name) {
@@ -40,6 +43,11 @@ public class User extends AbstractEntity {
         this.userId = userId;
         this.password = password;
         this.name = name;
+    }
+
+    public User(long id, String userId, String password, String name, Attachment avatar) {
+        this(id, userId, password, name);
+        this.avatar = avatar;
     }
 
     public String getUserId() {
@@ -69,11 +77,22 @@ public class User extends AbstractEntity {
         return this;
     }
 
+    public Attachment getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Attachment avatar) {
+        this.avatar = avatar;
+    }
+
     private boolean matchUserId(String userId) {
         return this.userId.equals(userId);
     }
 
     public void update(User loginUser, User target) {
+        if(!loginUser.userId.equals(target.userId)) {
+            throw new UnAuthorizedException();
+        }
         this.name = target.name;
         this.password = target.password;
     }
@@ -109,6 +128,7 @@ public class User extends AbstractEntity {
                 "userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
+                ", avatar=" + avatar +
                 '}';
     }
 

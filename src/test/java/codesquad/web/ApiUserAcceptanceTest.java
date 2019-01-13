@@ -26,7 +26,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     private static final Logger logger = getLogger(ApiUserAcceptanceTest.class);
 
     @Test
-    public void create() throws Exception {
+    public void create() {
         UserDto newUser = createUserDto("testuser1");
         /* 1. 회원가입 */
         String location = createResource("/api/user", newUser);
@@ -34,6 +34,14 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         /* 2. 회원정보 가져와서 비교! */
         UserDto dbUser = getResource(location, UserDto.class, findByUserId(newUser.getUserId()));
         softly.assertThat(dbUser).isEqualTo(newUser);
+    }
+
+    @Test
+    public void 회원가입_중복아이디존재_실패() {
+        UserDto newUser = UserFixture.DOBY._toUserDto();
+
+        ResponseEntity<Void> responseEntity = template.postForEntity("/api/user", newUser, Void.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
@@ -85,7 +93,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void update_같은_사람_패스워드6자리미만() throws Exception {
-        UserDto newUser = createUserDto("testuser4");
+        UserDto newUser = createUserDto("testuser5");
         String location = createResource("/api/user", newUser);
         logger.debug("Location : {}", location);
 
@@ -97,7 +105,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void 로그인_아이디_잘못입력_실패_Test() {
-        UserDto userDto = createUserDto("testId");
+        UserDto userDto = createUserDto("testId1");
         /* 1. 회원가입! */
         ResponseEntity<Void> response = template.postForEntity("/api/user", userDto, Void.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -110,7 +118,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void 로그인_패스워드_잘못입력_실패_Test() {
-        UserDto userDto = createUserDto("testId");
+        UserDto userDto = createUserDto("testId2");
         /* 1. 회원가입! */
         ResponseEntity<Void> response = template.postForEntity("/api/user", userDto, Void.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -123,7 +131,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void 로그인_성공_Test() {
-        UserDto userDto = createUserDto("testId");
+        UserDto userDto = createUserDto("testId3");
         /* 1. 회원가입! */
         ResponseEntity<Void> response = template.postForEntity("/api/user", userDto, Void.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -131,6 +139,5 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         /* 2. 로그인 */
         ResponseEntity<User> responseEntity = template.postForEntity("/api/user/login", userDto, User.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
-        softly.assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/");
     }
 }

@@ -16,6 +16,10 @@ $('.back-btn').on('click',function(){history.back();})
 $('#milestone-menu').click(showMilestone);
 function showMilestone(e) {
     e.preventDefault();
+    e.stopImmediatePropagation();
+    var events = $._data($('#milestone-menu'), 'events');
+    console.log(events);
+
     console.log("call show Milestone!");
     var url = $('#select-milestone').attr('value');
     console.log(url);
@@ -36,6 +40,7 @@ function showMilestone(e) {
             });
             console.log(li);
             $("#select-milestone").html(li);
+            $('#milestone-menu').click();
             $('#milestone-menu').unbind();
         }
     });
@@ -248,15 +253,17 @@ function login(e) {
     e.preventDefault();
     console.log("Call login Method()");
 
-    var queryString = $('#login').serialize();
-    console.log(queryString);
+    var json = new Object();
+    json.userId = $('#userId').val();
+    json.password = $('#password').val();
     var url = '/api/user/login';
 
     $.ajax({
         type : 'post',
         url : url,
-        data : queryString,
+        data : JSON.stringify(json),
         dataType : 'json',
+        contentType : 'application/json',
         error : function (request) {
             console.log("로그인 실패");
             exceptionProcessor(request);
@@ -267,6 +274,43 @@ function login(e) {
         }
     });
 }
+
+/* 회원가입 */
+$('#join-submit').click(join);
+
+function join(e) {
+    e.preventDefault();
+    console.log("Call join Method()");
+
+    var url = '/api/user';
+    var json = new Object();
+    json.userId = $('#userId').val();
+    json.name = $('#name').val();
+    json.password = $('#password').val();
+
+    var data = new FormData();
+    data.append('user', new Blob([JSON.stringify(json)], {type : "application/json"}));
+    data.append('file', $('input[name=pic]')[0].files[0])
+
+    $.ajax({
+        type : 'post',
+        url : url,
+        data : data,
+        dataType : 'json',
+        contentType: false,
+        processData : false,
+        error : function (request) {
+            console.log("회원가입 실패");
+            console.log(request);
+            //exceptionProcessor(request);
+        },
+        success : function (data, status, xhr) {
+            console.log("회원가입 성공!");
+            location.href = '/';
+        }
+    });
+}
+
 
 /* 개인정보수정 */
 $('#edit-privacy-submit').click(editPrivacy);
@@ -416,7 +460,12 @@ function register(e) {
 /* 예외처리 */
 function exceptionProcessor(request) {
     if(request.status == '403') {
-        location.href = '/user/login';
+        if(request.responseText != null) {
+            alert(request.responseText)
+        }
+        if(request.responseText == null) {
+            location.href = '/user/login';
+        }
     }
 
     if(request.status == '401') {

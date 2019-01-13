@@ -2,7 +2,7 @@
 <div class="issues__posts mdl-grid">
     <div class="issues-card-wide mdl-card mdl-shadow--2dp">
         <div class="mdl-card__title" style="height:80px;">
-            <h2 class="mdl-card__title-text mdl-color-text--grey-800">Label</h2>
+            <h2 class="mdl-card__title-text mdl-color-text--grey-800">Milestone</h2>
         </div>
         <a href="/issues"
            class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored show-modal">
@@ -10,7 +10,7 @@
         </a>
         <div class="mdl-card__supporting-text">
             <ul class="issue-list mdl-list">
-                {{# labels }}
+                {{# milestones }}
                 <li class="mdl-list__item mdl-list__item--two-line">
                     <span class="mdl-list__item-primary-content">
                         <a>
@@ -28,7 +28,7 @@
                         </span>
                     </span>
                 </li>
-                {{/ labels }}
+                {{/ milestones }}
             </ul>
         </div>
     </div>

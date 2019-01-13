@@ -63,7 +63,6 @@ public class IssueController {
     @GetMapping("/{id}/milestones/{milestoneId}")
     public String registerMilestone(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long milestoneId) {
         Issue issue = issueService.findIssue(id);
-        logger.debug("Call registerMilestone Method(), issue : {}", issue);
         milestoneService.registerMilestone(loginUser, issue, milestoneId);
         return "redirect:/issues/" + Long.valueOf(id);
     }

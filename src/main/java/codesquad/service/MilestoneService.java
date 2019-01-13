@@ -40,11 +40,9 @@ public class MilestoneService {
 
     @Transactional
     public void registerMilestone(User loginUser, Issue issue, Long milestoneId) {
-        logger.debug("Call registerMilestone Method(), Issue : {}", issue.toString());
         if(!issue.isOneSelf(loginUser)) {
             logger.debug(oneSelfErrorMessage);
             throw new UnAuthorizedException(oneSelfErrorMessage);
         }
-        milestoneRepository.findById(milestoneId).orElse(null).addIssue(issue);
     }
 }

@@ -1,23 +1,27 @@
 package codesquad.web;
 
-import codesquad.UnAuthenticationException;
+import codesquad.domain.Attachment;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
 import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
+import codesquad.service.AvatarService;
 import codesquad.service.UserService;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import support.domain.ErrorMessage;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -29,17 +33,21 @@ public class ApiUserController {
     @Resource(name = "userService")
     private UserService userService;
 
+    @Autowired
+    private AvatarService attachmentService;
+
     @Value("${error.not.supported}")
     private String errorMessage;
 
     private static final Logger logger = getLogger(ApiUserController.class);
 
-    @PostMapping("")
-    public ResponseEntity<Void> create(@Valid @RequestBody UserDto user) {
-        User savedUser = userService.add(user);
+    @PostMapping(consumes = {"multipart/form-data"}, value = "")
+    public ResponseEntity create(@RequestPart("user") @Valid UserDto user, @RequestPart("file") MultipartFile file) throws IOException {
+        Attachment avatar = attachmentService.createAvatar(file);
+        User savedUser = userService.add(user, avatar);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/api/user/" + savedUser.getId()));
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -52,8 +60,7 @@ public class ApiUserController {
     public ResponseEntity update(@LoginUser User loginUser, @PathVariable long id, @RequestBody @Valid UserDto updatedUser,
                                        BindingResult bindingResult, HttpSession httpSession) {
         if(bindingResult.hasErrors()) {
-            logger.debug("잘못된 형식으로 입력하셨습니다.");
-            return new ResponseEntity<ErrorMessage>(new ErrorMessage(errorMessage), HttpStatus.FORBIDDEN);
+            return new ResponseEntity(new ErrorMessage(errorMessage), HttpStatus.FORBIDDEN);
         }
         logger.debug("Call update Method() -> loginUser : {}, updatedUser : {}", loginUser, updatedUser);
         User user = userService.update(loginUser, id, updatedUser);
@@ -64,11 +71,12 @@ public class ApiUserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@Valid UserDto userDto, HttpSession httpSession) throws UnAuthenticationException {
+    public ResponseEntity login(@RequestBody @Valid UserDto userDto, HttpSession httpSession) {
+        logger.debug("UserDto : {}!", userDto);
         User user = userService.login(userDto.getUserId(), userDto.getPassword());
         HttpSessionUtils.setSession(httpSession, user);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create("/"));
-        return new ResponseEntity<User>(user, httpHeaders, HttpStatus.ACCEPTED);
+        return new ResponseEntity(user, httpHeaders, HttpStatus.ACCEPTED);
     }
 }
