@@ -2,6 +2,8 @@ package codesquad.service;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
+import codesquad.domain.Issue;
+import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
@@ -22,6 +24,9 @@ public class UserService {
 
     @Resource(name = "userRepository")
     private UserRepository userRepository;
+
+    @Resource(name = "issueRepository")
+    private IssueRepository issueRepository;
 
     public User add(UserDto userDto) {
         log.debug("userDto add : {}" , userDto._toUser());
@@ -65,4 +70,10 @@ public class UserService {
         return user;
     }
 
+    @Transactional
+    public Issue setAssginee(long issueId, long id) {
+        Issue issue = issueRepository.findById(issueId).orElseThrow(UnknownError::new);
+        issue.setAssignee(userRepository.findById(id).orElseThrow(UnknownError::new));
+        return issue;
+    }
 }

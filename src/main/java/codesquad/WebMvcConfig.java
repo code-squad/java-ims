@@ -8,12 +8,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import support.converter.LocalDateConverter;
 import support.converter.LocalDateTimeConverter;
 
+import javax.servlet.Filter;
+import java.nio.charset.Charset;
 import java.util.List;
 
 @Configuration
@@ -51,6 +56,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public LoginUserHandlerMethodArgumentResolver loginUserArgumentResolver() {
         return new LoginUserHandlerMethodArgumentResolver();
+    }
+
+
+
+    @Bean
+    public Filter characterEncodingFilter() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+        return characterEncodingFilter;
+    }
+
+    @Bean
+    public HttpMessageConverter<String> responseBodyConverter() {
+        return new StringHttpMessageConverter(Charset.forName("UTF-8"));
     }
 
     @Override

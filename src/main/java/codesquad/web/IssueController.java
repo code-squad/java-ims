@@ -4,9 +4,7 @@ import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
-import codesquad.service.IssueService;
-import codesquad.service.LabelService;
-import codesquad.service.MilestoneService;
+import codesquad.service.*;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +29,12 @@ public class IssueController {
     @Resource(name = "labelService")
     private LabelService labelService;
 
+    @Resource(name = "userService")
+    private UserService userService;
+
+    @Resource(name = "answerService")
+    private AnswerService answerService;
+
     @GetMapping("")
     public String createIssue(@LoginUser User user) {
         return "issue/form";
@@ -45,11 +49,12 @@ public class IssueController {
 
     @GetMapping("/{id}")
     public String showDetail(@PathVariable Long id, Model model) {
-        log.debug("호출되나?");
         model.addAttribute("issue", issueService.findById(id)
                 .orElseThrow(UnAuthorizedException::new));
-        model.addAttribute("milestone", milestoneService.findAll());
-        model.addAttribute("label", labelService.findAll());
+        model.addAttribute("milestones", milestoneService.findAll());
+        model.addAttribute("labels", labelService.findAll());
+        model.addAttribute("assignees", userService.findAll());
+        model.addAttribute("answers", answerService.findAll());
         return "issue/show";
     }
 

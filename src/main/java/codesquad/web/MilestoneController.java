@@ -36,7 +36,7 @@ public class MilestoneController {
     }
 
     @PostMapping("")
-    public String createMilesone(@LoginUser User user, @Valid Milestone milestone) {
+    public String createMilesone(@LoginUser User user, Milestone milestone) {
         milestoneService.create(user ,milestone);
         return "/milestone/list";
     }

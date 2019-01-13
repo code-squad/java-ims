@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Where;
 import support.domain.AbstractEntity;
 
@@ -22,11 +23,12 @@ public class Milestone extends AbstractEntity {
     @OneToMany(mappedBy = "milestone", cascade = CascadeType.ALL)
     @Where(clause = "delete = false")
     @OrderBy("id ASC")
+    @JsonIgnore
     private List<Issue> issues;
 
-    private LocalDateTime startDate;
+    private String startDate;
 
-    private LocalDateTime endDate;
+    private String endDate;
 
     public Milestone() {
     }
@@ -35,14 +37,14 @@ public class Milestone extends AbstractEntity {
         this.subject = subject;
     }
 
-    public Milestone(String subject, LocalDateTime startDate, LocalDateTime endDate, User user) {
+    public Milestone(String subject, String startDate, String endDate, User user) {
         this.subject = subject;
         this.startDate = startDate;
         this.endDate = endDate;
         this.writer = user;
     }
 
-    public Milestone(long id, String subject, LocalDateTime startDate, LocalDateTime endDate, User writer) {
+    public Milestone(long id, String subject, String startDate, String endDate, User writer) {
         super(id);
         this.subject = subject;
         this.writer = writer;
@@ -74,19 +76,19 @@ public class Milestone extends AbstractEntity {
         this.writer = writer;
     }
 
-    public LocalDateTime getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
@@ -116,6 +118,16 @@ public class Milestone extends AbstractEntity {
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Milestone{" +
+                "subject='" + subject + '\'' +
+                ", writer=" + writer +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                '}';
     }
 }
 

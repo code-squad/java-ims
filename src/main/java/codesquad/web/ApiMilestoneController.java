@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.domain.Issue;
 import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
@@ -14,22 +15,39 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import java.net.URI;
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 @RestController
-@RequestMapping("/api/milestones")
+@RequestMapping("")
 public class ApiMilestoneController {
     private static final Logger log = getLogger(ApiMilestoneController.class);
 
     @Resource(name = "milestoneService")
     private MilestoneService milestoneService;
 
-    @PostMapping("")
+    @PostMapping("/api/milestones")
     public ResponseEntity<Milestone> create(@LoginUser User user, @Valid @RequestBody Milestone milestone) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/milestones/list"));
         return new ResponseEntity<Milestone>(milestoneService.create(user, milestone),headers, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/api/issues/{{issueId}}/milestones")
+    public List<Milestone> list() {
+        log.debug("asdfasdfasd: {}", milestoneService.findAll());
+        return milestoneService.findAll();
+    }
+
+    @PostMapping("/api/issues/{issueId}/milestones/{id}")
+    public ResponseEntity<Issue> add(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id) {
+        log.debug("qwerqewrqwer "+issueId+", "+id);
+        log.debug("qwerqwerqwer "+issueId+", "+id);
+
+        ResponseEntity<Issue> response = new ResponseEntity<Issue>( milestoneService
+                .setMilestone(loginUser, issueId, id), HttpStatus.OK);
+        return response;
     }
 }
