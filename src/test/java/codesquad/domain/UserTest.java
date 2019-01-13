@@ -7,14 +7,10 @@ import org.junit.Test;
 import support.test.BaseTest;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
+import static support.test.Fixture.BRAD;
 
 public class UserTest extends BaseTest {
-    public static final String DEFAULT_USER_ID = "testuser";
-    public static final User BRAD = new User(1L, "brad903", "password", "Brad", Avatar.DEFAULT_AVATAR);
-    public static final User JUNGHYUN = new User(2L, "leejh903", "password", "이정현", Avatar.DEFAULT_AVATAR);
-
     public static User newUser(Long id) {
         return new User(id, "userId", "password", "name", Avatar.DEFAULT_AVATAR);
     }

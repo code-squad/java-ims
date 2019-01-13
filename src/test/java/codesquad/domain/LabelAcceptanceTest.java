@@ -9,7 +9,7 @@ import org.springframework.util.MultiValueMap;
 import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
-import static codesquad.domain.LabelTest.LABEL_BODY;
+import static support.test.Fixture.LABEL_BODY;
 
 public class LabelAcceptanceTest extends AcceptanceTest {
     HttpEntity<MultiValueMap<String, Object>> request;
@@ -27,5 +27,16 @@ public class LabelAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = template().postForEntity("/labels", request, String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/labels");
+    }
+
+    @Test
+    public void create_invalid() {
+        request = HtmlFormDataBuilder.urlEncodedForm()
+                .addParameter("name", "a")
+                .addParameter("explanation", "a")
+                .build();
+        ResponseEntity<String> response = template().postForEntity("/labels", request, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/labels/form");
     }
 }

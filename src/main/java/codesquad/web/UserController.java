@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import codesquad.UnAuthenticationException;
+import codesquad.UnAuthorizedException;
 import codesquad.domain.user.User;
 import codesquad.dto.UserDto;
 import codesquad.security.HttpSessionUtils;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,11 +51,10 @@ public class UserController {
     }
 
     @PostMapping("")
-    public String create(@Valid UserDto userDto, MultipartFile pic) throws IOException {
-        if(!pic.isEmpty()) {
-            log.debug("contentType : {}", pic.getContentType());
-            log.debug("originalFileName : {}", pic.getOriginalFilename());
-            log.debug("isEmpty : {}", pic.isEmpty());
+    public String create(@Valid UserDto userDto, BindingResult bindingResult, MultipartFile pic) throws IOException {
+        if(bindingResult.hasErrors()) {
+            log.debug("binding error happend");
+            return "/user/join";
         }
         userService.add(userDto, pic);
         return "redirect:/";

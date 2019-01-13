@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 public class Comment extends AbstractEntity {
 
     @Lob
-    @Size(min = 4)
+    @Size(min = 4, message = "{validation.size.min}")
     private String contents;
 
     @ManyToOne(cascade = CascadeType.ALL)

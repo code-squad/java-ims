@@ -17,8 +17,8 @@ import support.test.HtmlFormDataBuilder;
 
 import javax.persistence.EntityNotFoundException;
 
-import static codesquad.domain.UserTest.BRAD;
 import static org.junit.Assert.assertEquals;
+import static support.test.Fixture.BRAD;
 
 public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(UserAcceptanceTest.class);
@@ -52,6 +52,13 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(userRepository.findByUserId(userId)).isNotNull();
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/");
+    }
+
+    @Test
+    public void create_invalid() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = createUserRequest("a", "password", "브래드", "brad903@naver.com");
+        ResponseEntity<String> response = template.postForEntity("/users", request, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     private HttpEntity<MultiValueMap<String, Object>> createUserRequest(String userId, String password, String name, String email) {
@@ -132,7 +139,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     public void upload() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> file = HtmlFormDataBuilder
                 .multipartFormData()
-                .addParameter("file", new ClassPathResource("logback.xml"))
+                .addParameter("pic", new ClassPathResource("logback.xml"))
                 .addParameter("userId", "mrboo7")
                 .addParameter("password", "password")
                 .addParameter("name", "브라드").build();

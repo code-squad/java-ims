@@ -1,6 +1,9 @@
 package codesquad.web.issue;
 
 import codesquad.domain.issue.Issue;
+import codesquad.domain.issue.IssueBody;
+import codesquad.validate.ValidationError;
+import codesquad.validate.ValidationErrorsResponse;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.springframework.http.HttpMethod;
@@ -9,12 +12,10 @@ import org.springframework.http.ResponseEntity;
 import support.domain.ErrorMessage;
 import support.test.AcceptanceTest;
 
-import static codesquad.domain.IssueTest.*;
-import static codesquad.domain.UserTest.BRAD;
-import static codesquad.domain.UserTest.JUNGHYUN;
-import static codesquad.domain.LabelTest.LABEL;
-import static codesquad.domain.MilestoneTest.MILESTONE;
+import java.io.UnsupportedEncodingException;
+
 import static org.slf4j.LoggerFactory.getLogger;
+import static support.test.Fixture.*;
 
 public class ApiIssueControllerTest extends AcceptanceTest {
     private static final Logger log = getLogger(ApiIssueControllerTest.class);
@@ -25,6 +26,16 @@ public class ApiIssueControllerTest extends AcceptanceTest {
         ResponseEntity<Issue> responseEntity = template().getForEntity(location, Issue.class);
         softly.assertThat(responseEntity.getBody().hasSameBody(ISSUE_BODY)).isEqualTo(true);
         softly.assertThat(responseEntity.getBody().isOwner(BRAD)).isEqualTo(true);
+    }
+
+    @Test
+    public void create_invalid() {
+        IssueBody invalidIssueBody = new IssueBody("a", "a");
+        ResponseEntity<ValidationErrorsResponse> response = basicAuthTemplate().postForEntity("/api/issues", invalidIssueBody, ValidationErrorsResponse.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        for (ValidationError error : response.getBody().getErrors()) {
+            log.debug("error : {}" , error.getErrorMessage());
+        }
     }
 
     @Test

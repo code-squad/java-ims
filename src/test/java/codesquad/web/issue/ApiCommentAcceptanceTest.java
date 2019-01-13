@@ -2,6 +2,7 @@ package codesquad.web.issue;
 
 import codesquad.domain.issue.Comment;
 import codesquad.domain.issue.IssueRepository;
+import codesquad.validate.ValidationErrorsResponse;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import support.test.AcceptanceTest;
 
-import static codesquad.domain.IssueTest.ISSUE;
-import static codesquad.domain.UserTest.BRAD;
-import static codesquad.domain.UserTest.JUNGHYUN;
-import static codesquad.domain.CommentTest.*;
+import javax.validation.ConstraintViolation;
+import java.util.Set;
+
 import static org.slf4j.LoggerFactory.getLogger;
+import static support.test.Fixture.*;
+import static support.test.ValidationTest.VALIDATOR;
 
 public class ApiCommentAcceptanceTest extends AcceptanceTest {
     private static final Logger log = getLogger(ApiCommentAcceptanceTest.class);
@@ -30,6 +32,17 @@ public class ApiCommentAcceptanceTest extends AcceptanceTest {
         softly.assertThat(comment.getContents()).isEqualTo(CONTENTS);
         softly.assertThat(comment.getWriter()).isEqualTo(BRAD);
         log.debug("comment : {}", comment);
+    }
+
+    @Test
+    public void create_invalid() {
+        String url = String.format("/api/issues/%d/comments", ISSUE.getId());
+        Comment comment = new Comment("a");
+        ResponseEntity<ValidationErrorsResponse> response = basicAuthTemplate().postForEntity(url, comment, ValidationErrorsResponse.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        Set<ConstraintViolation<Comment>> violations = VALIDATOR.validate(comment);
+        softly.assertThat(violations.size()).isEqualTo(1);
     }
 
     @Test

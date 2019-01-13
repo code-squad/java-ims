@@ -9,11 +9,11 @@ import java.util.Objects;
 @Embeddable
 public class IssueBody {
 
-    @Size(min = 3, max = 100)
+    @Size(min = 3, max = 100, message = "{validation.size}")
     @Column(length = 100, nullable = false)
     private String subject;
 
-    @Size(min = 5)
+    @Size(min = 5, message = "{validation.size.min}")
     @Lob
     private String comment;
 

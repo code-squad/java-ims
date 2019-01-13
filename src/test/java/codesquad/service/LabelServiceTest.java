@@ -10,9 +10,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import support.test.BaseTest;
 
-import static codesquad.domain.LabelTest.LABEL;
-import static codesquad.domain.LabelTest.LABEL_BODY;
 import static org.mockito.Mockito.when;
+import static support.test.Fixture.LABEL;
+import static support.test.Fixture.LABEL_BODY;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LabelServiceTest extends BaseTest {

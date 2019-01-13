@@ -4,6 +4,7 @@ import codesquad.domain.label.LabelBody;
 import codesquad.service.LabelService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +31,8 @@ public class LabelController {
     }
 
     @PostMapping("")
-    public String create(@Valid LabelBody labelBody) {
+    public String create(@Valid LabelBody labelBody, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) return "redirect:/labels/form";
         labelService.create(labelBody);
         return "redirect:/labels";
     }

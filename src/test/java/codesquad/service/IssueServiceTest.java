@@ -16,13 +16,10 @@ import support.test.BaseTest;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
-import static codesquad.domain.IssueTest.*;
-import static codesquad.domain.UserTest.BRAD;
-import static codesquad.domain.UserTest.JUNGHYUN;
-import static codesquad.domain.LabelTest.LABEL;
-import static codesquad.domain.MilestoneTest.MILESTONE;
+import static codesquad.domain.IssueTest.newIssue;
 import static org.mockito.Mockito.when;
 import static org.slf4j.LoggerFactory.getLogger;
+import static support.test.Fixture.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IssueServiceTest extends BaseTest {
