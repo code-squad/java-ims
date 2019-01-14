@@ -67,9 +67,11 @@
                         </li>
                         {{#milestones}}
                         {{^issue.closed}}
-                        <li class="mdl-menu__item">
-                            <a href="/issues/{{issue.id}}/milestone/{{id}}">{{milestoneDto.subject}}</a>
-                        </li>
+                            <a href="/issues/{{issue.id}}/milestone/{{id}}">
+                                <li class="mdl-menu__item">
+                                    {{milestoneDto.subject}}
+                                </li>
+                            </a>
                         {{/issue.closed}}
                         {{/milestones}}
                     </ul>
@@ -81,11 +83,13 @@
                     <!-- label list -->
 
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="label-menu">
-                        {{#labels}}
-                        <li class="mdl-menu__item">
-                            <a href="/issues/{{issue.id}}/label/{{id}}">{{name}}</a>
-                        </li>
-                        {{/labels}}
+                        {{#allLabels}}
+                        <a href="/issues/{{issue.id}}/label/{{id}}">
+                            <li class="mdl-menu__item">
+                                {{name}}
+                            </li>
+                        </a>
+                        {{/allLabels}}
                     </ul>
 
                     <button id="assignee-menu" class="mdl-button mdl-js-button">
@@ -95,22 +99,10 @@
 
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="assignee-menu">
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/1">javajigi</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/2">cca-company</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/3">진저애비</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/4">신영</a>
-                        </li>
                         {{#users}}
-                        <li class="mdl-menu__item">
-                            <a href="/issues/{{issue.id}}/{{id}}">{{userDto.name}}</a>
-                        </li>
+                            <li class="mdl-menu__item">
+                                <a href="/issues/{{issue.id}}/assignee/{{id}}">{{userDto.name}}</a>
+                            </li>
                         {{/users}}
                     </ul>
                 </div>
@@ -119,7 +111,10 @@
                 </div>
 
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
-                    <p>{{label}}</p>
+                    <p>{{#labels}} {{name}} {{/labels}}</p>
+                </div>
+                <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
+                    <p>{{#assignees}} {{userDto.userId}} {{/assignees}}</p>
                 </div>
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
 

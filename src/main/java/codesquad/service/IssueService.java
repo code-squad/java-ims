@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
 
-import java.util.List;
 import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -57,12 +56,12 @@ public class IssueService {
     }
 
     @Transactional
-    public List<Label> addLabel(User loginUser, long id, Label label) {
-        return findByIssueId(id).addLabel(label, loginUser);
+    public Set<Label> addLabel(User loginUser, long id, Label label) {
+        return findByIssueId(id).addLabel(loginUser, label);
     }
 
-//    @Transactional
-//    public Issue assignee(long id, User assignee) {
-//        return findByIssueId(id).assignUser(assignee);
-//    }
+    @Transactional
+    public Set<User> assignee(User loginUser , long id, User assignee) {
+        return findByIssueId(id).addAssignee(loginUser ,assignee);
+    }
 }

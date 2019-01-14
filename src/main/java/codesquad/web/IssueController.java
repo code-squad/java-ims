@@ -30,9 +30,6 @@ public class IssueController {
     @Resource(name = "labelService")
     private LabelService labelService;
 
-//    @Resource(name = "labelManagerService")
-//    private LabelManagerService labelManagerService;
-
     @GetMapping("")
     public String createForm(@LoginUser User loginUser) {
         return "/issue/form";
@@ -49,8 +46,9 @@ public class IssueController {
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findByIssueId(id));
         model.addAttribute("milestones", milestoneService.findAll());
-        model.addAttribute("labels", labelService.findAll());
+        model.addAttribute("allLabels", labelService.findAll());
         model.addAttribute("users", userService.findAll());
+        log.debug("labelService:{}", labelService.findAll());
         return "/issue/show";
     }
 
@@ -91,21 +89,21 @@ public class IssueController {
     @GetMapping("/{id}/milestone/{milestoneId}")
     public String milestoneChoice(@LoginUser User loginUser, @PathVariable long id, @PathVariable long milestoneId) {
         Issue issue = issueService.findByIssueId(id);
-        milestoneService.addIssue(milestoneId, issue);
+        milestoneService.addIssue(loginUser,milestoneId, issue);
         return "redirect:/issues/{id}";
     }
 
     @GetMapping("/{id}/label/{labelId}")
     public String labelChoice(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
-        Issue issue = issueService.findByIssueId(id);
         Label label = labelService.findByLabelId(labelId);
         issueService.addLabel(loginUser, id , label);
         return "redirect:/issues/{id}";
     }
 
-//    @GetMapping("/{id}/{userId}")
-//    public String assign(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId) {
-//        User assignee = userService.findById(userId);
-//        issueService.assignee(id, assignee);
-//    }
+    @GetMapping("/{id}/assignee/{userId}")
+    public String assign(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId) {
+        User assignee = userService.findById(userId);
+        issueService.assignee(loginUser, id, assignee);
+        return "redirect:/issues/{id}";
+    }
 }

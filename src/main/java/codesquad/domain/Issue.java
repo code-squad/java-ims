@@ -34,16 +34,11 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
 
-    @ManyToMany(mappedBy = "issue")
-    private Issue issue;
-
-    @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
-    private User assignee;
+    @ManyToMany
+    private Set<Label> labels = new HashSet<>();
 
     @ManyToMany
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_labels"))
-    private List<Label> labels = new ArrayList<>();
+    private Set<User> assignees = new HashSet<>();
 
     private boolean deleted = false;
 
@@ -66,7 +61,8 @@ public class Issue extends AbstractEntity {
         return this._toIssueDto();
     }
 
-    public Issue toMilestone(Milestone milestone) {
+    public Issue toMilestone(User loginUser, Milestone milestone) {
+        isOwner(loginUser);
         this.milestone = milestone;
         return this;
     }
@@ -111,6 +107,26 @@ public class Issue extends AbstractEntity {
         return this;
     }
 
+    public Set<Label> addLabel(User loginUser, Label label) {
+        isOwner(loginUser);
+        if (labels.contains(label)) {
+            labels.remove(label);
+            return labels;
+        }
+        labels.add(label);
+        return labels;
+    }
+
+    public Set<User> addAssignee(User loginUser, User assignee) {
+        isOwner(loginUser);
+        if (assignees.contains(assignee)) {
+            assignees.remove(assignee);
+            return assignees;
+        }
+        assignees.add(assignee);
+        return assignees;
+    }
+
     public void setClosed(boolean closed) {
         this.closed = closed;
     }
@@ -119,10 +135,20 @@ public class Issue extends AbstractEntity {
         return closed;
     }
 
-    public List<Label> addLabel(Label label, User loginUser) {
-        isOwner(loginUser);
-        labels.add(label);
+    public Set<Label> getLabels() {
         return labels;
+    }
+
+    public void setLabels(Set<Label> labels) {
+        this.labels = labels;
+    }
+
+    public Set<User> getAssignees() {
+        return assignees;
+    }
+
+    public void setAssignees(Set<User> assignees) {
+        this.assignees = assignees;
     }
 
     @Override

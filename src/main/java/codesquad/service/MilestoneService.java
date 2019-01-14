@@ -36,7 +36,7 @@ public class MilestoneService {
     }
 
     @Transactional
-    public List<Issue> addIssue(long id, Issue issue) {
-        return findByMilestoneId(id).addIssue(issue);
+    public List<Issue> addIssue(User loginUser, long id, Issue issue) {
+        return findByMilestoneId(id).addIssue(loginUser, issue);
     }
 }

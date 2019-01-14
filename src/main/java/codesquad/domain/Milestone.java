@@ -49,8 +49,8 @@ public class Milestone extends AbstractEntity {
         return _toMilestoneDto();
     }
 
-    public List<Issue> addIssue(Issue issue) {
-         issue.toMilestone(this);
+    public List<Issue> addIssue(User loginUser, Issue issue) {
+         issue.toMilestone(loginUser, this);
          issues.add(issue);
          return issues;
     }

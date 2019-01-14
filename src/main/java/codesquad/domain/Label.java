@@ -15,8 +15,6 @@ public class Label extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_label_writer"))
     private User writer;
 
-
-
     public Label(){}
 
     public
