@@ -47,7 +47,7 @@
             <!-- milestone list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect milestones"
                 for="milestone-menu" >
-                <div id="select-milestone"></div>
+                <div id="select-milestones"></div>
             </ul>
 
                     <button id="label-menu" class="mdl-button mdl-js-button">
@@ -56,16 +56,7 @@
             <!-- label list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="label-menu">
-                {{#label}}
-                <li class="mdl-menu__item mdl-button--accent">
-                    <a href="/issue/{{id}}/setMilestone/{{label.id}}">{{label.subject}}</a>
-                </li>
-                {{/label}}
-                {{#labels}}
-                <li class="mdl-menu__item">
-                    <a href="/issue/{{issue.id}}/setLabel/{{id}}">{{subject}}</a>
-                </li>
-                {{/labels}}
+                <div id="select-labels"></div>
             </ul>
 
             <button id="assignee-menu" class="mdl-button mdl-js-button">
@@ -74,16 +65,7 @@
             <!-- label list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="assignee-menu">
-                {{#assignee}}
-                <li class="mdl-menu__item mdl-button--accent">
-                    <a href="/issue/{{id}}/setMilestone/{{assignee.id}}">{{assignee.name}}</a>
-                </li>
-                {{/assignee}}
-                {{#assignees}}
-                <li class="mdl-menu__item">
-                    <a href="/issue/{{issue.id}}/setAssignee/{{id}}">{{name}}</a>
-                </li>
-                {{/assignees}}
+                <div id="select-assignees"></div>
             </ul>
         </div>
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
@@ -104,7 +86,7 @@
 
                             <span>{{comment}} on  {{formattedCreateDate}}</span>
 
-                            <a href="/api/issue/{{issue.id}}/answers/{{id}}" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect updateFrom_answer">
+                            <a href="/api/issue/{{issue.id}}/answers/{{id}}" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect updateFrom_answer" id="updateForm_{{id}}">
                                 <i class="material-icons">edit</i>
                             </a>
                             <form style="display:inline-block" class="submit-write-delete" id="delete_{{id}}" action="/api/issue/{{issue.id}}/answers/{{id}}" method="POST">
@@ -130,7 +112,7 @@
             </div>
         </form>
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-            <form class="submit-write" action="/api/issue/{{id}}/answers" method="POST">
+            <form class="submit-write-answer" action="/api/issue/{{id}}/answers" method="POST">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                     <label for="comment" class="mdl-textfield__label">Leave a comment</label>
@@ -154,7 +136,7 @@
 
                     <span class="answer_comments">{1} on {2}</span>
 
-                    <a href="/api/issue/{3}/answers/{4}" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect updateFrom_answer">
+                    <a href="/api/issue/{3}/answers/{4}" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect updateFrom_answer" id="updateForm_{4}">
                         <i class="material-icons">edit</i>
                     </a>
                     <form style="display:inline-block" class="submit-write-delete" id="delete_{4}" action="/api/issue/{3}/answers/{4}" method="POST">
@@ -195,13 +177,12 @@
 </script>
 
 
-
-<script type="text/template" id="menuTemplate">
 <!--<li class="mdl-menu__item mdl-button&#45;&#45;accent">
     <a href="/issue/{{id}}/setMilestone/{{milestone.id}}">{{milestone.subject}}</a>
 </li>-->
+<script type="text/template" id="menuTemplate">
 <li class="mdl-menu__item">
-    <a href="/issue/{0}/setMilestone/{1}">{2}</a>
+    <a href="/issue/{0}/{3}/{1}">{2}</a>
 </li>
 
 </script>

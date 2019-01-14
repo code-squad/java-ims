@@ -1,6 +1,6 @@
 package codesquad.web;
 
-import codesquad.domain.Milestone;
+import codesquad.domain.IssueMenus;
 import codesquad.service.IssueService;
 import codesquad.service.LabelService;
 import codesquad.service.MilestoneService;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/issue/{id}")
@@ -30,8 +29,18 @@ public class ApiIssueController {
 
 
     @GetMapping("/milestones")
-    public List<Milestone> findMilestones(@PathVariable long id) {
-        return milestoneService.findAll();
+    public IssueMenus findMilestones(@PathVariable long id) {
+        return new IssueMenus(milestoneService.findAll());
+    }
+
+    @GetMapping("/labels")
+    public IssueMenus findLabels(@PathVariable long id) {
+        return new IssueMenus(labelService.findAll());
+    }
+
+    @GetMapping("/assignees")
+    public IssueMenus findAssignees(@PathVariable long id) {
+        return new IssueMenus(userService.findAll());
 
     }
 

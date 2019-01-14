@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Where;
 import support.domain.AbstractEntity;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Milestone extends AbstractEntity {
+public class Milestone extends AbstractEntity implements MenuEntity {
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
@@ -20,6 +21,7 @@ public class Milestone extends AbstractEntity {
     @OneToMany(mappedBy = "milestone", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Where(clause = "deleted = false")
     @OrderBy("id ASC")
+    @JsonIgnore
     private List<Issue> issues = new ArrayList<>();
 
     public Milestone() {

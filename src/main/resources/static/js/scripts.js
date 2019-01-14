@@ -1,12 +1,12 @@
 // 댓글쓰기 ajax
-$(".submit-write button[type=submit]").on("click", addAnswer);
+$(".submit-write-answer button[type=submit]").on("click", addAnswer);
 function addAnswer(e) {
     e.preventDefault();
 
-    var queryString = $(".submit-write").serialize(); //form data들을 자동으로 묶어준다.
+    var queryString = $(".submit-write-answer").serialize(); //form data들을 자동으로 묶어준다.
     console.log("query : "+ queryString);
 
-    var url = $(".submit-write").attr("action");
+    var url = $(".submit-write-answer").attr("action");
     console.log("url : " + url);
 
     $.ajax({
@@ -32,8 +32,8 @@ function onSuccess(data, status) {
     var template = answerTemplate.format(data.userId, data.comment, data.formattedCreateDate, data.issue.id, data.id);
     $("#comment_list").append(template);
 
-    $(".updateFrom_answer").unbind("click").on("click", updateFormAnswer);
-    $(".submit-write-delete button[type=submit]").unbind("click").on("click", deleteAnswer);
+    $("#updateForm_" + data.id).on("click", updateFormAnswer);
+    $(".submit-write-delete button[type=submit]").on("click", deleteAnswer);
     $("textarea[name=comment]").val("");
 
 }
@@ -57,11 +57,11 @@ function updateFormAnswer(e) {
             error: function() {
                 console.log('error');
             },
-            success : function(response) {
+            success : function(data) {
                 var answerTemplate = $("#answerUpdateTemplate").html();
-                var template = answerTemplate.format(url,response.comment, response.id)
+                var template = answerTemplate.format(url,data.comment, data.id)
                 updateBtn.closest(".comment__author").append(template);
-                $(".submit-write-update button[type=submit]").unbind("click").on("click", updateAnswer);
+                $(".submit-write-update button[type=submit]").on("click", updateAnswer);
             }
         });
 
@@ -93,6 +93,8 @@ function updateAnswer(e) {
                 var answerTemplate = $("#answerTemplate").html();
                 var template = answerTemplate.format(data.userId, data.comment, data.formattedCreateDate, data.issue.id, data.id);
                 updateFormBtn.closest('#answer_' + data.id).html(template);
+                $("#updateForm_" + data.id).on("click", updateFormAnswer);
+                $(".submit-write-delete button[type=submit]").on("click", deleteAnswer);
             }
         });
 
@@ -127,34 +129,119 @@ function deleteAnswer(e) {
 $('#milestone-menu').on('mouseenter',getMilestone)
 function getMilestone(e) {
     e.preventDefault()
-    console.log('milestone')
+    var menu = 'setMilestone'
     console.log(window.location.href)
     var milestoneMenuBtn = $(this)
-    var id =$('#select-milestone');
+    var id =$('#select-milestones');
+    console.log(menu);
     console.log('id1: {}',id)
     $.ajax({
-                    type : 'get',
-                    url : '/api/issue/1//milestones',
-                    dataType : 'json',
-                    error: function(request) {
-                        console.log('error');
-                        console.log(request);
-                    },
-                    success : function(data) {
-                        console.log(data)
+                type : 'get',
+                url : '/api/issue/1/milestones',
+                dataType : 'json',
+                error: function(request) {
+                    console.log('error');
+                    console.log(request);
+                },
+                success : function(data) {
+                    console.log(data)
 
-                        var template = '';
-                        var menuTemplate = $("#menuTemplate").html();
-                        Object.keys(data).forEach(function(k){
-                            template += menuTemplate.format(1, data[k].id, data[k].subject)
-                        });
-                        console.log(template);
-                        console.log(id);
-                        id.html(template);
-                        $('#milestone-menu').unbind();
+                    var template = '';
+                    var menuTemplate = $("#menuTemplate").html()
+                    if  (data.thisIssue != null) {
+                        Object.keys(data.thisIssue).forEach(function(k){
+                                            template += menuTemplate.format(1, data.thisIssue[k].id, data.thisIssue[k].subject, menu)
+                                        });
                     }
-                });
+                    Object.keys(data.others).forEach(function(k){
+                        template += menuTemplate.format(1, data.others[k].id, data.others[k].subject, menu)
+                    });
+                    console.log(template);
+                    console.log(id);
+                    id.html(template);
+                    $('#milestone-menu').unbind();
+                }
+            });
 }
+
+
+$('#label-menu').on('mouseenter',getLabels)
+function getLabels(e) {
+    e.preventDefault()
+    var menu = 'setLabel'
+    console.log(window.location.href)
+    var labelMenuBtn = $(this)
+    var id =$('#select-labels');
+    console.log(menu);
+    console.log('id1: {}',id)
+    $.ajax({
+                type : 'get',
+                url : '/api/issue/1/labels',
+                dataType : 'json',
+                error: function(request) {
+                    console.log('error');
+                    console.log(request);
+                },
+                success : function(data) {
+                    console.log(data)
+
+                    var template = '';
+                    var menuTemplate = $("#menuTemplate").html()
+                    if  (data.thisIssue != null) {
+                        Object.keys(data.thisIssue).forEach(function(k){
+                                            template += menuTemplate.format(1, data.thisIssue[k].id, data.thisIssue[k].subject, menu)
+                                        });
+                    }
+                    Object.keys(data.others).forEach(function(k){
+                        template += menuTemplate.format(1, data.others[k].id, data.others[k].subject, menu)
+                    });
+                    console.log(template);
+                    console.log(id);
+                    id.html(template);
+                    $('#label-menu').unbind();
+                }
+            });
+}
+
+$('#assignee-menu').on('mouseenter',getAssignees)
+function getAssignees(e) {
+    e.preventDefault()
+    var menu = 'setAssignee'
+    console.log(window.location.href)
+    var labelMenuBtn = $(this)
+    var id =$('#select-assignees');
+    console.log(menu);
+    console.log('id1: {}',id)
+    $.ajax({
+                type : 'get',
+                url : '/api/issue/1/assignees',
+                dataType : 'json',
+                error: function(request) {
+                    console.log('error');
+                    console.log(request);
+                },
+                success : function(data) {
+                    console.log(data)
+
+                    var template = '';
+                    var menuTemplate = $("#menuTemplate").html()
+                    if  (data.thisIssue != null) {
+                        Object.keys(data.thisIssue).forEach(function(k){
+                                            template += menuTemplate.format(1, data.thisIssue[k].id, data.thisIssue[k].userId, menu)
+                                        });
+                    }
+                    Object.keys(data.others).forEach(function(k){
+                        template += menuTemplate.format(1, data.others[k].id, data.others[k].userId, menu)
+                    });
+                    console.log(template);
+                    console.log(id);
+                    id.html(template);
+                    $('#assignee-menu').unbind();
+                }
+            });
+}
+
+
 
 String.prototype.format = function() {
     var args = arguments;
