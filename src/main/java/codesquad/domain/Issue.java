@@ -9,13 +9,15 @@ import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Entity
 public class Issue extends AbstractEntity {
     private static final Logger log = getLogger(Issue.class);
+
     @Size(min = 3, max = 100)
     @Column(length = 100, nullable = false)
     private String subject;
@@ -32,13 +34,16 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
 
-    @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
-    private Label label;
+    @ManyToMany(mappedBy = "issue")
+    private Issue issue;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee                                                                                                                                                                                                        "))
-    private Assignee assignee;
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
+
+    @ManyToMany
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_labels"))
+    private List<Label> labels = new ArrayList<>();
 
     private boolean deleted = false;
 
@@ -114,6 +119,11 @@ public class Issue extends AbstractEntity {
         return closed;
     }
 
+    public List<Label> addLabel(Label label, User loginUser) {
+        isOwner(loginUser);
+        labels.add(label);
+        return labels;
+    }
 
     @Override
     public String toString() {
@@ -125,5 +135,4 @@ public class Issue extends AbstractEntity {
                 ", id=" + getId() +
                 '}';
     }
-
 }

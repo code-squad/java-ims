@@ -1,8 +1,8 @@
 package codesquad.repository;
 
-import codesquad.domain.Issue;
+import codesquad.domain.Label;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface LabelRepository extends JpaRepository<Issue,Long> {
+public interface LabelRepository extends JpaRepository<Label,Long> {
 
 }

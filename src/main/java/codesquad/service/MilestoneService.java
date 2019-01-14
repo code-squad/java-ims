@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class MilestoneService {
     }
 
     public Milestone findByMilestoneId(long id) {
-        return milestoneRepository.findById(id).orElseThrow(EntityExistsException::new);
+        return milestoneRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional

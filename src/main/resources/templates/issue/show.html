@@ -68,7 +68,7 @@
                         {{#milestones}}
                         {{^issue.closed}}
                         <li class="mdl-menu__item">
-                            <a href="/issues/{{issue.id}}/{{id}}">{{milestoneDto.subject}}</a>
+                            <a href="/issues/{{issue.id}}/milestone/{{id}}">{{milestoneDto.subject}}</a>
                         </li>
                         {{/issue.closed}}
                         {{/milestones}}
@@ -77,30 +77,22 @@
                     <button id="label-menu" class="mdl-button mdl-js-button">
                         Label
                     </button>
+
                     <!-- label list -->
-                    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                        for="label-menu">
+
+                    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="label-menu">
+                        {{#labels}}
                         <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/1">label1</a>
+                            <a href="/issues/{{issue.id}}/label/{{id}}">{{name}}</a>
                         </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/2">label2</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/3">label3</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/4">label4</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setLabel/5">label5</a>
-                        </li>
+                        {{/labels}}
                     </ul>
 
                     <button id="assignee-menu" class="mdl-button mdl-js-button">
                         Assignee
                     </button>
                     <!-- assignee list -->
+
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="assignee-menu">
                         <li class="mdl-menu__item">
@@ -115,13 +107,19 @@
                         <li class="mdl-menu__item">
                             <a href="/issue/1/setAssignee/4">신영</a>
                         </li>
+                        {{#users}}
                         <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/5">전용우</a>
+                            <a href="/issues/{{issue.id}}/{{id}}">{{userDto.name}}</a>
                         </li>
+                        {{/users}}
                     </ul>
                 </div>
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
                     <p>{{issueDto.comment}}</p>
+                </div>
+
+                <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
+                    <p>{{label}}</p>
                 </div>
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
 

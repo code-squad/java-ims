@@ -1,7 +1,7 @@
 package codesquad.service;
 
 import codesquad.domain.Issue;
-import codesquad.domain.Milestone;
+import codesquad.domain.Label;
 import codesquad.repository.IssueRepository;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
+
+import java.util.List;
+import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -52,4 +55,14 @@ public class IssueService {
     public Issue open(User loginUser, long id) {
         return findByIssueId(id).open(loginUser);
     }
+
+    @Transactional
+    public List<Label> addLabel(User loginUser, long id, Label label) {
+        return findByIssueId(id).addLabel(label, loginUser);
+    }
+
+//    @Transactional
+//    public Issue assignee(long id, User assignee) {
+//        return findByIssueId(id).assignUser(assignee);
+//    }
 }

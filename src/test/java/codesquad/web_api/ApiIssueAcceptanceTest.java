@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 import org.springframework.http.*;
 import support.test.AcceptanceTest;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ApiIssueAcceptanceTest extends AcceptanceTest {
@@ -107,4 +110,5 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
             basicAuthTemplate(findByUserId("sanjigi")).exchange(location, HttpMethod.DELETE, new HttpEntity<>(new HttpHeaders()),IssueDto.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
+
 }

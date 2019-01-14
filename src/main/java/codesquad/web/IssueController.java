@@ -1,20 +1,15 @@
 package codesquad.web;
 
-import codesquad.domain.Issue;
-import codesquad.domain.Milestone;
-import codesquad.domain.User;
+import codesquad.domain.*;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
-import codesquad.service.IssueService;
-import codesquad.service.MilestoneService;
+import codesquad.service.*;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-
-import java.util.Objects;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -28,6 +23,15 @@ public class IssueController {
 
     @Resource(name = "milestoneService")
     private MilestoneService milestoneService;
+
+    @Resource(name = "userService")
+    private UserService userService;
+
+    @Resource(name = "labelService")
+    private LabelService labelService;
+
+//    @Resource(name = "labelManagerService")
+//    private LabelManagerService labelManagerService;
 
     @GetMapping("")
     public String createForm(@LoginUser User loginUser) {
@@ -43,8 +47,10 @@ public class IssueController {
 
     @GetMapping("/{id}")        //홈 화면에서 이슈제목을 눌렀을때 (마일스톤 누를때 동적으로 이슈 게시판에 어떤 작성자가 어떤 마일스톤을 누르는지에 대한 구현 포기..)
     public String show(@PathVariable long id, Model model) {
-        model.addAttribute("milestones", milestoneService.findAll());
         model.addAttribute("issue", issueService.findByIssueId(id));
+        model.addAttribute("milestones", milestoneService.findAll());
+        model.addAttribute("labels", labelService.findAll());
+        model.addAttribute("users", userService.findAll());
         return "/issue/show";
     }
 
@@ -82,10 +88,24 @@ public class IssueController {
         return "redirect:/issues/{id}";
     }
 
-    @GetMapping("/{id}/{milestoneId}")
+    @GetMapping("/{id}/milestone/{milestoneId}")
     public String milestoneChoice(@LoginUser User loginUser, @PathVariable long id, @PathVariable long milestoneId) {
         Issue issue = issueService.findByIssueId(id);
         milestoneService.addIssue(milestoneId, issue);
-        return String.format("redirect:/issues/%d", id);
+        return "redirect:/issues/{id}";
     }
+
+    @GetMapping("/{id}/label/{labelId}")
+    public String labelChoice(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
+        Issue issue = issueService.findByIssueId(id);
+        Label label = labelService.findByLabelId(labelId);
+        issueService.addLabel(loginUser, id , label);
+        return "redirect:/issues/{id}";
+    }
+
+//    @GetMapping("/{id}/{userId}")
+//    public String assign(@LoginUser User loginUser, @PathVariable long id, @PathVariable long userId) {
+//        User assignee = userService.findById(userId);
+//        issueService.assignee(id, assignee);
+//    }
 }
