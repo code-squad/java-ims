@@ -1,23 +1,27 @@
 package codesquad.service;
 
-import java.util.List;
-
 import codesquad.UnAuthorizedException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueBody;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.User;
-import codesquad.dto.IssueDto;
+import codesquad.domain.*;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Service
 public class IssueService {
+    private static final Logger log = getLogger(IssueService.class);
 
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
+
+    @Resource(name = "milestoneRepository")
+    private MilestoneRepository milestoneRepository;
+
+    @Resource(name = "userRepository")
+    private UserRepository userRepository;
 
     public void add(User loginUser, IssueBody issueBody) {
         Issue issue = new Issue(issueBody);
@@ -29,15 +33,15 @@ public class IssueService {
         return issueRepository.findAll();
     }
 
-    public IssueDto findById(User loginUser, long id) {
+    public Issue findById(User loginUser, long id) {
         return issueRepository.findById(id)
                 .filter(x -> x.isOwner(loginUser))
-                .orElseThrow(UnAuthorizedException::new)._toIssueDto();
+                .orElseThrow(UnAuthorizedException::new);
     }
 
-    public IssueDto findById(long id) {
+    public Issue findById(long id) {
         return issueRepository.findById(id)
-                .orElseThrow(UnAuthorizedException::new)._toIssueDto();
+                .orElseThrow(UnAuthorizedException::new);
     }
 
     @Transactional
@@ -56,5 +60,28 @@ public class IssueService {
 
         issue.delete(loginUser);
         return issue;
+    }
+
+    @Transactional
+    public void addMilestone(long issuesId, long milestonesId) {
+        log.debug("### addmilestone");
+        Issue issue = issueRepository.findById(issuesId)
+                .orElseThrow(UnAuthorizedException::new);
+
+        Milestone milestone = milestoneRepository.findById(milestonesId)
+                .orElseThrow(UnAuthorizedException::new);
+        issue.addMilestone(milestone);
+        log.debug("issue : {}", issue.getMilestone());
+    }
+
+    @Transactional
+    public void addAssignee(long issuesId, long userId) {
+        Issue issue = issueRepository.findById(issuesId)
+                .orElseThrow(UnAuthorizedException::new);
+
+        User assignee = userRepository.findById(userId)
+                .orElseThrow(UnAuthorizedException::new);
+
+        issue.addAssignee(assignee);
     }
 }

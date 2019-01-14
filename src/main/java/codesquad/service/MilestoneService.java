@@ -1,7 +1,10 @@
 package codesquad.service;
 
+import codesquad.UnAuthenticationException;
+import codesquad.UnAuthorizedException;
 import codesquad.domain.Milestone;
 import codesquad.domain.MilestoneRepository;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,5 +21,10 @@ public class MilestoneService {
 
     public List<Milestone> findAll() {
         return milestoneRepository.findAll();
+    }
+
+    public Milestone findById(long id) {
+        return milestoneRepository.findById(id)
+                .orElseThrow(UnAuthorizedException::new);
     }
 }

@@ -1,13 +1,12 @@
 package codesquad.web;
 
-import codesquad.domain.Issue;
 import codesquad.domain.IssueBody;
 import codesquad.domain.User;
-import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +24,12 @@ public class IssueController {
     @Resource(name = "issueService")
     private IssueService issueService;
 
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
+
+    @Resource(name = "userService")
+    private UserService userService;
+
     @GetMapping("/form")
     public String form (@LoginUser User loginUser) {
         return "/issue/form";
@@ -38,8 +43,14 @@ public class IssueController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
+        log.debug("### show");
         model.addAttribute("issue", issueService.findById(id));
-        return "issue/show";
+        log.debug("### issue : {}", issueService.findById(id) );
+        model.addAttribute("milestones", milestoneService.findAll());
+
+        log.debug("### users : {}", userService.findAll());
+        model.addAttribute("users", userService.findAll());
+        return "/issue/show";
     }
 
     @GetMapping("/{id}/form")

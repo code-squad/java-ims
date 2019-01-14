@@ -40,22 +40,39 @@
 
                     <div class="section-spacer"></div>
 
+
                     <button id="milestone-menu" class="mdl-button mdl-js-button">
                         Milestone
                     </button>
+
                     <!-- milestone list -->
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="milestone-menu">
-                        <li class="mdl-menu__item mdl-button--accent">
-                            <a href="/issue/1/setMilestone/0">Milestone1</a>
+
+                        {{#milestones}}
+                        <li class="mdl-menu__item mdl-menu__item_milestone">
+                            <a href="/api/issues/{{issue.id}}/milestones/{{id}}">{{subject}}</a>
                         </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setMilestone/2">Milestone2</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setMilestone/3">Milestone3</a>
-                        </li>
+                        {{/milestones}}
                     </ul>
+
+                    <!--<ul class="mdl-menu mdl-menu&#45;&#45;bottom-right mdl-js-menu mdl-js-ripple-effect"-->
+                        <!--for="milestone-menu">-->
+                        <!--<li class="mdl-menu__item mdl-button&#45;&#45;accent">-->
+                            <!--<a href="/issue/1/setMilestone/0">Milestone1</a>-->
+                        <!--</li>-->
+                        <!--<li class="mdl-menu__item">-->
+                            <!--<a href="/issue/1/setMilestone/2">Milestone2</a>-->
+                        <!--</li>-->
+                        <!--<li class="mdl-menu__item">-->
+                            <!--<a href="/issue/1/setMilestone/3">Milestone3</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+
+
+
+
+
 
                     <button id="label-menu" class="mdl-button mdl-js-button">
                         Label
@@ -80,28 +97,49 @@
                         </li>
                     </ul>
 
+                    <!--user list-->
                     <button id="assignee-menu" class="mdl-button mdl-js-button">
                         Assignee
                     </button>
                     <!-- label list -->
+
+
+
+
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="assignee-menu">
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/1">javajigi</a>
+                        {{#users}}
+                        <li class="mdl-menu__item mdl-menu__item_assignee">
+                            <a href="/api/issues/{{issue.id}}/users/{{id}}">{{name}}</a>
                         </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/2">cca-company</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/3">진저애비</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/4">신영</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setAssignee/5">전용우</a>
-                        </li>
+                        {{/users}}
                     </ul>
+
+
+
+
+
+                    <!--<ul class="mdl-menu mdl-menu&#45;&#45;bottom-right mdl-js-menu mdl-js-ripple-effect"-->
+                        <!--for="assignee-menu">-->
+                        <!--<li class="mdl-menu__item">-->
+                            <!--<a href="/issue/1/setAssignee/1">javajigi</a>-->
+                        <!--</li>-->
+                        <!--<li class="mdl-menu__item">-->
+                            <!--<a href="/issue/1/setAssignee/2">cca-company</a>-->
+                        <!--</li>-->
+                        <!--<li class="mdl-menu__item">-->
+                            <!--<a href="/issue/1/setAssignee/3">진저애비</a>-->
+                        <!--</li>-->
+                        <!--<li class="mdl-menu__item">-->
+                            <!--<a href="/issue/1/setAssignee/4">신영</a>-->
+                        <!--</li>-->
+                        <!--<li class="mdl-menu__item">-->
+                            <!--<a href="/issue/1/setAssignee/5">전용우</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                    <!---->
+
+
                 </div>
 
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
