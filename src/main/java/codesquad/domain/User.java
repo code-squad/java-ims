@@ -25,16 +25,17 @@ public class User extends AbstractEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_user_avatar"))
+    @Embedded
     private Attachment avatar;
 
     public User() {
 
     }
 
-    public User(String userId, String password, String name, Attachment avatar) {
-        this(0L, userId, password, name, avatar);
+    public User(String userId, String password, String name) {
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
     }
 
     public User(long id, String userId, String password, String name) {
@@ -44,8 +45,8 @@ public class User extends AbstractEntity {
         this.name = name;
     }
 
-    public User(long id, String userId, String password, String name, Attachment avatar) {
-        this(id, userId, password, name);
+    public User(String userId, String password, String name, Attachment avatar) {
+        this(userId, password, name);
         this.avatar = avatar;
     }
 

@@ -50,7 +50,6 @@ public class HtmlFormDataBuilder {
 
     public static HtmlFormDataBuilder multipartFormData() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         return new HtmlFormDataBuilder(headers);
     }

@@ -37,6 +37,7 @@ public class UserService {
         if(user.isPresent()) {
             throw new UnAuthorizedException(duplicationErrorMessage);
         }
+
         return userRepository.save(userDto._toUser(avatar));
     }
 

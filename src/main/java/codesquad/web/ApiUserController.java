@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.ApplicationConfigurationProp;
 import codesquad.domain.Attachment;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
@@ -41,14 +42,13 @@ public class ApiUserController {
 
     private static final Logger logger = getLogger(ApiUserController.class);
 
-    @PostMapping(consumes = {"multipart/form-data"}, value = "")
-    public ResponseEntity create(@RequestPart("user") @Valid UserDto user,
-                                 @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+    @PostMapping()
+    public ResponseEntity create(@Valid UserDto user, MultipartFile file) throws IOException {
         Attachment avatar = attachmentService.createAvatar(file);
         User savedUser = userService.add(user, avatar);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/api/user/" + savedUser.getId()));
-        return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
+        return new ResponseEntity<User>(savedUser, headers, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -58,12 +58,12 @@ public class ApiUserController {
     }
 
     @PutMapping(consumes = {"multipart/form-data"}, value = "/{id}")
-    public ResponseEntity update(@LoginUser User loginUser, @PathVariable long id, @RequestPart("user") @Valid UserDto updatedUser,
-                                       BindingResult bindingResult, @RequestPart(value = "file", required = false) MultipartFile file, HttpSession httpSession) throws IOException {
+    public ResponseEntity update(@LoginUser User loginUser, @PathVariable long id, @Valid UserDto updatedUser,
+                                       BindingResult bindingResult, MultipartFile file, HttpSession httpSession) throws IOException {
         if(bindingResult.hasErrors()) {
             return new ResponseEntity(new ErrorMessage(errorMessage), HttpStatus.FORBIDDEN);
         }
-        Attachment avatar = attachmentService.updateAvatar(file);
+        Attachment avatar = attachmentService.createAvatar(file);
         User user = userService.update(loginUser, id, updatedUser, avatar);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create("/"));

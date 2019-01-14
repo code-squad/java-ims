@@ -8,7 +8,7 @@ public class FileNameConverter {
     private static final String SPLIT_STANDARD = ".";
 
     public static String convert(String fileName) {
-        return String.format("$s.%s", String.valueOf((getLocalDateTime() + fileName).hashCode()));
+        return String.format("%s", String.valueOf((getLocalDateTime() + fileName).hashCode()));
     }
 
     public static String getLocalDateTime() {

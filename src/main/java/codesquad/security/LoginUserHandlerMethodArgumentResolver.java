@@ -25,6 +25,7 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         User user = HttpSessionUtils.getUserFromSession(webRequest);
+
         if (!user.isGuestUser()) {
             return user;
         }

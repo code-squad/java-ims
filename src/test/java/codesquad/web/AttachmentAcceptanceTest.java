@@ -14,12 +14,12 @@ import support.test.AcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 
-public class AttachmentControllerTest extends AcceptanceTest {
-    private static final Logger log = LoggerFactory.getLogger(AttachmentControllerTest.class);
+public class AttachmentAcceptanceTest extends AcceptanceTest {
+    private static final Logger log = LoggerFactory.getLogger(AttachmentAcceptanceTest.class);
 
     @Test
     public void download() {
-        ResponseEntity<String> result = template.getForEntity("/attachments/1", String.class);
+        ResponseEntity<String> result = template.getForEntity("/attachments/thumbnail/dummy.png", String.class);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         log.debug("body : {}", result.getBody());
     }

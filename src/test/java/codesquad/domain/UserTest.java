@@ -8,13 +8,6 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 
 public class UserTest {
-    public static final User JAVAJIGI = new User(1L, "javajigi", "password", "name");
-    public static final User SANJIGI = new User(2L, "sanjigi", "password", "name");
-
-    public static User newUser(Long id) {
-        return new User(id, "userId", "pass", "name");
-    }
-
     public static User newUser(String userId) {
         return newUser(userId, "password");
     }
@@ -23,12 +16,14 @@ public class UserTest {
         return new User(1L, userId, password, "name");
     }
 
+    public static Attachment attachment = new AttachmentDummy();
+
     @Test
     public void update_owner() throws Exception {
         User origin = newUser("sanjigi");
         User loginUser = origin;
         User target = new User("sanjigi", "password", "name2");
-        origin.update(loginUser, target);
+        origin.update(loginUser, target, attachment);
         assertThat(origin.getName(), is(target.getName()));
     }
 
@@ -37,14 +32,14 @@ public class UserTest {
         User origin = newUser("sanjigi");
         User loginUser = newUser("javajigi");
         User target = new User("sanjigi", "password", "name2");
-        origin.update(loginUser, target);
+        origin.update(loginUser, target, attachment);
     }
 
     @Test
     public void update_match_password() {
         User origin = newUser("sanjigi");
         User target = new User("sanjigi", "password", "name2");
-        origin.update(origin, target);
+        origin.update(origin, target, attachment);
         assertThat(origin.getName(), is(target.getName()));
     }
 
@@ -52,7 +47,7 @@ public class UserTest {
     public void update_mismatch_password() {
         User origin = newUser("sanjigi", "password");
         User target = new User("sanjigi", "password2", "name2");
-        origin.update(origin, target);
+        origin.update(origin, target, attachment);
         assertTrue(origin.getName().equals(target.getName()));
     }
 
