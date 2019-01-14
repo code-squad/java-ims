@@ -24,18 +24,20 @@ function onError(request) {
     console.log('error');
 
 }
+//댓글 생성
 function onSuccess(data, status) {
     console.log(data);
     console.log(status);
     var answerTemplate = $("#answerTemplate").html();
     var template = answerTemplate.format(data.userId, data.comment, data.formattedCreateDate, data.issue.id, data.id);
     $("#comment_list").append(template);
+
     $(".updateFrom_answer").unbind("click").on("click", updateFormAnswer);
     $(".submit-write-delete button[type=submit]").unbind("click").on("click", deleteAnswer);
     $("textarea[name=comment]").val("");
 
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // 업데이트 폼생성 에이젝스
 $(".updateFrom_answer").on("click", updateFormAnswer);
@@ -121,6 +123,38 @@ function deleteAnswer(e) {
 }
 
 
+
+$('#milestone-menu').on('mouseenter',getMilestone)
+function getMilestone(e) {
+    e.preventDefault()
+    console.log('milestone')
+    console.log(window.location.href)
+    var milestoneMenuBtn = $(this)
+    var id =$('#select-milestone');
+    console.log('id1: {}',id)
+    $.ajax({
+                    type : 'get',
+                    url : '/api/issue/1//milestones',
+                    dataType : 'json',
+                    error: function(request) {
+                        console.log('error');
+                        console.log(request);
+                    },
+                    success : function(data) {
+                        console.log(data)
+
+                        var template = '';
+                        var menuTemplate = $("#menuTemplate").html();
+                        Object.keys(data).forEach(function(k){
+                            template += menuTemplate.format(1, data[k].id, data[k].subject)
+                        });
+                        console.log(template);
+                        console.log(id);
+                        id.html(template);
+                        $('#milestone-menu').unbind();
+                    }
+                });
+}
 
 String.prototype.format = function() {
     var args = arguments;

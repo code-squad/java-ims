@@ -52,7 +52,6 @@ public class IssueController {
     public String show(@PathVariable long id, Model model) {
         Issue issue = issueService.findById(id).orElseThrow(UnAuthorizedException::new);
         model.addAttribute("issue",issue);
-        model.addAttribute("milestones",milestoneService.findAll());
         model.addAttribute("labels", labelService.findAll());
         model.addAttribute("assignees",userService.findAll());
         //Todo 라벨, 어사이니 모델로 줘야함 -> 이슈 본인것 담고 나머지 모델로 담을까?

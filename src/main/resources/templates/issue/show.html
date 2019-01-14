@@ -45,21 +45,12 @@
                 Milestone
             </button>
             <!-- milestone list -->
-            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                for="milestone-menu">
-                {{#milestone}}
-                <li class="mdl-menu__item mdl-button--accent">
-                    <a href="/issue/{{id}}/setMilestone/{{milestone.id}}">{{milestone.subject}}</a>
-                </li>
-                {{/milestone}}
-                {{#milestones}}
-                <li class="mdl-menu__item">
-                    <a href="/issue/{{issue.id}}/setMilestone/{{id}}">{{subject}}</a>
-                </li>
-                {{/milestones}}
+            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect milestones"
+                for="milestone-menu" >
+                <div id="select-milestone"></div>
             </ul>
 
-            <button id="label-menu" class="mdl-button mdl-js-button">
+                    <button id="label-menu" class="mdl-button mdl-js-button">
                 Label
             </button>
             <!-- label list -->
@@ -203,6 +194,17 @@
     </div>
 </script>
 
+
+
+<script type="text/template" id="menuTemplate">
+<!--<li class="mdl-menu__item mdl-button&#45;&#45;accent">
+    <a href="/issue/{{id}}/setMilestone/{{milestone.id}}">{{milestone.subject}}</a>
+</li>-->
+<li class="mdl-menu__item">
+    <a href="/issue/{0}/setMilestone/{1}">{2}</a>
+</li>
+
+</script>
 {{/issue}}
 {{/partial}}
 {{> base }}
