@@ -5,6 +5,7 @@ import codesquad.domain.user.User;
 import codesquad.dto.UserDto;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;
+import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,13 @@ import javax.validation.Valid;
 import java.net.URI;
 
 import static codesquad.security.HttpSessionUtils.USER_SESSION_KEY;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @RestController
 @RequestMapping("/api/users")
 public class ApiUserController {
+    private static final Logger log = getLogger(ApiUserController.class);
+
     @Resource(name = "userService")
     private UserService userService;
 
@@ -33,8 +37,11 @@ public class ApiUserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(String userId, String password, HttpSession httpSession) throws UnAuthenticationException {
-        User loginUser = userService.login(userId, password);
+    public ResponseEntity<User> login(@RequestBody User user, HttpSession httpSession) throws UnAuthenticationException {
+        log.debug("유저 아이디 : " + user.getUserId());
+        log.debug("유저 패스워드 : " + user.getPassword());
+
+        User loginUser = userService.login(user.getUserId(), user.getPassword());
         httpSession.setAttribute(USER_SESSION_KEY, loginUser);
 
         HttpHeaders headers = new HttpHeaders();

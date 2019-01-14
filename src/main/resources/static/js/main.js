@@ -22,7 +22,15 @@ $(document).on("click", '.register a', register);
 function login(e) {
     e.preventDefault();
 
-    var queryString = $('#loginForm').serialize();
+    var queryString = {
+        userId : $('#userId').val(),
+        password : $('#password').val()
+    };
+
+    var strObject = JSON.stringify(queryString);
+    console.log("strObject : " + strObject);
+
+
     var url = $('#loginForm').attr('action');
 
     console.log("url : " + url);
@@ -30,7 +38,8 @@ function login(e) {
     $.ajax({
         type : 'post',
         url : url,
-        data : queryString,
+        data : strObject,
+        contentType : 'application/json',
         dataType : 'json',
         error : onError,
         success : onSuccess
