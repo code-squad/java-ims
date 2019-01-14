@@ -85,3 +85,33 @@ function addAssignee(e) {
         }
     });
 }
+
+
+
+// ### add labels
+$(".mdl-menu__item_label").click(addLabels);
+function addLabels(e) {
+    console.log("click addLabels");
+    e.preventDefault();
+
+    var url = $(this).find('a').attr("href");
+    console.log(url);
+
+    $.ajax({
+        type : 'get',
+        url : url,
+        error : function(xhr, status, error) {
+            console.log('error');
+        },
+        success : function(data, status) {
+            console.log(data);
+            console.log('success');
+
+
+            if (data.valid) {
+
+                   alert('라벨을 지정했습니다..');
+            }
+        }
+    });
+}

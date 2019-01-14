@@ -49,4 +49,10 @@ public class ApiIssueController {
         issueService.addAssignee(issuesId, userId);
         return Result.ok();
     }
+
+    @GetMapping("/{issuesId}/labels/{lableId}")
+    public Result addLables(@PathVariable long issuesId, @PathVariable long lableId) {
+        issueService.addLables(issuesId, lableId);
+        return Result.ok();
+    }
 }

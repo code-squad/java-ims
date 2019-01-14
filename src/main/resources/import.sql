@@ -12,3 +12,8 @@ INSERT INTO MILESTONE (id, subject, start_date, end_date) values (2, 'Programmin
 INSERT INTO MILESTONE (id, subject, start_date, end_date) values (3, 'Software Test', '2019-01-01 00:00:00', '2019-01-31 00:00:00');
 INSERT INTO MILESTONE (id, subject, start_date, end_date) values (4, 'Software maintenance', '2019-02-01 10:00:00', '2019-02-28 00:00:00');
 INSERT INTO MILESTONE (id, subject, start_date, end_date) values (5, 'CodeSquad', '2018-09-10 10:00:00', '2019-01-31 18:00:00');
+
+INSERT INTO LABEL (id, label) values (1, 'Bug');
+INSERT INTO LABEL (id, label) values (2, 'Invalid');
+INSERT INTO LABEL (id, label) values (3, 'Question');
+INSERT INTO LABEL (id, label) values (4, 'Duplicate');

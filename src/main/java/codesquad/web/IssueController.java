@@ -4,6 +4,7 @@ import codesquad.domain.IssueBody;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.LabelService;
 import codesquad.service.MilestoneService;
 import codesquad.service.UserService;
 import org.slf4j.Logger;
@@ -30,6 +31,9 @@ public class IssueController {
     @Resource(name = "userService")
     private UserService userService;
 
+    @Resource(name = "labelService")
+    private LabelService labelService;
+
     @GetMapping("/form")
     public String form (@LoginUser User loginUser) {
         return "/issue/form";
@@ -50,6 +54,8 @@ public class IssueController {
 
         log.debug("### users : {}", userService.findAll());
         model.addAttribute("users", userService.findAll());
+        model.addAttribute("labels", labelService.findAll());
+
         return "/issue/show";
     }
 

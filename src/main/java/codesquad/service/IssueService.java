@@ -23,6 +23,9 @@ public class IssueService {
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
+    @Resource(name = "labelRepository")
+    private LabelRepository labelRepository;
+
     public void add(User loginUser, IssueBody issueBody) {
         Issue issue = new Issue(issueBody);
         issue.writeBy(loginUser);
@@ -83,5 +86,16 @@ public class IssueService {
                 .orElseThrow(UnAuthorizedException::new);
 
         issue.addAssignee(assignee);
+    }
+
+    @Transactional
+    public void addLables(long issuesId, long lableId) {
+        Issue issue = issueRepository.findById(issuesId)
+                .orElseThrow(UnAuthorizedException::new);
+
+        Label label = labelRepository.findById(lableId)
+                .orElseThrow(UnAuthorizedException::new);
+
+        issue.addLable(label);
     }
 }

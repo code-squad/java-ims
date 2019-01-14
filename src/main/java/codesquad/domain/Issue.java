@@ -2,9 +2,12 @@ package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
 import org.slf4j.Logger;
+import sun.jvm.hotspot.debugger.cdbg.basic.LazyBlockSym;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -27,6 +30,10 @@ public class Issue extends AbstractEntity {
     @OneToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
     private User assignee;
+
+    @ManyToMany
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_labels"))
+    private List<Label> lables;
 
     private boolean deleted = false;
 
@@ -87,6 +94,14 @@ public class Issue extends AbstractEntity {
         this.assignee = assignee;
     }
 
+    public List<Label> getLables() {
+        return lables;
+    }
+
+    public void setLables(List<Label> lables) {
+        this.lables = lables;
+    }
+
     public boolean isOwner(User loginUser) {
         return writer.equals(loginUser);
     }
@@ -111,5 +126,9 @@ public class Issue extends AbstractEntity {
 
     public void addAssignee(User assignee) {
         this.assignee = assignee;
+    }
+
+    public void addLable(Label lable) {
+        this.lables.add(lable);
     }
 }
