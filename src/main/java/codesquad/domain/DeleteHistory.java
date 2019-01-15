@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -9,7 +11,8 @@ public class DeleteHistory {
     @GeneratedValue
     private Long id;
 
-    private String contentType;
+    @Enumerated(EnumType.STRING)
+    private ContentType  contentType;
 
     private Long contentId;
 
@@ -22,13 +25,14 @@ public class DeleteHistory {
     public DeleteHistory() {
     }
 
-    public DeleteHistory(Long contentId, User deletedBy) {
-        this.contentType = "issue";
+    public DeleteHistory(ContentType contentType, Long contentId, User deletedBy) {
+        this.contentType = contentType;
         this.contentId = contentId;
         this.deletedBy = deletedBy;
     }
 
     @Override
+    @JsonProperty
     public String toString() {
         return "DeleteHistory [id=" + id + ", contentType=" + contentType + ", contentId=" + contentId + ", deletedBy="
                 + deletedBy + ", createDate=" + createDate + "]";

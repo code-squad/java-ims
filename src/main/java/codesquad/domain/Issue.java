@@ -1,9 +1,15 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.checkerframework.checker.units.qual.A;
+import org.hibernate.annotations.Where;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Issue extends AbstractEntity {
@@ -19,13 +25,19 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
     private Milestone milestone;
 
-    @ManyToOne
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_label"))
-    private Label label;
+    private List<Label> labels = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_assignee"))
     private User assignee;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Where(clause = "deleted = false")
+    @OrderBy("id ASC")
+    private List<Answer> answers = new ArrayList<>();
 
     private boolean deleted = false;
 
@@ -60,11 +72,21 @@ public class Issue extends AbstractEntity {
     }
 
     public void toLabel(Label label) {
-        this.label = label;
+        if (this.labels.contains(label)) {
+            this.labels.remove(label);
+            return;
+        }
+        this.labels.add(label);
     }
 
     public void toAssignee(User user) {
         this.assignee = user;
+    }
+
+    public Answer addAnswer(Answer answer) {
+        answer.toIssue(this);
+        answers.add(answer);
+        return answer;
     }
 
     public String getUserId() {
@@ -91,7 +113,7 @@ public class Issue extends AbstractEntity {
         this.contentsBody.setComment(comment);
     }
 
-    public Milestone getMilestone() {
+    public MenuEntity getMilestone() {
         return milestone;
     }
 
@@ -99,15 +121,12 @@ public class Issue extends AbstractEntity {
         this.milestone = milestone;
     }
 
-    public Label getLabel() {
-        return label;
+    public List getLabel() {
+
+        return labels;
     }
 
-    public void setLabel(Label label) {
-        this.label = label;
-    }
-
-    public User getAssignee() {
+    public MenuEntity getAssignee() {
         return assignee;
     }
 
@@ -120,7 +139,7 @@ public class Issue extends AbstractEntity {
             throw new UnAuthorizedException("작성자가 아닙니다.");
         }
         deleted = true;
-        return new DeleteHistory(getId(), loginUser);
+        return new DeleteHistory(ContentType.ISSUE, getId(), loginUser);
     }
 
 
@@ -140,5 +159,9 @@ public class Issue extends AbstractEntity {
                 ", comment" + getComment() +
                 ", deleted=" + deleted +
                 '}';
+    }
+
+    public List<Answer> getAnswers() {
+        return answers;
     }
 }

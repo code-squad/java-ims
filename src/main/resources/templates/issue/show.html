@@ -45,36 +45,18 @@
                 Milestone
             </button>
             <!-- milestone list -->
-            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                for="milestone-menu">
-                {{#milestone}}
-                <li class="mdl-menu__item mdl-button--accent">
-                    <a href="/issue/{{id}}/setMilestone/{{milestone.id}}">{{milestone.subject}}</a>
-                </li>
-                {{/milestone}}
-                {{#milestones}}
-                <li class="mdl-menu__item">
-                    <a href="/issue/{{issue.id}}/setMilestone/{{id}}">{{subject}}</a>
-                </li>
-                {{/milestones}}
+            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect milestones"
+                for="milestone-menu" >
+                <div id="select-milestones" about="/api/issue/{{id}}/milestones"></div>
             </ul>
 
-            <button id="label-menu" class="mdl-button mdl-js-button">
+                    <button id="label-menu" class="mdl-button mdl-js-button">
                 Label
             </button>
             <!-- label list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="label-menu">
-                {{#label}}
-                <li class="mdl-menu__item mdl-button--accent">
-                    <a href="/issue/{{id}}/setMilestone/{{label.id}}">{{label.subject}}</a>
-                </li>
-                {{/label}}
-                {{#labels}}
-                <li class="mdl-menu__item">
-                    <a href="/issue/{{issue.id}}/setLabel/{{id}}">{{subject}}</a>
-                </li>
-                {{/labels}}
+                <div id="select-labels" about="/api/issue/{{id}}/labels"></div>
             </ul>
 
             <button id="assignee-menu" class="mdl-button mdl-js-button">
@@ -83,82 +65,43 @@
             <!-- label list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="assignee-menu">
-                {{#assignee}}
-                <li class="mdl-menu__item mdl-button--accent">
-                    <a href="/issue/{{id}}/setMilestone/{{assignee.id}}">{{assignee.name}}</a>
-                </li>
-                {{/assignee}}
-                {{#assignees}}
-                <li class="mdl-menu__item">
-                    <a href="/issue/{{issue.id}}/setAssignee/{{id}}">{{name}}</a>
-                </li>
-                {{/assignees}}
+                <div id="select-assignees" about="/api/issue/{{id}}/assignees"></div>
             </ul>
         </div>
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
             <p>{{comment}}</p>
         </div>
-        <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
+        <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments" id="comment_list">
 
             <!-- comments start -->
-
-            <div class="comment mdl-color-text--grey-700">
+            {{#answers}}
+            <div class="comment mdl-color-text--grey-700 answer_form" id="answer_{{id}}">
                 <header class="comment__header">
                     <img class="comment__avatar2" height="48" width="48"
                          src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
                     <div class="comment__author">
                         <strong>
-                            <a>javajigi</a>
+                            <a>{{userId}}</a>
 
 
-                            <span>changed milestone 1 on 2017-01-14</span>
+                            <span>{{comment}} on  {{formattedCreateDate}}</span>
 
-
-                        </strong>
-                    </div>
-                </header>
-            </div>
-            <hr>
-
-
-            <div class="comment mdl-color-text--grey-700">
-                <header class="comment__header">
-                    <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars1.githubusercontent.com/u/7744966?v=3&u=1bd7d2e72800c0d5a1a5a2e04da851d30b3c13c7&s=140"
-                         alt="cca-company">
-                    <div class="comment__author">
-                        <strong>
-                            <a>cca-company</a>
-
-
-                            <span>comment new issue! on 2017-01-14</span>
-
+                            <a href="/api/issue/{{issue.id}}/answers/{{id}}" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect updateFrom_answer" id="updateForm_{{id}}">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            <form style="display:inline-block" class="submit-write-delete" id="delete_{{id}}" action="/api/issue/{{issue.id}}/answers/{{id}}" method="POST">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button class="mdl-button mdl-js-button mdl-button--icon" type="submit">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </form>
 
                         </strong>
                     </div>
                 </header>
+                <hr>
             </div>
-            <hr>
-
-
-            <div class="comment mdl-color-text--grey-700">
-                <header class="comment__header">
-                    <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars3.githubusercontent.com/u/14341811?v=3&s=400" alt="진저애비">
-                    <div class="comment__author">
-                        <strong>
-                            <a>진저애비</a>
-
-
-                            upload file <a href="upload file" target="_blank">[view]</a>
-
-
-                        </strong>
-                    </div>
-                </header>
-            </div>
-            <hr>
-
+            {{/answers}}
 
             <!-- comments end -->
         </div>
@@ -169,18 +112,80 @@
             </div>
         </form>
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-            <form action="/issue/1/addComment" method="POST">
+            <form class="submit-write-answer" action="/api/issue/{{id}}/answers" method="POST">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                     <label for="comment" class="mdl-textfield__label">Leave a comment</label>
                 </div>
-                <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="commentbtn">
                     <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">add comment</span>
                 </button>
             </form>
         </div>
     </div>
 </div>
+
+<script type="text/template" id="answerTemplate">
+    <div class="comment mdl-color-text--grey-700 answer_form" id="answer_{4}">
+        <header class="comment__header">
+            <img class="comment__avatar2" height="48" width="48"
+                 src="https://avatars3.githubusercontent.com/u/14341811?v=3&s=400" alt="진저애비">
+            <div class="comment__author">
+                <strong>
+                    <a>{0}</a>
+
+                    <span class="answer_comments">{1} on {2}</span>
+
+                    <a href="/api/issue/{3}/answers/{4}" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect updateFrom_answer" id="updateForm_{4}">
+                        <i class="material-icons">edit</i>
+                    </a>
+                    <form style="display:inline-block" class="submit-write-delete" id="delete_{4}" action="/api/issue/{3}/answers/{4}" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button class="mdl-button mdl-js-button mdl-button--icon" type="submit">
+                            <i class="material-icons">delete</i>
+                        </button>
+                    </form>
+
+                </strong>
+            </div>
+        </header>
+        <hr>
+    </div>
+</script>
+
+<script type="text/template" id="answerUpdateTemplate">
+    <div id="answerUpdateForm_{2}">
+        <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
+            <div style="margin:10px;">
+                <input type="file" name="file" id="update_file"/>
+                <button class="mdl-button" type="submit">upload file</button>
+            </div>
+        </form>
+        <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+            <form class="submit-write-update" action="{0}" method="POST">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <label for="comment" class="mdl-textfield__label">Leave a comment</label>
+                    <br>
+                    <textarea rows=5 class="mdl-textfield__input" id="update_comment" name="comment">{1}</textarea>
+                </div>
+                <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon update_answer" id="updateAnswerBtn">
+                    <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">add comment</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</script>
+
+
+<!--<li class="mdl-menu__item mdl-button&#45;&#45;accent">
+    <a href="/issue/{{id}}/setMilestone/{{milestone.id}}">{{milestone.subject}}</a>
+</li>-->
+<script type="text/template" id="menuTemplate">
+<li class="mdl-menu__item {4}">
+    <a href="/issue/{0}/{3}/{1}">{2}</a>
+</li>
+
+</script>
 {{/issue}}
 {{/partial}}
 {{> base }}

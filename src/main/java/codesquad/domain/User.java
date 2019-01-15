@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.validation.constraints.Size;
 
 @Entity
-public class User extends AbstractEntity {
+public class User extends AbstractEntity implements MenuEntity {
     public static final GuestUser GUEST_USER = new GuestUser();
 
     @Size(min = 3, max = 20)
@@ -81,6 +81,9 @@ public class User extends AbstractEntity {
         }
 
         this.name = target.name;
+    }
+    public String getSubject() {
+        return "";
     }
 
     public boolean matchPassword(String password) {

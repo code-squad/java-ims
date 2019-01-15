@@ -1,6 +1,8 @@
 package support.domain;
 
+import codesquad.domain.MenuEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -33,9 +35,8 @@ public class AbstractEntity {
         return id;
     }
 
-    @JsonIgnore
     public String getFormattedCreateDate() {
-        return getFormattedDate(createDate, "yyyy.MM.dd HH:mm:ss");
+        return getFormattedDate(createDate, "yyyy.MM.dd HH:mm");
     }
 
     @JsonIgnore

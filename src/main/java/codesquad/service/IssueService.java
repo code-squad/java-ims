@@ -29,6 +29,9 @@ public class IssueService {
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
+    @Resource(name = "answerRepository")
+    private AnswerRepository answerRepository;
+
     public Optional<Issue> findById(long id) {
         return issueRepository.findById(id);
     }
@@ -71,5 +74,29 @@ public class IssueService {
     public void updateAssignee(Long id, Long userId) {
         Issue issue = issueRepository.findById(id).orElseThrow(UnAuthorizedException::new);
         issue.toAssignee(userRepository.findById(userId).get());
+    }
+
+    @Transactional
+    public Answer addAnswer(User loginUser, long issueId, String comment) {
+        Issue issue = issueRepository.findById(issueId).orElseThrow(UnAuthorizedException::new);
+        Answer answer = new Answer(loginUser, comment);
+        return issue.addAnswer(answer);
+    }
+
+    public Answer findAnswerById(long id) {
+        return answerRepository.findById(id).orElseThrow(UnAuthorizedException::new);
+    }
+
+    @Transactional
+    public Answer updateAnswer(User loginUser, long id, String comment) {
+        Answer answer = answerRepository.findById(id).orElseThrow(UnAuthorizedException::new);
+        return answer.update(loginUser, comment);
+    }
+
+    @Transactional
+    public DeleteHistory deletedAnswer(User loginUser, long id) {
+        Answer answer = answerRepository.findById(id).orElseThrow(UnAuthorizedException::new);
+        answer.deleted(loginUser);
+        return new DeleteHistory(ContentType.ANSWER, id, loginUser);
     }
 }
