@@ -82,14 +82,11 @@ public class Attachment {
     public static boolean extensionCheck(MultipartFile multipartFile, ApplicationConfigurationProp applicationConfigurationProp) {
         String fileName = multipartFile.getOriginalFilename();
         if(!fileName.contains(SPLIT_STANDARD)) {
-            System.out.println("닷이 없어!");
             return false;
         }
 
         List<String> suffixes = applicationConfigurationProp.getSuffix();
         if(!suffixes.contains(obtainSuffix(fileName))) {
-            System.out.println("확장자가 아니야");
-            System.out.println(suffixes.toString()+"~~~~");
             return false;
         }
 
@@ -98,7 +95,6 @@ public class Attachment {
 
     public static String obtainSuffix(String fileName) {
         String[] splited = fileName.split("\\.");
-        System.out.println("확장자는 " + splited[splited.length - 1]);
         return splited[splited.length - 1];
     }
 
