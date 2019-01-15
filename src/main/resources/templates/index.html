@@ -28,8 +28,9 @@
             <div class="mdl-layout-spacer"></div>
             <!-- Tabs -->
             <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="/labels/list">Label</a>
                 <a class="mdl-navigation__link" href="/">Issues</a>
-                <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
+                <a class="mdl-navigation__link" href="/milestones/list">Milestones</a>
 
                 {{^loginedUser}}
                 <a class="mdl-navigation__link" href="/users/login/form">login</a>
@@ -80,7 +81,7 @@
 								</span>
                             <span class="mdl-list__item-secondary-content">
 									<span class="material-icons mdl-badge mdl-badge--overlap"
-                                          data-badge="1">issueBody.comment</span>
+                                          data-badge="1">comment</span>
 								</span>
                         </li>
 						{{/issues}}
@@ -105,6 +106,5 @@
 <script
         src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.3/dialog-polyfill.min.js"></script>
 <script src="https://cdn.tinymce.com/4/tinymce.min.js"></script>
-<script src="/js/main.js"></script>
 </body>
 </html>

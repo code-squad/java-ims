@@ -1,12 +1,13 @@
 package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
-import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
+import sun.jvm.hotspot.debugger.cdbg.basic.LazyBlockSym;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -21,6 +22,18 @@ public class Issue extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
+
+    @OneToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
+
+    @ManyToMany
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_labels"))
+    private List<Label> lables;
 
     private boolean deleted = false;
 
@@ -65,12 +78,32 @@ public class Issue extends AbstractEntity {
         this.writer = loginUser;
     }
 
-    public boolean isOwner(User loginUser) {
-        return writer.equals(loginUser);
+    public Milestone getMilestone() {
+        return milestone;
     }
 
-    public IssueDto _toIssueDto() {
-        return new IssueDto(this.issueBody);
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
+
+    public List<Label> getLables() {
+        return lables;
+    }
+
+    public void setLables(List<Label> lables) {
+        this.lables = lables;
+    }
+
+    public boolean isOwner(User loginUser) {
+        return writer.equals(loginUser);
     }
 
     public void update(User loginUser, IssueBody target) {
@@ -81,11 +114,21 @@ public class Issue extends AbstractEntity {
     }
 
     public void delete(User loginUser) {
-        log.debug("loginUser : {}", loginUser);
-        log.debug("writer : {}", writer);
         if (!isOwner(loginUser)) {
             throw new UnAuthorizedException();
         }
         this.deleted = true;
+    }
+
+    public void addMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public void addAssignee(User assignee) {
+        this.assignee = assignee;
+    }
+
+    public void addLable(Label lable) {
+        this.lables.add(lable);
     }
 }

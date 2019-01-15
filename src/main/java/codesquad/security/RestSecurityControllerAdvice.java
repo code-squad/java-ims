@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import support.domain.ErrorMessage;
+import support.domain.Result;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -32,8 +33,15 @@ public class RestSecurityControllerAdvice {
 
     @ExceptionHandler(UnAuthenticationException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public ErrorMessage unAuthentication(UnAuthenticationException e) {
+    public Result unAuthentication(UnAuthenticationException e) {
         log.debug("JSON API UnAuthenticationException is happend!");
-        return new ErrorMessage(e.getMessage());
+        return Result.fail(e.getMessage());
     }
+
+//    @ExceptionHandler(UnAuthenticationException.class)
+//    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+//    public ErrorMessage unAuthentication(UnAuthenticationException e) {
+//        log.debug("JSON API UnAuthenticationException is happend!");
+//        return new ErrorMessage(e.getMessage());
+//    }
 }
