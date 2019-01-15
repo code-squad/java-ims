@@ -15,7 +15,7 @@ public class ApplicationConfigurationProp {
     private Dummy dummy = new Dummy();
     private List<String> suffix = new ArrayList<>();
 
-    public class Dummy {
+    public static class Dummy {
 
         private String path;
         private String name;
@@ -57,7 +57,7 @@ public class ApplicationConfigurationProp {
         return suffix;
     }
 
-    public void setSuffix(List<String> suffixes) {
-        this.suffix = suffixes;
+    public void setSuffix(List<String> suffix) {
+        this.suffix = suffix;
     }
 }

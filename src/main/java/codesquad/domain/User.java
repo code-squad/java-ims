@@ -32,22 +32,22 @@ public class User extends AbstractEntity {
 
     }
 
-    public User(String userId, String password, String name) {
-        this.userId = userId;
-        this.password = password;
-        this.name = name;
-    }
-
-    public User(long id, String userId, String password, String name) {
+    public User(long id, String userId, String password, String name) { // UserTest<테스트코드>, UserFixture<테스트코드>
         super(id);
         this.userId = userId;
         this.password = password;
         this.name = name;
     }
 
-    public User(String userId, String password, String name, Attachment avatar) {
-        this(userId, password, name);
+    public User(String userId, String password, String name, Attachment avatar) { // UserDto
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
         this.avatar = avatar;
+    }
+
+    public User(String userId, String password, String name) { // UserTest<테스트코드>, UserValidationTest<테스트코드>
+        this(userId, password, name, null);
     }
 
     public String getUserId() {

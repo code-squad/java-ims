@@ -27,8 +27,9 @@ public class AttachmentController {
     @Autowired
     private ApplicationConfigurationProp applicationConfigurationProp;
 
-    @GetMapping(value = "/thumbnail/{target}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE})
-    public ResponseEntity<PathResource> thumbnailDownload(@PathVariable String target) {
+    @GetMapping(value = "/thumbnail/{userId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE})
+    public ResponseEntity<PathResource> thumbnailDownload(@PathVariable String userId) {
+        String target = userRepository.findByUserId(userId).orElse(null).getAvatar().getTargetFileName();
         Path path = Paths.get(applicationConfigurationProp.getPath() + "/" + target);
         PathResource resource = new PathResource(path);
         return new ResponseEntity<PathResource>(resource, HttpStatus.OK);

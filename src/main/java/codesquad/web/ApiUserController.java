@@ -46,9 +46,8 @@ public class ApiUserController {
     public ResponseEntity create(@Valid UserDto user, MultipartFile file) throws IOException {
         Attachment avatar = attachmentService.createAvatar(file);
         User savedUser = userService.add(user, avatar);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/api/user/" + savedUser.getId()));
-        return new ResponseEntity<User>(savedUser, headers, HttpStatus.CREATED);
+
+        return new ResponseEntity<User>(savedUser, createHeader("/api/user/" + savedUser.getId()), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -63,21 +62,25 @@ public class ApiUserController {
         if(bindingResult.hasErrors()) {
             return new ResponseEntity(new ErrorMessage(errorMessage), HttpStatus.FORBIDDEN);
         }
+
         Attachment avatar = attachmentService.createAvatar(file);
         User user = userService.update(loginUser, id, updatedUser, avatar);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("/"));
         HttpSessionUtils.updateUserSession(httpSession, updatedUser);
-        return new ResponseEntity<User>(user, httpHeaders, HttpStatus.OK);
+
+        return new ResponseEntity<User>(user, createHeader("/"), HttpStatus.OK);
     }
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid UserDto userDto, HttpSession httpSession) {
-        logger.debug("UserDto : {}!", userDto);
         User user = userService.login(userDto.getUserId(), userDto.getPassword());
         HttpSessionUtils.setSession(httpSession, user);
+
+        return new ResponseEntity(user, createHeader("/"), HttpStatus.ACCEPTED);
+    }
+
+    public HttpHeaders createHeader(String location) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("/"));
-        return new ResponseEntity(user, httpHeaders, HttpStatus.ACCEPTED);
+        httpHeaders.setLocation(URI.create(location));
+        return httpHeaders;
     }
 }

@@ -30,11 +30,12 @@ public class AvatarService {
 
     public Attachment createAvatar(MultipartFile multipartFile) throws IOException {
         if (multipartFile != null) {
-            if(!Attachment.extensionCheck(multipartFile, applicationConfigurationProp)) {
+            String originFileName = multipartFile.getOriginalFilename();
+            if (!Attachment.extensionCheck(originFileName, applicationConfigurationProp.getSuffix())) {
                 throw new UnsupportedFormatException(notSupportedError);
             }
-            Attachment attachment = Attachment.of(multipartFile, applicationConfigurationProp.getPath(), applicationConfigurationProp.getSuffix());
-            return attachment.createAttachment(multipartFile);
+            Attachment attachment = Attachment.of(originFileName, applicationConfigurationProp.getPath());
+            return attachment.createAttachment(multipartFile.getInputStream());
         }
         return dummyAvatar;
     }

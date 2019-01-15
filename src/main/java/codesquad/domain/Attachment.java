@@ -1,10 +1,13 @@
 package codesquad.domain;
 
 import codesquad.ApplicationConfigurationProp;
+import org.slf4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 import support.converter.FileNameConverter;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.Pattern;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,13 +17,22 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Embeddable
 public class Attachment {
 
     private static final String SPLIT_STANDARD = ".";
 
+    private static final Logger logger = getLogger(Attachment.class);
+
+    @Column
     private String originFileName;
+
+    @Column(unique = true)
     private String targetFileName;
+
+    @Column
     private String path;
 
     public Attachment() {
@@ -61,8 +73,7 @@ public class Attachment {
         this.originFileName = originFileName;
     }
 
-    public Attachment createAttachment(MultipartFile multipartFile) throws IOException {
-        InputStream is = multipartFile.getInputStream();
+    public Attachment createAttachment(InputStream is) throws IOException {
         Files.copy(is, createPath(path, targetFileName), StandardCopyOption.REPLACE_EXISTING);
 
         return this;
@@ -72,21 +83,18 @@ public class Attachment {
         return Paths.get(String.format("%s/%s", path, targetFileName));
     }
 
-    public static Attachment of(MultipartFile multipartFile, String path, List<String> suffixes) {
-        String originFileName = multipartFile.getOriginalFilename();
+    public static Attachment of(String originFileName, String path) {
         String targetFileName = FileNameConverter.convert(originFileName);
 
         return new Attachment(originFileName, targetFileName, path);
     }
 
-    public static boolean extensionCheck(MultipartFile multipartFile, ApplicationConfigurationProp applicationConfigurationProp) {
-        String fileName = multipartFile.getOriginalFilename();
-        if(!fileName.contains(SPLIT_STANDARD)) {
+    public static boolean extensionCheck(String originFileName, List<String> suffix) {
+        if(!originFileName.contains(SPLIT_STANDARD)) {
             return false;
         }
 
-        List<String> suffixes = applicationConfigurationProp.getSuffix();
-        if(!suffixes.contains(obtainSuffix(fileName))) {
+        if(!suffix.contains(obtainSuffix(originFileName))) {
             return false;
         }
 
