@@ -3,6 +3,7 @@ package codesquad.service;
 import codesquad.domain.milestone.Milestone;
 import codesquad.domain.milestone.MilestoneRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -17,6 +18,7 @@ public class MilestoneService {
         return milestoneRepository.findAll();
     }
 
+    @Transactional
     public Milestone add(Milestone milestone) {
         return milestoneRepository.save(milestone);
     }

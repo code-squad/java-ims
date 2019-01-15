@@ -82,66 +82,81 @@
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
                     <p>{{comment}}</p>
                 </div>
-                <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
+                <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments" id = "comments">
 
                     <!-- comments start -->
-
+                    {{#comments}}
                     <div class="comment mdl-color-text--grey-700">
                         <header class="comment__header">
                             <img class="comment__avatar2" height="48" width="48"
                                  src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
-                            <div class="comment__author">
-                                <strong>
-                                    <a>javajigi</a>
-
-
-                                    <span>changed milestone 1 on 2017-01-14</span>
-
-
-                                </strong>
+                            <div style="width: 100%;" class="comment-body">
+                                <span class="comment__author">
+                                    <strong>
+                                        <a>{{writer.name}}</a>
+                                        <span class="comment-contents">{{contents}}</span>
+                                    </strong>
+                                </span>
+                                <span>
+                                    <form style="display: inline;" action="/api/issues/{{issue.id}}/comments/{{id}}" class="edit-comment" method="post">
+                                        <input type="hidden" name="_method" value="PUT">
+                                        <button type="submit" class="nostylebutton">
+                                            <i class="material-icons">edit</i>
+                                        </button>
+                                    </form>
+                                </span>
+                                <span>
+                                    <form style="display: inline;" action="/api/issues/{{issue.id}}/comments/{{id}}" class="delete-comment" method="post">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="nostylebutton">
+                                            <i class="material-icons">delete</i>
+                                        </button>
+                                    </form>
+                                </span>
                             </div>
                         </header>
+                        <hr>
                     </div>
-                    <hr>
+                    {{/comments}}
 
 
-                    <div class="comment mdl-color-text--grey-700">
-                        <header class="comment__header">
-                            <img class="comment__avatar2" height="48" width="48"
-                                 src="https://avatars1.githubusercontent.com/u/7744966?v=3&u=1bd7d2e72800c0d5a1a5a2e04da851d30b3c13c7&s=140"
-                                 alt="cca-company">
-                            <div class="comment__author">
-                                <strong>
-                                    <a>cca-company</a>
+                    <!--<div class="comment mdl-color-text&#45;&#45;grey-700">-->
+                        <!--<header class="comment__header">-->
+                            <!--<img class="comment__avatar2" height="48" width="48"-->
+                                 <!--src="https://avatars1.githubusercontent.com/u/7744966?v=3&u=1bd7d2e72800c0d5a1a5a2e04da851d30b3c13c7&s=140"-->
+                                 <!--alt="cca-company">-->
+                            <!--<div class="comment__author">-->
+                                <!--<strong>-->
+                                    <!--<a>cca-company</a>-->
 
 
-                                    <span>comment new issue! on 2017-01-14</span>
+                                    <!--<span>comment new issue! on 2017-01-14</span>-->
 
 
-                                </strong>
-                            </div>
-                        </header>
-                    </div>
-                    <hr>
+                                <!--</strong>-->
+                            <!--</div>-->
+                        <!--</header>-->
+                    <!--</div>-->
+                    <!--<hr>-->
 
 
-                    <div class="comment mdl-color-text--grey-700">
-                        <header class="comment__header">
-                            <img class="comment__avatar2" height="48" width="48"
-                                 src="https://avatars3.githubusercontent.com/u/14341811?v=3&s=400" alt="진저애비">
-                            <div class="comment__author">
-                                <strong>
-                                    <a>진저애비</a>
+                    <!--<div class="comment mdl-color-text&#45;&#45;grey-700">-->
+                        <!--<header class="comment__header">-->
+                            <!--<img class="comment__avatar2" height="48" width="48"-->
+                                 <!--src="https://avatars3.githubusercontent.com/u/14341811?v=3&s=400" alt="진저애비">-->
+                            <!--<div class="comment__author">-->
+                                <!--<strong>-->
+                                    <!--<a>진저애비</a>-->
 
 
-                                    upload file <a href="upload file" target="_blank">[view]</a>
+                                    <!--upload file <a href="upload file" target="_blank">[view]</a>-->
 
 
-                                </strong>
-                            </div>
-                        </header>
-                    </div>
-                    <hr>
+                                <!--</strong>-->
+                            <!--</div>-->
+                        <!--</header>-->
+                    <!--</div>-->
+                    <!--<hr>-->
 
 
                     <!-- comments end -->
@@ -153,12 +168,18 @@
                     </div>
                 </form>
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-                    <form action="/issue/1/addComment" method="POST">
+                    <form action="/api/issues/{{id}}/comments" method="POST" id="add-comment">
+                        <!--<input type="hidden" name = "writer" value="{{loginedUser}}" id="add-comment-writer">-->
+                        <!--&lt;!&ndash;Choising&ndash;&gt;-->
+                        <!--<input type="hidden" name = "writer" value="{{loginedUser.userId}}" id="add-comment-writer-id">-->
+                        <!--<input type="hidden" name = "writer" value="{{loginedUser.password}}" id="add-comment-writer-password">-->
+                        <!--<input type="hidden" name = "writer" value="{{loginedUser.name}}" id="add-comment-writer-name">-->
+                        <!--&lt;!&ndash;&ndash;&gt;-->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                             <label for="comment" class="mdl-textfield__label">Leave a comment</label>
                         </div>
-                        <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                        <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id = "write-comment-btn">
                             <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">add comment</span>
                         </button>
                     </form>
@@ -174,6 +195,39 @@
         </footer>
     </main>
     <div class="mdl-layout__obfuscator"></div>
+<script type="text/template" id="write-comment-template">
+    <div class="comment mdl-color-text--grey-700">
+        <header class="comment__header">
+            <img class="comment__avatar2" height="48" width="48"
+                 src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
+            <div style="width: 100%;" class="comment-body">
+                <span class="comment__author">
+                    <strong>
+                        <a>{0}</a>
+                        <span class="comment-contents">{1}</span>
+                    </strong>
+                </span>
+                <span>
+                    <form style="display: inline;" action="/api/issues/{2}/comments/{3}" class="comment-edit" method="post">
+                        <input type="hidden" name="_method" value="PUT">
+                        <button type="submit" class="nostylebutton">
+                            <i class="material-icons">edit</i>
+                        </button>
+                    </form>
+                </span>
+                <span>
+                    <form style="display: inline;" action="/api/issues/{2}/comments/{3}" class="comment-delete" method="post">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="nostylebutton">
+                            <i class="material-icons">delete</i>
+                        </button>
+                    </form>
+                </span>
+            </div>
+        </header>
+        <hr>
+    </div>
+</script>
 {{/partial}}
 {{>shared/base}}
 <!--</div>-->

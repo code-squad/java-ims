@@ -7,6 +7,7 @@ import codesquad.domain.deletehistory.DeleteHistory;
 import codesquad.domain.label.Label;
 import codesquad.domain.milestone.Milestone;
 import codesquad.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -42,6 +43,10 @@ public class Issue extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
     private User assignee;
+
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL)  //외래키 가지고 있는 애가 주인이라고 했던가.. 그럼 issue가 comment의 외래키를 가진다는거야?? 근데 왜 JoinColumn 안햐?
+    @JsonIgnore
+    private List<Comment> comments;
 
     private boolean deleted = false;
     private boolean closed = false;
@@ -129,6 +134,33 @@ public class Issue extends AbstractEntity {
         this.assignee = assignee;
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void update(User loginUser, Issue updatedIssue) {
+        if (!this.writer.equals(loginUser)) throw new CannotUpdateException("you can't update this issue");
+        this.subject = updatedIssue.subject;
+        this.comment = updatedIssue.comment;
+    }
+
+    public List<DeleteHistory> delete(User loginUser) {
+        if (!this.isOwner(loginUser)) throw new CannotDeleteException("you can't delete this issue");
+        List<DeleteHistory> histories = new ArrayList<>();
+        this.deleted = true;
+        histories.add(new DeleteHistory(ContentType.ISSUE, this.getId(), this.getWriter()));
+        return histories;
+    }
+
+    public void addComment(Comment comment) {
+        comment.setIssue(this);
+        comments.add(comment);
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
@@ -159,17 +191,4 @@ public class Issue extends AbstractEntity {
         return Objects.hash(super.hashCode(), subject, comment, writer);
     }
 
-    public void update(User loginUser, Issue updatedIssue) {
-        if (!this.writer.equals(loginUser)) throw new CannotUpdateException("you can't update this issue");
-        this.subject = updatedIssue.subject;
-        this.comment = updatedIssue.comment;
-    }
-
-    public List<DeleteHistory> delete(User loginUser) {
-        if (!this.isOwner(loginUser)) throw new CannotDeleteException("you can't delete this issue");
-        List<DeleteHistory> histories = new ArrayList<>();
-        this.deleted = true;
-        histories.add(new DeleteHistory(ContentType.ISSUE, this.getId(), this.getWriter()));
-        return histories;
-    }
 }

@@ -6,8 +6,10 @@ $("#join-submit").click(join);
 function join(e){
     e.preventDefault();
 
-//    var queryString = $("#join").serialize();   //form태그의 id(join)에서 받은 데이터를 직렬화(키,밸류 형태) string타입임??
+//    var queryString = $("#join").serializeObject();   //form태그의 id(join)에서 받은 데이터를 직렬화(키,밸류 형태) string타입임??
 //    console.log("query : " + queryString);
+
+
     var json = new Object();
     json.userId = $("#userId").val();
     json.name = $("#name").val();
@@ -68,7 +70,54 @@ function login(e) {
     })
 }
 
+
+//답변 추가
+$("#write-comment-btn").click(addComment);
+
+function addComment(e){
+    e.preventDefault();
+
+//    var user = new Object();
+//    user.userId = $("#add-comment-writer-id").val();
+//    user.password = $("#add-comment-writer-password").val();
+//    user.name = $("#add-comment-writer-name").val();
+//    console.log(user);
+//    json.writer = $("#add-comment-writer").val();
+//    json.writer = user;
+
+    var json = new Object();
+    json.contents = $("#comment").val();
+    var url = $("#add-comment").attr("action");
+    console.log("url : " + url);
+
+    $.ajax({
+        type : "post",
+        url : url,
+        data : JSON.stringify(json),
+        contentType : "application/json",
+        dataType : "json",
+        error : onError,
+        success : function(data, status, jqXHR) {
+            var commentTemplate = $("#write-comment-template").html();
+            var template = commentTemplate.format(data.writer.name, data.contents, data.issue.id, data.id);
+            $("#comments").append(template);
+        }
+    })
+}
+
+//에러 메세지
 function onError(jqXHR, status, errorThrown) {
     console.log(jqXHR.responseText);    //json값 다 보여줌 (키,밸류 모두다) ex) {"message":"아이디 또는 비밀번호가 다릅니다."}
     alert(jqXHR.responseJSON.message);  ////예외처리에서 받은 리턴값(responseEntity<ErrorMessage>)의 json객체의 키(message)값의 value를 가져온다.
 }
+
+//템플리 추가
+String.prototype.format = function() {
+  var args = arguments;
+       return this.replace(/{(\d+)}/g, function(match, number) {
+    return typeof args[number] != 'undefined'
+         ? args[number]
+             : match
+        ;
+  });
+};

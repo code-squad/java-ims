@@ -27,6 +27,7 @@ public class LabelService {
         return labelRepository.findAll();
     }
 
+    @Transactional
     public Label add(Label label) {
         return labelRepository.save(label);
     }

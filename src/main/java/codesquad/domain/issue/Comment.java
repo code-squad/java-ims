@@ -19,6 +19,10 @@ public class Comment extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_writer"))
     private User writer;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_issue"))
+    private Issue issue;
+
     private boolean deleted = false;
 
     public Comment() {
@@ -56,6 +60,14 @@ public class Comment extends AbstractEntity {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Issue getIssue() {
+        return issue;
+    }
+
+    public void setIssue(Issue issue) {
+        this.issue = issue;
     }
 
     @Override

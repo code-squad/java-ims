@@ -4,6 +4,8 @@ import codesquad.CannotApplyException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.deletehistory.DeleteHistory;
 import codesquad.domain.deletehistory.DeleteHistoryRepository;
+import codesquad.domain.issue.Comment;
+import codesquad.domain.issue.CommentRepository;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueRepository;
 import codesquad.domain.label.LabelRepository;
@@ -38,6 +40,9 @@ public class IssueService {
     @Resource(name = "labelRepository")
     private LabelRepository labelRepository;
 
+    @Resource(name = "commentRepository")
+    private CommentRepository commentRepository;
+
     public Issue add(User loginUser, IssueDto issueDto) {
         issueDto.setWriter(loginUser);
         return issueRepository.save(issueDto._toIssue());
@@ -60,12 +65,14 @@ public class IssueService {
                 .orElseThrow(UnAuthorizedException::new);
     }
 
+    @Transactional
     public void update(User loginUser, long id, IssueDto updatedIssue) {
         Issue originalIssue = this.findById(id, loginUser);
         originalIssue.update(loginUser, updatedIssue._toIssue());
         issueRepository.save(originalIssue);
     }
 
+    @Transactional
     public void delete(User loginUser, long id) {
         Issue originalIssue = this.findById(id, loginUser);
         List<DeleteHistory> histories = originalIssue.delete(loginUser);
@@ -98,4 +105,15 @@ public class IssueService {
                 .orElseThrow(UnAuthorizedException::new));
         issueRepository.save(currentIssue);
     }
+
+    @Transactional        //얘 지정 하면 왜 자동 디비에 저장될까 --> 트랜잭션이 끝난 시점에 em의 플러쉬메소드가 실행되면서, 영속성컨텍스트에 있는 엔티티를 디비에 저장하는것임?(디비 어느 테이블인 줄 알고 저장시킴??) 안쓸 경우는 직접 레포지터리.save 해줘야함
+    public Comment addComment(User loginUser, long issueId, Comment comment) {
+        if(loginUser.isGuestUser()) throw new UnAuthorizedException("로그인이 필요합니다.");
+        Issue currentIssue = issueRepository.findById(issueId)
+                .orElseThrow(UnAuthorizedException::new);       //얘 메세지 입력은 어떻게?
+        comment.setWriter(loginUser);
+        currentIssue.addComment(comment);
+        return comment;
+    }
+
 }
