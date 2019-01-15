@@ -32,11 +32,11 @@ public class User extends AbstractEntity {
 
     }
 
-    public User(long id, String userId, String password, String name) { // UserTest<테스트코드>, UserFixture<테스트코드>
-        super(id);
-        this.userId = userId;
-        this.password = password;
-        this.name = name;
+    public User(UserBuilder userBuilder) {
+        super(userBuilder.id);
+        this.userId = userBuilder.userId;
+        this.password = userBuilder.password;
+        this.name = userBuilder.name;
     }
 
     public User(String userId, String password, String name, Attachment avatar) { // UserDto
@@ -44,10 +44,6 @@ public class User extends AbstractEntity {
         this.password = password;
         this.name = name;
         this.avatar = avatar;
-    }
-
-    public User(String userId, String password, String name) { // UserTest<테스트코드>, UserValidationTest<테스트코드>
-        this(userId, password, name, null);
     }
 
     public String getUserId() {
@@ -125,6 +121,28 @@ public class User extends AbstractEntity {
         @Override
         public boolean isGuestUser() {
             return true;
+        }
+    }
+
+    public static class UserBuilder {
+        private Long id;
+        private String userId;
+        private String password;
+        private String name;
+
+        public UserBuilder(String userId, String password, String name) {
+            this.userId = userId;
+            this.password = password;
+            this.name = name;
+        }
+
+        public UserBuilder setId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
         }
     }
 
