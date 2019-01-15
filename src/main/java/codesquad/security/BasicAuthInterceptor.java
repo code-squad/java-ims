@@ -1,6 +1,5 @@
 package codesquad.security;
 
-import codesquad.UnAuthenticationException;
 import codesquad.domain.User;
 import codesquad.service.UserService;
 import org.slf4j.Logger;
@@ -20,8 +19,7 @@ public class BasicAuthInterceptor extends HandlerInterceptorAdapter {
     private UserService userService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String authorization = request.getHeader("Authorization");
         log.debug("Authorization : {}", authorization);
         if (authorization == null || !authorization.startsWith("Basic")) {
@@ -34,13 +32,9 @@ public class BasicAuthInterceptor extends HandlerInterceptorAdapter {
         log.debug("username : {}", values[0]);
         log.debug("password : {}", values[1]);
 
-        try {
-            User user = userService.login(values[0], values[1]);
-            log.debug("Login Success : {}", user);
-            request.getSession().setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
-            return true;
-        } catch (UnAuthenticationException e) {
-            return true;
-        }
+        User user = userService.login(values[0], values[1]);
+        log.debug("Login Success : {}", user);
+        request.getSession().setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
+        return true;
     }
 }

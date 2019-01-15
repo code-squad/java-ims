@@ -27,6 +27,7 @@ dependencies {
 	compile('com.google.guava:guava:27.0.1-jre')
 	compile('org.hibernate:hibernate-java8')
 	compile('pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.1')
+	compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.13.Final'
 	runtime('com.h2database:h2')
 	runtime('net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1')
 	testCompile('org.springframework.boot:spring-boot-starter-test')

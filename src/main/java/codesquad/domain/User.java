@@ -4,9 +4,7 @@ import codesquad.UnAuthorizedException;
 import codesquad.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -27,19 +25,25 @@ public class User extends AbstractEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
+    @Embedded
+    private Attachment avatar;
+
     public User() {
 
     }
 
-    public User(String userId, String password, String name) {
-        this(0L, userId, password, name);
+    public User(UserBuilder userBuilder) {
+        super(userBuilder.id);
+        this.userId = userBuilder.userId;
+        this.password = userBuilder.password;
+        this.name = userBuilder.name;
     }
 
-    public User(long id, String userId, String password, String name) {
-        super(id);
+    public User(String userId, String password, String name, Attachment avatar) { // UserDto
         this.userId = userId;
         this.password = password;
         this.name = name;
+        this.avatar = avatar;
     }
 
     public String getUserId() {
@@ -69,13 +73,30 @@ public class User extends AbstractEntity {
         return this;
     }
 
+    public Attachment getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Attachment avatar) {
+        this.avatar = avatar;
+    }
+
     private boolean matchUserId(String userId) {
         return this.userId.equals(userId);
     }
 
-    public void update(User loginUser, User target) {
+    public User update(User loginUser, User target, Attachment avatar) {
+        if(!loginUser.userId.equals(target.userId)) {
+            throw new UnAuthorizedException();
+        }
+
+        if(!avatar.isDummyAttachment()) {
+            this.avatar = avatar;
+        }
+
         this.name = target.name;
         this.password = target.password;
+        return this;
     }
 
     public void update(UserDto target) {
@@ -103,12 +124,35 @@ public class User extends AbstractEntity {
         }
     }
 
+    public static class UserBuilder {
+        private Long id;
+        private String userId;
+        private String password;
+        private String name;
+
+        public UserBuilder(String userId, String password, String name) {
+            this.userId = userId;
+            this.password = password;
+            this.name = name;
+        }
+
+        public UserBuilder setId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
+                ", avatar=" + avatar +
                 '}';
     }
 

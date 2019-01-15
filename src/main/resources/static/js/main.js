@@ -16,6 +16,10 @@ $('.back-btn').on('click',function(){history.back();})
 $('#milestone-menu').click(showMilestone);
 function showMilestone(e) {
     e.preventDefault();
+    e.stopImmediatePropagation();
+    var events = $._data($('#milestone-menu'), 'events');
+    console.log(events);
+
     console.log("call show Milestone!");
     var url = $('#select-milestone').attr('value');
     console.log(url);
@@ -36,6 +40,7 @@ function showMilestone(e) {
             });
             console.log(li);
             $("#select-milestone").html(li);
+            $('#milestone-menu').click();
             $('#milestone-menu').unbind();
         }
     });
@@ -172,6 +177,7 @@ function deleteAnswer(e) {
         success : function (response) {
             console.log("댓글 삭제 성공!");
             console.log(response);
+            console.log(response.id);
             $('.article-' + response.id).html('');
         }
     });
@@ -206,6 +212,7 @@ function writeAnswer(e) {
             var template = answerTemplate.format(response.id, response.writer.userId, response.comment, url);
             $('#answers').append(template);
             $('.showUpdateAnswerBtn').click(showAnswer);
+            $('.deleteAnswerBtn').click(deleteAnswer);
             $('#comment').html('');
         }
     });
@@ -248,15 +255,17 @@ function login(e) {
     e.preventDefault();
     console.log("Call login Method()");
 
-    var queryString = $('#login').serialize();
-    console.log(queryString);
+    var json = new Object();
+    json.userId = $('#userId').val();
+    json.password = $('#password').val();
     var url = '/api/user/login';
 
     $.ajax({
         type : 'post',
         url : url,
-        data : queryString,
+        data : JSON.stringify(json),
         dataType : 'json',
+        contentType : 'application/json',
         error : function (request) {
             console.log("로그인 실패");
             exceptionProcessor(request);
@@ -268,32 +277,64 @@ function login(e) {
     });
 }
 
+/* 회원가입 */
+$('#join-submit').click(join);
+
+function join(e) {
+    e.preventDefault();
+    console.log("Call join Method()");
+    console.log($('input[name=pic]')[0].files[0]);
+
+    var url = '/api/user';
+    var data = new FormData();
+    data.append('file', $('input[name=pic]')[0].files[0])
+    data.append('userId', $('#userId').val());
+    data.append('name', $('#name').val());
+    data.append('password', $('#password').val());
+
+    $.ajax({
+        type : 'post',
+        url : url,
+        data : data,
+        dataType : 'json',
+        contentType: false,
+        processData : false,
+        error : function (request) {
+            console.log("회원가입 실패");
+            exceptionProcessor(request);
+        },
+        success : function (data, status, xhr) {
+            console.log("회원가입 성공!");
+            location.href = '/';
+        }
+    });
+}
+
+
 /* 개인정보수정 */
 $('#edit-privacy-submit').click(editPrivacy);
 
 function editPrivacy(e) {
     e.preventDefault();
-    console.log("Call editPrivacy Method()");
 
     var url = '/api' + $('#edit-privacy').attr('action');
-    console.log(url);
-
-    var json = new Object();
-    json.userId = $('#userId').val();
-    json.name = $('#name').val();
-    json.password = $('#password').val();
+    var data = new FormData();
+    data.append('file', $('input[name=pic]')[0].files[0])
+    data.append('userId', $('#userId').val());
+    data.append('name', $('#name').val());
+    data.append('password', $('#password').val());
 
     $.ajax({
         type : 'put',
         url : url,
-        data : JSON.stringify(json),
+        data : data,
         dataType : 'json',
-        contentType: 'application/json',
+        contentType : false,
+        processData : false,
         error : function (request) {
             exceptionProcessor(request);
         },
         success : function (data, status, xhr) {
-            console.log("개인정보수정 성공!");
             location.href = xhr.getResponseHeader('Location');
         }
     });
@@ -416,7 +457,12 @@ function register(e) {
 /* 예외처리 */
 function exceptionProcessor(request) {
     if(request.status == '403') {
-        location.href = '/user/login';
+        if(request.responseText != null) {
+            alert(request.responseText)
+        }
+        if(request.responseText == null) {
+            location.href = '/user/login';
+        }
     }
 
     if(request.status == '401') {

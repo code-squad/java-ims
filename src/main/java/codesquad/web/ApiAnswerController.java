@@ -25,7 +25,7 @@ import java.net.URI;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-@Controller
+@RestController
 @RequestMapping("/api/issues/{id}/answers")
 public class ApiAnswerController {
 

@@ -1,5 +1,6 @@
 package codesquad.dto;
 
+import codesquad.domain.Attachment;
 import codesquad.domain.User;
 
 import javax.validation.constraints.Size;
@@ -13,6 +14,8 @@ public class UserDto {
 
     @Size(min = 3, max = 20)
     private String name;
+
+    private Attachment avatar;
 
     public UserDto() {
     }
@@ -53,7 +56,11 @@ public class UserDto {
     }
 
     public User _toUser() {
-        return new User(this.userId, this.password, this.name);
+        return new User(this.userId, this.password, this.name, this.avatar);
+    }
+
+    public User _toUser(Attachment avatar) {
+        return new User(this.userId, this.password, this.name, avatar);
     }
 
     @Override

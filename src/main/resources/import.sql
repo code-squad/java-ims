@@ -23,3 +23,5 @@ INSERT INTO answer (id, comment, writer_id, issue_id, deleted) values (1, 'answe
 INSERT INTO answer (id, comment, writer_id, issue_id, deleted) values (2, 'answer - 2', 2, 1, 0);
 INSERT INTO answer (id, comment, writer_id, issue_id, deleted) values (3, 'answer - 3', 1, 1, 0);
 
+
+

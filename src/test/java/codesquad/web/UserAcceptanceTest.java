@@ -79,9 +79,10 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("_method", "put")
                 .addParameter("password", "password")
                 .addParameter("name", "재성222")
+                .addParameter("userId", "javajigi")
                 .addParameter("email", "javajigi@slipp.net").build();
 
-        ResponseEntity<String> responseEntity = template
+        ResponseEntity<String> responseEntity = basicAuthTemplate()
                 .postForEntity(String.format("/user/%d", loginUser.getId()), request, String.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/");

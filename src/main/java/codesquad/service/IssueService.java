@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -31,9 +32,10 @@ public class IssueService {
         return issueRepository.save(issueDto._toIssue(loginUser));
     }
 
-    public List<Issue> findAllIssue() {
-        List<Issue> issues = issueRepository.findByDeleted(false);
-        return issueRepository.findByDeleted(false);
+    public List<IssueDto> findAllIssue() {
+        List<IssueDto> issues = new ArrayList<>();
+        issueRepository.findByDeleted(false).forEach(i -> issues.add(i._toIssueDto()));
+        return issues;
     }
 
     @Transactional

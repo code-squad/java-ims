@@ -61,4 +61,13 @@ public abstract class AcceptanceTest extends BaseTest {
                 .exchange(location, httpMethod, new HttpEntity(obj, new HttpHeaders()),String.class);
     }
 
+    protected ResponseEntity createUserResponse(String userId, String password, String name, TestRestTemplate template) {
+        HttpEntity httpEntity = HtmlFormDataBuilder.multipartFormData()
+                .addParameter("userId", userId)
+                .addParameter("password", password)
+                .addParameter("name", name)
+                .build();
+        return template.postForEntity("/api/user", httpEntity, Void.class);
+    }
+
 }

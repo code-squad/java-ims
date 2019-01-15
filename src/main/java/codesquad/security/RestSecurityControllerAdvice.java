@@ -4,6 +4,8 @@ import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
 import codesquad.UnsupportedFormatException;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,12 +23,20 @@ public class RestSecurityControllerAdvice {
     
     private static final Logger logger = getLogger(RestSecurityControllerAdvice.class);
 
+    @Value("$(error.not.supported)")
+    private String errorMessage;
+
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorMessage> constraintViolation() {
-        logger.debug("ConstraintViolationException is happened!");
-        return new ResponseEntity(new ErrorMessage("Exception is Occurred Because Unsupported Data Format")
+    public ResponseEntity<ErrorMessage> constraintViolation(ConstraintViolationException e) {
+        return new ResponseEntity(new ErrorMessage(e.getMessage())
                 , HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorMessage> dataIntegrityViolationException(DataIntegrityViolationException e) {
+        return new ResponseEntity(new ErrorMessage(errorMessage), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(UnAuthenticationException.class)
@@ -39,7 +49,6 @@ public class RestSecurityControllerAdvice {
     @ExceptionHandler(UnAuthorizedException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public ResponseEntity<ErrorMessage> UnAuthorizedException(UnAuthorizedException e) {
-        logger.debug("UnAuthorizedException is happened!");
         return new ResponseEntity(new ErrorMessage(e.getMessage()), HttpStatus.FORBIDDEN);
     }
 

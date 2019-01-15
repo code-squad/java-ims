@@ -26,9 +26,6 @@ public class Milestone extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_milestone_writer"))
     private User writer;
 
-    @Embedded
-    private Issues issues = new Issues();
-
     public Milestone() {
 
     }
@@ -74,18 +71,6 @@ public class Milestone extends AbstractEntity {
 
     public MilestoneDto _toMilestoneDto() {
         return new MilestoneDto(subject, startDate, endDate, writer);
-    }
-
-    public void addIssue(Issue issue) {
-        issues.addIssue(issue, this);
-    }
-
-    public Issues getIssues() {
-        return issues;
-    }
-
-    public void setIssues(Issues issues) {
-        this.issues = issues;
     }
 
     @Override

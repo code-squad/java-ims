@@ -25,4 +25,5 @@ public class MainController {
         model.addAttribute("issues", issueService.findAllIssue());
         return "index";
     }
+
 }
