@@ -47,7 +47,7 @@
             <!-- milestone list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect milestones"
                 for="milestone-menu" >
-                <div id="select-milestones"></div>
+                <div id="select-milestones" about="/api/issue/{{id}}/milestones"></div>
             </ul>
 
                     <button id="label-menu" class="mdl-button mdl-js-button">
@@ -56,7 +56,7 @@
             <!-- label list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="label-menu">
-                <div id="select-labels"></div>
+                <div id="select-labels" about="/api/issue/{{id}}/labels"></div>
             </ul>
 
             <button id="assignee-menu" class="mdl-button mdl-js-button">
@@ -65,7 +65,7 @@
             <!-- label list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="assignee-menu">
-                <div id="select-assignees"></div>
+                <div id="select-assignees" about="/api/issue/{{id}}/assignees"></div>
             </ul>
         </div>
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
@@ -181,7 +181,7 @@
     <a href="/issue/{{id}}/setMilestone/{{milestone.id}}">{{milestone.subject}}</a>
 </li>-->
 <script type="text/template" id="menuTemplate">
-<li class="mdl-menu__item">
+<li class="mdl-menu__item {4}">
     <a href="/issue/{0}/{3}/{1}">{2}</a>
 </li>
 

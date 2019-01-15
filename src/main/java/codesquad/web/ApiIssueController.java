@@ -30,17 +30,18 @@ public class ApiIssueController {
 
     @GetMapping("/milestones")
     public IssueMenus findMilestones(@PathVariable long id) {
-        return new IssueMenus(milestoneService.findAll());
+
+        return new IssueMenus(id, milestoneService.findAll());
     }
 
     @GetMapping("/labels")
     public IssueMenus findLabels(@PathVariable long id) {
-        return new IssueMenus(labelService.findAll());
+        return new IssueMenus(id, labelService.findAll());
     }
 
     @GetMapping("/assignees")
     public IssueMenus findAssignees(@PathVariable long id) {
-        return new IssueMenus(userService.findAll());
+        return new IssueMenus(id, userService.findAll());
 
     }
 

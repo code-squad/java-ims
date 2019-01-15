@@ -1,5 +1,6 @@
 package support.domain;
 
+import codesquad.domain.MenuEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.CreatedDate;

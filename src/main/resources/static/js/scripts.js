@@ -130,14 +130,16 @@ $('#milestone-menu').on('mouseenter',getMilestone)
 function getMilestone(e) {
     e.preventDefault()
     var menu = 'setMilestone'
+    var ok = 'mdl-button--accent'
     console.log(window.location.href)
     var milestoneMenuBtn = $(this)
     var id =$('#select-milestones');
+    var url = id.attr('about');
     console.log(menu);
-    console.log('id1: {}',id)
+    console.log('url: {}',url)
     $.ajax({
                 type : 'get',
-                url : '/api/issue/1/milestones',
+                url : url,
                 dataType : 'json',
                 error: function(request) {
                     console.log('error');
@@ -150,11 +152,11 @@ function getMilestone(e) {
                     var menuTemplate = $("#menuTemplate").html()
                     if  (data.thisIssue != null) {
                         Object.keys(data.thisIssue).forEach(function(k){
-                                            template += menuTemplate.format(1, data.thisIssue[k].id, data.thisIssue[k].subject, menu)
+                                            template += menuTemplate.format(data.issueId , data.thisIssue[k].id, data.thisIssue[k].subject, menu, ok)
                                         });
                     }
                     Object.keys(data.others).forEach(function(k){
-                        template += menuTemplate.format(1, data.others[k].id, data.others[k].subject, menu)
+                        template += menuTemplate.format(data.issueId , data.others[k].id, data.others[k].subject, menu, '')
                     });
                     console.log(template);
                     console.log(id);
@@ -169,6 +171,7 @@ $('#label-menu').on('mouseenter',getLabels)
 function getLabels(e) {
     e.preventDefault()
     var menu = 'setLabel'
+    var ok = 'mdl-button--accent'
     console.log(window.location.href)
     var labelMenuBtn = $(this)
     var id =$('#select-labels');
@@ -189,11 +192,11 @@ function getLabels(e) {
                     var menuTemplate = $("#menuTemplate").html()
                     if  (data.thisIssue != null) {
                         Object.keys(data.thisIssue).forEach(function(k){
-                                            template += menuTemplate.format(1, data.thisIssue[k].id, data.thisIssue[k].subject, menu)
+                                            template += menuTemplate.format(data.issueId , data.thisIssue[k].id, data.thisIssue[k].subject, menu, ok)
                                         });
                     }
                     Object.keys(data.others).forEach(function(k){
-                        template += menuTemplate.format(1, data.others[k].id, data.others[k].subject, menu)
+                        template += menuTemplate.format(data.issueId , data.others[k].id, data.others[k].subject, menu, '')
                     });
                     console.log(template);
                     console.log(id);
@@ -207,6 +210,7 @@ $('#assignee-menu').on('mouseenter',getAssignees)
 function getAssignees(e) {
     e.preventDefault()
     var menu = 'setAssignee'
+    var ok = 'mdl-button--accent'
     console.log(window.location.href)
     var labelMenuBtn = $(this)
     var id =$('#select-assignees');
@@ -227,11 +231,11 @@ function getAssignees(e) {
                     var menuTemplate = $("#menuTemplate").html()
                     if  (data.thisIssue != null) {
                         Object.keys(data.thisIssue).forEach(function(k){
-                                            template += menuTemplate.format(1, data.thisIssue[k].id, data.thisIssue[k].userId, menu)
+                                            template += menuTemplate.format(data.issueId, data.thisIssue[k].id, data.thisIssue[k].userId, menu, ok)
                                         });
                     }
                     Object.keys(data.others).forEach(function(k){
-                        template += menuTemplate.format(1, data.others[k].id, data.others[k].userId, menu)
+                        template += menuTemplate.format(data.issueId, data.others[k].id, data.others[k].userId, menu, '')
                     });
                     console.log(template);
                     console.log(id);
