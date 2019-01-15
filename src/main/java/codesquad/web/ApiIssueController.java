@@ -1,6 +1,8 @@
 package codesquad.web;
 
 import codesquad.domain.IssueMenus;
+import codesquad.domain.Label;
+import codesquad.domain.MenuEntity;
 import codesquad.service.IssueService;
 import codesquad.service.LabelService;
 import codesquad.service.MilestoneService;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/issue/{id}")

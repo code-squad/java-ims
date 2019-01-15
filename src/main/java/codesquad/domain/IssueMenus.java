@@ -28,6 +28,17 @@ public class IssueMenus{
         this.issueId = id;
     }
 
+    public IssueMenus(long id, List<MenuEntity> owners,List others) {
+        this.others = others;
+        if (owners != null){
+            for (MenuEntity owner : owners) {
+                this.thisIssue.add(owner);
+                this.others.remove(owner);
+            }
+        }
+        this.issueId = id;
+    }
+
     public IssueMenus(List others) {
         this.others = others;
     }

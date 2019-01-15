@@ -9,6 +9,7 @@ import support.domain.AbstractEntity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Issue extends AbstractEntity {
@@ -24,9 +25,9 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
     private Milestone milestone;
 
-    @ManyToOne
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_label"))
-    private Label label;
+    private List<Label> labels = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_assignee"))
@@ -71,7 +72,11 @@ public class Issue extends AbstractEntity {
     }
 
     public void toLabel(Label label) {
-        this.label = label;
+        if (this.labels.contains(label)) {
+            this.labels.remove(label);
+            return;
+        }
+        this.labels.add(label);
     }
 
     public void toAssignee(User user) {
@@ -116,12 +121,9 @@ public class Issue extends AbstractEntity {
         this.milestone = milestone;
     }
 
-    public MenuEntity getLabel() {
-        return label;
-    }
+    public List getLabel() {
 
-    public void setLabel(Label label) {
-        this.label = label;
+        return labels;
     }
 
     public MenuEntity getAssignee() {
