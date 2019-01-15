@@ -108,7 +108,7 @@ public class Issue extends AbstractEntity {
         this.contentsBody.setComment(comment);
     }
 
-    public Milestone getMilestone() {
+    public MenuEntity getMilestone() {
         return milestone;
     }
 
@@ -116,7 +116,7 @@ public class Issue extends AbstractEntity {
         this.milestone = milestone;
     }
 
-    public Label getLabel() {
+    public MenuEntity getLabel() {
         return label;
     }
 
@@ -124,7 +124,7 @@ public class Issue extends AbstractEntity {
         this.label = label;
     }
 
-    public User getAssignee() {
+    public MenuEntity getAssignee() {
         return assignee;
     }
 

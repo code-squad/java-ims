@@ -19,16 +19,13 @@ public class IssueMenus{
         this.others = others;
     }
 
-    public IssueMenus(long id,List others) {
-        /*this.others = others;
-        for (MenuEntity other : this.others) {
-            if (other.getId() == id) {
-                thisIssue.add(other);
-                others.remove(other);
-            }
-        }*/
-        this.issueId = id;
+    public IssueMenus(long id, MenuEntity owner,List others) {
         this.others = others;
+        if (owner != null){
+            this.thisIssue.add(owner);
+            this.others.remove(owner);
+        }
+        this.issueId = id;
     }
 
     public IssueMenus(List others) {

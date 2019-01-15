@@ -88,4 +88,8 @@ public class Milestone extends AbstractEntity implements MenuEntity {
     public void setIssues(List<Issue> issues) {
         this.issues = issues;
     }
+
+    public String getName() {
+        return "";
+    }
 }

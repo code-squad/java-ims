@@ -82,6 +82,9 @@ public class User extends AbstractEntity implements MenuEntity {
 
         this.name = target.name;
     }
+    public String getSubject() {
+        return "";
+    }
 
     public boolean matchPassword(String password) {
         return this.password.equals(password);

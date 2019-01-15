@@ -30,18 +30,17 @@ public class ApiIssueController {
 
     @GetMapping("/milestones")
     public IssueMenus findMilestones(@PathVariable long id) {
-
-        return new IssueMenus(id, milestoneService.findAll());
+        return new IssueMenus(id,issueService.findById(id).get().getMilestone() , milestoneService.findAll());
     }
 
     @GetMapping("/labels")
     public IssueMenus findLabels(@PathVariable long id) {
-        return new IssueMenus(id, labelService.findAll());
+        return new IssueMenus(id,issueService.findById(id).get().getLabel(), labelService.findAll());
     }
 
     @GetMapping("/assignees")
     public IssueMenus findAssignees(@PathVariable long id) {
-        return new IssueMenus(id, userService.findAll());
+        return new IssueMenus(id,issueService.findById(id).get().getAssignee(), userService.findAll());
 
     }
 
