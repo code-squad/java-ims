@@ -1,10 +1,10 @@
 package codesquad.domain;
 
+import codesquad.CannotDeleteException;
+import codesquad.CannotUpdateException;
 import support.domain.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +15,20 @@ public class Label extends AbstractEntity {
     @Column(length = 30, nullable = false)
     private String name;
 
-    @ManyToMany
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_label_writer"))
+    private User writer;
+
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Issue> issues = new ArrayList<>();
 
     public Label() {
     }
 
-    public Label(long id, String name) {
+    public Label(long id, String name, User writer) {
         super(id);
         this.name = name;
+        this.writer = writer;
     }
 
     public String getName() {
@@ -34,7 +39,8 @@ public class Label extends AbstractEntity {
         this.name = name;
     }
 
-    public void update(Label updatedLabel) {
+    public void update(Label updatedLabel) throws CannotUpdateException{
+        for (Issue issue : issues) if (!isOwner(issue.getWriter())) throw new CannotUpdateException("You can't update this label");
         this.name = updatedLabel.name;
     }
 
@@ -50,6 +56,14 @@ public class Label extends AbstractEntity {
         this.issues = issues;
     }
 
+    public User getWriter() {
+        return writer;
+    }
+
+    public void setWriter(User writer) {
+        this.writer = writer;
+    }
+
     public int getCountIssues() {
         return issues.size();
     }
@@ -59,5 +73,15 @@ public class Label extends AbstractEntity {
             return issues.remove(issue);
         }
         return issues.add(issue);
+    }
+
+    public boolean isOwner(User loginUser) {
+        return writer.equals(loginUser);
+    }
+
+    public boolean delete() throws CannotDeleteException{
+//        if (issues.contains(null)) return true;
+        for (Issue issue : issues) if (!isOwner(issue.getWriter())) throw new CannotDeleteException("You can't delete this label");
+        return true;
     }
 }

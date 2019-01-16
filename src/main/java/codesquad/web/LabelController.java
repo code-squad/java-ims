@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.UnAuthorizedException;
 import codesquad.domain.Label;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
@@ -7,6 +8,8 @@ import codesquad.service.LabelService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import javax.annotation.Resource;
 
 @Controller
@@ -21,13 +24,13 @@ public class LabelController {
     }
 
     @PostMapping("")
-    public String create(@LoginUser User loginUser, Label label, Model model) {
+    public String create(@LoginUser User loginUser, Label label, RedirectAttributes redirectAttrs) {
         try {
             labelService.add(label);
             return "redirect:/labels";
         } catch (Exception e) {
-            model.addAttribute("errorMessage" , "Duplicate");
-            return "/label/list";
+            redirectAttrs.addFlashAttribute("errorMessage", "Duplicate");
+            return "redirect:/labels";
         }
     }
 
@@ -38,20 +41,35 @@ public class LabelController {
     }
 
     @GetMapping("/{id}/form")
-    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
-        model.addAttribute("label", labelService.findById(id));
-        return "/label/updateForm";
+    public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model, RedirectAttributes redirectAttrs) {
+        try {
+            model.addAttribute("label", labelService.findById(loginUser, id));
+            return "/label/updateForm";
+        } catch (UnAuthorizedException e) {
+            redirectAttrs.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/labels";
+        }
     }
 
     @PutMapping("/{id}")
-    public String update(@LoginUser User loginUser, @PathVariable long id, Label updatedLabel) {
-        labelService.update(id, updatedLabel);
-        return "redirect:/labels";
+    public String update(@LoginUser User loginUser, @PathVariable long id, Label updatedLabel, RedirectAttributes redirectAttrs) {
+        try {
+            labelService.update(loginUser, id, updatedLabel);
+            return "redirect:/labels";
+        } catch (Exception e) {
+            redirectAttrs.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/labels";
+        }
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@LoginUser User loginUser, @PathVariable long id) {
-        labelService.delete(id);
-        return "redirect:/labels";
+    public String delete(@LoginUser User loginUser, @PathVariable long id, RedirectAttributes redirectAttrs) {
+        try {
+            labelService.delete(loginUser, id);
+            return "redirect:/labels";
+        } catch (Exception e) {
+            redirectAttrs.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/labels";
+        }
     }
 }

@@ -15,6 +15,8 @@ import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
 import static codesquad.domain.LabelTest.*;
+import static codesquad.domain.UserTest.JAVAJIGI;
+import static codesquad.domain.UserTest.SANJIGI;
 
 public class LabelAccpetanceTest  extends BasicAuthAcceptanceTest {
     private static final Logger log = LoggerFactory.getLogger(IssueAcceptanceTest.class);
@@ -59,8 +61,7 @@ public class LabelAccpetanceTest  extends BasicAuthAcceptanceTest {
 
         ResponseEntity<String> response = basicAuthTemplate.postForEntity("/labels", request, String.class);
 
-        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        softly.assertThat(response.getBody().contains("Duplicate")).isTrue();
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
     }
 
     @Test
@@ -95,6 +96,14 @@ public class LabelAccpetanceTest  extends BasicAuthAcceptanceTest {
     }
 
     @Test
+    public void updateForm_not_owner() throws Exception {
+        ResponseEntity<String> response = basicAuthTemplate(SANJIGI).getForEntity(String.format("/labels/%d/form", LABEL1.getId()), String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/labels");
+    }
+
+    @Test
     public void updateForm() throws Exception {
         ResponseEntity<String> response = basicAuthTemplate.getForEntity(String.format("/labels/%d/form", LABEL1.getId()), String.class);
 
@@ -115,13 +124,51 @@ public class LabelAccpetanceTest  extends BasicAuthAcceptanceTest {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .put()
                 .addParameter("name", UPDATEDLABEL2.getName())
+                .addParameter("writer", JAVAJIGI.getId())
                 .build();
 
         return template.postForEntity(String.format("/labels/%d", LABEL2.getId()), request, String.class);
     }
 
     @Test
-    public void update() throws Exception {
+    public void update_not_owner() throws Exception {
+        ResponseEntity<String> response = update(basicAuthTemplate(SANJIGI));
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/labels");
+    }
+
+    @Test
+    public void update_label_have_other_user_issue() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .put()
+                .addParameter("name", UPDATEDLABEL6.getName())
+                .addParameter("writer", SANJIGI.getId())
+                .build();
+
+        ResponseEntity<String> response = basicAuthTemplate(SANJIGI).postForEntity(String.format("/labels/%d", LABEL6.getId()), request, String.class);
+
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/labels");
+    }
+
+    @Test
+    public void update_label_have_myself_issues() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .put()
+                .addParameter("name", UPDATEDLABEL5.getName())
+                .addParameter("writer", SANJIGI.getId())
+                .build();
+
+        ResponseEntity<String> response = basicAuthTemplate(SANJIGI).postForEntity(String.format("/labels/%d", LABEL5.getId()), request, String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/labels");
+    }
+
+    @Test
+    public void update_empty_issues() throws Exception {
         ResponseEntity<String> response = update(basicAuthTemplate);
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
@@ -145,8 +192,32 @@ public class LabelAccpetanceTest  extends BasicAuthAcceptanceTest {
     }
 
     @Test
-    public void delete() throws Exception {
-        ResponseEntity<String> response = delete(basicAuthTemplate);
+    public void delete_not_owner() throws Exception {
+        ResponseEntity<String> response = delete(basicAuthTemplate(SANJIGI));
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/labels");
+    }
+
+    @Test
+    public void delete_label_have_myself_issues() {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .delete()
+                .build();
+
+        ResponseEntity<String> response = basicAuthTemplate(SANJIGI).postForEntity(String.format("/labels/%d", LABEL6.getId()), request, String.class);
+
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/labels");
+    }
+
+    @Test
+    public void delete_empty_issues() throws Exception {
+        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
+                .delete()
+                .build();
+
+        ResponseEntity<String> response = basicAuthTemplate(SANJIGI).postForEntity(String.format("/labels/%d", LABEL5.getId()), request, String.class);
 
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/labels");

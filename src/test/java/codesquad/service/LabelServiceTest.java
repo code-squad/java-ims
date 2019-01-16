@@ -1,6 +1,5 @@
 package codesquad.service;
 
-import codesquad.domain.IssueRepository;
 import codesquad.domain.LabelRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +15,7 @@ import java.util.Optional;
 
 import static codesquad.domain.IssueTest.ISSUE1;
 import static codesquad.domain.LabelTest.*;
+import static codesquad.domain.UserTest.JAVAJIGI;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -26,9 +26,6 @@ public class LabelServiceTest extends BaseTest {
     private LabelRepository labelRepository;
 
     @Mock
-    private IssueRepository issueRepository;
-
-    @Mock
     private IssueService issueService;
 
     @InjectMocks
@@ -36,7 +33,7 @@ public class LabelServiceTest extends BaseTest {
 
     @Before
     public void setUp() throws Exception {
-        when(issueRepository.findById(ISSUE1.getId())).thenReturn(Optional.of(ISSUE1));
+        when(issueService.findById(ISSUE1.getId())).thenReturn(ISSUE1);
         when(labelRepository.findById(LABEL2.getId())).thenReturn(Optional.of(LABEL2));
         when(labelRepository.findById(LABEL3.getId())).thenReturn(Optional.of(LABEL3));
         when(labelRepository.findById(UPDATEDLABEL2.getId())).thenReturn(Optional.of(UPDATEDLABEL2));
@@ -49,18 +46,12 @@ public class LabelServiceTest extends BaseTest {
     }
 
     @Test
-    public void update() {
-        labelService.update(LABEL2.getId(), UPDATEDLABEL2);
+    public void update() throws Exception{
+        labelService.update(JAVAJIGI, LABEL2.getId(), UPDATEDLABEL2);
         softly.assertThat(labelRepository.findById(LABEL2.getId()).get().getName()).isEqualTo(UPDATEDLABEL2.getName());
     }
 
     @Test
-    public void delete() throws Exception {
-        labelService.delete(LABEL1.getId());
-        softly.assertThat(labelRepository.findById(LABEL1.getId())).isEmpty();
-    }
-
-    @Test // false로 에러발생. 원인이 무엇일까?
     public void setIssues() {
         labelService.setIssue(ISSUE1.getId(), LABEL3.getId());
         softly.assertThat(labelRepository.findById(LABEL3.getId()).get().getIssues().contains(ISSUE1)).isTrue();

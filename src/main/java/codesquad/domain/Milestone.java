@@ -12,6 +12,8 @@ import java.util.List;
 
 @Entity
 public class Milestone extends AbstractEntity {
+    public static final int progressBarWidth = 300;
+
     @Size(min = 3, max = 50)
     @Column(length = 50, nullable = false)
     private String subject;
@@ -75,6 +77,7 @@ public class Milestone extends AbstractEntity {
 
     public void addIssue(Issue issue) {
         issues.add(issue);
+        issue.setMilestone(this);
     }
 
     public long getOpenIssue() {
@@ -87,6 +90,6 @@ public class Milestone extends AbstractEntity {
 
     public long getProgress() {
         if (issues.size() == 0) return 0;
-        return 300 * getOpenIssue() / (getCloseIssue() + getOpenIssue());
+        return (progressBarWidth * getOpenIssue()) / (getCloseIssue() + getOpenIssue());
     }
 }

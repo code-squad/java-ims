@@ -1,7 +1,9 @@
 package codesquad.service;
 
+import codesquad.UnAuthorizedException;
 import codesquad.domain.Label;
 import codesquad.domain.LabelRepository;
+import codesquad.domain.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,6 +27,12 @@ public class LabelService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
+    public Label findById(User loginUser, long id) {
+        return labelRepository.findById(id)
+                .filter(user -> user.isOwner(loginUser))
+                .orElseThrow(() -> new UnAuthorizedException("You're Unauthorized User"));
+    }
+
     @Transactional
     public Label add(Label label) throws Exception {
         if (labelRepository.findByName(label.getName()).isPresent()) throw new Exception();
@@ -32,14 +40,15 @@ public class LabelService {
     }
 
     @Transactional
-    public void update(long id, Label updatedLabel) {
-        Label label = findById(id);
+    public void update(User loginUser, long id, Label updatedLabel) throws Exception{
+        Label label = findById(loginUser, id);
         label.update(updatedLabel);
     }
 
     @Transactional
-    public void delete(long id) {
-        labelRepository.deleteById(id);
+    public void delete(User loginUser, long id) throws Exception{
+        Label label = findById(loginUser, id);
+        if (label.delete()) labelRepository.deleteById(id);
     }
 
     @Transactional

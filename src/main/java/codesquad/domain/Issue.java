@@ -33,7 +33,7 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_assignee"))
     private User assignee;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Label> labels = new ArrayList<>();
 
     private boolean deleted = false;
@@ -44,11 +44,7 @@ public class Issue extends AbstractEntity {
     }
 
     public Issue(String subject, String comment, User writer, boolean deleted, boolean closed) {
-        this.subject = subject;
-        this.comment = comment;
-        this.writer = writer;
-        this.deleted = deleted;
-        this.closed = closed;
+        this(0L, subject, comment, writer, deleted, closed);
     }
 
     public Issue(long id, String subject, String comment, User writer, boolean deleted, boolean closed) {
@@ -159,5 +155,14 @@ public class Issue extends AbstractEntity {
             return labels.remove(label);
         }
         return labels.add(label);
+    }
+
+    @Override
+    public String toString() {
+        return "Issue{" +
+                "subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
+                ", writer=" + writer +
+                '}';
     }
 }

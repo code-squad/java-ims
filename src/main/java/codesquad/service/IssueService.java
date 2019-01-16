@@ -66,11 +66,7 @@ public class IssueService {
 
     @Transactional
     public void setMilestone(User loginUser, long issueId, long milestoneId) {
-        Issue issue = findById(loginUser, issueId);
-        Milestone milestone = milestoneService.findById(milestoneId);
-
-        milestone.addIssue(issue);
-        issue.setMilestone(milestone);
+        milestoneService.findById(milestoneId).addIssue(findById(loginUser, issueId));
     }
 
     @Transactional

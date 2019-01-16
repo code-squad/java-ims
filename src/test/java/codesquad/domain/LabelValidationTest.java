@@ -12,6 +12,7 @@ import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 
+import static codesquad.domain.UserTest.JAVAJIGI;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -28,7 +29,7 @@ public class LabelValidationTest {
 
     @Test
     public void nameWhenIsEmpty() throws Exception {
-        Label label = new Label(1, "");
+        Label label = new Label(1, "", JAVAJIGI);
         Set<ConstraintViolation<Label>> constraintViolcations = validator.validate(label);
         assertThat(constraintViolcations.size(), is(1));
 
@@ -39,7 +40,7 @@ public class LabelValidationTest {
 
     @Test
     public void nameWhenIsShort() throws Exception {
-        Label label = new Label(1, "a");
+        Label label = new Label(1, "a", JAVAJIGI);
         Set<ConstraintViolation<Label>> constraintViolcations = validator.validate(label);
         assertThat(constraintViolcations.size(), is(1));
 
