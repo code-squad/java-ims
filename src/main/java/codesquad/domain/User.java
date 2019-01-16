@@ -5,6 +5,7 @@ import codesquad.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ public class User extends AbstractEntity {
 
     @Size(min = 3, max = 20)
     @Column(unique = true, nullable = false, length = 20)
+    @NotBlank
     private String userId;
 
     @Size(min = 6, max = 20)
@@ -22,6 +24,7 @@ public class User extends AbstractEntity {
     private String password;
 
     @Size(min = 3, max = 20)
+    @NotBlank
     @Column(nullable = false, length = 20)
     private String name;
 
@@ -125,7 +128,7 @@ public class User extends AbstractEntity {
     }
 
     public static class UserBuilder {
-        private Long id;
+        private Long id = 0L;
         private String userId;
         private String password;
         private String name;

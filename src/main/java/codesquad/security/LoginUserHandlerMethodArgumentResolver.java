@@ -2,7 +2,9 @@ package codesquad.security;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -10,11 +12,13 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.Locale;
+
 @Component
 public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-    @Value("${error.login}")
-    private String errorMessage;
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -31,7 +35,7 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
         }
         LoginUser loginUser = parameter.getParameterAnnotation(LoginUser.class);
         if (loginUser.required()) {
-            throw new UnAuthorizedException(errorMessage);
+            throw new UnAuthorizedException(messageSource.getMessage("error.login",null, Locale.getDefault()));
         }
         return user;
     }

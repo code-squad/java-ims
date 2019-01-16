@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
@@ -66,6 +67,7 @@ public abstract class AcceptanceTest extends BaseTest {
                 .addParameter("userId", userId)
                 .addParameter("password", password)
                 .addParameter("name", name)
+                .addParameter("file", new ClassPathResource("maguni.png"))
                 .build();
         return template.postForEntity("/api/user", httpEntity, Void.class);
     }

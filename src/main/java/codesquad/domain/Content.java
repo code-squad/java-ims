@@ -3,16 +3,19 @@ package codesquad.domain;
 import codesquad.dto.IssueDto;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Embeddable
 public class Content {
     @Size(min = 5, max = 200)
     @Column(nullable = false)
+    @NotBlank
     private String subject;
 
     @Size(min = 5, max = 1000)
     @Column(nullable = false)
+    @NotBlank
     private String comment;
 
     public Content() {

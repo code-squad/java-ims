@@ -11,6 +11,7 @@ import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Locale;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -37,8 +39,8 @@ public class ApiUserController {
     @Autowired
     private AvatarService attachmentService;
 
-    @Value("${error.not.supported}")
-    private String errorMessage;
+    @Autowired
+    private MessageSource messageSource;
 
     private static final Logger logger = getLogger(ApiUserController.class);
 
@@ -58,11 +60,7 @@ public class ApiUserController {
 
     @PutMapping(consumes = {"multipart/form-data"}, value = "/{id}")
     public ResponseEntity update(@LoginUser User loginUser, @PathVariable long id, @Valid UserDto updatedUser,
-                                       BindingResult bindingResult, MultipartFile file, HttpSession httpSession) throws IOException {
-        if(bindingResult.hasErrors()) {
-            return new ResponseEntity(new ErrorMessage(errorMessage), HttpStatus.FORBIDDEN);
-        }
-
+                                       MultipartFile file, HttpSession httpSession) throws IOException {
         Attachment avatar = attachmentService.createAvatar(file);
         User user = userService.update(loginUser, id, updatedUser, avatar);
         HttpSessionUtils.updateUserSession(httpSession, updatedUser);
@@ -81,6 +79,7 @@ public class ApiUserController {
     public HttpHeaders createHeader(String location) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create(location));
+
         return httpHeaders;
     }
 }

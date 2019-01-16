@@ -4,19 +4,20 @@ import codesquad.dto.LabelDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
 public class Label extends AbstractEntity {
 
-    @Embedded
-    private Issues issues;
-
     @Size(min = 5, max = 20)
     @Column(nullable = false, length = 20)
+    @NotBlank
     private String subject;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_label_writer"))
     private User writer;
 
@@ -27,14 +28,6 @@ public class Label extends AbstractEntity {
     public Label(String subject, User writer) {
         this.subject = subject;
         this.writer = writer;
-    }
-
-    public Issues getIssues() {
-        return issues;
-    }
-
-    public void setIssues(Issues issues) {
-        this.issues = issues;
     }
 
     public String getSubject() {

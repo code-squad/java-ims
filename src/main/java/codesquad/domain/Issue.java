@@ -5,6 +5,7 @@ import codesquad.dto.IssueDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -17,6 +18,7 @@ public class Issue extends AbstractEntity {
     private Answers answers = new Answers();
 
     @ManyToOne
+    @NotNull
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 

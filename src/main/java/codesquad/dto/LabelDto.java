@@ -2,10 +2,14 @@ package codesquad.dto;
 
 import codesquad.domain.Label;
 import codesquad.domain.User;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class LabelDto {
     @Size(min = 5, max = 20)
+    @NotBlank
     private String subject;
 
     private User writer;

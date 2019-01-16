@@ -8,6 +8,7 @@ import codesquad.service.MilestoneService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
+import java.util.Locale;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Controller
@@ -28,32 +31,29 @@ public class MilestoneController {
     @Autowired
     private MilestoneService milestoneService;
 
-    @Value("${error.not.supported}")
-    private String formatError;
+    @Autowired
+    private MessageSource messageSource;
 
     private static final Logger logger = getLogger(MilestoneController.class);
 
     @GetMapping
     public String milestoneList(Model model) {
-        logger.debug("Call milestone Method call");
         model.addAttribute("milestones", milestoneService.findAllMilestone());
         return "/milestone/list";
     }
 
     @GetMapping("/form")
     public String milestoneForm(@LoginUser User loginUser) {
-        logger.debug("Call milestoneFrom Method call");
         return "/milestone/form";
     }
 
     @PostMapping
     public String milestoneCreate(@LoginUser User loginUser, @Valid MilestoneDto milestoneDto, BindingResult bindingResult) {
-        logger.debug("Call milestoneCreate Method call, MileStoneDto : {}", milestoneDto.toString());
         if(bindingResult.hasErrors()) {
-            logger.debug(formatError);
-            throw new EntityNotFoundException(formatError);
+            throw new EntityNotFoundException(
+                    messageSource.getMessage("error.not.supported", null, Locale.getDefault()));
         }
-        Milestone milestone = milestoneService.saveMilestone(loginUser, milestoneDto);
+        milestoneService.saveMilestone(loginUser, milestoneDto);
         return "redirect:/milestone";
     }
 }

@@ -4,6 +4,8 @@ import codesquad.dto.MilestoneDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,15 +16,19 @@ public class Milestone extends AbstractEntity {
 
     @Column(nullable = false, length = 200)
     @Size(min = 5, max = 200)
+    @NotBlank
     private String subject;
 
     @Column(nullable = false)
+    @NotNull
     private LocalDateTime startDate;
 
     @Column(nullable = false)
+    @NotNull
     private LocalDateTime endDate;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_milestone_writer"))
     private User writer;
 

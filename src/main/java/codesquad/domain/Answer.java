@@ -4,12 +4,15 @@ import codesquad.dto.AnswerDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Answer extends AbstractEntity {
 
     @Column(nullable = false)
     @Lob
+    @NotBlank
     private String comment;
 
     @ManyToOne
@@ -17,6 +20,7 @@ public class Answer extends AbstractEntity {
     private User writer;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_issue"))
     private Issue issue;
 

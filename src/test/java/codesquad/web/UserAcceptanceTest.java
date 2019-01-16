@@ -27,7 +27,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
-    public void create() throws Exception {
+    public void create() {
         String userId = "testuser";
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .addParameter("userId", userId)
@@ -43,14 +43,14 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
-    public void updateForm_no_login() throws Exception {
+    public void updateForm_no_login() {
         ResponseEntity<String> response = template.getForEntity(String.format("/user/%d/form", loginUser.getId()),
                 String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
-    public void updateForm_login() throws Exception {
+    public void updateForm_login() {
         ResponseEntity<String> response = basicAuthTemplate
                 .getForEntity(String.format("/user/%d/form", loginUser.getId()), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -58,7 +58,7 @@ public class UserAcceptanceTest extends BasicAuthAcceptanceTest {
     }
 
     @Test
-    public void update_no_login() throws Exception {
+    public void update_no_login() {
         ResponseEntity<String> response = update(template);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }

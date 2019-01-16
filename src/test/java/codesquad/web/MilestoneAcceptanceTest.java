@@ -58,7 +58,7 @@ public class MilestoneAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("subject", "subject")
                 .build();
         ResponseEntity<Void> responseEntity = basicAuthTemplate().postForEntity("/milestone", httpEntity, Void.class);
-        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -71,23 +71,5 @@ public class MilestoneAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<Void> responseEntity = basicAuthTemplate().postForEntity("/milestone", httpEntity, Void.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/milestone");
-    }
-
-    @Test
-    public void 마일스톤_적용_로그인X_실패() {
-        ResponseEntity<Void> responseEntity = template.getForEntity("/issues/1/milestones/1", Void.class);
-        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-    }
-
-    @Test
-    public void 마일스톤_적용_로그인O_이슈작성자X_실패() {
-        ResponseEntity<Void> responseEntity = basicAuthTemplate(UserFixture.DOBY).getForEntity("/issues/1/milestones/1", Void.class);
-        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-    }
-
-    @Test
-    public void 마일스톤_적용_로그인O_이슈작성O_성공() {
-        ResponseEntity<Void> responseEntity = basicAuthTemplate().getForEntity("/issues/1/milestones/1", Void.class);
-        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
     }
 }

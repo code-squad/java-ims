@@ -38,7 +38,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    public void show_다른_사람() throws Exception {
+    public void show_다른_사람() {
         ResponseEntity responseEntity = createUserResponse("testUser-2", "password", "testName", template);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         String location = responseEntity.getHeaders().getLocation().getPath();
@@ -100,7 +100,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     public void 로그인_아이디_잘못입력_실패_Test() {
         /* 1. 회원가입 */
         createUserResponse("testUser-6", "password", "testName", template);
-        UserDto userDto = new UserDto("failIdInput", "password");
+        UserDto userDto = new UserDto("failIdInput", "password", "testName");
 
         /* 2. 로그인 */
         ResponseEntity<User> responseEntity = template.postForEntity("/api/user/login", userDto, User.class);
@@ -111,7 +111,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     public void 로그인_패스워드_잘못입력_실패_Test() {
         /* 1. 회원가입 */
         createUserResponse("testUser-7", "password", "testName", template);
-        UserDto userDto = new UserDto("testUser-7", "passwordError");
+        UserDto userDto = new UserDto("testUser-7", "passwordError", "testName");
 
         /* 2. 로그인 */
         ResponseEntity<User> responseEntity = template.postForEntity("/api/user/login", userDto, User.class);
@@ -122,7 +122,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     public void 로그인_성공_Test() {
         /* 1. 회원가입 */
         createUserResponse("testUser-8", "password", "testName", template);
-        UserDto userDto = new UserDto("testUser-8", "password");
+        UserDto userDto = new UserDto("testUser-8", "password", "testName");
 
         /* 2. 로그인 */
         ResponseEntity<User> responseEntity = template.postForEntity("/api/user/login", userDto, User.class);

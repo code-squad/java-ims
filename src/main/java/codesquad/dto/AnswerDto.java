@@ -1,10 +1,17 @@
 package codesquad.dto;
 
 import codesquad.domain.Answer;
+import codesquad.domain.Issue;
 import codesquad.domain.User;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class AnswerDto {
 
+    @Lob
+    @NotBlank
     private String comment;
 
     private User writer;

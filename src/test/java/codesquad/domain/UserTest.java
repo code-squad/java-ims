@@ -35,7 +35,7 @@ public class UserTest {
     @Test
     public void update_mismatch_password() {
         User origin = new User.UserBuilder("javajigi", "notMatch", "name").build();
-        User target = new User.UserBuilder("sanjigi", "password", "name_modify").build();
+        User target = new User.UserBuilder("javajigi", "password", "name").build();
         origin.update(origin, target, attachment);
         assertTrue(origin.getName().equals(target.getName()));
     }
@@ -50,7 +50,7 @@ public class UserTest {
     @Test
     public void mismatch_password() throws Exception {
         User origin = new User.UserBuilder("javajigi", "password", "name").build();
-        User target = new User.UserBuilder("javajigi", "password", "name").build();
+        User target = new User.UserBuilder("javajigi", "modifiedPWD", "name").build();
         assertFalse(origin.matchPassword(target.getPassword()));
     }
 }

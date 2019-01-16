@@ -10,12 +10,14 @@ import codesquad.dto.MilestoneDto;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -25,8 +27,8 @@ public class MilestoneService {
     @Autowired
     private MilestoneRepository milestoneRepository;
 
-    @Value("${error.not.oneself}")
-    private String oneSelfErrorMessage;
+    @Autowired
+    private MessageSource messageSource;
 
     private static final Logger logger = getLogger(MilestoneService.class);
 
@@ -41,8 +43,8 @@ public class MilestoneService {
     @Transactional
     public void registerMilestone(User loginUser, Issue issue, Long milestoneId) {
         if(!issue.isOneSelf(loginUser)) {
-            logger.debug(oneSelfErrorMessage);
-            throw new UnAuthorizedException(oneSelfErrorMessage);
+            throw new UnAuthorizedException(
+                    messageSource.getMessage("error.not.oneself", null, Locale.getDefault()));
         }
     }
 }
