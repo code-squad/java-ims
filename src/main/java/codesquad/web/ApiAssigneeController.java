@@ -36,9 +36,9 @@ public class ApiAssigneeController {
     private UserService userService;
 
     @PostMapping("/{assigneeId}")
-    public ResponseEntity<String> registerAssignee(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long assigneeId) throws UnAuthenticationException {
+    public ResponseEntity<String> registerAssignee(@LoginUser User loginUser, @PathVariable Long id,
+                                                   @PathVariable Long assigneeId) throws UnAuthenticationException {
         Issue issue = issueService.findIssue(id);
-        logger.debug("Call registerAssignee Method(), issue : {}", issue);
         assigneeService.registerAssignee(loginUser, issue, assigneeId);
         return new ResponseEntity("success", HttpStatus.OK);
     }

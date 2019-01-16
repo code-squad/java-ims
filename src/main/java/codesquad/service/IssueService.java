@@ -8,11 +8,13 @@ import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -24,8 +26,8 @@ public class IssueService {
     @Autowired
     private IssueRepository issueRepository;
 
-    @Value("${error.not.oneself}")
-    private String oneSelfErrorMessage;
+    @Autowired
+    private MessageSource messageSource;
 
     public Issue createIssue(User loginUser, IssueDto issueDto) {
         logger.debug("Call Method createIssue() : {}", issueDto.toString());
@@ -52,8 +54,8 @@ public class IssueService {
 
     public void confirmOneSelf(User loginUser, Long id) throws UnAuthenticationException {
         if(!issueRepository.findById(id).orElse(null).isOneSelf(loginUser)) {
-            logger.debug("Error : {}",oneSelfErrorMessage);
-            throw new UnAuthenticationException(oneSelfErrorMessage);
+            throw new UnAuthenticationException(
+                    messageSource.getMessage("error.not.oneself", null, Locale.getDefault()));
         }
     }
 

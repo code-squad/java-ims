@@ -1,14 +1,10 @@
 package codesquad.domain;
 
-import codesquad.ApplicationConfigurationProp;
 import org.slf4j.Logger;
-import org.springframework.web.multipart.MultipartFile;
 import support.converter.FileNameConverter;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Pattern;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -16,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -24,9 +21,12 @@ public class Attachment {
 
     private static final String SPLIT_STANDARD = ".";
 
+    private static final String PATTERN = "^\\S+.(?i)(png|jpg|jpeg|gif)$";
+
     private static final Logger logger = getLogger(Attachment.class);
 
     @Column
+    @Pattern(regexp = PATTERN)
     private String originFileName;
 
     @Column(unique = true)
@@ -84,9 +84,7 @@ public class Attachment {
     }
 
     public static Attachment of(String originFileName, String path) {
-        String targetFileName = FileNameConverter.convert(originFileName);
-
-        return new Attachment(originFileName, targetFileName, path);
+        return new Attachment(originFileName, UUID.randomUUID().toString(), path);
     }
 
     public static boolean extensionCheck(String originFileName, List<String> suffix) {

@@ -21,7 +21,6 @@ public class MainController {
 
     @GetMapping("/")
     public String home(Model model, HttpSession httpSession) {
-        logger.debug("Call Method home()");
         model.addAttribute("issues", issueService.findAllIssue());
         return "index";
     }

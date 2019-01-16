@@ -23,20 +23,11 @@ public class RestSecurityControllerAdvice {
     
     private static final Logger logger = getLogger(RestSecurityControllerAdvice.class);
 
-    @Value("$(error.not.supported)")
-    private String errorMessage;
-
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorMessage> constraintViolation(ConstraintViolationException e) {
         return new ResponseEntity(new ErrorMessage(e.getMessage())
                 , HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorMessage> dataIntegrityViolationException(DataIntegrityViolationException e) {
-        return new ResponseEntity(new ErrorMessage(errorMessage), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(UnAuthenticationException.class)

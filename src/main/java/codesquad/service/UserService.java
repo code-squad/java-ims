@@ -6,26 +6,24 @@ import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
 public class UserService {
-    @Value("${error.not.supported.id}")
-    private String idErrorMessage;
 
-    @Value("${error.not.supported.password}")
-    private String passwordErrorMessage;
-
-    @Value("${error.duplication}")
-    private String duplicationErrorMessage;
+    @Autowired
+    private MessageSource messageSource;
 
     @Resource(name = "userRepository")
     private UserRepository userRepository;
@@ -35,7 +33,8 @@ public class UserService {
     public User add(UserDto userDto, Attachment avatar) {
         Optional<User> user = userRepository.findByUserId(userDto.getUserId());
         if(user.isPresent()) {
-            throw new UnAuthorizedException(duplicationErrorMessage);
+            throw new UnAuthorizedException(
+                    messageSource.getMessage("error.duplication", null, Locale.getDefault()));
         }
 
         return userRepository.save(userDto._toUser(avatar));
@@ -60,13 +59,15 @@ public class UserService {
     public User login(String userId, String password) throws UnAuthorizedException {
         Optional<User> maybeUser = userRepository.findByUserId(userId);
         if (!maybeUser.isPresent()) {
-            throw new UnAuthorizedException(idErrorMessage);
+            throw new UnAuthorizedException(
+                    messageSource.getMessage("error.not.supported.id", null, Locale.getDefault()));
         }
 
         User user = maybeUser.get();
         logger.debug("User : {}, PWD : {}", user, password);
         if (!user.matchPassword(password)) {
-            throw new UnAuthorizedException(passwordErrorMessage);
+            throw new UnAuthorizedException(
+                    messageSource.getMessage("error.not.supported.password", null, Locale.getDefault()));
         }
 
         return user;

@@ -29,13 +29,11 @@ public class UserController {
 
     @GetMapping("/join")
     public String form() {
-        log.debug("Call form() Method!");
         return "/user/join";
     }
 
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
-        log.debug("LoginUser : {}", loginUser);
         model.addAttribute("user", userService.findById(loginUser, id));
         return "user/updateForm";
     }
@@ -48,7 +46,6 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
-        log.debug("Call Method login()");
         return "/user/login";
     }
 }

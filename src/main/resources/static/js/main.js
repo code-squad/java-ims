@@ -456,24 +456,9 @@ function register(e) {
 
 /* 예외처리 */
 function exceptionProcessor(request) {
-    if(request.status == '403') {
-        if(request.responseText != null) {
-            alert(request.responseText)
-        }
-        if(request.responseText == null) {
-            location.href = '/user/login';
-        }
+    if(request.responseText == null ) {
+        location.href = '/user/login';
     }
-
-    if(request.status == '401') {
-        alert(request.responseText);
-    }
-
-    if(request.status == '400') {
-        alert(request.responseText);
-    }
-
-    if(request.status == '500') {
-        alert(request.responseText);
-    }
+    
+    alert(request.responseJSON.errors[0].errorMessage);
 }

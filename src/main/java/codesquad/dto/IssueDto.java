@@ -4,16 +4,20 @@ import codesquad.domain.*;
 
 import javax.persistence.Embedded;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class IssueDto {
 
     private Long id;
 
+    @NotBlank
     @Size(min = 5, max = 200)
     private String subject;
 
     @Size(min = 5, max = 1000)
+    @NotBlank
     private String comment;
 
     private User writer;

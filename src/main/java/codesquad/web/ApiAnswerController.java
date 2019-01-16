@@ -12,25 +12,25 @@ import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import support.domain.ErrorMessage;
 
 import javax.validation.Valid;
 
 import java.net.URI;
+import java.util.Locale;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 @RestController
 @RequestMapping("/api/issues/{id}/answers")
 public class ApiAnswerController {
-
-    @Value("${error.not.supported}")
-    private String notFormattedError;
 
     @Autowired
     private AnswerService answerService;
@@ -41,8 +41,8 @@ public class ApiAnswerController {
     private static final Logger logger = getLogger(ApiAnswerController.class);
 
     @PostMapping()
-    public ResponseEntity createAnswer(@LoginUser User loginUser, @PathVariable Long id, @RequestBody AnswerDto answerDto) {
-        logger.debug("Call createAnswer Method, AnswerDto : " + answerDto.toString());
+    public ResponseEntity createAnswer(@LoginUser User loginUser, @PathVariable Long id
+            , @RequestBody @Valid AnswerDto answerDto) {
         Issue issue = issueService.findIssue(id);
         Answer createdAnswer = answerService.createAnswer(loginUser, issue, answerDto);
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -54,22 +54,21 @@ public class ApiAnswerController {
     @PutMapping("/{answerId}")
     public ResponseEntity updateAnswer(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long answerId,
                                        @RequestBody AnswerDto updatedAnswer) throws UnAuthenticationException {
-        logger.debug("Call updateAnswer Method");
         Issue issue = issueService.findIssue(id);
         AnswerDto answerDto = answerService.updateAnswer(loginUser, issue, updatedAnswer, answerId)._toAnswerDto();
         return new ResponseEntity(answerDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{answerId}")
-    public ResponseEntity deleteAnswer(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long answerId) throws UnAuthenticationException {
-        logger.debug("Call deleteAnswer Method");
+    public ResponseEntity deleteAnswer(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long answerId)
+            throws UnAuthenticationException {
         AnswerDto answerDto = answerService.deleteAnswer(loginUser, answerId)._toAnswerDto();
         return new ResponseEntity(answerDto, HttpStatus.OK);
     }
 
     @GetMapping("/{answerId}")
-    public ResponseEntity<AnswerDto> updateAnswerForm(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long answerId) throws UnAuthenticationException {
-        logger.debug("Call detailAnswer Method");
+    public ResponseEntity<AnswerDto> updateAnswerForm(@LoginUser User loginUser, @PathVariable Long id,
+                                                      @PathVariable Long answerId) throws UnAuthenticationException {
         AnswerDto answerDto = answerService.detailAnswer(loginUser, answerId);
         return new ResponseEntity(answerDto, HttpStatus.OK);
     }

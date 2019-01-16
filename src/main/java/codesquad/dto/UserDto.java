@@ -3,10 +3,12 @@ package codesquad.dto;
 import codesquad.domain.Attachment;
 import codesquad.domain.User;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class UserDto {
     @Size(min = 3, max = 20)
+    @NotBlank
     private String userId;
 
     @Size(min = 6, max = 20)
@@ -20,15 +22,14 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(String userId, String password) {
-        super();
+    public UserDto(String userId, String password, String name) {
         this.userId = userId;
         this.password = password;
+        this.name = name;
     }
 
-    public UserDto(String userId, String password, String name) {
-        this(userId, password);
-        this.name = name;
+    public UserDto(String userId, String password) {
+        this(userId, password, "");
     }
 
     public String getUserId() {

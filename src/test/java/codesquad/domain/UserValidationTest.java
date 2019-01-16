@@ -26,10 +26,10 @@ public class UserValidationTest {
     }
 
     @Test
-    public void userIdWhenIsEmpty() throws Exception {
+    public void userIdWhenIsEmpty() {
         User user = new User.UserBuilder("", "password", "name").build();
         Set<ConstraintViolation<User>> constraintViolcations = validator.validate(user);
-        assertThat(constraintViolcations.size(), is(1));
+        assertThat(constraintViolcations.size(), is(2));
 
         for (ConstraintViolation<User> constraintViolation : constraintViolcations) {
             log.debug("violation error message : {}", constraintViolation.getMessage());

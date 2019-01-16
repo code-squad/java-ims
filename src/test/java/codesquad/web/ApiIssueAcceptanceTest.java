@@ -17,13 +17,13 @@ public class ApiIssueAcceptanceTest extends BasicAuthAcceptanceTest {
     public void 이슈작성_미입력_실패_Test() {
         ResponseEntity<Issue> responseEntity = basicAuthTemplate()
                                                 .postForEntity("/api/issues", IssueFixture.FAIL_ISSUE, Issue.class);
-        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
     public void 이슈작성_내용미입력_실패_Test() {
         ResponseEntity<Issue> responseEntity = basicAuthTemplate().postForEntity("/api/issues", IssueFixture.FAIL_ISSUE, Issue.class);
-        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -139,6 +139,6 @@ public class ApiIssueAcceptanceTest extends BasicAuthAcceptanceTest {
         IssueDto issue = IssueFixture.FAIL_ISSUE;
         responseEntity = basicAuthTemplate()
                 .exchange(location, HttpMethod.PUT, new HttpEntity<>(issue, new HttpHeaders()), Issue.class);
-        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }

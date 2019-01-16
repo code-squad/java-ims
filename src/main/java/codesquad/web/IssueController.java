@@ -27,28 +27,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class IssueController {
 
     @Autowired
-    private IssueRepository issueRepository;
-
-    @Autowired
-    private MilestoneService milestoneService;
-
-    @Autowired
     private IssueService issueService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private AssigneeService assigneeService;
-
-    @Autowired
-    private LabelService labelService;
 
     private static final Logger logger = getLogger(IssueController.class);
 
     @GetMapping
     public String issueForm(@LoginUser User loginUser) throws UnAuthorizedException {
-        logger.debug("Call issueForm Method()");
         return "/issue/form";
     }
 
@@ -60,25 +44,9 @@ public class IssueController {
         return "/issue/show";
     }
 
-    @GetMapping("/{id}/milestones/{milestoneId}")
-    public String registerMilestone(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long milestoneId) {
-        Issue issue = issueService.findIssue(id);
-        milestoneService.registerMilestone(loginUser, issue, milestoneId);
-        return "redirect:/issues/" + Long.valueOf(id);
-    }
-
     @GetMapping("/{id}/updateForm")
     public String updateForm(@LoginUser User loginUser, @PathVariable Long id, Model model) {
-        logger.debug("Call updateForm method");
         model.addAttribute("issue", issueService.findIssue(id)._toIssueDto());
         return "/issue/updateForm";
-    }
-
-    @GetMapping("/{id}/assignees/{assigneeId}")
-    public String registerAssignee(@LoginUser User loginUser, @PathVariable Long id, @PathVariable Long assigneeId) throws UnAuthenticationException {
-        Issue issue = issueService.findIssue(id);
-        logger.debug("Call registerAssignee Method(), issue : {}", issue);
-        assigneeService.registerAssignee(loginUser, issue, assigneeId);
-        return "redirect:/issues/" + Long.valueOf(id);
     }
 }

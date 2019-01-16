@@ -4,16 +4,21 @@ import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import support.converter.LocalDateTimeConverter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public class MilestoneDto {
 
     @Size(min = 5, max = 200)
+    @NotBlank
     private String subject;
 
+    @NotNull
     private LocalDateTime startDate;
 
+    @NotNull
     private LocalDateTime endDate;
 
     private User writer;
