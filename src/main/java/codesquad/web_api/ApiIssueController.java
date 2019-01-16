@@ -5,6 +5,8 @@ import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.MilestoneService;
+import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
+import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -24,6 +28,12 @@ public class ApiIssueController {
 
     @Resource (name = "issueService")
     private IssueService issueService;
+
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
+
+    @Resource(name = "userService")
+    private UserService userService;
 
     @PostMapping("")
     public ResponseEntity<Void> create(@LoginUser User loginUser, @Valid @RequestBody IssueDto issue) {
@@ -51,4 +61,18 @@ public class ApiIssueController {
     public IssueDto delete(@LoginUser User loginUser, @PathVariable long id) {
         return issueService.deleteIssue(loginUser, id)._toIssueDto();
     }
+
+    @GetMapping("/{id}/milestone/{milestoneId}")
+    public List<Issue> milestoneChoice(@LoginUser User loginUser, @PathVariable long id, @PathVariable long milestoneId) {
+        Issue issue = issueService.findByIssueId(id);
+        return milestoneService.addIssue(loginUser, milestoneId, issue);
+    }
+
+    @GetMapping("/{id}/assignee/{userId}")
+    public Set<User> assign(@LoginUser User loginUser , @PathVariable long id, @PathVariable long userId) {
+        User assignee = userService.findById(id);
+        return issueService.assignee(loginUser, id, assignee);
+    }
+
+
 }

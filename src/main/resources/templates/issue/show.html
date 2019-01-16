@@ -56,15 +56,6 @@
                     <!-- milestone list -->
 
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="milestone-menu">
-                        <li class="mdl-menu__item mdl-button--accent">
-                            <a href="/issue/1/setMilestone/0">Milestone1</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setMilestone/2">Milestone2</a>
-                        </li>
-                        <li class="mdl-menu__item">
-                            <a href="/issue/1/setMilestone/3">Milestone3</a>
-                        </li>
                         {{#milestones}}
                         {{^issue.closed}}
                             <a href="/issues/{{issue.id}}/milestone/{{id}}">
@@ -100,9 +91,11 @@
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="assignee-menu">
                         {{#users}}
+                        <a href="/issues/{{issue.id}}/assignee/{{id}}">
                             <li class="mdl-menu__item">
-                                <a href="/issues/{{issue.id}}/assignee/{{id}}">{{userDto.name}}</a>
+                                {{userDto.name}}
                             </li>
+                        </a>
                         {{/users}}
                     </ul>
                 </div>
@@ -208,8 +201,5 @@
     </main>
 {{/partial}}
 
-{{#partial "script"}}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-{{/partial}}
 
 {{> base}}

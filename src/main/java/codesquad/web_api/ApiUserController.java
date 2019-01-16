@@ -11,9 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.URI;
 
+import static codesquad.security.HttpSessionUtils.USER_SESSION_KEY;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @RestController
@@ -24,7 +26,7 @@ public class ApiUserController {
     @Resource(name = "userService")
     private UserService userService;
 
-    @PostMapping("")        //1.데이터 만들어서
+    @PostMapping("")        // 1.데이터 만들어서
     public ResponseEntity<Void> create(@Valid @RequestBody UserDto user) {
         User savedUser = userService.create(user._toUser());
         log.debug("user : {}", user);
@@ -33,11 +35,9 @@ public class ApiUserController {
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 
-    @GetMapping("{id}")         //2. (1 에서 만든)데이터 가져오기 - (본인만 조회)
+    @GetMapping("{id}")         // 2. (1)에서 만든 데이터 가져오기
     public UserDto show(@LoginUser User loginUser, @PathVariable long id) {
         User user = userService.findById(id);
-        user.isOwner(loginUser);
-        log.debug("user:{}", user._toUserDto());
         return user._toUserDto();
     }
 
@@ -46,4 +46,14 @@ public class ApiUserController {
             , @Valid @RequestBody UserDto updatedUser) {
         return userService.update(loginUser, id, updatedUser)._toUserDto();
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<User> login(UserDto userDto, HttpSession httpSession) {
+        User loginUser = userService.login(userDto.getUserId(), userDto.getPassword());
+        httpSession.setAttribute(USER_SESSION_KEY, loginUser);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("/"));
+        return new ResponseEntity<User>(loginUser,headers, HttpStatus.ACCEPTED);
+    }
+
 }
