@@ -70,6 +70,32 @@ function login(e) {
     })
 }
 
+//이슈 속성 추가
+$("ul.mdl-menu--bottom-right li").click(setIssueAttribute);
+
+function setIssueAttribute(e) {
+    e.preventDefault();
+    console.log("함수 작동");
+    var url = $(this).children('a').attr("href");
+    console.log("url : " + url);
+
+    $.ajax({
+        type : "get",
+        url : url,
+        dataType : "json",
+        error : onError,
+        success : function(data, status, jqXHR) {
+            if(data.subject) {
+                alert("해당 이슈에 '" + data.subject + "' 이(가) 지정되었습니다.");     //어떤 속성이 적용 되었는지까지 메세지가 나오면 좋을 듯
+            }
+            if(data.name) {
+                alert("해당 이슈에 '" + data.name + "' 이(가) 지정되었습니다.");
+            }
+        }
+    })
+
+}
+
 
 //답변 추가
 $("#write-comment-btn").click(addComment);
@@ -101,6 +127,37 @@ function addComment(e){
             var commentTemplate = $("#write-comment-template").html();
             var template = commentTemplate.format(data.writer.name, data.contents, data.issue.id, data.id);
             $("#comments").append(template);
+        }
+    })
+}
+
+//답변 수정
+$("#edit-comment-btn").click(updateComment);
+
+function updateComment(e) {
+    e.preventDefault();
+}
+
+//답변 삭제     //미완료
+$("#delete-comment-btn").click(deleteComment);
+
+function deleteComment(e) {
+    e.preventDefault();
+    var deleteBtn = $(this);    //this를 확실히 알고 넘어 갈 것
+    console.log(deleteBtn);
+//    var url = $(".delete-comment").attr("action");
+    var url = deleteBtn.parent().attr("action");
+    console.log("url : " + url);
+
+    $.ajax({
+        type : "delete",
+        url : url,
+        dataType : "json",
+        error : onError,
+        success : function(data, status, jqXHR) {
+//            deleteBtn.closest("comment-body").remove();
+            deleteBtn.closest("comment mdl-color-text--grey-700").remove();
+            console.log(status);
         }
     })
 }

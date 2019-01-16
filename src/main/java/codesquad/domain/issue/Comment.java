@@ -1,10 +1,15 @@
 package codesquad.domain.issue;
 
+import codesquad.CannotDeleteException;
+import codesquad.domain.deletehistory.ContentType;
+import codesquad.domain.deletehistory.DeleteHistory;
 import codesquad.domain.user.User;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -93,5 +98,13 @@ public class Comment extends AbstractEntity {
                 ", writer=" + writer +
                 ", deleted=" + deleted +
                 '}';
+    }
+
+    public List<DeleteHistory> delete(User loginUser) {
+        if(!this.writer.equals(loginUser)) throw new CannotDeleteException("you can't delete comment");
+        List<DeleteHistory> histories = new ArrayList<>();
+        this.deleted = true;
+        histories.add(new DeleteHistory(ContentType.COMMENT, this.getId(), this.writer));
+        return histories;
     }
 }

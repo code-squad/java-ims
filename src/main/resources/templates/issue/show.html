@@ -50,7 +50,7 @@
                         for="milestone-menu">
                         {{#milestones}}
                         <li class="mdl-menu__item mdl-button--accent">
-                            <a href="/issues/{{issue.id}}/setMilestone/{{id}}">{{subject}}</a>
+                            <a href="/api/issues/{{issue.id}}/setMilestone/{{id}}">{{subject}}</a>
                         </li>
                         {{/milestones}}
                     </ul>
@@ -62,7 +62,7 @@
                         for="label-menu">
                         {{#labels}}
                         <li class="mdl-menu__item">
-                            <a href="/issues/{{issue.id}}/setLabel/{{id}}">{{name}}</a>
+                            <a href="/api/issues/{{issue.id}}/setLabel/{{id}}">{{name}}</a>
                         </li>
                         {{/labels}}
                     </ul>
@@ -74,7 +74,7 @@
                         for="assignee-menu">
                         {{#assignees}}
                         <li class="mdl-menu__item">
-                            <a href="/issues/{{issue.id}}/setAssignee/{{id}}">{{userId}}</a>
+                            <a href="/api/issues/{{issue.id}}/setAssignee/{{id}}">{{userId}}</a>
                         </li>
                         {{/assignees}}
                     </ul>
@@ -86,6 +86,7 @@
 
                     <!-- comments start -->
                     {{#comments}}
+                    {{^deleted}}
                     <div class="comment mdl-color-text--grey-700">
                         <header class="comment__header">
                             <img class="comment__avatar2" height="48" width="48"
@@ -97,26 +98,23 @@
                                         <span class="comment-contents">{{contents}}</span>
                                     </strong>
                                 </span>
-                                <span>
+                                <li>
                                     <form style="display: inline;" action="/api/issues/{{issue.id}}/comments/{{id}}" class="edit-comment" method="post">
                                         <input type="hidden" name="_method" value="PUT">
-                                        <button type="submit" class="nostylebutton">
-                                            <i class="material-icons">edit</i>
-                                        </button>
+                                        <button type="submit" class="edit-comment-btn" id = "edit-comment-btn">edit</button>
                                     </form>
-                                </span>
-                                <span>
+                                </li>
+                                <li>
                                     <form style="display: inline;" action="/api/issues/{{issue.id}}/comments/{{id}}" class="delete-comment" method="post">
                                         <input type="hidden" name="_method" value="DELETE">
-                                        <button type="submit" class="nostylebutton">
-                                            <i class="material-icons">delete</i>
-                                        </button>
+                                        <button type="submit" class="delete-comment-btn" id = "delete-comment-btn">delete</button>
                                     </form>
-                                </span>
+                                </li>
                             </div>
                         </header>
                         <hr>
                     </div>
+                    {{/deleted}}
                     {{/comments}}
 
 
@@ -207,22 +205,18 @@
                         <span class="comment-contents">{1}</span>
                     </strong>
                 </span>
-                <span>
-                    <form style="display: inline;" action="/api/issues/{2}/comments/{3}" class="comment-edit" method="post">
+                <li>
+                    <form style="display: inline;" action="/api/issues/{2}/comments/{3}" class="edit-comment" method="post">
                         <input type="hidden" name="_method" value="PUT">
-                        <button type="submit" class="nostylebutton">
-                            <i class="material-icons">edit</i>
-                        </button>
+                        <button type="submit" class="edit-comment-btn">edit</button>
                     </form>
-                </span>
-                <span>
-                    <form style="display: inline;" action="/api/issues/{2}/comments/{3}" class="comment-delete" method="post">
+                </li>
+                <li>
+                    <form action="/api/issues/{2}/comments/{3}" class="delete-comment" method="post">
                         <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="nostylebutton">
-                            <i class="material-icons">delete</i>
-                        </button>
+                        <button type="submit" class="delete-comment-btn">delete</button>
                     </form>
-                </span>
+                </li>
             </div>
         </header>
         <hr>

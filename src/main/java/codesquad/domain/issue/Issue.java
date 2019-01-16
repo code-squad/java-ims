@@ -97,8 +97,9 @@ public class Issue extends AbstractEntity {
         return milestone;
     }
 
-    public void setMilestone(Milestone milestone) {
+    public Milestone setMilestone(Milestone milestone) {
         this.milestone = milestone;
+        return this.milestone;
     }
 
     public boolean isDeleted() {
@@ -122,16 +123,18 @@ public class Issue extends AbstractEntity {
         return label;
     }
 
-    public void setLabel(Label label) {
+    public Label setLabel(Label label) {
         this.label = label;
+        return this.label;
     }
 
     public User getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(User assignee) {
+    public User setAssignee(User assignee) {
         this.assignee = assignee;
+        return this.assignee;
     }
 
     public List<Comment> getComments() {
@@ -190,5 +193,4 @@ public class Issue extends AbstractEntity {
     public int hashCode() {
         return Objects.hash(super.hashCode(), subject, comment, writer);
     }
-
 }

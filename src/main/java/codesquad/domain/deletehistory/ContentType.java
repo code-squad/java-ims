@@ -1,5 +1,5 @@
 package codesquad.domain.deletehistory;
 
 public enum ContentType {
-    ISSUE, ANSWER, LABEL
+    ISSUE, COMMENT, LABEL
 }

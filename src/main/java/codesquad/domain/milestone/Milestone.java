@@ -1,6 +1,7 @@
 package codesquad.domain.milestone;
 
 import codesquad.domain.issue.Issue;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 import support.domain.AbstractEntity;
 
@@ -27,6 +28,7 @@ public class Milestone extends AbstractEntity {
 
     @OneToMany(mappedBy = "milestone")
     @OrderBy("id ASC")
+    @JsonIgnore
     private List<Issue> issues;
 
     public Milestone() {
