@@ -2,6 +2,7 @@ package codesquad.domain.issue;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.DeleteHistory;
+import codesquad.domain.issue.answer.Answers;
 import codesquad.domain.label.Label;
 import codesquad.domain.milestone.Milestone;
 import codesquad.domain.user.User;
@@ -11,7 +12,6 @@ import support.domain.AbstractEntity;
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -38,6 +38,9 @@ public class Issue extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_assignee"))
     private User assignee;
+
+    @Embedded
+    private Answers answers = new Answers();
 
     private Boolean deleted = false;
 
@@ -76,7 +79,12 @@ public class Issue extends AbstractEntity {
             throw new UnAuthorizedException("로그인 유저가 이슈 작성자와 달라 삭제할 수 없습니다");
         }
 
-        List<DeleteHistory> histories = new ArrayList<>();
+        long otherAnswers = answers.otherAnswerCount(writer);
+        if (otherAnswers > 0) {
+            throw new UnAuthorizedException("다른 댓글 작성자가 있어 삭제가 불가능 합니다.");
+        }
+
+        List<DeleteHistory> histories = answers.delete(loginUser);
 
         this.deleted = true;
 
@@ -134,5 +142,13 @@ public class Issue extends AbstractEntity {
 
     public void setAssignee(User assignee) {
         this.assignee = assignee;
+    }
+
+    public Answers getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(Answers answers) {
+        this.answers = answers;
     }
 }

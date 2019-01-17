@@ -83,28 +83,29 @@
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
             <p>{{contents.comment}}</p>
         </div>
-        <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
+        <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments" id="comments">
 
             <!-- comments start -->
-
+            {{#answers.answers}}
             <div class="comment mdl-color-text--grey-700">
                 <header class="comment__header">
                     <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
+                         src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt={{writer.userId}}>
                     <div class="comment__author">
                         <strong>
-                            <a>javajigi</a>
+                            <a>{{writer.userId}}</a>
 
 
-                            <span>changed milestone 1 on 2017-01-14</span>
+                            <span>{{contents}} {{formattedCreateDate}}</span>
 
 
                         </strong>
                     </div>
                 </header>
+                <hr>
             </div>
-            <hr>
 
+            {{/answers.answers}}
 
             <!--<div class="comment mdl-color-text&#45;&#45;grey-700">-->
                 <!--<header class="comment__header">-->
@@ -154,7 +155,7 @@
             </div>
         </form>
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-            <form action="/issue/1/addComment" method="POST">
+            <form class="answer-write" action="/api/issues/{{id}}/answers" method="POST">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                     <label for="comment" class="mdl-textfield__label">Leave a comment</label>
@@ -182,4 +183,27 @@
 <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
 {{/partial}}
 
+<script type="text/template" id="answerTemplate">
+<div class="comment mdl-color-text--grey-700">
+    <header class="comment__header">
+        <img class="comment__avatar2" height="48" width="48"
+             src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt={0}>
+        <div class="comment__author">
+            <strong>
+                <!--<a>{{writer}}</a>-->
+                <a>{0}</a>
+
+
+                <!--<span>{{contents}} {{formattedCreateDate}}</span>-->
+                <span>{1} {2}</span>
+
+
+            </strong>
+        </div>
+    </header>
+</div>
+<hr>
+</script>
+
 {{>base}}
+

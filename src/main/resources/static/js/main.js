@@ -18,6 +18,7 @@ $("#milestone-menu").on("click", milestone_menu);
 $("#label_menu").on("click", label_menu);
 $(document).on("click", '.assignee', assignee);
 $(document).on("click", '.register a', register);
+$(".answer-write button[type=submit]").click(addAnswer);
 
 function login(e) {
     e.preventDefault();
@@ -206,4 +207,35 @@ function assignee(e) {
     })
 }
 
+function addAnswer(e) {
+    console.log("댓글 추가");
+    e.preventDefault();
+
+    var queryString = $(".answer-write").serialize();
+    console.log("querystring : " + queryString);
+
+    var url = $(".answer-write").attr("action");
+    console.log("url : " + url);
+
+    $.ajax({
+        type : 'post',
+        url : url,
+        data : queryString,
+        dataType : 'json',
+        error : function(xhr) {
+            console.log("error");
+            console.log(xhr);
+        },
+        success : function(data, status) {
+            console.log(data);
+            var answerTemplate = $("#answerTemplate").html();
+            var template = answerTemplate.format(data.writer.userId, data.contents, data.formattedCreateDate);
+            console.log("data.formattedDate : " + data.formattedDate);
+
+            $("#comments").append(template);
+            $("textarea[name=comment]").val("");
+
+        }
+    });
+}
 
