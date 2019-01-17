@@ -13,7 +13,7 @@ String.prototype.format = function() {
 $(".submit-login div button[type=submit]").on("click", login);
 
 function login(e) {
-    console.log("로긴 버튼 작동");
+    console.log("로그인 버튼 작동");
     e.preventDefault();
 
     var queryString = $('.submit-login').serialize();       // 사용자가 입력한 id, password
@@ -28,7 +28,7 @@ function login(e) {
         url : url,
         dataType : 'json',
         error : onError,
-        success : onSuccess,
+        success : onSuccess
     });
 }
 
@@ -38,4 +38,39 @@ function onError() {
 
 function onSuccess(data,status,xhr) {
     location.href = xhr.getResponseHeader('Location');
+}
+//--------------------------------------------------------------------------------
+$("#milestone-menu").on("click", milestoneList);
+
+function milestoneList(e) {
+    console.log("버튼 작동");
+    e.preventDefault();
+
+    var url = $("#milestone-menu").attr('value');
+    var list = "";
+
+    $.ajax({
+        type : 'get',
+        url : url,
+        dataType : 'json',
+//        error : onError,
+        success : OnSuccess
+    });
+}
+
+//function onError() {
+//    alert("milestone이 존재 하지 않습니다.");
+//}
+
+function OnSuccess(data) {
+    $(data).each(function(index, value) {
+        li_list += '<a href="' + url + '/' + value.id
+                + '"><li class="mdl-menu__item">'
+                + value.milestoneDto.subject
+                + '</li></a>';
+    });
+
+    console.log(li_list);
+    $("#milestone_menu_ul").html(li_list);
+    $("#milestone-menu").unbind();
 }

@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.dto.AnswerDto;
 import codesquad.dto.MilestoneDto;
 import codesquad.exception.UnAuthenticationException;
 import codesquad.exception.UnAuthorizedException;
@@ -10,7 +11,6 @@ import support.domain.AbstractEntity;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -40,6 +40,10 @@ public class Issue extends AbstractEntity {
     @ManyToMany
     private Set<User> assignees = new HashSet<>();
 
+
+    @Embedded
+    private Answers answers = new Answers();
+
     private boolean deleted = false;
 
     private boolean closed = false;
@@ -48,6 +52,7 @@ public class Issue extends AbstractEntity {
     }
 
     public Issue(String subject, String comment, User writer) {
+
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
@@ -151,6 +156,22 @@ public class Issue extends AbstractEntity {
         this.assignees = assignees;
     }
 
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public Answers getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(Answers answers) {
+        this.answers = answers;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
@@ -160,5 +181,10 @@ public class Issue extends AbstractEntity {
                 ", deleted=" + deleted +
                 ", id=" + getId() +
                 '}';
+    }
+
+    public List<Answer> addAnswer(Answer answer) {
+        answers.getAnswers().add(answer);
+        return answers.getAnswers();
     }
 }

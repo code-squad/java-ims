@@ -1,6 +1,7 @@
 package codesquad.web_api;
 
 import codesquad.domain.Issue;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
@@ -50,16 +51,9 @@ public class ApiIssueController {
         return issueService.findByIssueId(id)._toIssueDto();
     }
 
-    @PutMapping("/{id}")
-    public IssueDto update(@LoginUser User loginUser, @PathVariable long id,
-                        @Valid @RequestBody IssueDto updatedIssue) {
-        log.debug("mis:{}",issueService.update(loginUser, id ,updatedIssue));
-        return issueService.update(loginUser, id ,updatedIssue)._toIssueDto();
-    }
-
-    @DeleteMapping("/{id}")
-    public IssueDto delete(@LoginUser User loginUser, @PathVariable long id) {
-        return issueService.deleteIssue(loginUser, id)._toIssueDto();
+    @GetMapping("/{id}/milestone")
+    public Iterable<Milestone> list(@PathVariable long id) {
+        return milestoneService.findAll();
     }
 
     @GetMapping("/{id}/milestone/{milestoneId}")

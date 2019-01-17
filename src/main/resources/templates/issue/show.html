@@ -13,7 +13,7 @@
                     <a href="/issues/{{id}}/form" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
                         <i class="material-icons">edit</i>
                     </a>
-                    <form action="/issues/{{id}}" method="POST">
+                    <form style="display:inline-block" action="/issues/{{id}}" method="POST">
                         <input type="hidden" name="_method" value="DELETE">
                         <button id="issues-menu-lower-right" class="mdl-button mdl-button--icon">
                             <i class="material-icons"> delete </i>
@@ -48,23 +48,25 @@
                     </a>
                     {{/closed}}
 
+                    {{milestone}}
+
                     <div class="section-spacer"></div>
 
-                    <button id="milestone-menu" class="mdl-button mdl-js-button">
+                    <button id="milestone-menu" class="mdl-button mdl-js-button" value="/api/issues/{{id}}/milestone">
                         Milestone
                     </button>
                     <!-- milestone list -->
 
-                    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="milestone-menu">
-                        {{#milestones}}
-                        {{^issue.closed}}
-                            <a href="/issues/{{issue.id}}/milestone/{{id}}">
-                                <li class="mdl-menu__item">
-                                    {{milestoneDto.subject}}
-                                </li>
-                            </a>
-                        {{/issue.closed}}
-                        {{/milestones}}
+                    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="milestone-menu" id="milestone_menu_ul">
+                        <!--{{#milestones}}-->
+                        <!--{{^issue.closed}}-->
+                            <!--<a href="/issues/{{issue.id}}/milestone/{{id}}">-->
+                                <!--<li class="mdl-menu__item">-->
+                                    <!--{{milestoneDto.subject}}-->
+                                <!--</li>-->
+                            <!--</a>-->
+                        <!--{{/issue.closed}}-->
+                        <!--{{/milestones}}-->
                     </ul>
 
                     <button id="label-menu" class="mdl-button mdl-js-button">
@@ -131,6 +133,38 @@
                     </div>
                     <hr>
 
+                    {{#answers.answers}}
+                    <div class="comment mdl-color-text--grey-700">
+                        <header class="comment__header">
+                            <img class="comment__avatar2" height="48" width="48"
+                                 src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
+                            <div class="comment__author">
+                                <strong>
+                                    <a>{{answer.userDto.userId}}</a>
+
+
+                                    <span>reply comment [{{answer.comment}}] on {{formattedCreateDate}}</span>
+
+
+                                </strong>
+                            </div>
+                            <a href="/issues/{{id}}/form" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                                <i class="material-icons">edit</i>
+                                <span class = "mdl-button__ripple-container">
+                                    <span class="mdl-ripple"></span>
+                                </span>
+                            </a>
+                            <form style="display:inline-block" action="/issues/{{id}}" method="POST">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button id="answers-menu-lower-right" class="mdl-button mdl-button--icon">
+                                    <i class="material-icons"> delete </i>
+                                </button>
+                            </form>
+                        </header>
+                    </div>
+                    <hr>
+                    {{/answers.answers}}
+
                     <!--<div class="comment mdl-color-text&#45;&#45;grey-700">-->
                         <!--<header class="comment__header">-->
                             <!--<img class="comment__avatar2" height="48" width="48"-->
@@ -179,7 +213,7 @@
                     </div>
                 </form>
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-                    <form action="/issue/1/addComment" method="POST">
+                    <form action="/issues/{{id}}/answers" method="POST">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                             <label for="comment" class="mdl-textfield__label">Leave a comment</label>

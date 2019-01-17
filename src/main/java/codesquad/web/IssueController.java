@@ -106,4 +106,6 @@ public class IssueController {
         issueService.assignee(loginUser, id, assignee);
         return "redirect:/issues/{id}";
     }
+
+
 }

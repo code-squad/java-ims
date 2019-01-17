@@ -66,4 +66,9 @@ public class Milestone extends AbstractEntity {
     public void setIssues(List<Issue> issues) {
         this.issues = issues;
     }
+
+    @Override
+    public String toString() {
+        return subject;
+    }
 }
