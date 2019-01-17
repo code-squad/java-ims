@@ -25,24 +25,35 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
+    private Milestone milestone;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_assignee"))
+    private User assignee;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Label> labels = new ArrayList<>();
+
     private boolean deleted = false;
+
+    private boolean closed = false;
 
     public Issue() {
     }
 
-    public Issue(String subject, String comment, User writer, boolean deleted) {
-        this.subject = subject;
-        this.comment = comment;
-        this.writer = writer;
-        this.deleted = deleted;
+    public Issue(String subject, String comment, User writer, boolean deleted, boolean closed) {
+        this(0L, subject, comment, writer, deleted, closed);
     }
 
-    public Issue(long id, String subject, String comment, User writer, boolean deleted) {
+    public Issue(long id, String subject, String comment, User writer, boolean deleted, boolean closed) {
         super(id);
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
         this.deleted = deleted;
+        this.closed = closed;
     }
 
     public String getSubject() {
@@ -73,12 +84,49 @@ public class Issue extends AbstractEntity {
         return deleted;
     }
 
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public String getOpen() {
+        if (this.closed) return "Closed";
+        return "Open";
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
+
+    public List<Label> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<Label> labels) {
+        this.labels = labels;
+    }
+
     public IssueDto _toIssueDto() {
-        return new IssueDto(this.subject, this.comment, this.writer, this.deleted);
+        return new IssueDto(this.subject, this.comment, this.writer, this.deleted, this.closed);
     }
 
     public boolean isOwner(User loginUser) {
         return writer.equals(loginUser);
+    }
+
+    public boolean isAsignee(User loginUser) {
+        return assignee.equals(loginUser);
     }
 
     public void update(User loginUser, IssueDto updatedIssue) {
@@ -94,5 +142,27 @@ public class Issue extends AbstractEntity {
         temp.add(new DeleteHistory(ContentType.ISSUE, getId(), loginUser));
 
         return temp;
+    }
+
+    public void close(User loginUser) throws Exception {
+        if (this.closed) throw new Exception("This issue was already closed");
+        if (!isAsignee(loginUser)) throw new UnAuthorizedException("You're not assignee");
+        this.closed = true;
+    }
+
+    public boolean setLabel(Label label) {
+        if (labels.contains(label)) {
+            return labels.remove(label);
+        }
+        return labels.add(label);
+    }
+
+    @Override
+    public String toString() {
+        return "Issue{" +
+                "subject='" + subject + '\'' +
+                ", comment='" + comment + '\'' +
+                ", writer=" + writer +
+                '}';
     }
 }

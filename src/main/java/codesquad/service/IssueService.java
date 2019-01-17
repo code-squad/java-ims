@@ -4,6 +4,7 @@ import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
 import codesquad.domain.IssueRepository;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,15 @@ public class IssueService {
 
     @Resource(name = "deleteHistoryService")
     private DeleteHistoryService deleteHistoryService;
+
+    @Resource(name = "milestoneService")
+    private MilestoneService milestoneService;
+
+    @Resource(name = "userService")
+    private UserService userService;
+
+    @Resource(name = "labelService")
+    private LabelService labelService;
 
     @Transactional
     public Issue add(User loginUser, IssueDto issueDto) {
@@ -39,7 +49,7 @@ public class IssueService {
     public Issue findById(User loginUser, long id) {
         return issueRepository.findById(id)
                 .filter(user -> user.isOwner(loginUser))
-                .orElseThrow(UnAuthorizedException::new);
+                .orElseThrow(() -> new UnAuthorizedException("You're Unauthorized User"));
     }
 
     @Transactional
@@ -50,7 +60,27 @@ public class IssueService {
 
     @Transactional
     public void delete(User loginUser, long id) throws Exception {
-        Issue issue = findById(id);
+        Issue issue = findById(loginUser, id);
         deleteHistoryService.saveAll(issue.delete(loginUser));
+    }
+
+    @Transactional
+    public void setMilestone(User loginUser, long issueId, long milestoneId) {
+        milestoneService.findById(milestoneId).addIssue(findById(loginUser, issueId));
+    }
+
+    @Transactional
+    public void close(User loginUser, long id) throws Exception {
+        findById(id).close(loginUser);
+    }
+
+    @Transactional
+    public void setAssignee(User loginUser, long issueId, long assigneeId) {
+        findById(loginUser, issueId).setAssignee(userService.findById(assigneeId));
+    }
+
+    @Transactional
+    public void setLabel(User loginUser, long issueId, long labelId) {
+        findById(loginUser, issueId).setLabel(labelService.findById(labelId));
     }
 }

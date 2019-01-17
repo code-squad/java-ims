@@ -1,0 +1,44 @@
+{{#partial "contents"}}
+<div class="issues__posts mdl-grid">
+
+    {{#errorMessage}}
+    <div class="alert alert-danger" role="alert">{{this}}</div>
+    {{/errorMessage}}
+
+    <div class="issues-card-wide mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title" style="height:80px;">
+            <h2 class="mdl-card__title-text mdl-color-text--grey-800">Labels</h2>
+        </div>
+        <a href="/labels/form"
+           class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored show-modal">
+            <i class="material-icons">add</i>
+        </a>
+        <div class="mdl-card__supporting-text">
+            <ul class="issue-list mdl-list">
+
+                {{#labels}}
+                <li class="mdl-list__item mdl-list__item--two-line">
+                    <span class="mdl-list__item-primary-content">
+                        <a href="/labels/{{id}}"><strong>{{name}} ({{countIssues}})</strong></a>
+                        <span style="float:right">
+                            <a href="/labels/{{id}}/form">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            <form action="/labels/{{id}}" method="POST" style="display:inline-block">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </form>
+                        </span>
+                    </span>
+                </li>
+                {{/labels}}
+
+            </ul>
+        </div>
+    </div>
+</div>
+{{/partial}}
+
+{{> base}}

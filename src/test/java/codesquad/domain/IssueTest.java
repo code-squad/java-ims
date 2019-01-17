@@ -10,20 +10,34 @@ import support.test.BaseTest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static codesquad.domain.LabelTest.*;
 import static codesquad.domain.UserTest.JAVAJIGI;
 import static codesquad.domain.UserTest.SANJIGI;
 
 public class IssueTest extends BaseTest {
     public static final List<Issue> ISSUES = new ArrayList<>();
-    public static final Issue ISSUE1 = new Issue(1,"testSubject1", "testComment1", JAVAJIGI, false);
-    public static final Issue ISSUE2 = new Issue(2, "testSubject2", "testComment2", JAVAJIGI, false);
-    public static final Issue ISSUE3 = new Issue(3, "testSubject3", "testComment3", SANJIGI, false);
-    public static final IssueDto UPDATEDISSUE1 = new IssueDto("testSubject1", "testComment1", JAVAJIGI, false);
+    public static final Issue ISSUE1 = new Issue(1,"testSubject1", "testComment1", JAVAJIGI, false, false);
+    public static final Issue ISSUE2 = new Issue(2, "testSubject2", "testComment2", JAVAJIGI, false, false);
+    public static final Issue ISSUE3 = new Issue(3, "testSubject3", "testComment3", SANJIGI, false, false);
+    public static final Issue ISSUE4 = new Issue(4, "testSubject4", "testComment4", SANJIGI, false, true);
+    public static final IssueDto UPDATEDISSUE1 = new IssueDto("testSubject1", "testComment1", JAVAJIGI, false, false);
 
     static {
         ISSUES.add(ISSUE1);
         ISSUES.add(ISSUE2);
         ISSUES.add(ISSUE3);
+        ISSUES.add(ISSUE4);
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        ISSUE1.setLabels(LABELS1);
+        ISSUE2.setLabels(LABELS2);
+
+        ISSUE1.setAssignee(JAVAJIGI);
+        ISSUE2.setAssignee(SANJIGI);
+        ISSUE3.setAssignee(SANJIGI);
+        ISSUE4.setAssignee(JAVAJIGI);
     }
 
     @Test
@@ -63,5 +77,35 @@ public class IssueTest extends BaseTest {
     public void delete() throws CannotDeleteException {
         ISSUE2.delete(JAVAJIGI);
         softly.assertThat(ISSUE2.isDeleted()).isEqualTo(true);
+    }
+
+    @Test(expected = Exception.class)
+    public void close_already_closed() throws Exception{
+        ISSUE4.close(JAVAJIGI);
+    }
+
+    @Test(expected = Exception.class)
+    public void close_not_assignee() throws Exception{
+        ISSUE1.close(SANJIGI);
+    }
+
+    @Test
+    public void close() throws Exception {
+        ISSUE1.close(JAVAJIGI);
+        softly.assertThat(ISSUE1.isClosed()).isEqualTo(true);
+    }
+
+    @Test
+    public void setLabel_already_exist() {
+        ISSUE1.setLabel(LABEL1);
+        softly.assertThat(ISSUE1.getLabels().contains(LABEL1)).isEqualTo(false);
+    }
+
+    @Test
+    public void setLabel() {
+        ISSUE2.setLabel(LABEL1);
+        softly.assertThat(ISSUE2.getLabels().contains(LABEL1)).isEqualTo(true);
+        softly.assertThat(ISSUE2.getLabels().contains(LABEL2)).isEqualTo(true);
+        softly.assertThat(ISSUE2.getLabels().contains(LABEL3)).isEqualTo(true);
     }
 }
