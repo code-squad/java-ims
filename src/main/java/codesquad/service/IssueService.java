@@ -85,4 +85,11 @@ public class IssueService {
 
         issue.addLabel(loginUser, label);
     }
+
+    @Transactional
+    public Issue close(User loginUser, long id) {
+        Issue issue = findById(id);
+        issue.closeIssue(loginUser);
+        return issue;
+    }
 }

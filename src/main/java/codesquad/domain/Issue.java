@@ -101,6 +101,14 @@ public class Issue extends AbstractEntity {
         this.labels.add(label);
     }
 
+    public void closeIssue(User loginUser) {
+        if(!isMatchWriter(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.closed = true;
+    }
+
     public String getSubject() {
         return subject;
     }
