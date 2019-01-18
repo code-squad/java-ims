@@ -56,7 +56,7 @@ public class ApiIssueController {
         return new ResponseEntity<Issue>(headers, HttpStatus.FOUND);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Issue> delete(@LoginUser User loginUser, @PathVariable long id) {
         issueService.delete(loginUser, id);
         HttpHeaders headers = new HttpHeaders();

@@ -6,9 +6,8 @@ $("#join-submit").click(join);
 function join(e){
     e.preventDefault();
 
-//    var queryString = $("#join").serializeObject();   //form태그의 id(join)에서 받은 데이터를 직렬화(키,밸류 형태) string타입임??
+//    var queryString = $("#join").serializeObject();   //form태그의 id(join)에서 받은 데이터를 직렬화(키,밸류 형태) string타입
 //    console.log("query : " + queryString);
-
 
     var json = new Object();
     json.userId = $("#userId").val();
@@ -102,15 +101,6 @@ $("#write-comment-btn").click(addComment);
 
 function addComment(e){
     e.preventDefault();
-
-//    var user = new Object();
-//    user.userId = $("#add-comment-writer-id").val();
-//    user.password = $("#add-comment-writer-password").val();
-//    user.name = $("#add-comment-writer-name").val();
-//    console.log(user);
-//    json.writer = $("#add-comment-writer").val();
-//    json.writer = user;
-
     var json = new Object();
     json.contents = $("#comment").val();
     var url = $("#add-comment").attr("action");
@@ -124,40 +114,90 @@ function addComment(e){
         dataType : "json",
         error : onError,
         success : function(data, status, jqXHR) {
+            console.log(data);
+            console.log("writeOnly : " + data.formattedCreateDate);
+            console.log("readOnly : " + data.formattedModifiedDate);
             var commentTemplate = $("#write-comment-template").html();
-            var template = commentTemplate.format(data.writer.name, data.contents, data.issue.id, data.id);
+            var template = commentTemplate.format(data.writer.name, data.contents, data.issue.id, data.id, data.formattedCreateDate);
             $("#comments").append(template);
+            $(".delete-comment-btn").click(deleteComment);
+        }
+    })
+}
+
+//답변 수정 폼
+$(".edit-comment-btn").click(updateCommentForm);
+
+function updateCommentForm(e) {
+    e.preventDefault();
+    console.log(this);
+    var updateBtn = $(this);
+    console.log("updateBtn : " + updateBtn);
+    var url = updateBtn.parent().attr("action");
+    console.log("url : " + url);
+
+    $.ajax({
+        type : "get",
+        url : url,
+        dataType : "json",
+        error : onError,
+        success : function(data, status, jqXHR) {
+            console.log(status);
+            console.log(data);
+            var commentUpdateTemplate = $("#update-comment-template").html();       //script태그 안의 클래스만 유효
+            var template = commentUpdateTemplate.format(data.contents, data.issue.id, data.id);
+            $(".comment-body-" + data.id).html(template);  //해당 댓글만 수정폼으로 바꿔줌 --> 클래스 네임에 해당 댓글의 아이디를 줘야 가능 아닐 경우, 모든 댓글에 대한 수정 폼이 적용됨
+            $("#template-update-comment-btn").click(updateComment);
         }
     })
 }
 
 //답변 수정
-$("#edit-comment-btn").click(updateComment);
-
 function updateComment(e) {
     e.preventDefault();
+    var updateBtn = $(this);
+    var json = new Object();
+    json.contents = $("#template-comment").val();
+    console.log("contents : " + json.contents);
+
+    var url = updateBtn.parent().attr("action");
+    console.log("url : " + url);
+
+    $.ajax({
+        type : "put",
+        url : url,                      //url지정 안하니까 /issues/1(id) 로 이동하던데 왜 하필 저기로 이동함??
+        data : JSON.stringify(json),
+        contentType : "application/json",
+        dataType : "json",
+        error : onError,
+        success : function(data, status, jqXHR) {
+            console.log(status);
+             var commentTemplate = $("#write-update-comment-template").html();
+             var template = commentTemplate.format(data.writer.name, data.contents, data.issue.id, data.id, data.formattedModifiedDate);
+             $(".comment-body-" + data.id).html(template);
+             $(".delete-comment-btn").click(deleteComment);
+             $(".edit-comment-btn").click(updateCommentForm);
+        }
+    })
 }
 
-//답변 삭제     //미완료
-$("#delete-comment-btn").click(deleteComment);
+//답변 삭제
+$(".delete-comment-btn").click(deleteComment);
 
 function deleteComment(e) {
     e.preventDefault();
-    var deleteBtn = $(this);    //this를 확실히 알고 넘어 갈 것
+    var deleteBtn = $(this);
     console.log(deleteBtn);
-//    var url = $(".delete-comment").attr("action");
     var url = deleteBtn.parent().attr("action");
     console.log("url : " + url);
 
     $.ajax({
         type : "delete",
         url : url,
-        dataType : "json",
+//        dataType : "json",        //리스폰스의 바디가 없기 때문에, 데이터타입 지정할 경우 parseerror발생
         error : onError,
         success : function(data, status, jqXHR) {
-//            deleteBtn.closest("comment-body").remove();
-            deleteBtn.closest("comment mdl-color-text--grey-700").remove();
-            console.log(status);
+            deleteBtn.closest(".mdl-color-text--grey-700").remove();
         }
     })
 }
@@ -165,10 +205,11 @@ function deleteComment(e) {
 //에러 메세지
 function onError(jqXHR, status, errorThrown) {
     console.log(jqXHR.responseText);    //json값 다 보여줌 (키,밸류 모두다) ex) {"message":"아이디 또는 비밀번호가 다릅니다."}
-    alert(jqXHR.responseJSON.message);  ////예외처리에서 받은 리턴값(responseEntity<ErrorMessage>)의 json객체의 키(message)값의 value를 가져온다.
+    console.log(jqXHR);
+    alert(jqXHR.responseJSON.message);  //예외처리에서 받은 리턴값(responseEntity<ErrorMessage>)의 json객체의 키(message)값의 value를 가져온다.
 }
 
-//템플리 추가
+//템플릿 추가
 String.prototype.format = function() {
   var args = arguments;
        return this.replace(/{(\d+)}/g, function(match, number) {

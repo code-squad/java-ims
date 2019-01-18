@@ -1,6 +1,7 @@
 package codesquad.domain.issue;
 
 import codesquad.CannotDeleteException;
+import codesquad.CannotUpdateException;
 import codesquad.domain.deletehistory.ContentType;
 import codesquad.domain.deletehistory.DeleteHistory;
 import codesquad.domain.user.User;
@@ -75,6 +76,10 @@ public class Comment extends AbstractEntity {
         this.issue = issue;
     }
 
+    public boolean isOwner(User loginUser) {
+        return this.writer.equals(loginUser);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -101,10 +106,16 @@ public class Comment extends AbstractEntity {
     }
 
     public List<DeleteHistory> delete(User loginUser) {
-        if(!this.writer.equals(loginUser)) throw new CannotDeleteException("you can't delete comment");
+        if (!isOwner(loginUser)) throw new CannotDeleteException("you can't delete comment");
         List<DeleteHistory> histories = new ArrayList<>();
         this.deleted = true;
         histories.add(new DeleteHistory(ContentType.COMMENT, this.getId(), this.writer));
         return histories;
+    }
+
+    public Comment update(User loginUser, Comment comment) {
+        if(!this.isOwner(loginUser)) throw new CannotUpdateException("you can't update comment");
+        this.setContents(comment.contents);
+        return this;
     }
 }

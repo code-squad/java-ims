@@ -123,4 +123,19 @@ public class IssueService {
         List<DeleteHistory> histories = currentComment.delete(loginUser);
         deleteHistoryRepository.saveAll(histories); //얘도 Transactional 있으니까 안해도 자동 디비 저장?
     }
+
+    @Transactional
+    public Comment updateComment(User loginUser, long issueId, long id, Comment comment) {
+        if(loginUser.isGuestUser()) throw new UnAuthorizedException("로그인이 필요합니다.");
+        Comment currentComment = commentRepository.findById(id)
+                .orElseThrow(UnAuthorizedException::new);
+        return currentComment.update(loginUser, comment);
+    }
+
+    @Transactional
+    public Comment findComment(User loginUser, long id) {
+        if(loginUser.isGuestUser()) throw new UnAuthorizedException("로그인이 필요합니다.");
+        return commentRepository.findById(id)
+                .orElseThrow(UnAuthorizedException::new);
+    }
 }

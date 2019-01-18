@@ -1,5 +1,6 @@
 package codesquad.web.api;
 
+import codesquad.CannotUpdateException;
 import codesquad.domain.issue.Comment;
 import codesquad.domain.user.User;
 import codesquad.security.LoginUser;
@@ -11,8 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import support.domain.ErrorMessage;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -32,20 +33,34 @@ public class ApiCommentController {
 
     @PostMapping("")
     public ResponseEntity create(@LoginUser User loginUser, @PathVariable long issueId, @Valid @RequestBody Comment comment) {
-        log.debug("create 접근!!!!!!!!!!!!!!!!!!!!!!");
         Comment newComment = issueService.addComment(loginUser, issueId, comment); //얘는 직접적으로 commentRepository.save를 안해주는데?? 디비에 들어가나?
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(String.format("/api/issues/%d", issueId)));
         return new ResponseEntity<Comment>(newComment, headers, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity delete(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id) {
+        Comment currentComment = issueService.findComment(loginUser, id);
+        if(!currentComment.isOwner(loginUser)) {
+            return new ResponseEntity<ErrorMessage>(new ErrorMessage("다른 사용자의 comment를 삭제할 수 없습니다."), HttpStatus.UNAUTHORIZED);
+        }
         issueService.deleteComment(loginUser, id);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(String.format("/api/issues/%d", issueId)));
-        log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity updateForm(@LoginUser User loginUser, @PathVariable long id) {
+        Comment currentComment = issueService.findComment(loginUser, id);
+        if(!currentComment.isOwner(loginUser)) {
+            return new ResponseEntity<ErrorMessage>(new ErrorMessage("다른 사용자의 comment를 수정할 수 없습니다."), HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<Comment>(currentComment, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity update(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id, @Valid @RequestBody Comment comment) {
+        Comment updatedComment = issueService.updateComment(loginUser, issueId, id, comment);
+        return new ResponseEntity<Comment>(updatedComment, HttpStatus.OK);
+    }
 }
