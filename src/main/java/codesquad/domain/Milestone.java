@@ -7,6 +7,7 @@ import support.domain.AbstractEntity;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,6 +26,12 @@ public class Milestone extends AbstractEntity {
     @OrderBy("id ASC")
     @JsonIgnore
     private List<Issue> issues;
+
+    @OneToMany
+    @Where(clause = "deleted = false")
+    @JsonIgnore
+    @OrderBy("id ASC")
+    private List<MileStoneOpen> opens = new ArrayList();
 
     private String startDate;
 
@@ -90,6 +97,14 @@ public class Milestone extends AbstractEntity {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public List<MileStoneOpen> getOpens() {
+        return opens;
+    }
+
+    public void setOpens(List<MileStoneOpen> opens) {
+        this.opens = opens;
     }
 
     public void writeBy(User user) {

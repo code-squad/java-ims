@@ -3,6 +3,7 @@ package codesquad.domain;
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Where;
 import support.domain.AbstractEntity;
 
@@ -40,17 +41,13 @@ public class Issue extends AbstractEntity {
 
     @OneToMany
     @Where(clause = "deleted = false")
+    @JsonIgnore
     @OrderBy("id ASC")
     private List<Answer> answers = new ArrayList<>();
 
     private boolean deleted = false;
 
     public Issue() {
-    }
-
-    public Issue(String subject, String comment) {
-        this.subject = subject;
-        this.comment = comment;
     }
 
     public Issue(long id, String subject, String comment) {
@@ -95,12 +92,12 @@ public class Issue extends AbstractEntity {
         this.assignee = assignee;
     }
 
-    public List<Answer> getComments() {
+    public List<Answer> getAnswers() {
         return answers;
     }
 
-    public void setComments(List<Answer> comments) {
-        this.answers = comments;
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
     }
 
     public User getWriter() {

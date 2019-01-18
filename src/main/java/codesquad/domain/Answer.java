@@ -26,7 +26,6 @@ public class Answer extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_writer"))
     private User writer;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_issue"))
     private Issue issue;
@@ -34,6 +33,14 @@ public class Answer extends AbstractEntity {
     private boolean deleted = false;
 
     public Answer() {
+    }
+
+    public Answer(long id, @Size(min = 2, max = 500) String comment, User writer, Issue issue, boolean deleted) {
+        super(id);
+        this.comment = comment;
+        this.writer = writer;
+        this.issue = issue;
+        this.deleted = deleted;
     }
 
     public Answer(User loginUser, Issue issue, String newComment) {
@@ -78,6 +85,7 @@ public class Answer extends AbstractEntity {
         if (!this.writer.equals(loginUser)) {
             throw new UnAuthorizedException();
         }
+        log.debug("update domain : {}", update);
         this.comment = update;
     }
 

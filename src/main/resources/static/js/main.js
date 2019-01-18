@@ -59,7 +59,7 @@ function milestone(e) {
 
             console.log("마일스톤 리스트 확인 ~~ : "+li);
             $("#milestone-list").html(li);
-
+            $("#milestone-menu").unbind();
         }
     })
 }
@@ -90,6 +90,7 @@ function label(e) {
 
         console.log("제발 되주세요 ㅠㅠ ~~ :" + li);
         $("#label-list").html(li);
+        $("#label-menu").unbind();
         }
     })
 
@@ -125,6 +126,7 @@ function assignee(e) {
             console.log("성공했나요?");
             console.log(li);
             $("#assignee-list").html(li);
+            $("#assignee-menu").unbind();
         }
     })
 }

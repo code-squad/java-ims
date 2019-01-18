@@ -59,4 +59,13 @@ public class Label extends AbstractEntity {
     public void writeBy(User user) {
         this.writer = user;
     }
+
+    @Override
+    public String toString() {
+        return "Label{" +
+                "issue=" + issue +
+                ", writer=" + writer +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

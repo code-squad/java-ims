@@ -58,11 +58,6 @@ public class IssueController {
         return "issue/show";
     }
 
-    @GetMapping("/list")
-    public String list() {
-        return "issue/list";
-    }
-
     @GetMapping("/{id}/update")
     public String update(@LoginUser User loginUser, @PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id).filter(user -> user.isOwner(loginUser))

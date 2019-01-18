@@ -35,9 +35,10 @@ public class ApiLabelController {
     @PostMapping("/api/labels")
     public ResponseEntity<Label> create(@LoginUser User user, @Valid @RequestBody Label label) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/"));
+        Label newLabel = labelService.create(user, label);
+        headers.setLocation(URI.create(String.valueOf(newLabel.getId())));
 
-        return new ResponseEntity<Label>(labelService.create(user, label), headers, HttpStatus.CREATED);
+        return new ResponseEntity<Label>(newLabel, headers, HttpStatus.CREATED);
     }
 
     @GetMapping("/api/issues/{issueId}/labels")
@@ -46,7 +47,7 @@ public class ApiLabelController {
     }
 
     @PostMapping("/api/issues/{issueId}/labels/{id}")
-    public ResponseEntity<Issue> add(@LoginUser User user, @PathVariable long issueId, @PathVariable long id) {
+    public ResponseEntity<Issue> designate(@LoginUser User user, @PathVariable long issueId, @PathVariable long id) {
         return new ResponseEntity<Issue>(labelService.setLabel(issueId, id), HttpStatus.OK);
     }
 }

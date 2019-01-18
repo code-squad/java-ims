@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-import java.net.URI;
-
 import static org.slf4j.LoggerFactory.getLogger;
 
 @RestController
@@ -42,18 +40,21 @@ public class ApiAnswerController {
         return new ResponseEntity<Answer>(comment ,headers, HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}")
+    public Answer updateShow(@LoginUser User loginUser, @PathVariable long id) {
+        Answer answer =answerService.findById(loginUser, id);
+        return answer;
+    }
+
     @PutMapping("/{id}")
-    public Answer update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody String update) {
-        return answerService.update(loginUser, id, update);
+    public ResponseEntity<Answer> update(@LoginUser User loginUser, @PathVariable long id, @RequestBody String comment) {
+        log.debug("컨트롤러 확인 : {}", comment);
+        return new ResponseEntity<Answer>(answerService.update(loginUser, id, comment), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@LoginUser User loginUser,@PathVariable long issueId ,@PathVariable long id) {
+    public void delete(@LoginUser User loginUser,@PathVariable long issueId ,@PathVariable long id) {
         answerService.delete(loginUser, id);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/api/issues/" + issueId + "/answers"));
         log.debug("되는건가? : {}", id);
-        return new ResponseEntity<Void>(headers, HttpStatus.OK);
     }
 }

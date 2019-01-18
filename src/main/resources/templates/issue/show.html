@@ -47,7 +47,9 @@
             <!-- milestone list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" id="milestone-list"
                 for="milestone-menu">
+                {{#milestone}}
 
+                {{/milestone}}
             </ul>
             <button id="label-menu" class="mdl-button mdl-js-button" value="/api/issues/{{id}}/labels">
                 Label
@@ -73,26 +75,30 @@
             <!--
              start -->
             {{#answers}}
-            <div class="comment mdl-color-text--grey-700">
+            <div class="comment mdl-color-text--grey-700 answer-form">
                 <header class="comment__header">
                     <img class="comment__avatar2" height="48" width="48"
                          src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
-                    <div class="comment__author">
+                    <div class="comment__author" id="answer-{{id}}">
                         <strong>
                             <a>{{writer.name}}</a>
+                            <div class="update-answer-showed">
+                                <span>{{comment}}</span>
+                                <span> on {{createDate}}</span>
+                                <!--<textarea> {{comment}} on {{createDate}}</textarea>-->
+                            </div>
 
-
-                            <span>{{comment}} on {{createDate}}</span>
                         </strong>
                     </div>
                     <div class="article-util">
                         <ul class="article-util-list">
                             <li>
-                                <a class="link-modify-article"
-                                   href="/questions/413/answers/1405/form">수정</a>
+                                <a href="/api/issues/{{issue.id}}/answers/{{id}}" form class="update-answers-form">
+                                    <button type="submit" class="update-answer-button">수정</button>
+                                </a>
                             </li>
                             <li>
-                                <form class="form-delete" action="/api/issues/{{issue.id}}/answers/{{id}}"
+                                <form class="delete-answer-form" action="/api/issues/{{issue.id}}/answers/{{id}}"
                                       method="POST">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <button type="submit" class="delete-answer-button">삭제</button>
@@ -101,8 +107,8 @@
                         </ul>
                     </div>
                 </header>
+                <hr>
             </div>
-            <hr>
             {{/answers}}
 
             <!-- comments end -->
@@ -117,7 +123,7 @@
             <form class="comments-write" action="/api/issues/{{id}}/answers" method="POST">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
-                    <label for="comment" class="mdl-textfield__label">Leave a comment</label>
+                    <label for="comment" class="mdl-textfield__label" name="comment">Leave a comment</label>
                 </div>
                 <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
                     <i class="material-icons" role="presentation">check</i><span
@@ -131,11 +137,11 @@
 {{/issue}}
 
 <script type="text/template" id="commentTemplate">
-    <div class="comment mdl-color-text--grey-700">
+    <div class="comment mdl-color-text--grey-700 answer-form">
         <header class="comment__header">
             <img class="comment__avatar2" height="48" width="48"
                  src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
-            <div class="comment__author">
+            <div class="comment__author" id="answer-{4}">
                 <strong>
                     <a>{0}</a>
 
@@ -148,8 +154,9 @@
             <div class="article-util">
                 <ul class="article-util-list">
                     <li>
-                        <a class="link-modify-article" href="/api/qna/updateAnswer">수정</a>
-                        <input type="hidden" name="_method" value="PUT"/>
+                        <a href="/api/issues/{3}/answers/{4}" form class="update-answers-form">
+                            <button type="submit" class="update-answer-button">수정</button>
+                        </a>
                     </li>
                     <li>
                         <form class="delete-answer-form" action="/api/issues/{3}/answers/{4}" method="POST">
@@ -160,11 +167,36 @@
                 </ul>
             </div>
         </header>
+        <hr>
     </div>
-    <hr>
 
 </script>
 
+<script type="text/template" id="answerUpdateTemplate" class="answer-remove">
+    <div id="answerUpdateForm-{2}">
+        <form action="/issue/{1}/uploadFile" enctype="multipart/form-data" method="POST">
+            <div style="margin:10px;">
+                <input type="file" name="file" id="update_file"/>
+                <button class="mdl-button" type="submit">upload file</button>
+            </div>
+        </form>
+        <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+            <form class="submit-write-update" action="{0}" method="POST">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <label for="comment" class="mdl-textfield__label">Leave a comment</label>
+                    <br>
+                    <textarea rows=5 class="mdl-textfield__input" id="update_comment" name="comment">{1}</textarea>
+                </div>
+                <button type="submit"
+                        class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon update_answer"
+                        id="update-answer-btn">
+                    <i class="material-icons" role="presentation">check</i><span
+                        class="visuallyhidden">add comment</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</script>
 {{/partial}}
 
 {{> base}}

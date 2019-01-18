@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import javax.annotation.Resource;
 
 import java.util.Optional;
@@ -45,6 +46,7 @@ public class IssueService {
         Issue original = issueRepository.findById(id).filter(user -> user.isOwner(loginUser))
                 .orElseThrow(UnAuthorizedException::new);
         original.update(loginUser, target._toIssue());
+
         return original;
     }
 

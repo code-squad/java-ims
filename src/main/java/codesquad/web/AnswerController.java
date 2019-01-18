@@ -9,10 +9,7 @@ import codesquad.service.AnswerService;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -30,11 +27,16 @@ public class AnswerController {
     @Resource(name = "answerService")
     private AnswerService answerService;
 
-    @PutMapping("")
+    @PostMapping("")
     public Answer add(@LoginUser User loginUser, @PathVariable long issueId, @Valid String newComment) {
         Issue issue = issueService.findById(issueId).orElseThrow(UnknownError::new);
         Answer answer = answerService.create(loginUser, issue, newComment);
         return answer;
+    }
+
+    @PutMapping("/{id}")
+    public Answer update(@LoginUser User loginUser, @PathVariable long id, String update) {
+        return answerService.update(loginUser, id, update);
     }
 
     @DeleteMapping("/{id}")

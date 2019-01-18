@@ -29,10 +29,10 @@ public class ApiMilestoneController {
 
     @PostMapping("/api/milestones")
     public ResponseEntity<Milestone> create(@LoginUser User user, @Valid @RequestBody Milestone milestone) {
-
+        Milestone newMilestone = milestoneService.create(user, milestone);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/milestones/list"));
-        return new ResponseEntity<Milestone>(milestoneService.create(user, milestone),headers, HttpStatus.CREATED);
+        headers.setLocation(URI.create(String.valueOf(newMilestone.getId())));
+        return new ResponseEntity<Milestone>(newMilestone, headers, HttpStatus.CREATED);
     }
 
     @GetMapping("/api/issues/{{issueId}}/milestones")
@@ -43,11 +43,7 @@ public class ApiMilestoneController {
 
     @PostMapping("/api/issues/{issueId}/milestones/{id}")
     public ResponseEntity<Issue> add(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id) {
-        log.debug("qwerqewrqwer "+issueId+", "+id);
-        log.debug("qwerqwerqwer "+issueId+", "+id);
-
-        ResponseEntity<Issue> response = new ResponseEntity<Issue>( milestoneService
+        return new ResponseEntity<Issue>( milestoneService
                 .setMilestone(loginUser, issueId, id), HttpStatus.OK);
-        return response;
     }
 }
