@@ -40,7 +40,7 @@
 									    <strong>{{subject}}</strong>
 									</a>
 									<span class="mdl-list__item-sub-subject">
-									    #1 Open
+									    #{{@index_1}} {{^ closed}}Open{{/ closed}}{{# closed}}Close{{/ closed}}
 									    <relative-time datetime="2017-01-14"
                                                        subject="2017-01-14">{{formattedModifiedDate}}</relative-time>
 									    by <a href="" aria-label="View all issues opened by javajigi"

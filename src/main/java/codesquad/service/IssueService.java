@@ -2,6 +2,8 @@ package codesquad.service;
 
 import codesquad.CannotDeleteException;
 import codesquad.domain.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Service
 public class IssueService {
+    private static final Logger log = LoggerFactory.getLogger(IssueService.class);
+
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
@@ -75,7 +79,7 @@ public class IssueService {
         Issue issue = findById(id);
         User assignee = userService.findById(assigneeId);
 
-        issue.assignedBy(loginUser, assignee);
+        issue.toAssignee(loginUser, assignee);
     }
 
     @Transactional
@@ -87,9 +91,10 @@ public class IssueService {
     }
 
     @Transactional
-    public Issue close(User loginUser, long id) {
+    public Issue changeOpeningAndClosingStatus(User loginUser, long id) {
         Issue issue = findById(id);
-        issue.closeIssue(loginUser);
+        issue.changeOpeningAndClosingStatus(loginUser);
+
         return issue;
     }
 }

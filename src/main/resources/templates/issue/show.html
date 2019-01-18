@@ -75,7 +75,12 @@
                         <span>2017-01-14</span>
                     </div>
                     <a href="/api/issues/{{issue.id}}" class="mdl-button mdl-button--colored mdl-js-button" id="close-button">
+                        {{^ issue.closed}}
                         Close issue
+                        {{/ issue.closed}}
+                        {{# issue.closed}}
+                        Open issue
+                        {{/ issue.closed}}
                     </a>
 
                     <div class="section-spacer"></div>

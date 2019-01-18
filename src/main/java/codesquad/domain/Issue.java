@@ -2,6 +2,8 @@ package codesquad.domain;
 
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -12,6 +14,8 @@ import java.util.Objects;
 
 @Entity
 public class Issue extends AbstractEntity {
+    private static final Logger log = LoggerFactory.getLogger(Issue.class);
+
     @Size(min = 3, max = 100)
     @Column(nullable = false, length = 100)
     private String subject;
@@ -53,10 +57,6 @@ public class Issue extends AbstractEntity {
         return this.writer.equals(loginUser);
     }
 
-    public boolean isClosed() {
-        return this.closed;
-    }
-
     public void update(User loginUser, Issue target) {
         if (!isMatchWriter(loginUser)) {
             throw new UnAuthorizedException();
@@ -77,6 +77,7 @@ public class Issue extends AbstractEntity {
         return temp;
     }
 
+    //TODO : 아래 4개 메소드 중복제거 가능할까?
     public void toMilestone(User loginUser, Milestone milestone) {
         if(!isMatchWriter(loginUser)) {
             throw new UnAuthorizedException();
@@ -85,7 +86,7 @@ public class Issue extends AbstractEntity {
         this.milestone = milestone;
     }
 
-    public void assignedBy(User loginUser, User assignee) {
+    public void toAssignee(User loginUser, User assignee) {
         if (!isMatchWriter(loginUser)) {
             throw new UnAuthorizedException();
         }
@@ -101,12 +102,12 @@ public class Issue extends AbstractEntity {
         this.labels.add(label);
     }
 
-    public void closeIssue(User loginUser) {
+    public void changeOpeningAndClosingStatus(User loginUser) {
         if(!isMatchWriter(loginUser)) {
             throw new UnAuthorizedException();
         }
 
-        this.closed = true;
+        this.closed = !closed;
     }
 
     public String getSubject() {
@@ -139,6 +140,14 @@ public class Issue extends AbstractEntity {
 
     public void setMilestone(Milestone milestone) {
         this.milestone = milestone;
+    }
+
+    public boolean isClosed() {
+        return this.closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 
     @Override
