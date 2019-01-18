@@ -1,6 +1,5 @@
 
 $("#close-button").on("click", changeStatus);
-
 function changeStatus(e) {
     e.preventDefault();
 
@@ -21,6 +20,26 @@ function changeStatus(e) {
                 } else {
                     $("#close-button").html('CLOSE ISSUE');
                 }
+            }
+        });
+}
+
+$(".property-list").on("click", relateProperty);
+function relateProperty(e) {
+    e.preventDefault();
+
+    var url = $(this).attr("href");
+    console.log("url : " + url);
+
+    $.ajax({
+            type : 'get',
+            url : url,
+            dataType : 'json',
+            error: function() {
+                console.log('error');
+            },
+            success : function(data) {
+                console.log('success');
             }
         });
 }

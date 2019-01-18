@@ -92,10 +92,8 @@
 
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="milestone-menu">
-
-                        <!--TODO:지정 된 마일스톤은 노란색으로 표시되게..! 핸들바 if, 헬퍼함수? 쓰려했는데 잘 안됨-->
                         {{# milestones}}
-                        <a href="/issues/{{issue.id}}/milestones/{{id}}">
+                        <a class=property-list href="/api/issues/{{issue.id}}/milestones/{{id}}">
                         <li class="mdl-menu__item">{{subject}}</li>
                         </a>
                         {{/ milestones}}
@@ -108,9 +106,9 @@
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="label-menu">
                         {{# labels}}
-                        <li class="mdl-menu__item">
-                            <a href="/issues/{{issue.id}}/labels/{{id}}">{{name}}</a>
-                        </li>
+                        <a class=property-list href="/api/issues/{{issue.id}}/labels/{{id}}">
+                            <li class="mdl-menu__item">{{name}}</li>
+                        </a>
                         {{/ labels}}
                     </ul>
 
@@ -121,9 +119,9 @@
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="assignee-menu">
                         {{# assignees}}
-                        <li class="mdl-menu__item">
-                            <a href="/issues/{{issue.id}}/users/{{id}}">{{name}}</a>
-                        </li>
+                        <a class=property-list href="/api/issues/{{issue.id}}/assignees/{{id}}">
+                            <li class="mdl-menu__item">{{name}}</li>
+                        </a>
                         {{/ assignees}}
                     </ul>
                 </div>

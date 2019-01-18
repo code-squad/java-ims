@@ -23,10 +23,21 @@ public class ApiIssueController {
 
     @GetMapping("/{id}")
     public Issue changeOpeningAndClosingStatus(@LoginUser User loginUser, @PathVariable long id) {
-        Issue issue = issueService.findById(id);
-        issueService.changeOpeningAndClosingStatus(loginUser, id);
-
-        return issue;
+        return issueService.changeOpeningAndClosingStatus(loginUser, id);
     }
 
+    @GetMapping("/{id}/milestones/{milestoneId}")
+    public Issue addToMilestone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long milestoneId) {
+        return issueService.addToMilestone(loginUser, id, milestoneId);
+    }
+
+    @GetMapping("/{id}/labels/{labelId}")
+    public Issue addLabel(@LoginUser User loginUser, @PathVariable long id, @PathVariable long labelId) {
+        return issueService.addLabel(loginUser, id, labelId);
+    }
+
+    @GetMapping("/{id}/assignees/{assigneeId}")
+    public Issue setAssignee(@LoginUser User loginUser, @PathVariable long id, @PathVariable long assigneeId) {
+        return issueService.setAssignee(loginUser, id, assigneeId);
+    }
 }
