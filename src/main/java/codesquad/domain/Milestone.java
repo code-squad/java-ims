@@ -1,11 +1,13 @@
 package codesquad.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Where;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,11 +24,18 @@ public class Milestone extends AbstractEntity {
     @OneToMany(mappedBy = "milestone", cascade = CascadeType.ALL)
     @Where(clause = "delete = false")
     @OrderBy("id ASC")
+    @JsonIgnore
     private List<Issue> issues;
 
-    private LocalDateTime startDate;
+    @OneToMany
+    @Where(clause = "deleted = false")
+    @JsonIgnore
+    @OrderBy("id ASC")
+    private List<MileStoneOpen> opens = new ArrayList();
 
-    private LocalDateTime endDate;
+    private String startDate;
+
+    private String endDate;
 
     public Milestone() {
     }
@@ -35,14 +44,14 @@ public class Milestone extends AbstractEntity {
         this.subject = subject;
     }
 
-    public Milestone(String subject, LocalDateTime startDate, LocalDateTime endDate, User user) {
+    public Milestone(String subject, String startDate, String endDate, User user) {
         this.subject = subject;
         this.startDate = startDate;
         this.endDate = endDate;
         this.writer = user;
     }
 
-    public Milestone(long id, String subject, LocalDateTime startDate, LocalDateTime endDate, User writer) {
+    public Milestone(long id, String subject, String startDate, String endDate, User writer) {
         super(id);
         this.subject = subject;
         this.writer = writer;
@@ -74,20 +83,28 @@ public class Milestone extends AbstractEntity {
         this.writer = writer;
     }
 
-    public LocalDateTime getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public List<MileStoneOpen> getOpens() {
+        return opens;
+    }
+
+    public void setOpens(List<MileStoneOpen> opens) {
+        this.opens = opens;
     }
 
     public void writeBy(User user) {
@@ -116,6 +133,16 @@ public class Milestone extends AbstractEntity {
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Milestone{" +
+                "subject='" + subject + '\'' +
+                ", writer=" + writer +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                '}';
     }
 }
 

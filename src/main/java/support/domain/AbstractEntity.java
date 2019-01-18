@@ -38,6 +38,14 @@ public class AbstractEntity {
         return getFormattedDate(createDate, "yyyy.MM.dd HH:mm:ss");
     }
 
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public LocalDateTime getModifiedDate() {
+        return modifiedDate;
+    }
+
     @JsonIgnore
     public String getFormattedModifiedDate() {
         return getFormattedDate(modifiedDate, "yyyy.MM.dd HH:mm:ss");

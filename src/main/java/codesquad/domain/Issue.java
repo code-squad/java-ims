@@ -3,6 +3,8 @@ package codesquad.domain;
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import codesquad.dto.IssueDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Where;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -33,15 +35,19 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_label"))
     private Label label;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
+    private User assignee;
+
+    @OneToMany
+    @Where(clause = "deleted = false")
+    @JsonIgnore
+    @OrderBy("id ASC")
+    private List<Answer> answers = new ArrayList<>();
 
     private boolean deleted = false;
 
     public Issue() {
-    }
-
-    public Issue(String subject, String comment) {
-        this.subject = subject;
-        this.comment = comment;
     }
 
     public Issue(long id, String subject, String comment) {
@@ -76,6 +82,22 @@ public class Issue extends AbstractEntity {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
+
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
     }
 
     public User getWriter() {
@@ -144,9 +166,14 @@ public class Issue extends AbstractEntity {
             throw new CannotDeleteException("작성자가 아니면 지울수 없습니다.");
         }
         this.deleted = true;
-        List<DeleteHistory> deletes = new ArrayList<>();
+        List<DeleteHistory> deletes = Answer.deleteAnswers(this.answers, loginUser);
         deletes.add(new DeleteHistory(ContentType.ISSUE, getId(), writer));
         return deletes;
+    }
+
+
+    public void addComment(Answer newComment) {
+        answers.add(newComment);
     }
 
     public boolean equalsQuestion(Issue issue) {

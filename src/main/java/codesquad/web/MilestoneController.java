@@ -31,14 +31,14 @@ public class MilestoneController {
 
     @GetMapping("/list")
     public String list(Milestone milestone, Model model) {
-        model.addAttribute("milestone", milestoneService.findAll());
+        model.addAttribute("milestones", milestoneService.findAll());
         return "/milestone/list";
     }
 
     @PostMapping("")
-    public String createMilesone(@LoginUser User user, @Valid Milestone milestone) {
+    public String createMilesone(@LoginUser User user, Milestone milestone) {
         milestoneService.create(user ,milestone);
-        return "/milestone/list";
+        return "redirect:/milestones/list";
     }
 
 }

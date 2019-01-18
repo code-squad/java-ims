@@ -2,10 +2,13 @@ package codesquad.service;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
+import codesquad.domain.Issue;
+import codesquad.domain.IssueRepository;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +23,14 @@ public class UserService {
 
     private static final Logger log = getLogger(UserService.class);
 
+//    @Value("${default.profile.image}")
+//    private String defaultImage;
+
     @Resource(name = "userRepository")
     private UserRepository userRepository;
+
+    @Resource(name = "issueRepository")
+    private IssueRepository issueRepository;
 
     public User add(UserDto userDto) {
         log.debug("userDto add : {}" , userDto._toUser());
@@ -65,4 +74,10 @@ public class UserService {
         return user;
     }
 
+    @Transactional
+    public Issue setAssginee(long issueId, long id) {
+        Issue issue = issueRepository.findById(issueId).orElseThrow(UnknownError::new);
+        issue.setAssignee(userRepository.findById(id).orElseThrow(UnknownError::new));
+        return issue;
+    }
 }

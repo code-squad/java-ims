@@ -8,15 +8,16 @@
                    class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored show-modal">
                     <i class="material-icons">add</i>
                 </a>
+
                 <div class="mdl-card__supporting-text">
                     <ul class="issue-list mdl-list">
-
+                    {{#milestones}}
 
                         <li class="mdl-list__item mdl-list__item--two-line">
                   <span class="mdl-list__item-primary-comment">
-                    <a href="/milestones/{{id}}"><strong>Milestone1</strong></a>
+                    <a href="/milestones/{{id}}"><strong>{{subject}}</strong></a>
                     <span class="mdl-list__item-sub-title">
-                      Due by June 23, 2016
+                      {{createDate}}
                     </span>
                   </span>
 
@@ -29,44 +30,7 @@
                     </span>
                   </span>
                         </li>
-
-                        <li class="mdl-list__item mdl-list__item--two-line">
-                  <span class="mdl-list__item-primary-comment">
-                    <a href="/milestone/2"><strong>Milestone2</strong></a>
-                    <span class="mdl-list__item-sub-title">
-                      Due by June 23, 2016
-                    </span>
-                  </span>
-
-                            <span class="mdl-list__item-secondary-comment">
-                    <span class="progress-bar">
-                      <span class="progress" style="width:200.0px"> </span>
-                    </span>
-                    <span class="mdl-list__item-sub-title" style="font-size:13px; color:#888">
-                    2 Open 1 Closed
-                    </span>
-                  </span>
-                        </li>
-
-                        <li class="mdl-list__item mdl-list__item--two-line">
-                  <span class="mdl-list__item-primary-comment">
-                    <a href="/milestone/3"><strong>Milestone3</strong></a>
-                    <span class="mdl-list__item-sub-title">
-                      Due by June 23, 2016
-                    </span>
-                  </span>
-
-                            <span class="mdl-list__item-secondary-comment">
-                    <span class="progress-bar">
-                      <span class="progress" style="width:150.0px"> </span>
-                    </span>
-                    <span class="mdl-list__item-sub-title" style="font-size:13px; color:#888">
-                    1 Open 1 Closed
-                    </span>
-                  </span>
-                        </li>
-
-
+                        {{/milestones}}
                     </ul>
                 </div>
             </div>

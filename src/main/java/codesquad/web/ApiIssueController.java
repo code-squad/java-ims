@@ -3,10 +3,12 @@ package codesquad.web;
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.Issue;
+import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
+import codesquad.service.UserService;
 import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import java.net.URI;
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -28,6 +31,9 @@ public class ApiIssueController {
     @Resource(name = "issueService")
     private IssueService issueService;
 
+    @Resource(name = "userService")
+    private UserService userService;
+
     @PostMapping("")
     public ResponseEntity<Issue> create(@LoginUser User loginUser, @Valid @RequestBody IssueDto issueDto) {
 
@@ -38,7 +44,7 @@ public class ApiIssueController {
 
     @GetMapping("/{id}")
     public IssueDto show(@PathVariable long id) {
-        Issue issue = issueService.findById(id).orElseThrow(UnAuthorizedException::new);
+        Issue issue = issueService.findById(id).orElseThrow(UnknownError::new);
         return issue._toIssueDto();
     }
 
@@ -56,5 +62,15 @@ public class ApiIssueController {
         } catch (CannotDeleteException e) {
             return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
         }
+    }
+
+    @GetMapping("/{id}/assignees")
+    public List<User> assigneeList() {
+        return userService.findAll();
+    }
+
+    @PostMapping("/{issueId}/assignees/{id}")
+    public ResponseEntity<Issue> assignneAdd(@LoginUser User user, @PathVariable long issueId, @PathVariable long id) {
+        return new ResponseEntity<Issue>(userService.setAssginee(issueId, id), HttpStatus.OK);
     }
 }
