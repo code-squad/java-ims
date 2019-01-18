@@ -57,17 +57,17 @@
                     </button>
                     <!-- milestone list -->
 
+                    {{^issue.closed}}
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="milestone-menu" id="milestone_menu_ul">
-                        <!--{{#milestones}}-->
-                        <!--{{^issue.closed}}-->
-                            <!--<a href="/issues/{{issue.id}}/milestone/{{id}}">-->
-                                <!--<li class="mdl-menu__item">-->
-                                    <!--{{milestoneDto.subject}}-->
-                                <!--</li>-->
-                            <!--</a>-->
-                        <!--{{/issue.closed}}-->
-                        <!--{{/milestones}}-->
+                        {{#milestones}}
+                            <a href="/issues/{{issue.id}}/milestone/{{id}}">
+                                <li class="mdl-menu__item">
+                                    {{milestoneDto.subject}}
+                                </li>
+                            </a>
+                        {{/milestones}}
                     </ul>
+                    {{/issue.closed}}
 
                     <button id="label-menu" class="mdl-button mdl-js-button">
                         Label
@@ -219,7 +219,8 @@
                             <label for="comment" class="mdl-textfield__label">Leave a comment</label>
                         </div>
                         <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-                            <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">add comment</span>
+                            <i class="material-icons" role="presentation">check</i>
+                            <span class="visuallyhidden">add comment</span>
                         </button>
                     </form>
                 </div>
@@ -233,6 +234,21 @@
             </div>
         </footer>
     </main>
+
+<script type="text/template" id="commentEditTemplate">
+    <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+        <form action="{0}" method="POST">
+            <input type="hidden" name="_method" value="PUT">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <textarea rows=5 class="mdl-textfield__input" id="edit-contents" name="contents">{1}</textarea>
+            </div>
+            <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon comment-edit-ims">
+                <i class="material-icons" role="presentation">check</i>
+                <span class="visuallyhidden">edit comment</span>
+            </button>
+        </form>
+    </div>
+</script>
 {{/partial}}
 
 

@@ -52,7 +52,7 @@ public class ApiIssueController {
     }
 
     @GetMapping("/{id}/milestone")
-    public Iterable<Milestone> list(@PathVariable long id) {
+    public List<Milestone> list(@PathVariable long id) {
         return milestoneService.findAll();
     }
 

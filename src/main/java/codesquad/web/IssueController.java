@@ -48,7 +48,6 @@ public class IssueController {
         model.addAttribute("milestones", milestoneService.findAll());
         model.addAttribute("allLabels", labelService.findAll());
         model.addAttribute("users", userService.findAll());
-        log.debug("labelService:{}", labelService.findAll());
         return "/issue/show";
     }
 

@@ -1,7 +1,5 @@
 package codesquad.domain;
 
-import codesquad.dto.AnswerDto;
-import codesquad.dto.MilestoneDto;
 import codesquad.exception.UnAuthenticationException;
 import codesquad.exception.UnAuthorizedException;
 import codesquad.dto.IssueDto;

@@ -27,7 +27,7 @@ public class MilestoneService {
        return milestoneRepository.save(milestoneDto._toMilestone(loginUser));
     }
 
-    public Iterable<Milestone> findAll() {
+    public List<Milestone> findAll() {
         return milestoneRepository.findAll();
     }
 
