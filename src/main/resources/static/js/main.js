@@ -1,7 +1,7 @@
 
-$("#close-button").on("click", addAnswer);
+$("#close-button").on("click", changeStatus);
 
-function addAnswer(e) {
+function changeStatus(e) {
     e.preventDefault();
 
     var url = $("#close-button").attr("href");
