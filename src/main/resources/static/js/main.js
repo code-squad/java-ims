@@ -19,6 +19,7 @@ $("#label_menu").on("click", label_menu);
 $(document).on("click", '.assignee', assignee);
 $(document).on("click", '.register a', register);
 $(".answer-write button[type=submit]").click(addAnswer);
+$(".comments").on("click", ".delete-answer-form button[type=submit]", deleteAnswer);
 
 function login(e) {
     e.preventDefault();
@@ -229,12 +230,41 @@ function addAnswer(e) {
         success : function(data, status) {
             console.log(data);
             var answerTemplate = $("#answerTemplate").html();
-            var template = answerTemplate.format(data.writer.userId, data.contents, data.formattedCreateDate);
+            var template = answerTemplate.format(data.writer.userId, data.contents, data.formattedCreateDate, data.issue.id, data.id);
+
             console.log("data.formattedDate : " + data.formattedDate);
 
             $("#comments").append(template);
             $("textarea[name=comment]").val("");
+        }
+    });
+}
 
+function deleteAnswer(e){
+    console.log("댓글 삭제");
+
+    e.preventDefault();
+
+    var deleteBtn = $(this);
+    var url = $(".delete-answer-form").attr("action");
+    console.log("url : " + url);
+
+    $.ajax({
+        type : 'delete',
+        url : url,
+        dataType : 'json',
+        error : function(xhr) {
+            console.log("answer Delete error");
+            console.log(xhr);
+        },
+        success : function(data) {
+            console.log(data);
+            if (data.valid) {
+                deleteBtn.closest(".comment").remove();
+                console.log("댓글 삭제됨");
+            } else {
+                alert(data.errorMessage);
+            }
         }
     });
 }

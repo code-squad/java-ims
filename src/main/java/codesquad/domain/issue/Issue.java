@@ -6,6 +6,7 @@ import codesquad.domain.issue.answer.Answers;
 import codesquad.domain.label.Label;
 import codesquad.domain.milestone.Milestone;
 import codesquad.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 
@@ -40,6 +41,7 @@ public class Issue extends AbstractEntity {
     private User assignee;
 
     @Embedded
+    @JsonIgnore
     private Answers answers = new Answers();
 
     private Boolean deleted = false;

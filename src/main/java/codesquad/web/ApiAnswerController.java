@@ -8,10 +8,10 @@ import codesquad.service.AnswerService;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import support.domain.Result;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -29,7 +29,16 @@ public class ApiAnswerController {
     @PostMapping("")
     public Answer create(@LoginUser User loginUser, @PathVariable long id, String comment) {
         Issue issue = issueService.findById(id);
-        Answer ret = answerService.add(loginUser, issue, comment);
-        return ret;
+        return answerService.add(loginUser, issue, comment);
+    }
+
+    @DeleteMapping("/{answerId}")
+    public Result delete(@LoginUser User loginUser, @PathVariable long id, @PathVariable long answerId) {
+        try {
+            answerService.delete(answerId, loginUser);
+            return Result.ok();
+        }catch (Exception e) {
+            return Result.error("삭제할 수 없습니다.");
+        }
     }
 }

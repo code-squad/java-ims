@@ -101,10 +101,22 @@
 
                         </strong>
                     </div>
+                    <div class="article-util">
+                        <ul class="article-util-list" style="list-style-type:none;">
+                            <li>
+                                <a class="link-modify-article" href="/api/issue/{{issue.id}}/answers/{{id}}">수정</a>
+                            </li>
+                            <li>
+                                <form class="delete-answer-form" action="/api/issues/{{issue.id}}/answers/{{id}}" method="POST">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="delete-answer-button">삭제</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </header>
                 <hr>
             </div>
-
             {{/answers.answers}}
 
             <!--<div class="comment mdl-color-text&#45;&#45;grey-700">-->
@@ -199,6 +211,19 @@
 
 
             </strong>
+        </div>
+        <div class="article-util">
+            <ul class="article-util-list" style="list-style-type:none;">
+                <li>
+                    <a class="link-modify-article" href="/api/issues/{3}/answers/{4}">수정</a>
+                </li>
+                <li>
+                    <form class="delete-answer-form" action="/api/issues/{3}/answers/{4}" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="delete-answer-button">삭제</button>
+                    </form>
+                </li>
+            </ul>
         </div>
     </header>
 </div>

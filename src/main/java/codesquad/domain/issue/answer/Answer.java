@@ -22,7 +22,6 @@ public class Answer extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_to_issue"))
-    @JsonIgnore
     private Issue issue;
 
     @Size(min = 1)
