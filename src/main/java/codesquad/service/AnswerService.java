@@ -9,6 +9,7 @@ import codesquad.domain.user.User;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -44,5 +45,13 @@ public class AnswerService {
     public void delete(long answerId, User loginUser) {
         Answer answer = findById(answerId);
         deleteHistoryService.save(answer.delete(loginUser));
+    }
+
+    @Transactional
+    public Answer update(User loginUser, Answer answer, String comment) {
+        answer.isOwner(loginUser);
+        answer.setContents(comment);
+        log.debug("업데이트 댓글 : " + answer.getContents());
+        return answer;
     }
 }

@@ -20,6 +20,7 @@ $(document).on("click", '.assignee', assignee);
 $(document).on("click", '.register a', register);
 $(".answer-write button[type=submit]").click(addAnswer);
 $(".comments").on("click", ".delete-answer-form button[type=submit]", deleteAnswer);
+$(".comments").on("click", ".link-modify-article", updateAnswerForm);
 
 function login(e) {
     e.preventDefault();
@@ -246,7 +247,7 @@ function deleteAnswer(e){
     e.preventDefault();
 
     var deleteBtn = $(this);
-    var url = $(".delete-answer-form").attr("action");
+    var url = $(this).parent('form').attr("action");
     console.log("url : " + url);
 
     $.ajax({
@@ -267,5 +268,63 @@ function deleteAnswer(e){
             }
         }
     });
+}
+
+function updateAnswerForm(e) {
+    console.log("댓글 수정 Form");
+
+    e.preventDefault();
+
+    var url = $(this).attr("href");
+    console.log("url : " + url);
+
+    var targetComment = $(this).closest(".comment");
+
+    $.ajax({
+        type : 'get',
+        url : url,
+        dataType : 'json',
+        error : function(xhr) {
+            console.log("answer modifyForm error");
+            console.log(xhr);
+            alert("수정 권한이 없습니다.");
+        },
+        success : function(data) {
+            console.log(data);
+            var answerUpdateForm = $("#answerUpdate").html();
+            var template = answerUpdateForm.format(data.issue.id, data.id, data.contents);
+            targetComment.html(template);
+            $("#updateAnswer").on("click", updateAnswer);
+        }
+    })
+}
+
+function updateAnswer(e) {
+    console.log("댓글 업데이트");
+
+    e.preventDefault();
+
+    var url = $(this).parent('form').attr("action");
+    console.log("url : " + url);
+
+    var queryString = $(this).parent('form').serialize();
+    var targetComment = $(this).closest(".comment");
+
+    $.ajax({
+        type : 'put',
+        url : url,
+        data : queryString,
+        dataType : 'json',
+        error : function(xhr) {
+            console.log("update error!");
+            console.log(xhr);
+        },
+        success : function(data) {
+            console.log("업데이트 성공");
+            var answerTemplate = $("#answerTemplate").html();
+            var template = answerTemplate.format(data.writer.userId, data.contents, data.formattedCreateDate, data.issue.id, data.id);
+            targetComment.replaceWith(template);
+        }
+    })
 }
 

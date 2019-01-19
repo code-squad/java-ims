@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.UnAuthorizedException;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.answer.Answer;
 import codesquad.domain.user.User;
@@ -32,13 +33,28 @@ public class ApiAnswerController {
         return answerService.add(loginUser, issue, comment);
     }
 
+    @GetMapping("/{answerId}")
+    public ResponseEntity<Answer> modifyForm(@LoginUser User loginUser, @PathVariable long id, @PathVariable long answerId) {
+        Answer answer = answerService.findById(answerId);
+        if (!answer.isOwner(loginUser)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(answer, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{answerId}")
     public Result delete(@LoginUser User loginUser, @PathVariable long id, @PathVariable long answerId) {
         try {
             answerService.delete(answerId, loginUser);
             return Result.ok();
-        }catch (Exception e) {
+        } catch (Exception e) {
             return Result.error("삭제할 수 없습니다.");
         }
+    }
+
+    @PutMapping("/{answerId}")
+    public ResponseEntity<Answer> update(@LoginUser User loginUser, @PathVariable long id, @PathVariable long answerId, String updateComment) {
+        Answer answer = answerService.findById(answerId);
+        return new ResponseEntity<>(answerService.update(loginUser, answer, updateComment), HttpStatus.OK);
     }
 }

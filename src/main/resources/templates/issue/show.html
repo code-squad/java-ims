@@ -104,7 +104,7 @@
                     <div class="article-util">
                         <ul class="article-util-list" style="list-style-type:none;">
                             <li>
-                                <a class="link-modify-article" href="/api/issue/{{issue.id}}/answers/{{id}}">수정</a>
+                                <a class="link-modify-article" href="/api/issues/{{issue.id}}/answers/{{id}}">수정</a>
                             </li>
                             <li>
                                 <form class="delete-answer-form" action="/api/issues/{{issue.id}}/answers/{{id}}" method="POST">
@@ -226,8 +226,22 @@
             </ul>
         </div>
     </header>
+    <hr>
 </div>
-<hr>
+</script>
+
+<script type="text/template" id="answerUpdate">
+<div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+    <form class="answer-write" id="updateAnswerForm" action="/api/issues/{0}/answers/{1}" method="POST">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <textarea rows=5 class="mdl-textfield__input" id="updateComment" name="updateComment">{2}</textarea>
+            <label for="comment" class="mdl-textfield__label">Leave a comment</label>
+        </div>
+        <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="updateAnswer">
+            <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">update comment</span>
+        </button>
+    </form>
+</div>
 </script>
 
 {{>base}}
