@@ -2,6 +2,8 @@ package codesquad.service;
 
 import codesquad.CannotDeleteException;
 import codesquad.domain.*;
+import codesquad.domain.issue.Issue;
+import codesquad.domain.issue.IssueRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;

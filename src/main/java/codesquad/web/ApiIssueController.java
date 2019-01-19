@@ -1,6 +1,6 @@
 package codesquad.web;
 
-import codesquad.domain.Issue;
+import codesquad.domain.issue.Issue;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
@@ -20,6 +20,8 @@ public class ApiIssueController {
 
     @Resource(name = "issueService")
     private IssueService issueService;
+
+    //TODO: Result 객체의 필요성 생각해보기
 
     @GetMapping("/{id}")
     public Issue changeOpeningAndClosingStatus(@LoginUser User loginUser, @PathVariable long id) {

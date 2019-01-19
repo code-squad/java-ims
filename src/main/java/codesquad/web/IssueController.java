@@ -2,6 +2,7 @@ package codesquad.web;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.*;
+import codesquad.domain.issue.Issue;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import codesquad.service.MilestoneService;

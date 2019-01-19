@@ -10,9 +10,7 @@ function changeStatus(e) {
             type : 'get',
             url : url,
             dataType : 'json',
-            error: function() {
-                console.log('error');
-            },
+            error: onError,
             success : function(data) {
                 console.log(data);
                 if(data.closed) {
@@ -35,13 +33,15 @@ function relateProperty(e) {
             type : 'get',
             url : url,
             dataType : 'json',
-            error: function() {
-                console.log('error');
-            },
+            error: onError,
             success : function(data) {
                 console.log('success');
             }
         });
+}
+
+function onError() {
+    console.log('error');
 }
 
 String.prototype.format = function() {

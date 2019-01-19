@@ -1,7 +1,8 @@
-package codesquad.domain;
+package codesquad.domain.issue;
 
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
+import codesquad.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
@@ -33,8 +34,11 @@ public class Issue extends AbstractEntity {
     private User assignee;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
+
+    @OneToMany
+    private List<Reply> replies = new ArrayList<>();
 
     @ManyToMany
     private List<Label> labels = new ArrayList<>();
