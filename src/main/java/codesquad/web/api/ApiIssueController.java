@@ -36,10 +36,10 @@ public class ApiIssueController {
 
     @PostMapping("")
     public ResponseEntity<Issue> create(@LoginUser User loginUser, @Valid @RequestBody IssueDto issueDto) {
-        issueService.add(loginUser, issueDto);
+        Issue issue = issueService.add(loginUser, issueDto);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/"));
-        return new ResponseEntity<Issue>(headers, HttpStatus.FOUND);
+        headers.setLocation(URI.create("/api/issues/" + issue.getId()));
+        return new ResponseEntity<Issue>(headers, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

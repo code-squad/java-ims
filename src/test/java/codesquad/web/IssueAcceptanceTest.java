@@ -13,7 +13,7 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
-import static codesquad.domain.IssueTest.originalIssue;
+import static codesquad.domain.IssueTest.ORIGINAL_ISSUE;
 import static codesquad.domain.UserTest.SANJIGI;
 
 public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
@@ -53,21 +53,21 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void createIssueUpdateForm_no_login() throws Exception {
         ResponseEntity<String> response =
-                template.getForEntity(String.format("/issues/%d/form", originalIssue.getId()), String.class);
+                template.getForEntity(String.format("/issues/%d/form", ORIGINAL_ISSUE.getId()), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
     public void createIssueUpdateFrom_login() throws Exception {
         ResponseEntity<String> response =
-                basicAuthTemplate.getForEntity(String.format("/issues/%d/form", originalIssue.getId()), String.class);
+                basicAuthTemplate.getForEntity(String.format("/issues/%d/form", ORIGINAL_ISSUE.getId()), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     public void createIssueUpdateForm_other_user() throws Exception {
         ResponseEntity<String> response =
-                basicAuthTemplate(SANJIGI).getForEntity(String.format("/issues/%d/form", originalIssue.getId()), String.class);
+                basicAuthTemplate(SANJIGI).getForEntity(String.format("/issues/%d/form", ORIGINAL_ISSUE.getId()), String.class);
 //        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);     //basicAuthTemplate에서 FORBIDDEN에러 뜨는 듯 한데 구체적으로 어느 부분에서 나는지 모르겠음. -->UserService 클래스의 findById에서 UnAuthorizedException 뜸
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
@@ -78,7 +78,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("subject", "updatedSubject")
                 .addParameter("comment", "updatedComment")
                 .build();
-        return template.postForEntity(String.format("/issues/%d", originalIssue.getId()), request, String.class);
+        return template.postForEntity(String.format("/issues/%d", ORIGINAL_ISSUE.getId()), request, String.class);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = update(basicAuthTemplate());
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath())
-                .isEqualTo(String.format("/issues/%d", originalIssue.getId()));
+                .isEqualTo(String.format("/issues/%d", ORIGINAL_ISSUE.getId()));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .delete()
                 .build();
-        return template.postForEntity(String.format("/issues/%d", originalIssue.getId()), request, String.class);
+        return template.postForEntity(String.format("/issues/%d", ORIGINAL_ISSUE.getId()), request, String.class);
     }
 
     @Test
