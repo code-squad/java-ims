@@ -28,6 +28,7 @@ public class IssueService {
     @Resource(name = "deleteHistoryService")
     private DeleteHistoryService deleteHistoryService;
 
+
     public Issue add(User user, IssueDto issueDto) {
         issueDto.writeBy(user);
         return issueRepository.save(issueDto._toIssue());

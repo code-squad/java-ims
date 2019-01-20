@@ -35,6 +35,9 @@ public class IssueController {
     @Resource(name = "answerService")
     private AnswerService answerService;
 
+    @Resource(name = "multipartFileService")
+    private MultipartFileService multipartFileService;
+
     @GetMapping("")
     public String createIssue(@LoginUser User user) {
         return "issue/form";
@@ -55,6 +58,7 @@ public class IssueController {
         model.addAttribute("labels", labelService.findAll());
         model.addAttribute("assignees", userService.findAll());
         model.addAttribute("answers", answerService.findAll());
+        model.addAttribute("multipart", multipartFileService.findAll());
         return "issue/show";
     }
 
