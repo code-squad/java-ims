@@ -40,6 +40,34 @@ function relateProperty(e) {
         });
 }
 
+$(".new-comment button[type=submit]").on("click", addComment);
+function addComment(e) {
+    e.preventDefault();
+
+    var url = $(this).closest("form").attr("action");
+    console.log("url : " + url);
+
+    var comment = $("#comment").val();
+    console.log(comment);
+
+//    $.ajax({
+//        type : 'post',
+//        url : url,
+//        data : queryString,
+//        dataType : 'json',
+//        error: function () {
+//            alert("error");
+//        },
+//        success : function (data, status) {
+//            console.log(data);
+//            var answerTemplate = $("#answerTemplate").html();
+//            var template = answerTemplate.format(data.writer.userId, data.formattedCreateDate, data.contents, data.question.id, data.id);
+//            $(".qna-comment-slipp-articles").prepend(template);
+//            $("textarea[name=contents]").val("");
+//        }
+//    });
+}
+
 function onError() {
     console.log('error');
 }

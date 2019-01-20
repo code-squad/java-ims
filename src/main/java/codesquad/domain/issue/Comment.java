@@ -14,24 +14,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Reply extends AbstractEntity {
-    private static final Logger log = LoggerFactory.getLogger(Reply.class);
+public class Comment extends AbstractEntity {
+    private static final Logger log = LoggerFactory.getLogger(Comment.class);
 
     @Size(min = 1)
     @Lob
     private String body;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_reply_writer"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_writer"))
     private User writer;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_reply_issue"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_issue"))
     private Issue issue;
 
     private boolean deleted = false;
 
-    public Reply() {
+    public Comment() {
 
     }
 
@@ -68,7 +68,7 @@ public class Reply extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "Reply{" +
+        return "Comment{" +
                 "id=" + getId() +
                 "body='" + body + '\'' +
                 ", writer=" + writer +

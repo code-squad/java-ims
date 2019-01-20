@@ -38,7 +38,7 @@ public class Issue extends AbstractEntity {
     private Milestone milestone;
 
     @OneToMany
-    private List<Reply> replies = new ArrayList<>();
+    private List<Comment> replies = new ArrayList<>();
 
     @ManyToMany
     private List<Label> labels = new ArrayList<>();

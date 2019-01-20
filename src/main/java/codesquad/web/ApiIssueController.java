@@ -1,15 +1,13 @@
 package codesquad.web;
 
+import codesquad.domain.issue.Comment;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -41,5 +39,10 @@ public class ApiIssueController {
     @GetMapping("/{id}/assignees/{assigneeId}")
     public Issue setAssignee(@LoginUser User loginUser, @PathVariable long id, @PathVariable long assigneeId) {
         return issueService.setAssignee(loginUser, id, assigneeId);
+    }
+
+    @PostMapping("/{id}/comments")
+    public Issue addComment(@LoginUser User loginUser, @PathVariable long id, Comment comment) {
+        return null;
     }
 }
