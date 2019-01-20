@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.domain.user.User;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;

@@ -1,6 +1,7 @@
 package support.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -20,6 +21,7 @@ public class AbstractEntity {
     private LocalDateTime createDate;
 
     @LastModifiedDate
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime modifiedDate;
 
     public AbstractEntity() {
@@ -33,17 +35,19 @@ public class AbstractEntity {
         return id;
     }
 
-    @JsonIgnore
+    //    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public String getFormattedCreateDate() {
         return getFormattedDate(createDate, "yyyy.MM.dd HH:mm:ss");
     }
 
-    @JsonIgnore
+    //    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public String getFormattedModifiedDate() {
         return getFormattedDate(modifiedDate, "yyyy.MM.dd HH:mm:ss");
     }
 
-    private String getFormattedDate(LocalDateTime dateTime, String format) {
+    protected String getFormattedDate(LocalDateTime dateTime, String format) {
         if (dateTime == null) {
             return "";
         }

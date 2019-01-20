@@ -9,8 +9,8 @@ import org.springframework.util.MultiValueMap;
 import support.test.BasicAuthAcceptanceTest;
 import support.test.HtmlFormDataBuilder;
 
-import static codesquad.domain.IssueTest.originalIssue;
-import static codesquad.domain.LabelTest.originalLabel;
+import static codesquad.domain.IssueTest.ORIGINAL_ISSUE;
+import static codesquad.domain.LabelTest.ORIGINAL_LABEL;
 
 public class LabelAcceptanceTest extends BasicAuthAcceptanceTest {
 
@@ -45,14 +45,14 @@ public class LabelAcceptanceTest extends BasicAuthAcceptanceTest {
     @Test
     public void createUpdateForm_no_login() {
         ResponseEntity<String> response =
-                template.getForEntity(String.format("/labels/%d/form", originalIssue.getId()), String.class);
+                template.getForEntity(String.format("/labels/%d/form", ORIGINAL_ISSUE.getId()), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
     public void createUpdateForm_login() {
         ResponseEntity<String> response =
-                basicAuthTemplate.getForEntity(String.format("/labels/%d/form", originalIssue.getId()), String.class);
+                basicAuthTemplate.getForEntity(String.format("/labels/%d/form", ORIGINAL_ISSUE.getId()), String.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
@@ -62,7 +62,7 @@ public class LabelAcceptanceTest extends BasicAuthAcceptanceTest {
                 .addParameter("name", "updatedName")
                 .addParameter("explanation", "updatedExplanation")
                 .build();
-        return template.postForEntity(String.format("/labels/%d", originalLabel.getId()), request, String.class);
+        return template.postForEntity(String.format("/labels/%d", ORIGINAL_LABEL.getId()), request, String.class);
     }
 
     @Test
@@ -76,14 +76,14 @@ public class LabelAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = update(basicAuthTemplate);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         softly.assertThat(response.getHeaders().getLocation().getPath())
-                .isEqualTo(String.format("/labels/%d", originalLabel.getId()));
+                .isEqualTo(String.format("/labels/%d", ORIGINAL_LABEL.getId()));
     }
 
     private ResponseEntity<String> delete(TestRestTemplate template) throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodedForm()
                 .delete()
                 .build();
-        return template.postForEntity(String.format("/labels/%d", originalLabel.getId()), request, String.class);
+        return template.postForEntity(String.format("/labels/%d", ORIGINAL_LABEL.getId()), request, String.class);
     }
 
     @Test

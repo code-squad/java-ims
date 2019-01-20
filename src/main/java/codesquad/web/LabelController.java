@@ -1,7 +1,7 @@
 package codesquad.web;
 
-import codesquad.domain.Label;
-import codesquad.domain.User;
+import codesquad.domain.label.Label;
+import codesquad.domain.user.User;
 import codesquad.security.LoginUser;
 import codesquad.service.LabelService;
 import org.slf4j.Logger;

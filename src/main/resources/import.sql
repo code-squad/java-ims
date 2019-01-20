@@ -10,3 +10,10 @@ INSERT INTO milestone (id, create_date, modified_date, subject, start_date, end_
 INSERT INTO label (id, create_date, modified_date, deleted, explanation, name) values (1, current_timestamp, current_timestamp, false, '개발를 하기 위해서 사전에 완료되어야 하는 task 목록을 작성하도록 한다. ', 'Development');
 INSERT INTO label (id, create_date, modified_date, deleted, explanation, name) values (2, current_timestamp, current_timestamp, false, '버그와 관련된 이슈이다.', 'Bug');
 INSERT INTO label (id, create_date, modified_date, deleted, explanation, name) values (3, current_timestamp, current_timestamp, false, '고객/사용자와의 업무협의 미팅이 있는 경우 meeting으로 이슈를 등록한다.', 'Meeting');
+
+INSERT INTO comment (id, create_date, modified_date, contents, deleted, issue_id, writer_id) values (1, current_timestamp, current_timestamp, '에러는 스스로 해결하려무나', false, 1, 1);
+INSERT INTO comment (id, create_date, modified_date, contents, deleted, issue_id, writer_id) values (2, current_timestamp, current_timestamp, '해결되면 나한테 알려주고', false, 1, 1);
+INSERT INTO comment (id, create_date, modified_date, contents, deleted, issue_id, writer_id) values (3, current_timestamp, current_timestamp, '내가 도와줄까요?', false, 1, 2);
+
+
+

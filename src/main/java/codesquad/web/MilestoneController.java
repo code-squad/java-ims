@@ -1,7 +1,7 @@
 package codesquad.web;
 
-import codesquad.domain.Milestone;
-import codesquad.domain.User;
+import codesquad.domain.milestone.Milestone;
+import codesquad.domain.user.User;
 import codesquad.security.LoginUser;
 import codesquad.service.MilestoneService;
 import org.springframework.stereotype.Controller;

@@ -1,5 +1,8 @@
-package codesquad.domain;
+package codesquad.domain.milestone;
 
+import codesquad.domain.issue.Issue;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.format.annotation.DateTimeFormat;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Column;
@@ -7,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -16,24 +20,25 @@ public class Milestone extends AbstractEntity {
     @Column(nullable = false, length = 100)
     private String subject;
 
-    private String startDate;
+    private LocalDateTime startDate;
 
-    private String endDate;
+    private LocalDateTime endDate;
 
     private int open, closed;
 
     @OneToMany(mappedBy = "milestone")
     @OrderBy("id ASC")
+    @JsonIgnore
     private List<Issue> issues;
 
     public Milestone() {
     }
 
-    public Milestone(String subject, String startDate, String endDate) {
+    public Milestone(String subject, LocalDateTime startDate, LocalDateTime endDate) {
         this(0L, subject, startDate, endDate);
     }
 
-    public Milestone(long id, String subject, String startDate, String endDate) {
+    public Milestone(long id, String subject, LocalDateTime startDate, LocalDateTime endDate) {
         super(id);
         this.subject = subject;
         this.startDate = startDate;
@@ -48,19 +53,23 @@ public class Milestone extends AbstractEntity {
         this.subject = subject;
     }
 
-    public String getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public String getFormattedEndDate() {
+        return getFormattedDate(endDate,"yyyy-MM-dd HH:mm");
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 

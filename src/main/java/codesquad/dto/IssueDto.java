@@ -1,7 +1,7 @@
 package codesquad.dto;
 
-import codesquad.domain.Issue;
-import codesquad.domain.User;
+import codesquad.domain.issue.Issue;
+import codesquad.domain.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
