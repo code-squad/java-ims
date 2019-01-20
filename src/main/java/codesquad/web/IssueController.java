@@ -5,6 +5,7 @@ import codesquad.domain.issue.Issue;
 import codesquad.domain.user.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
+import codesquad.service.AnswerService;
 import codesquad.service.IssueService;
 import codesquad.service.MilestoneService;
 import codesquad.service.UserService;
@@ -24,10 +25,13 @@ public class IssueController {
     private static final Logger log = getLogger(IssueController.class);
 
     @Autowired
-    IssueService issueService;
+    private IssueService issueService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
+
+    @Autowired
+    private AnswerService answerService;
 
     @GetMapping("")
     public String form(@LoginUser User loginUser) {
@@ -44,6 +48,7 @@ public class IssueController {
     public String show(@PathVariable long id, Model model) {
         model.addAttribute("issue", issueService.findById(id));
         model.addAttribute("users", userService.findAll());
+        model.addAttribute("answers", answerService.findByIssueId(id));
         return "issue/show";
     }
 

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/milestones")
-public class milestoneController {
+public class MilestoneController {
 
     @Autowired
     MilestoneService milestoneService;

@@ -57,17 +57,6 @@
             <!-- milestone list -->
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="milestone-menu" id="milestone_menu_ul">
-                <!--{{#milestones}}-->
-                <!--<li class="mdl-menu__item mdl-button&#45;&#45;accent">-->
-                    <!--<a href="/api/issue/{{issue.id}}/milestone/{{milestones.id}}">{{subject}}</a>-->
-                <!--</li>-->
-                <!--&lt;!&ndash;<li class="mdl-menu__item">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<a href="/issue/1/setMilestone/2">Milestone2</a>&ndash;&gt;-->
-                <!--&lt;!&ndash;</li>&ndash;&gt;-->
-                <!--&lt;!&ndash;<li class="mdl-menu__item">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<a href="/issue/1/setMilestone/3">Milestone3</a>&ndash;&gt;-->
-                <!--&lt;!&ndash;</li>&ndash;&gt;-->
-                <!--{{/milestones}}-->
             </ul>
 
             <button id="label_menu" class="mdl-button mdl-js-button" value="/api/issue/{{id}}/label">
@@ -94,28 +83,41 @@
         <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
             <p>{{contents.comment}}</p>
         </div>
-        <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
+        <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments" id="comments">
 
             <!-- comments start -->
-
+            {{#answers.answers}}
             <div class="comment mdl-color-text--grey-700">
                 <header class="comment__header">
                     <img class="comment__avatar2" height="48" width="48"
-                         src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
+                         src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt={{writer.userId}}>
                     <div class="comment__author">
                         <strong>
-                            <a>javajigi</a>
+                            <a>{{writer.userId}}</a>
 
 
-                            <span>changed milestone 1 on 2017-01-14</span>
+                            <span>{{contents}} {{formattedCreateDate}}</span>
 
 
                         </strong>
                     </div>
+                    <div class="article-util">
+                        <ul class="article-util-list" style="list-style-type:none;">
+                            <li>
+                                <a class="link-modify-article" href="/api/issues/{{issue.id}}/answers/{{id}}">수정</a>
+                            </li>
+                            <li>
+                                <form class="delete-answer-form" action="/api/issues/{{issue.id}}/answers/{{id}}" method="POST">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="delete-answer-button">삭제</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </header>
+                <hr>
             </div>
-            <hr>
-
+            {{/answers.answers}}
 
             <!--<div class="comment mdl-color-text&#45;&#45;grey-700">-->
                 <!--<header class="comment__header">-->
@@ -165,7 +167,7 @@
             </div>
         </form>
         <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-            <form action="/issue/1/addComment" method="POST">
+            <form class="answer-write" action="/api/issues/{{id}}/answers" method="POST">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                     <label for="comment" class="mdl-textfield__label">Leave a comment</label>
@@ -193,4 +195,54 @@
 <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
 {{/partial}}
 
+<script type="text/template" id="answerTemplate">
+<div class="comment mdl-color-text--grey-700">
+    <header class="comment__header">
+        <img class="comment__avatar2" height="48" width="48"
+             src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt={0}>
+        <div class="comment__author">
+            <strong>
+                <!--<a>{{writer}}</a>-->
+                <a>{0}</a>
+
+
+                <!--<span>{{contents}} {{formattedCreateDate}}</span>-->
+                <span>{1} {2}</span>
+
+
+            </strong>
+        </div>
+        <div class="article-util">
+            <ul class="article-util-list" style="list-style-type:none;">
+                <li>
+                    <a class="link-modify-article" href="/api/issues/{3}/answers/{4}">수정</a>
+                </li>
+                <li>
+                    <form class="delete-answer-form" action="/api/issues/{3}/answers/{4}" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="delete-answer-button">삭제</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <hr>
+</div>
+</script>
+
+<script type="text/template" id="answerUpdate">
+<div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+    <form class="answer-write" id="updateAnswerForm" action="/api/issues/{0}/answers/{1}" method="POST">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <textarea rows=5 class="mdl-textfield__input" id="updateComment" name="updateComment">{2}</textarea>
+            <label for="comment" class="mdl-textfield__label">Leave a comment</label>
+        </div>
+        <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="updateAnswer">
+            <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">update comment</span>
+        </button>
+    </form>
+</div>
+</script>
+
 {{>base}}
+
