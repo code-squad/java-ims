@@ -19,7 +19,7 @@ public class Comment extends AbstractEntity {
 
     @Size(min = 1)
     @Lob
-    private String body;
+    private String comment;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_writer"))
@@ -35,6 +35,12 @@ public class Comment extends AbstractEntity {
 
     }
 
+    public Comment(User loginUser, Issue issue, String comment) {
+        this.writer = loginUser;
+        this.issue = issue;
+        this.comment = comment;
+    }
+
     public List<DeleteHistory> delete(User loginUser) {
         if (!isMatchWriter(loginUser)) {
             throw new CannotDeleteException("작성자만 삭제 가능합니다.");
@@ -42,7 +48,7 @@ public class Comment extends AbstractEntity {
         this.deleted = true;
 
         List<DeleteHistory> temp = new ArrayList<>();
-        temp.add(new DeleteHistory(ContentType.REPLY, getId(), writer));
+        temp.add(new DeleteHistory(ContentType.COMMENT, getId(), writer));
         return temp;
     }
 
@@ -50,12 +56,12 @@ public class Comment extends AbstractEntity {
         return this.writer.equals(loginUser);
     }
 
-    public String getBody() {
-        return body;
+    public String getComment() {
+        return comment;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public boolean isDeleted() {
@@ -66,11 +72,27 @@ public class Comment extends AbstractEntity {
         this.deleted = deleted;
     }
 
+    public User getWriter() {
+        return writer;
+    }
+
+    public void setWriter(User writer) {
+        this.writer = writer;
+    }
+
+    public Issue getIssue() {
+        return issue;
+    }
+
+    public void setIssue(Issue issue) {
+        this.issue = issue;
+    }
+
     @Override
     public String toString() {
         return "Comment{" +
                 "id=" + getId() +
-                "body='" + body + '\'' +
+                "comment='" + comment + '\'' +
                 ", writer=" + writer +
                 ", issue=" + issue +
                 '}';

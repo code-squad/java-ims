@@ -1,5 +1,5 @@
 package codesquad.domain;
 
 public enum ContentType {
-    ISSUE, REPLY;
+    ISSUE, COMMENT;
 }

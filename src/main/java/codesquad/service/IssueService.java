@@ -2,6 +2,7 @@ package codesquad.service;
 
 import codesquad.CannotDeleteException;
 import codesquad.domain.*;
+import codesquad.domain.issue.Comment;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueRepository;
 import org.slf4j.Logger;
@@ -9,9 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.List;
 
 @Service

@@ -7,6 +7,7 @@ import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -21,7 +22,7 @@ public class ApiIssueController {
 
     //TODO: Result 객체의 필요성 생각해보기
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/status")
     public Issue changeOpeningAndClosingStatus(@LoginUser User loginUser, @PathVariable long id) {
         return issueService.changeOpeningAndClosingStatus(loginUser, id);
     }
@@ -41,8 +42,8 @@ public class ApiIssueController {
         return issueService.setAssignee(loginUser, id, assigneeId);
     }
 
-    @PostMapping("/{id}/comments")
-    public Issue addComment(@LoginUser User loginUser, @PathVariable long id, Comment comment) {
-        return null;
+    @GetMapping("/{id}")
+    public Issue show(@PathVariable long id) {
+        return issueService.findById(id);
     }
 }

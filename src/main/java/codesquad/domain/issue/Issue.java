@@ -38,7 +38,7 @@ public class Issue extends AbstractEntity {
     private Milestone milestone;
 
     @OneToMany
-    private List<Comment> replies = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
     @ManyToMany
     private List<Label> labels = new ArrayList<>();
@@ -112,6 +112,14 @@ public class Issue extends AbstractEntity {
         }
 
         this.closed = !closed;
+    }
+
+    public void addComment(User loginUser, Comment comment) {
+        if(!isMatchWriter(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.comments.add(comment);
     }
 
     public String getSubject() {

@@ -47,25 +47,24 @@ function addComment(e) {
     var url = $(this).closest("form").attr("action");
     console.log("url : " + url);
 
-    var comment = $("#comment").val();
-    console.log(comment);
+    var queryString = $("#comment").serialize();
+    console.log(queryString);
 
-//    $.ajax({
-//        type : 'post',
-//        url : url,
-//        data : queryString,
-//        dataType : 'json',
-//        error: function () {
-//            alert("error");
-//        },
-//        success : function (data, status) {
-//            console.log(data);
-//            var answerTemplate = $("#answerTemplate").html();
-//            var template = answerTemplate.format(data.writer.userId, data.formattedCreateDate, data.contents, data.question.id, data.id);
-//            $(".qna-comment-slipp-articles").prepend(template);
-//            $("textarea[name=contents]").val("");
-//        }
-//    });
+    $.ajax({
+        type : 'post',
+        url : url,
+        data : queryString,
+        error: function () {
+            alert("error");
+        },
+        success : function (data, status) {
+            console.log(data);
+            var commentTemplate = $("#commentTemplate").html();
+            var template = commentTemplate.format(data.writer.userId, data.comment);
+            $(".comments").prepend(template);
+            $("textarea[name=comment]").val("");
+        }
+    });
 }
 
 function onError() {
