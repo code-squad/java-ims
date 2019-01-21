@@ -26,6 +26,8 @@ public class Answer extends AbstractEntity {
 
     private String answer;
 
+    private boolean deleted = false;
+
     public Answer() {
 
     }
@@ -62,6 +64,14 @@ public class Answer extends AbstractEntity {
         this.answer = answer;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public void writerBy(User loginUser) {
         this.writer = loginUser;
     }
@@ -71,6 +81,13 @@ public class Answer extends AbstractEntity {
             throw new UnAuthorizedException();
         }
         this.answer = target;
+    }
+
+    public void delete(User loginUser) {
+        if (!writer.equals(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        this.deleted = true;
     }
 
     @Override
@@ -98,6 +115,7 @@ public class Answer extends AbstractEntity {
                 ", answer='" + answer + '\'' +
                 '}';
     }
+
 
 
 }

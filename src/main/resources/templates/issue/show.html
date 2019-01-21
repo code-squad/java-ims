@@ -165,7 +165,7 @@
                             <img class="comment__avatar2" height="48" width="48"
                                  src="https://avatars1.githubusercontent.com/u/7744966?v=3&u=1bd7d2e72800c0d5a1a5a2e04da851d30b3c13c7&s=140"
                                  alt="cca-company">
-                            <div class="comment__author" id="answerForm">
+                            <div class="comment__author answerForm">
                                 <strong>
                                     <a>{{writer.userId}}</a>
 
@@ -176,8 +176,10 @@
                                        id = "updateAnswerForm" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
                                         <i class="material-icons">edit</i>
                                     </a>
-                                    <a href="/issues/{{id}}" id="issueds-menu-lower-right"
-                                       class="mdl-button mdl-js-button mdl-button--icon">
+
+                                    <!--answer 삭제-->
+                                    <a href="/api/issues/{{issue.id}}/answers/{{id}}" id="issueds-menu-lower-right"
+                                       class="mdl-button mdl-js-button mdl-button--icon deleteAnswer">
                                         <i class="material-icons">delete</i>
                                     </a>
 

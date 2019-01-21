@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.domain.Issue;
 import codesquad.domain.IssueBody;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
@@ -48,7 +49,8 @@ public class IssueController {
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
         log.debug("### show");
-        model.addAttribute("issue", issueService.findById(id));
+        Issue issue = issueService.findById(id);
+        model.addAttribute("issue", issue);
         log.debug("### issue : {}", issueService.findById(id) );
         model.addAttribute("milestones", milestoneService.findAll());
 
@@ -56,7 +58,7 @@ public class IssueController {
         model.addAttribute("users", userService.findAll());
         model.addAttribute("labels", labelService.findAll());
 
-        model.addAttribute("answers", answerService.findAll());
+        model.addAttribute("answers", answerService.findByIssue(issue));
 
         return "/issue/show";
     }

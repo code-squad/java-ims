@@ -80,4 +80,42 @@ public class ApiAnswerAcceptanceTest extends AcceptanceTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpEntity(body, headers);
     }
+
+    @Test
+    public void delete() {
+        // 이슈 생성
+        IssueBody issueBody = ISSUE_BODY_JSON_PARSE_ERROR;
+        String location = createResource(RED, "/api/issues/", issueBody);
+        ResponseEntity<Issue> responseIssue = template().getForEntity(location, Issue.class);
+
+        // 답변달기
+        String answer = "answer";
+        String answerLocation = createResource(RED, String.format("/api/issues/%d/answers",
+                responseIssue.getBody().getId()), answer);
+        ResponseEntity<Answer> responseAnswer = template().getForEntity(answerLocation, Answer.class);
+
+        // 답변 삭제
+        ResponseEntity<Void> responseEntity = basicAuthTemplate(RED).exchange(
+                answerLocation, HttpMethod.DELETE,null, Void.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void delete_no_login() {
+        // 이슈 생성
+        IssueBody issueBody = ISSUE_BODY_JSON_PARSE_ERROR;
+        String location = createResource(RED, "/api/issues/", issueBody);
+        ResponseEntity<Issue> responseIssue = template().getForEntity(location, Issue.class);
+
+        // 답변달기
+        String answer = "answer";
+        String answerLocation = createResource(RED, String.format("/api/issues/%d/answers",
+                responseIssue.getBody().getId()), answer);
+        ResponseEntity<Answer> responseAnswer = template().getForEntity(answerLocation, Answer.class);
+
+        // 답변 삭제
+        ResponseEntity<Void> responseEntity = template().exchange(
+                answerLocation, HttpMethod.DELETE,null, Void.class);
+        softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
 }

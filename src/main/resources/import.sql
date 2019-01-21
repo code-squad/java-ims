@@ -18,6 +18,6 @@ INSERT INTO LABEL (id, label) values (2, 'Invalid');
 INSERT INTO LABEL (id, label) values (3, 'Question');
 INSERT INTO LABEL (id, label) values (4, 'Duplicate');
 
-INSERT INTO ANSWER (id, answer, issue_id, writer_id) values (1, 'null point error fixed', 1, 3);
-INSERT INTO ANSWER (id, answer, issue_id, writer_id) values (2, 'update issues ', 1, 3);
-INSERT INTO ANSWER (id, answer, issue_id, writer_id) values (3, 'finish issue', 1, 3);
+INSERT INTO ANSWER (id, answer, issue_id, writer_id, deleted) values (1, 'null point error fixed', 1, 3, false);
+INSERT INTO ANSWER (id, answer, issue_id, writer_id, deleted) values (2, 'update issues ', 1, 3, false);
+INSERT INTO ANSWER (id, answer, issue_id, writer_id, deleted) values (3, 'finish issue', 1, 3, false);

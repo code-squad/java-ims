@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import static codesquad.domain.UserTest.JAVAJIGI;
 import static codesquad.domain.UserTest.RED;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnswerTest  {
 
@@ -28,5 +29,22 @@ public class AnswerTest  {
         answer.writerBy(RED);
 
         answer.update(JAVAJIGI, updateAnswer);
+    }
+
+    @Test
+    public void delete() {
+        Answer answer = new Answer("answer");
+        answer.writerBy(RED);
+
+        answer.delete(RED);
+    }
+
+    @Test(expected = UnAuthorizedException.class)
+    public void delete_different_writer() {
+        Answer answer = new Answer("answer");
+        answer.writerBy(RED);
+
+        answer.delete(JAVAJIGI);
+        assertThat(answer.isDeleted()).isTrue();
     }
 }

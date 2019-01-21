@@ -52,4 +52,16 @@ public class AnswerService {
         answer.update(loginUser, updateAnswer);
         return answer;
     }
+
+    @Transactional
+    public void delete(User loginUser, long id) {
+        Answer answer = answerRepository.findById(id)
+                .orElseThrow(UnAuthorizedException::new);
+
+        answer.delete(loginUser);
+    }
+
+    public List<Answer> findByIssue(Issue issue) {
+        return answerRepository.findByIssueAndDeleted(issue, false);
+    }
 }

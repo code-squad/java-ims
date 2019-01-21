@@ -170,8 +170,9 @@ function updateAnswerForm(e) {
 
             var answerTemplate = $("#answerUpdateTemplate").html();
             var template = answerTemplate.format(data.answer);
-            $("#answerForm").append(template);
+            $(".answerForm").append(template);
             $(".update_answer button[type=submit]").click(updateAnswer);
+            $(".deleteAnswer").click(deleteAnswer);
         }
     });
 }
@@ -206,7 +207,7 @@ function updateAnswer(e) {
             console.log("success");
             console.log(data);
             submitBnt.closest(".new-comment").remove();
-            submitBnt.closest()
+
 
 //            var answerTemplate = $("#answerUpdateTemplate").html();
 //            var template = answerTemplate.format(data.answer);
@@ -216,6 +217,29 @@ function updateAnswer(e) {
 
 }
 
+// ## answer delete
+$(".deleteAnswer").click(deleteAnswer);
+function deleteAnswer(e) {
+    console.log("deleteAnswer");
+    e.preventDefault(); // 클릭이벤트 막아주는
+
+    var submitBnt = $(this);
+    var url = $(this).attr("href");
+    console.log("url : " + url);
+
+    $.ajax({
+        type : 'delete',
+        url : url,
+        error : function (xhr, status) {
+            console.log("error");
+            location.href = "/users/login/form";
+        },
+        success : function (data, status) {
+            console.log("success");
+            submitBnt.closest(".comment").remove();
+        }
+    });
+}
 
 String.prototype.format = function() {
   var args = arguments;

@@ -56,4 +56,10 @@ public class ApiAnswerController {
     public Answer updateForm(@PathVariable long id) {
         return answerService.findById(id);
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@LoginUser User loginUser, @PathVariable long id) {
+        logger.debug("## delete : {}",  loginUser);
+        answerService.delete(loginUser, id);
+    }
 }
