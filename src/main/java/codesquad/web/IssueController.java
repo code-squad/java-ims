@@ -3,10 +3,7 @@ package codesquad.web;
 import codesquad.domain.IssueBody;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
-import codesquad.service.IssueService;
-import codesquad.service.LabelService;
-import codesquad.service.MilestoneService;
-import codesquad.service.UserService;
+import codesquad.service.*;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +31,9 @@ public class IssueController {
     @Resource(name = "labelService")
     private LabelService labelService;
 
+    @Resource(name = "answerService")
+    private AnswerService answerService;
+
     @GetMapping("/form")
     public String form (@LoginUser User loginUser) {
         return "/issue/form";
@@ -55,6 +55,8 @@ public class IssueController {
         log.debug("### users : {}", userService.findAll());
         model.addAttribute("users", userService.findAll());
         model.addAttribute("labels", labelService.findAll());
+
+        model.addAttribute("answers", answerService.findAll());
 
         return "/issue/show";
     }

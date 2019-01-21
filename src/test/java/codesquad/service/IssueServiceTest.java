@@ -1,10 +1,7 @@
 package codesquad.service;
 
 import codesquad.UnAuthorizedException;
-import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
-import codesquad.domain.Milestone;
-import codesquad.domain.MilestoneRepository;
+import codesquad.domain.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,6 +12,7 @@ import support.test.BaseTest;
 
 import java.util.Optional;
 
+import static codesquad.domain.IssueFixture.ISSUE_BODY_JSON_PARSE_ERROR;
 import static codesquad.domain.IssueFixture.ISSUE_NULLPOINT_EXCEPTION;
 import static codesquad.domain.MilestoneFixture.PROGRAMMING;
 import static codesquad.domain.UserTest.JAVAJIGI;
@@ -24,13 +22,16 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IssueServiceTest extends BaseTest {
-    private static final Logger log = getLogger(IssueServiceTest.class);
+    private static final Logger logger = getLogger(IssueServiceTest.class);
 
     @Mock
     private IssueRepository issueRepository;
 
     @Mock
     private MilestoneRepository milestoneRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private IssueService issueService;

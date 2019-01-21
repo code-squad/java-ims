@@ -22,6 +22,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @RestController
 @RequestMapping("/api/users")
 public class ApiUserController {
+
     private static final Logger log = getLogger(ApiUserController.class);
     @Resource(name = "userService")
     private UserService userService;
@@ -45,6 +46,21 @@ public class ApiUserController {
     public void update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody UserDto updatedUser) {
         userService.update(loginUser, id, updatedUser);
     }
+
+//    @PostMapping("/login")
+//    public ResponseEntity<Void> login(HttpSession session, @Valid @RequestBody UserDto userDto) throws UnAuthenticationException {
+//        log.debug("=#= login {}", userDto);
+//        User user = userService.login(userDto.getUserId(), userDto.getPassword());
+//        session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(URI.create("/"));
+//
+//        //return new ResponseEntity.ok();
+//        //todo
+//
+//        return new ResponseEntity<Void>(headers, HttpStatus.OK);
+//    }
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(HttpSession session, @Valid @RequestBody UserDto userDto) throws UnAuthenticationException {

@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import codesquad.UnAuthorizedException;
+import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Entity;
@@ -8,8 +10,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.util.Objects;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Entity
 public class Answer extends AbstractEntity {
+    private static final Logger logger = getLogger(Answer.class);
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
@@ -20,6 +25,14 @@ public class Answer extends AbstractEntity {
     private Issue issue;
 
     private String answer;
+
+    public Answer() {
+
+    }
+
+    public Answer(String answer) {
+        this.answer = answer;
+    }
 
     public User getWriter() {
         return writer;
@@ -37,6 +50,10 @@ public class Answer extends AbstractEntity {
         this.issue = issue;
     }
 
+    public void toIssue(Issue issue) {
+        this.issue = issue;
+    }
+
     public String getAnswer() {
         return answer;
     }
@@ -47,6 +64,13 @@ public class Answer extends AbstractEntity {
 
     public void writerBy(User loginUser) {
         this.writer = loginUser;
+    }
+
+    public void update(User loginUser, String target) {
+        if (!writer.equals(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+        this.answer = target;
     }
 
     @Override
@@ -65,6 +89,7 @@ public class Answer extends AbstractEntity {
         return Objects.hash(super.hashCode(), writer, issue, answer);
     }
 
+
     @Override
     public String toString() {
         return "Answer{" +
@@ -73,6 +98,8 @@ public class Answer extends AbstractEntity {
                 ", answer='" + answer + '\'' +
                 '}';
     }
+
+
 }
 
 

@@ -106,12 +106,123 @@ function addLabels(e) {
         success : function(data, status) {
             console.log(data);
             console.log('success');
-
-
             if (data.valid) {
-
                    alert('라벨을 지정했습니다..');
             }
         }
     });
 }
+
+// ### add answers
+$(".add_answers button[type=submit]").click(addAnswers);
+function addAnswers(e) {
+    console.log("click addAnswers");
+    e.preventDefault();
+
+    var url = $(".add_answers").attr("action");
+    console.log(url);
+
+    var queryString = $(".add_answers").serialize();
+    console.log(queryString);
+
+    $.ajax({
+        type : 'post',
+        url : url,
+        data : queryString,
+        error : function() {
+            console.log("error");
+            location.href = "/users/login/form";
+        },
+        success : function(data) {
+            console.log("success");
+            console.log(data);
+
+console.log(data.formattedCreateDate);
+console.log(data.formattedDate);
+            var answerTemplate = $("#answerTemplate").html();
+            var template = answerTemplate.format(data.writer.userId, data.answer, data.formattedCreateDate);
+            $(".comments").append(template);
+            $("textarea[name=comment]").val("");
+
+        }
+    });
+}
+
+// ### update answers form
+$("#updateAnswerForm").click(updateAnswerForm);
+function updateAnswerForm(e) {
+    console.log("click updateAnswerForm");
+    e.preventDefault();
+
+    var url = $("#updateAnswerForm").attr("href");
+    console.log(url);
+
+    $.ajax({
+        type : 'get',
+        url : url,
+        error : function() {
+            console.log("error");
+            location.href = "/users/login/form";
+        },
+        success : function(data) {
+            console.log("success");
+            console.log(data);
+
+            var answerTemplate = $("#answerUpdateTemplate").html();
+            var template = answerTemplate.format(data.answer);
+            $("#answerForm").append(template);
+            $(".update_answer button[type=submit]").click(updateAnswer);
+        }
+    });
+}
+
+
+// ### update answers
+$(".update_answer button[type=submit]").click(updateAnswer);
+function updateAnswer(e) {
+    console.log("click updateAnswer");
+    e.preventDefault();
+
+    var url = $(".update_answer").attr("action");
+    console.log(url);
+
+    var json = new Object();
+    json.answer = $("#updatecomment").val();
+    console.log(json);
+
+     var submitBnt = $(this);
+
+    $.ajax({
+        type : 'put',
+        url : url,
+        data : JSON.stringify(json),
+        dataType : 'json',
+        contentType : 'application/json',
+        error : function() {
+            console.log("error");
+            location.href = "/users/login/form";
+        },
+        success : function(data) {
+            console.log("success");
+            console.log(data);
+            submitBnt.closest(".new-comment").remove();
+            submitBnt.closest()
+
+//            var answerTemplate = $("#answerUpdateTemplate").html();
+//            var template = answerTemplate.format(data.answer);
+//            $("#answerForm").append(template);
+        }
+    });
+
+}
+
+
+String.prototype.format = function() {
+  var args = arguments;
+  return this.replace(/{(\d+)}/g, function(match, number) {
+    return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+        ;
+  });
+};

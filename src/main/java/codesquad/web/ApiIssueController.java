@@ -1,8 +1,11 @@
 package codesquad.web;
 
+import codesquad.domain.Issue;
+import codesquad.domain.IssueBody;
 import codesquad.domain.Milestone;
 import codesquad.domain.User;
 import codesquad.security.LoginUser;
+import codesquad.service.AnswerService;
 import codesquad.service.IssueService;
 import codesquad.service.MilestoneService;
 import com.sun.tools.javac.main.Main;
@@ -10,10 +13,7 @@ import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import support.domain.Result;
 
 import javax.annotation.Resource;
@@ -31,6 +31,9 @@ public class ApiIssueController {
 
     @Resource(name = "milestoneService")
     private MilestoneService milestoneService;
+
+    @Resource(name = "answerService")
+    private AnswerService answerService;
 
     @GetMapping("/{issuesId}/milestones/{milestonesId}")
     public Result addMilestone( @PathVariable long issuesId,
@@ -55,4 +58,20 @@ public class ApiIssueController {
         issueService.addLables(issuesId, lableId);
         return Result.ok();
     }
+
+    @PostMapping("")
+    public ResponseEntity<Issue> create(@LoginUser User loginUser, @RequestBody IssueBody issueBody) {
+        Issue issue = issueService.add(loginUser, issueBody);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("/api/issues/" + issue.getId()));
+        return new ResponseEntity<Issue>(headers, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public Issue show(@PathVariable long id) {
+        return issueService.findById(id);
+    }
+
+
 }
