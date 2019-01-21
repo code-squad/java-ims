@@ -12,7 +12,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
 public class IssueService {
-    private static final Logger log = getLogger(IssueService.class);
+    private static final Logger logger = getLogger(IssueService.class);
 
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
@@ -26,10 +26,10 @@ public class IssueService {
     @Resource(name = "labelRepository")
     private LabelRepository labelRepository;
 
-    public void add(User loginUser, IssueBody issueBody) {
+    public Issue add(User loginUser, IssueBody issueBody) {
         Issue issue = new Issue(issueBody);
         issue.writeBy(loginUser);
-        issueRepository.save(issue);
+        return issueRepository.save(issue);
     }
 
     public Iterable<Issue> findAll() {
@@ -67,14 +67,14 @@ public class IssueService {
 
     @Transactional
     public void addMilestone(long issuesId, long milestonesId) {
-        log.debug("### addmilestone");
+        logger.debug("### addmilestone");
         Issue issue = issueRepository.findById(issuesId)
                 .orElseThrow(UnAuthorizedException::new);
 
         Milestone milestone = milestoneRepository.findById(milestonesId)
                 .orElseThrow(UnAuthorizedException::new);
         issue.addMilestone(milestone);
-        log.debug("issue : {}", issue.getMilestone());
+        logger.debug("issue : {}", issue.getMilestone());
     }
 
     @Transactional

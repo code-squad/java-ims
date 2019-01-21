@@ -133,49 +133,64 @@
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
                     <p>{{issueBody.comment}}</p>
                 </div>
-                {{/issue}}
+
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
 
 
                     <!-- comments start -->
 
-                    <div class="comment mdl-color-text--grey-700">
-                        <header class="comment__header">
-                            <img class="comment__avatar2" height="48" width="48"
-                                 src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
-                            <div class="comment__author">
-                                <strong>
-                                    <a>javajigi</a>
+                    <!--original comment-->
+                    <!--<div class="comment mdl-color-text&#45;&#45;grey-700">-->
+                        <!--<header class="comment__header">-->
+                            <!--<img class="comment__avatar2" height="48" width="48"-->
+                                 <!--src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">-->
+                            <!--<div class="comment__author">-->
+                                <!--<strong>-->
+                                    <!--<a>javajigi</a>-->
 
 
-                                    <span>changed milestone 1 on 2017-01-14</span>
+                                    <!--<span>changed milestone 1 on 2017-01-14</span>-->
 
 
-                                </strong>
-                            </div>
-                        </header>
-                    </div>
-                    <hr>
+                                <!--</strong>-->
+                            <!--</div>-->
+                        <!--</header>-->
+                    <!--</div>-->
+                    <!--<hr>-->
 
 
+                    {{#answers}}
                     <div class="comment mdl-color-text--grey-700">
                         <header class="comment__header">
                             <img class="comment__avatar2" height="48" width="48"
                                  src="https://avatars1.githubusercontent.com/u/7744966?v=3&u=1bd7d2e72800c0d5a1a5a2e04da851d30b3c13c7&s=140"
                                  alt="cca-company">
-                            <div class="comment__author">
+                            <div class="comment__author answerForm">
                                 <strong>
-                                    <a>cca-company</a>
+                                    <a>{{writer.userId}}</a>
 
+                                    <span>{{answer}} on {{formattedCreateDate}}</span>
 
-                                    <span>comment new issue! on 2017-01-14</span>
+                                    <!--answer 수정-->
+                                    <a href="/api/issues/{{issue.id}}/answers/{{id}}/updateForm"
+                                       id = "updateAnswerForm" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                                        <i class="material-icons">edit</i>
+                                    </a>
 
+                                    <!--answer 삭제-->
+                                    <a href="/api/issues/{{issue.id}}/answers/{{id}}" id="issueds-menu-lower-right"
+                                       class="mdl-button mdl-js-button mdl-button--icon deleteAnswer">
+                                        <i class="material-icons">delete</i>
+                                    </a>
 
                                 </strong>
                             </div>
                         </header>
                     </div>
                     <hr>
+
+
+                    {{/answers}}
 
 
                     <div class="comment mdl-color-text--grey-700">
@@ -192,9 +207,14 @@
 
                                 </strong>
                             </div>
+
+
+
+
                         </header>
                     </div>
                     <hr>
+
 
 
                     <!-- comments end -->
@@ -206,7 +226,7 @@
                     </div>
                 </form>
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-                    <form action="/issue/1/addComment" method="POST">
+                    <form action="/api/issues/{{id}}/answers" method="POST" class="add_answers">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                             <label for="comment" class="mdl-textfield__label">Leave a comment</label>
@@ -216,7 +236,45 @@
                         </button>
                     </form>
                 </div>
+
+                {{/issue}}
             </div>
         </div>
+
+
+<script type="text/template" id="answerTemplate">
+    <div class="comment mdl-color-text--grey-700">
+        <header class="comment__header">
+            <img class="comment__avatar2" height="48" width="48"
+                 src="https://avatars1.githubusercontent.com/u/7744966?v=3&u=1bd7d2e72800c0d5a1a5a2e04da851d30b3c13c7&s=140"
+                 alt="cca-company">
+            <div class="comment__author">
+                <strong>
+                    <a>{0} </a> <!--0 : id-->
+
+                    <!--1 : subject, 2 : date-->
+                    <span>{1} on {2}</span>
+                </strong>
+            </div>
+        </header>
+    </div>
+    <hr>
+</script>
+
+<script type="text/template" id="answerUpdateTemplate">
+    <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+        <form action="/api/issues/{{issue.id}}/answers/{{id}}" method="POST" class ="update_answer">
+            <input type="hidden" name="_method" value="PUT" />
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <textarea rows=5 class="mdl-textfield__input" id="updatecomment" name="answer"></textarea>
+                <label for="updatecomment" class="mdl-textfield__label"></label>
+            </div>
+            <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">add comment</span>
+            </button>
+        </form>
+    </div>
+</script>
+
 {{/partial}}
 {{> base}}
