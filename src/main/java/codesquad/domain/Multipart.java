@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 import support.domain.AbstractEntity;
 
@@ -17,7 +18,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Entity
 public class Multipart extends AbstractEntity {
     private static final Logger log = getLogger(Multipart.class);
-    private static final String UPLOAD_PATH = "C:\\Users\\User\\Documents\\workspace\\codesquad\\java-ims\\src\\main\\resources\\static\\fileUpload\\";
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_multipart_writer"))
@@ -32,6 +32,9 @@ public class Multipart extends AbstractEntity {
 
     @Column
     private String saveName;
+
+    @Value("${value.from.file}")
+    private String uploadPath;
 
     public Multipart() {
     }
@@ -55,8 +58,8 @@ public class Multipart extends AbstractEntity {
         return saveName;
     }
 
-    public static String getUploadPath() {
-        return UPLOAD_PATH;
+    public String getUploadPath() {
+        return uploadPath;
     }
 
     public Issue getIssue() {
@@ -69,7 +72,7 @@ public class Multipart extends AbstractEntity {
 
     public Path add(User user, MultipartFile file) throws IOException {
         byte[] bytes = file.getBytes();
-        Path path = Paths.get(UPLOAD_PATH + saveName);
+        Path path = Paths.get(uploadPath + saveName);
         log.debug("path :~~~~~ {}", path.toString());
         return Files.write(path, bytes);
     }

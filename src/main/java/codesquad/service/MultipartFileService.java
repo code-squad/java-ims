@@ -23,8 +23,6 @@ public class MultipartFileService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
-
-
     @Transactional
     public Multipart add(User user, long issueId, MultipartFile file) throws IOException {
         Issue issue = issueRepository.findById(issueId).orElseThrow(UnknownError::new);
