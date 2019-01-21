@@ -35,9 +35,9 @@ public class UserController {
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
         log.debug("LoginUser : {}", loginUser);
         log.debug("login id : {}", id);
-        log.debug("user test :",userService.findById(loginUser, id));
+        log.debug("user test :",userService.findById(id));
 
-        model.addAttribute("user", userService.findById(loginUser, id));
+        model.addAttribute("user", userService.findById(id));
         return "/user/updateForm";
     }
 
