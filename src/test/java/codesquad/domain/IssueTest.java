@@ -9,7 +9,7 @@ import static codesquad.domain.UserTest.JAVAJIGI;
 import static codesquad.domain.UserTest.SANJIGI;
 
 public class IssueTest extends BaseTest {
-    public static Issue issue1;
+    public Issue issue1;
 
     @Before
     public void setUp() {

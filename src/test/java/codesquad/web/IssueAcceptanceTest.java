@@ -131,7 +131,7 @@ public class IssueAcceptanceTest extends BasicAuthAcceptanceTest {
         ResponseEntity<String> response = template.getForEntity("/issue/1/setMilestone/1",String.class);
         log.debug(response.getStatusCode());
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        softly.assertThat(issueRepository.findById(1L).get().getMilestone().getSubject()).isEqualTo("취업");
+        softly.assertThat(issueRepository.findById(1L).get().getMilestone().getSubject()).isEqualTo("1차");
         softly.assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/issue/1");
     }
 

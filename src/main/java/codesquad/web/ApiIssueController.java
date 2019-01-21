@@ -36,7 +36,7 @@ public class ApiIssueController {
         return new IssueMenus(id,issueService.findById(id).get().getMilestone() , milestoneService.findAll());
     }
 
-    @GetMapping("/labels")
+    @GetMapping(value = "/labels")
     public IssueMenus findLabels(@PathVariable long id) {
         return new IssueMenus(id,issueService.findById(id).get().getLabel(), labelService.findAll());
     }
@@ -44,7 +44,6 @@ public class ApiIssueController {
     @GetMapping("/assignees")
     public IssueMenus findAssignees(@PathVariable long id) {
         return new IssueMenus(id,issueService.findById(id).get().getAssignee(), userService.findAll());
-
     }
 
 }

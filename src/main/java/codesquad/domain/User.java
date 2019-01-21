@@ -5,8 +5,7 @@ import codesquad.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -25,6 +24,10 @@ public class User extends AbstractEntity implements MenuEntity {
     @Size(min = 3, max = 20)
     @Column(nullable = false, length = 20)
     private String name;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_user_to_image_file"))
+    private ImageFile img;
 
     public User() {
     }
@@ -65,6 +68,23 @@ public class User extends AbstractEntity implements MenuEntity {
     public User setName(String name) {
         this.name = name;
         return this;
+    }
+
+    public User updateImg(ImageFile img) {
+        this.img = img;
+        return this;
+    }
+
+    //Todo 안이쁘다 리펙토링하자.
+    public ImageFile getImg() {
+        if (img == null){
+            return new ImageFile("001d7fcc-33b3-46c3-b4bf-da273373070e","001d7fcc-33b3-46c3-b4bf-da273373070e");
+        }
+        return img;
+    }
+
+    public void setImg(ImageFile img) {
+        this.img = img;
     }
 
     private boolean matchUserId(String userId) {

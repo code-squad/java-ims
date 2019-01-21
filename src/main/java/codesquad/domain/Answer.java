@@ -45,6 +45,14 @@ public class Answer extends AbstractEntity {
         this.issue = issue;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public boolean isOwner(User loginUser) {
         return user.matchUser(loginUser);
     }

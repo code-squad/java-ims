@@ -89,6 +89,14 @@ public class Issue extends AbstractEntity {
         return answer;
     }
 
+    public User getWriter() {
+        return writer;
+    }
+
+    public void setWriter(User writer) {
+        this.writer = writer;
+    }
+
     public String getUserId() {
         return writer.getName();
     }

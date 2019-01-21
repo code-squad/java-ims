@@ -29,7 +29,6 @@ public class IssueController {
 
     @GetMapping("/form")
     public String createForm(@LoginUser User loginUser) {
-
         return "/issue/form";
     }
 
@@ -69,7 +68,6 @@ public class IssueController {
     }
 
 
-    //todo 이넘을 쓰면 하나로 할수 있을까?
     @GetMapping("/{id}/setMilestone/{milestoneId}")
     public String setMilestone(@PathVariable Long id, @PathVariable Long milestoneId) {
         //Todo login 추가해야함

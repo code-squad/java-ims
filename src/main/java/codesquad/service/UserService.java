@@ -2,6 +2,7 @@ package codesquad.service;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
+import codesquad.domain.ImageFile;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
@@ -19,6 +20,10 @@ public class UserService {
 
     public User add(UserDto userDto) {
         return userRepository.save(userDto._toUser());
+    }
+
+    public User add(UserDto userDto, ImageFile img) {
+        return userRepository.save(userDto._toUser().updateImg(img));
     }
 
     public User update(User loginUser, long id, UserDto updatedUser) {
