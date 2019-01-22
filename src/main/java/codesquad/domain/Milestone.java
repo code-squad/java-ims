@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Milestone extends AbstractEntity implements MenuEntity {
+public class Milestone extends AbstractEntity {
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;

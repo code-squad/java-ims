@@ -6,7 +6,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 
 @Entity
-public class Label extends AbstractEntity implements MenuEntity {
+public class Label extends AbstractEntity {
     @Embedded
     private ContentsBody contentsBody;
 

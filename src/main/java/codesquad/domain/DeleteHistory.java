@@ -12,7 +12,7 @@ public class DeleteHistory {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private ContentType  contentType;
+    private ContentType contentType;
 
     private Long contentId;
 

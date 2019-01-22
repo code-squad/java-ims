@@ -25,6 +25,10 @@ public class Answer extends AbstractEntity {
     @JsonProperty
     private boolean deleted = false;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_to_image_file"))
+    private ImageFile imageFile;
+
     public Answer() {
     }
 
@@ -45,6 +49,22 @@ public class Answer extends AbstractEntity {
         this.issue = issue;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public ImageFile getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(ImageFile imageFile) {
+        this.imageFile = imageFile;
+    }
+
     public boolean isOwner(User loginUser) {
         return user.matchUser(loginUser);
     }
@@ -55,6 +75,10 @@ public class Answer extends AbstractEntity {
         }
         this.comment = comment;
         return this;
+    }
+
+    public void addImg(ImageFile imageFile) {
+        this.imageFile = imageFile;
     }
 
     public DeleteHistory deleted(User loginUser) {

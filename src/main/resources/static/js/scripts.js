@@ -29,7 +29,7 @@ function onSuccess(data, status) {
     console.log(data);
     console.log(status);
     var answerTemplate = $("#answerTemplate").html();
-    var template = answerTemplate.format(data.userId, data.comment, data.formattedCreateDate, data.issue.id, data.id);
+    var template = answerTemplate.format(data.userId, data.comment, data.formattedCreateDate, data.issue.id, data.id, data.user.id);
     $("#comment_list").append(template);
 
     $("#updateForm_" + data.id).on("click", updateFormAnswer);
@@ -39,6 +39,41 @@ function onSuccess(data, status) {
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// 댓글 파일 쓰기 ajax
+$(".submit-file-answer button[type=submit]").on("click", addFileAnswer);
+function addFileAnswer(e) {
+    e.preventDefault();
+    var form = $('.submit-file-answer')[0];
+    console.log(form)
+    var formData = new FormData(form);
+    console.log(formData)
+    var url = $(".submit-file-answer").attr("action");
+    console.log("url : " + url);
+
+    $.ajax({
+        type : 'post',
+        url : url,
+        data : formData,
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false,
+        cache: false,
+        error: function() {
+            console.log('error');
+        },
+        success : function(data, status) {
+            console.log(data);
+            console.log(status);
+            var answerTemplate = $("#answerTemplate").html();
+            var template = answerTemplate.format(data.userId, data.comment, data.formattedCreateDate, data.issue.id, data.id, data.user.id, data.imageFile.originName);
+            $("#comment_list").append(template);
+
+        }
+    });
+}
+
+
+///////
 // 업데이트 폼생성 에이젝스
 $(".updateFrom_answer").on("click", updateFormAnswer);
 function updateFormAnswer(e) {
@@ -59,7 +94,7 @@ function updateFormAnswer(e) {
             },
             success : function(data) {
                 var answerTemplate = $("#answerUpdateTemplate").html();
-                var template = answerTemplate.format(url,data.comment, data.id)
+                var template = answerTemplate.format(url,data.comment, data.id, data.issue.id)
                 updateBtn.closest(".comment__author").append(template);
                 $(".submit-write-update button[type=submit]").on("click", updateAnswer);
             }
@@ -91,7 +126,7 @@ function updateAnswer(e) {
             success : function(data) {
                 console.log(data)
                 var answerTemplate = $("#answerTemplate").html();
-                var template = answerTemplate.format(data.userId, data.comment, data.formattedCreateDate, data.issue.id, data.id);
+                var template = answerTemplate.format(data.userId, data.comment, data.formattedCreateDate, data.issue.id, data.id, data.user.id);
                 updateFormBtn.closest('#answer_' + data.id).html(template);
                 $("#updateForm_" + data.id).on("click", updateFormAnswer);
                 $(".submit-write-delete button[type=submit]").on("click", deleteAnswer);
@@ -175,11 +210,12 @@ function getLabels(e) {
     console.log(window.location.href)
     var labelMenuBtn = $(this)
     var id =$('#select-labels');
+    var url = id.attr('about');
     console.log(menu);
-    console.log('id1: {}',id)
+    console.log('url: {}',url)
     $.ajax({
                 type : 'get',
-                url : '/api/issue/1/labels',
+                url : url,
                 dataType : 'json',
                 error: function(request) {
                     console.log('error');
@@ -214,11 +250,12 @@ function getAssignees(e) {
     console.log(window.location.href)
     var labelMenuBtn = $(this)
     var id =$('#select-assignees');
+    var url = id.attr('about');
     console.log(menu);
-    console.log('id1: {}',id)
+    console.log('url: {}',url)
     $.ajax({
                 type : 'get',
-                url : '/api/issue/1/assignees',
+                url : url,
                 dataType : 'json',
                 error: function(request) {
                     console.log('error');

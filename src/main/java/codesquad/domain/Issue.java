@@ -2,14 +2,12 @@ package codesquad.domain;
 
 import codesquad.UnAuthorizedException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.checkerframework.checker.units.qual.A;
 import org.hibernate.annotations.Where;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class Issue extends AbstractEntity {
@@ -89,6 +87,14 @@ public class Issue extends AbstractEntity {
         return answer;
     }
 
+    public User getWriter() {
+        return writer;
+    }
+
+    public void setWriter(User writer) {
+        this.writer = writer;
+    }
+
     public String getUserId() {
         return writer.getName();
     }
@@ -113,7 +119,7 @@ public class Issue extends AbstractEntity {
         this.contentsBody.setComment(comment);
     }
 
-    public MenuEntity getMilestone() {
+    public Milestone getMilestone() {
         return milestone;
     }
 
@@ -126,7 +132,7 @@ public class Issue extends AbstractEntity {
         return labels;
     }
 
-    public MenuEntity getAssignee() {
+    public User getAssignee() {
         return assignee;
     }
 

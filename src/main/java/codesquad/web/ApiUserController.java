@@ -3,6 +3,7 @@ package codesquad.web;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
 import codesquad.security.LoginUser;
+import codesquad.service.ImageFileService;
 import codesquad.service.UserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,9 @@ import java.net.URI;
 public class ApiUserController {
     @Resource(name = "userService")
     private UserService userService;
+
+    @Resource(name = "imageFileService")
+    private ImageFileService imageFileService;
 
     @PostMapping("")
     public ResponseEntity<Void> create(@Valid @RequestBody UserDto user) {

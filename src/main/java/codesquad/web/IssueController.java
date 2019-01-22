@@ -29,7 +29,6 @@ public class IssueController {
 
     @GetMapping("/form")
     public String createForm(@LoginUser User loginUser) {
-
         return "/issue/form";
     }
 
@@ -68,8 +67,16 @@ public class IssueController {
         return "redirect:/";
     }
 
+    //todo 이걸로 쓸지 에이젝스로 쓸지 고민
+/*
+    @PutMapping("/{id}")
+    public String addFileAnswer() {
 
-    //todo 이넘을 쓰면 하나로 할수 있을까?
+        return "redirect:/issue/{id}";
+    }
+*/
+
+
     @GetMapping("/{id}/setMilestone/{milestoneId}")
     public String setMilestone(@PathVariable Long id, @PathVariable Long milestoneId) {
         //Todo login 추가해야함

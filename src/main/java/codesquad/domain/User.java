@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.validation.constraints.Size;
 
 @Entity
-public class User extends AbstractEntity implements MenuEntity {
+public class User extends AbstractEntity {
     public static final GuestUser GUEST_USER = new GuestUser();
 
     @Size(min = 3, max = 20)
@@ -26,11 +26,15 @@ public class User extends AbstractEntity implements MenuEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
+    @Column
+    private String img;
+
     public User() {
     }
 
     public User(String userId, String password, String name) {
         this(0L, userId, password, name);
+
     }
 
     public User(long id, String userId, String password, String name) {
@@ -67,6 +71,21 @@ public class User extends AbstractEntity implements MenuEntity {
         return this;
     }
 
+
+    public User updateImg(String img) {
+        this.img = img;
+        return this;
+    }
+
+    //Todo 안이쁘다 리펙토링하자.
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
     private boolean matchUserId(String userId) {
         return this.userId.equals(userId);
     }
@@ -82,6 +101,7 @@ public class User extends AbstractEntity implements MenuEntity {
 
         this.name = target.name;
     }
+
     public String getSubject() {
         return "";
     }
