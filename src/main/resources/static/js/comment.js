@@ -4,12 +4,11 @@ function comment(e) {
     console.log("커밋 생성중");
 
     var queryString = $(".comments-write").serialize();
+//    var queryString = jQuery("daesoop");
     console.log(queryString);
 
     var url = $(".comments-write").attr("action");
     console.log(url);
-
-
 
     $.ajax({
         type : 'post',

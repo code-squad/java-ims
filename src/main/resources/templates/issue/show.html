@@ -74,8 +74,28 @@
 
             <!--
              start -->
+            {{#multiparts}}
+                <div class="comment mdl-color-text--grey-700">
+                    <header class="comment__header">
+                        <img class="comment__avatar2" height="48" width="48" src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="{{writer.name}}">
+                        <div class="comment__author">
+                            <strong> <a>{{writer.name}}</a></strong>
+                            <div>upload file <a href="/attachments/{{id}}">[{{originalFilename}}]</a></div>
+                            <span>on {{createDate}}</span>
+                        </div>
+                    </header>
+                    <div>
+                        <ul class="article-util-list" style="display: inline-block;">
+                            <li style="display: inline-block;">
+                                <a class="delete-comment" href="/api/issues/{{issue.id}}/answers/{{id}}">삭제</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <hr>
+                {{/multiparts}}
             {{#answers}}
             <div class="comment mdl-color-text--grey-700 answer-form">
+
                 <header class="comment__header">
                     <img class="comment__avatar2" height="48" width="48"
                          src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
@@ -113,7 +133,7 @@
 
             <!-- comments end -->
         </div>
-        <form action="/api/issues/{{id}}/comments" enctype="multipart/form-data" method="POST">
+        <form action="/attachments/{{id}}" enctype="multipart/form-data" method="POST">
             <div style="margin:10px;">
                 <input type="file" name="file" id="file"/>
                 <button class="mdl-button" type="submit">upload file</button>
@@ -133,7 +153,7 @@
         </div>
     </div>
 </div>
-
+</div>
 {{/issue}}
 
 <script type="text/template" id="commentTemplate">

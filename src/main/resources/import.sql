@@ -1,5 +1,6 @@
-INSERT INTO user (id, user_id, password, name) values (1, 'kuro', 'eogks369', 'kuro');
-INSERT INTO user (id, user_id, password, name) values (2, 'dsoop', 'eogks369', 'daesoop');
+INSERT INTO user (id, user_id, password, name) values (1, 'kuro', 'test', 'kuro');
+INSERT INTO user (id, user_id, password, name) values (2, 'cmich8869', 'test', 'Myoungeun');
+INSERT INTO user (id, user_id, password, name) values (3, 'dsoop', 'test', 'daesoop');
 
 INSERT INTO issue (id, subject, comment, deleted, writer_id) values (1, 'this is first issue', 'this is soop first comment test', false, 1);
 INSERT INTO issue (id, subject, comment, deleted, writer_id) values (2, 'this is second issue', 'this is soop second comment test', false, 1);

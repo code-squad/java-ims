@@ -39,7 +39,7 @@ public class UserService {
 
     @Transactional
     public User update(User loginUser, long id, UserDto updatedUser) {
-        User original = findById(loginUser, id);
+        User original = findById(id);
         original.update(loginUser, updatedUser._toUser());
         return userRepository.save(original);
     }
@@ -48,9 +48,8 @@ public class UserService {
         return userRepository.findByUserId(userId).orElseThrow(UnAuthorizedException::new);
     }
 
-    public User findById(User loginUser, long id) {
+    public User findById(long id) {
         return userRepository.findById(id)
-                .filter(user -> user.equals(loginUser))
                 .orElseThrow(UnAuthorizedException::new);
     }
 

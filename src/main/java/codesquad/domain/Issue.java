@@ -39,11 +39,16 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_assignee"))
     private User assignee;
 
-    @OneToMany
+    @OneToMany(mappedBy = "issue")
     @Where(clause = "deleted = false")
     @JsonIgnore
     @OrderBy("id ASC")
     private List<Answer> answers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "issue")
+    @JsonIgnore
+    @OrderBy("id ASC")
+    private List<Multipart> multiparts = new ArrayList<>();
 
     private boolean deleted = false;
 
@@ -130,6 +135,14 @@ public class Issue extends AbstractEntity {
 
     public void setLabel(Label label) {
         this.label = label;
+    }
+
+    public List<Multipart> getMultiparts() {
+        return multiparts;
+    }
+
+    public void setMultiparts(List<Multipart> multiparts) {
+        this.multiparts = multiparts;
     }
 
     public void update(User loginUser, Issue toIssue) {
