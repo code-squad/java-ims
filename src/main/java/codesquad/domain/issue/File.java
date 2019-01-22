@@ -22,10 +22,6 @@ public class File extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_file_uploader"))
     private User uploader;
 
-    @OneToOne(cascade = CascadeType.ALL)    //file의 commentId는 null인데,, 설정 어떻게
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_file_comment"))
-    private Comment comment;
-
     public File() {
     }
 

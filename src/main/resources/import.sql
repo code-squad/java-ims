@@ -15,5 +15,5 @@ INSERT INTO comment (id, create_date, modified_date, contents, deleted, issue_id
 INSERT INTO comment (id, create_date, modified_date, contents, deleted, issue_id, writer_id) values (2, current_timestamp, current_timestamp, '해결되면 나한테 알려주고', false, 1, 1);
 INSERT INTO comment (id, create_date, modified_date, contents, deleted, issue_id, writer_id) values (3, current_timestamp, current_timestamp, '내가 도와줄까요?', false, 1, 2);
 
-INSERT INTO file (id, create_date, modified_date, location, original_name, saved_name, comment_id, uploader_id) values (1, current_timestamp, current_timestamp, 'C:\Users\lollo\Desktop\uploadFile\0123456789sample.txt', 'sample.txt', '0123456789sample.txt', null, 1);
+INSERT INTO file (id, create_date, modified_date, location, original_name, saved_name, uploader_id) values (1, current_timestamp, current_timestamp, 'C:\Users\lollo\Desktop\uploadFile\0123456789sample.txt', 'sample.txt', '0123456789sample.txt', 1);
 
