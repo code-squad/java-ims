@@ -2,6 +2,8 @@ package codesquad.web;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.*;
+import codesquad.domain.issue.Comment;
+import codesquad.domain.issue.CommentRepository;
 import codesquad.domain.issue.Issue;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
@@ -33,6 +35,9 @@ public class IssueController {
     @Resource(name = "labelRepository")
     private LabelRepository labelRepository;
 
+    @Resource(name = "commentRepository")
+    private CommentRepository commentRepository;
+
     @GetMapping("/form")
     public String form() {
         return "/issue/form";
@@ -55,11 +60,14 @@ public class IssueController {
         List<Milestone> milestones = milestoneService.findAll();
         List<User> assignees = userService.findAll();
         List<Label> labels = labelRepository.findAll();
+        List<Comment> comments = issue.getComments();
 
         model.addAttribute("issue", issue)
                 .addAttribute("milestones", milestones)
                 .addAttribute("assignees", assignees)
-                .addAttribute("labels", labels);
+                .addAttribute("labels", labels)
+                .addAttribute("comments", comments);
+
         return "/issue/show";
     }
 

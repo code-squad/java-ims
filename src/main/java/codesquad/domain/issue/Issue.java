@@ -3,6 +3,8 @@ package codesquad.domain.issue;
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
 import codesquad.domain.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Where;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
@@ -37,11 +39,14 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
 
-    @OneToMany
-    private List<Comment> comments = new ArrayList<>();
-
     @ManyToMany
     private List<Label> labels = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Where(clause = "deleted = false")
+    @OrderBy("id DESC")
+    private List<Comment> comments = new ArrayList<>();
 
     private boolean deleted = false;
 
@@ -114,14 +119,6 @@ public class Issue extends AbstractEntity {
         this.closed = !closed;
     }
 
-    public void addComment(User loginUser, Comment comment) {
-        if(!isMatchWriter(loginUser)) {
-            throw new UnAuthorizedException();
-        }
-
-        this.comments.add(comment);
-    }
-
     public String getSubject() {
         return subject;
     }
@@ -160,6 +157,14 @@ public class Issue extends AbstractEntity {
 
     public void setClosed(boolean closed) {
         this.closed = closed;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override

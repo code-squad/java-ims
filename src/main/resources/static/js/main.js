@@ -1,4 +1,5 @@
 
+//이슈 열림/닫힘 설정
 $("#close-button").on("click", changeStatus);
 function changeStatus(e) {
     e.preventDefault();
@@ -22,6 +23,7 @@ function changeStatus(e) {
         });
 }
 
+//이슈 속성 지정(마일스톤/라벨/담당자)
 $(".property-list").on("click", relateProperty);
 function relateProperty(e) {
     e.preventDefault();
@@ -40,6 +42,7 @@ function relateProperty(e) {
         });
 }
 
+//이슈 코멘트 등록
 $(".new-comment button[type=submit]").on("click", addComment);
 function addComment(e) {
     e.preventDefault();
@@ -54,15 +57,34 @@ function addComment(e) {
         type : 'post',
         url : url,
         data : queryString,
-        error: function () {
-            alert("error");
-        },
+        error: onError,
         success : function (data, status) {
             console.log(data);
             var commentTemplate = $("#commentTemplate").html();
-            var template = commentTemplate.format(data.writer.userId, data.comment);
+            var template = commentTemplate.format(data.writer.userId, data.comment, data.issue.id, data.id);
             $(".comments").prepend(template);
             $("textarea[name=comment]").val("");
+
+            $(".link-delete-comment").on("click", deleteAnswer);
+        }
+    });
+}
+
+//이슈 코멘트 삭제
+$(".link-delete-comment").on("click", deleteAnswer);
+function deleteAnswer(e) {
+    e.preventDefault();
+
+    var deleteBtn = $(this);
+    var url = $(this).attr("href");
+    console.log("url : " + url);
+
+    $.ajax({
+        type : 'delete',
+        url : url,
+        error : onError,
+        success : function() {
+            deleteBtn.closest("comment").remove();
         }
     });
 }
@@ -79,4 +101,4 @@ String.prototype.format = function() {
           : match
           ;
     });
-  };
+};

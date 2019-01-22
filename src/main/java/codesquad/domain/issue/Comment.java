@@ -1,6 +1,7 @@
 package codesquad.domain.issue;
 
 import codesquad.CannotDeleteException;
+import codesquad.UnAuthorizedException;
 import codesquad.domain.ContentType;
 import codesquad.domain.DeleteHistory;
 import codesquad.domain.User;
@@ -39,6 +40,16 @@ public class Comment extends AbstractEntity {
         this.writer = loginUser;
         this.issue = issue;
         this.comment = comment;
+    }
+
+
+    public Comment update(User loginUser, String body) {
+        if (!isMatchWriter(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.comment = body;
+        return this;
     }
 
     public List<DeleteHistory> delete(User loginUser) {

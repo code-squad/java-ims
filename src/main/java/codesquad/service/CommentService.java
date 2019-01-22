@@ -1,5 +1,6 @@
 package codesquad.service;
 
+import codesquad.CannotDeleteException;
 import codesquad.domain.User;
 import codesquad.domain.issue.Comment;
 import codesquad.domain.issue.CommentRepository;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 
 @Service
 public class CommentService {
@@ -17,6 +19,9 @@ public class CommentService {
 
     @Resource(name = "commentRepository")
     private CommentRepository commentRepository;
+
+    @Resource(name = "deleteHistoryService")
+    private DeleteHistoryService deleteHistoryService;
 
     public Comment findById(long id) {
         return commentRepository.findById(id)
@@ -32,5 +37,17 @@ public class CommentService {
         Issue issue = issueService.findById(issueId);
         Comment comment = new Comment(loginUser, issue, body);
         return add(comment);
+    }
+
+    @Transactional
+    public void delete(User loginUser, long id) throws CannotDeleteException {
+        Comment original = findById(id);
+        deleteHistoryService.saveAll(original.delete(loginUser));
+    }
+
+    @Transactional
+    public Comment update(User loginUser, long id, String body) {
+        Comment comment = commentRepository.findById(id).orElseThrow(NoResultException::new);
+        return comment.update(loginUser, body);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -23,27 +24,26 @@ public class ApiCommentController {
     private CommentService commentService;
 
     @PostMapping("")
-    public ResponseEntity<Comment> create(@LoginUser User loginUser, @PathVariable long issueId, String comment) {
+    public ResponseEntity<Comment> create(@LoginUser User loginUser, @PathVariable long issueId, @Valid String comment) {
         Comment newComment = commentService.create(loginUser, issueId, comment);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(String.format("/api/issues/%d/answers/", issueId)));
+        headers.setLocation(URI.create(String.format("/api/issues/%d/comments", issueId)));
         return new ResponseEntity<>(newComment, headers, HttpStatus.CREATED);
     }
 
-//    @PutMapping("/{id}")
-//    public Answer update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody String answer) {
-//        logger.debug("## update : {}", answer);
-//        return answerService.update(loginUser, id, answer);
-//    }
-//
-//    @GetMapping("/{id}/updateForm")
-//    public Answer updateForm(@PathVariable long id) {
-//        return answerService.findById(id);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public void delete(@LoginUser User loginUser, @PathVariable long id) {
-//        answerService.delete(loginUser, id);
-//    }
+    @GetMapping("/{id}")
+    public Comment updateForm(@PathVariable long id) {
+        return commentService.findById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Comment update(@LoginUser User loginUser, @PathVariable long id, @Valid String comment) {
+        return commentService.update(loginUser, id, comment);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id) {
+        commentService.delete(loginUser, id);
+    }
 }
