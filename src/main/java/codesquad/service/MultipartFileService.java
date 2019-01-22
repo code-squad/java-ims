@@ -2,6 +2,7 @@ package codesquad.service;
 
 import codesquad.domain.*;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,10 +24,13 @@ public class MultipartFileService {
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
+    @Value("${value.from.file}")
+    private String uploadPath;
+
     @Transactional
     public Multipart add(User user, long issueId, MultipartFile file) throws IOException {
         Issue issue = issueRepository.findById(issueId).orElseThrow(UnknownError::new);
-        Multipart multipart = new Multipart(user, issue, file.getOriginalFilename());
+        Multipart multipart = new Multipart(user, issue, file.getOriginalFilename(), uploadPath);
         Path path = multipart.add(user, file);
         file.transferTo(path);
         return multipartRepository.save(multipart);
@@ -35,6 +39,10 @@ public class MultipartFileService {
     public List<Multipart> findAll() {
         return multipartRepository.findAll();
     }
+
+//    public List<Multipart> findByIssueId(long issueId) {
+//        return multipartRepository.(issueId);
+//    }
 
     public String findPath(long id) {
         Multipart multipart = multipartRepository.findById(id).orElseThrow(UnknownError::new);

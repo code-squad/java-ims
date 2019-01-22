@@ -33,17 +33,17 @@ public class Multipart extends AbstractEntity {
     @Column
     private String saveName;
 
-    @Value("${value.from.file}")
     private String uploadPath;
 
     public Multipart() {
     }
 
-    public Multipart(User user, Issue issue, String file) {
+    public Multipart(User user, Issue issue, String file, String uploadPath) {
         this.writer = user;
         this.issue = issue;
         this.originalFilename = file;
         this.saveName = UUID.randomUUID() + "_" + file;
+        this.uploadPath = uploadPath;
     }
 
     public User getWriter() {

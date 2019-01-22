@@ -57,8 +57,6 @@ public class IssueController {
         model.addAttribute("milestones", milestoneService.findAll());
         model.addAttribute("labels", labelService.findAll());
         model.addAttribute("assignees", userService.findAll());
-        model.addAttribute("answers", answerService.findAll());
-        model.addAttribute("multipart", multipartFileService.findAll());
         return "issue/show";
     }
 

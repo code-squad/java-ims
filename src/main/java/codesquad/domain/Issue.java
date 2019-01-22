@@ -50,7 +50,6 @@ public class Issue extends AbstractEntity {
     @OrderBy("id ASC")
     private List<Multipart> multiparts = new ArrayList<>();
 
-
     private boolean deleted = false;
 
     public Issue() {
