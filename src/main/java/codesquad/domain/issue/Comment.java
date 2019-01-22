@@ -42,7 +42,6 @@ public class Comment extends AbstractEntity {
         this.comment = comment;
     }
 
-
     public Comment update(User loginUser, String body) {
         if (!isMatchWriter(loginUser)) {
             throw new UnAuthorizedException();

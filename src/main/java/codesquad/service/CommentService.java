@@ -24,8 +24,7 @@ public class CommentService {
     private DeleteHistoryService deleteHistoryService;
 
     public Comment findById(long id) {
-        return commentRepository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+        return commentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     public Comment add(Comment comment) {

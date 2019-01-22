@@ -75,6 +75,7 @@ public class Issue extends AbstractEntity {
         this.comment = target.comment;
     }
 
+    //TODO : comment 유무에 따른 delete 조건 변경 필요
     public List<DeleteHistory> delete(User loginUser) {
         if (!isMatchWriter(loginUser)) {
             throw new CannotDeleteException("작성자만 삭제 가능합니다.");
@@ -88,7 +89,7 @@ public class Issue extends AbstractEntity {
 
     //TODO : 아래 4개 메소드 중복제거 가능할까?
     public void toMilestone(User loginUser, Milestone milestone) {
-        if(!isMatchWriter(loginUser)) {
+        if (!isMatchWriter(loginUser)) {
             throw new UnAuthorizedException();
         }
 
@@ -104,7 +105,7 @@ public class Issue extends AbstractEntity {
     }
 
     public void addLabel(User loginUser, Label label) {
-        if(!isMatchWriter(loginUser)) {
+        if (!isMatchWriter(loginUser)) {
             throw new UnAuthorizedException();
         }
 
@@ -112,7 +113,7 @@ public class Issue extends AbstractEntity {
     }
 
     public void changeOpeningAndClosingStatus(User loginUser) {
-        if(!isMatchWriter(loginUser)) {
+        if (!isMatchWriter(loginUser)) {
             throw new UnAuthorizedException();
         }
 

@@ -23,6 +23,8 @@ public class ApiCommentController {
     @Resource(name = "commentService")
     private CommentService commentService;
 
+    //TODO : 인수테스트 가능하게 리팩토링, 인수테스트 구축 필요
+
     @PostMapping("")
     public ResponseEntity<Comment> create(@LoginUser User loginUser, @PathVariable long issueId, @Valid String comment) {
         Comment newComment = commentService.create(loginUser, issueId, comment);
