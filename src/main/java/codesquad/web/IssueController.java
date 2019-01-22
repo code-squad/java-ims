@@ -67,6 +67,15 @@ public class IssueController {
         return "redirect:/";
     }
 
+    //todo 이걸로 쓸지 에이젝스로 쓸지 고민
+/*
+    @PutMapping("/{id}")
+    public String addFileAnswer() {
+
+        return "redirect:/issue/{id}";
+    }
+*/
+
 
     @GetMapping("/{id}/setMilestone/{milestoneId}")
     public String setMilestone(@PathVariable Long id, @PathVariable Long milestoneId) {

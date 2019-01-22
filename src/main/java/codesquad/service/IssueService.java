@@ -6,9 +6,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class IssueService {
@@ -31,6 +33,9 @@ public class IssueService {
 
     @Resource(name = "answerRepository")
     private AnswerRepository answerRepository;
+
+    @Resource(name = "imageFileRepository")
+    private ImageFileRepository imageFileRepository;
 
     public Optional<Issue> findById(long id) {
         return issueRepository.findById(id);
@@ -80,6 +85,14 @@ public class IssueService {
     public Answer addAnswer(User loginUser, long issueId, String comment) {
         Issue issue = issueRepository.findById(issueId).orElseThrow(UnAuthorizedException::new);
         Answer answer = new Answer(loginUser, comment);
+        return issue.addAnswer(answer);
+    }
+
+    @Transactional
+    public Answer addFileAnswer(User loginUser, long issueId, ImageFile pic) {
+        Issue issue = issueRepository.findById(issueId).orElseThrow(UnAuthorizedException::new);
+        Answer answer = new Answer(loginUser, "img");
+        answer.addImg(pic);
         return issue.addAnswer(answer);
     }
 

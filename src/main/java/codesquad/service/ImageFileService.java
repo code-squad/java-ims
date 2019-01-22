@@ -2,6 +2,7 @@ package codesquad.service;
 
 import codesquad.domain.ImageFile;
 import codesquad.domain.ImageFileRepository;
+import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +17,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,27 +35,29 @@ public class ImageFileService {
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
-    public File findById(long id) {
-        Long imgid = userRepository.findById(id).get().getImg().getId();
-        log.debug("dzdz : {} " , imgid);
-        Optional<ImageFile> imageFile = imageFileRepository.findById(imgid);
-        log.debug("image : {} ",imageFile.isPresent());
-        if (!imageFile.isPresent()) {
-            log.debug("디폴트이미지");
-            return new File(defaultImg);
+    public File findByUserImg(long id) {
+        User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        log.debug("나는 파일명: {}" );
+
+        String imgPath = path + "/" + defaultImg;
+        if (user.getImg() != null) {
+            imgPath = path + "/" + user.getImg();
         }
-        String imgPath = path + "/" + imageFile.get().getName();
-        log.debug("다 나오는가 : {} ",imageFile.get().getName());
+
         return new File(imgPath);
+    }
+
+    public ImageFile findById(long id) {
+        return imageFileRepository.findById(id).get();
     }
 
     @Transactional
     public ImageFile add(MultipartFile pic) throws IOException {
-//        if (!pic.isEmpty()) {
-            String fileName =  UUID.randomUUID().toString();
-            Files.copy(pic.getInputStream(), Paths.get(path,fileName), StandardCopyOption.REPLACE_EXISTING);
+        String fileName =  UUID.randomUUID().toString();
+        Files.copy(pic.getInputStream(), Paths.get(path,fileName), StandardCopyOption.REPLACE_EXISTING);
         log.debug("나는 파일명: {}",pic.getOriginalFilename());
 
         return imageFileRepository.save(new ImageFile(pic.getOriginalFilename(),fileName));
     }
+
 }

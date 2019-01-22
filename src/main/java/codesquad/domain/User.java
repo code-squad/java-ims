@@ -3,6 +3,7 @@ package codesquad.domain;
 import codesquad.UnAuthorizedException;
 import codesquad.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Value;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -25,15 +26,15 @@ public class User extends AbstractEntity implements MenuEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_user_to_image_file"))
-    private ImageFile img;
+    @Column
+    private String img;
 
     public User() {
     }
 
     public User(String userId, String password, String name) {
         this(0L, userId, password, name);
+
     }
 
     public User(long id, String userId, String password, String name) {
@@ -70,20 +71,18 @@ public class User extends AbstractEntity implements MenuEntity {
         return this;
     }
 
-    public User updateImg(ImageFile img) {
+
+    public User updateImg(String img) {
         this.img = img;
         return this;
     }
 
     //Todo 안이쁘다 리펙토링하자.
-    public ImageFile getImg() {
-        if (img == null){
-            return new ImageFile("001d7fcc-33b3-46c3-b4bf-da273373070e","001d7fcc-33b3-46c3-b4bf-da273373070e");
-        }
+    public String getImg() {
         return img;
     }
 
-    public void setImg(ImageFile img) {
+    public void setImg(String img) {
         this.img = img;
     }
 

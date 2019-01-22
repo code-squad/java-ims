@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,12 +38,14 @@ public class UserController {
     }
 
     @PostMapping("")
+    @Transactional
     public String create(UserDto userDto, MultipartFile pic) throws IOException {
-        log.debug("나는 파일입니다. : {}", pic.getOriginalFilename());
-        log.debug("나는 패스입니다.: {}",path);
-        // 객체로 옮기자 일단 구현하자.
-        ImageFile img = imageFileService.add(pic);
-        userService.add(userDto, img);
+        if (!pic.isEmpty()) {
+            ImageFile img = imageFileService.add(pic);
+            userService.add(userDto, img.getName());
+        } else {
+            userService.add(userDto);
+        }
         return "redirect:/";
     }
 

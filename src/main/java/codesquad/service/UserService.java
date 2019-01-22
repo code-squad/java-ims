@@ -22,7 +22,7 @@ public class UserService {
         return userRepository.save(userDto._toUser());
     }
 
-    public User add(UserDto userDto, ImageFile img) {
+    public User add(UserDto userDto, String img) {
         return userRepository.save(userDto._toUser().updateImg(img));
     }
 
