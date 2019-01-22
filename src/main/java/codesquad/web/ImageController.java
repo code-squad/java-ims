@@ -32,7 +32,7 @@ public class ImageController {
             MediaType.IMAGE_JPEG_VALUE })
     public @ResponseBody
     byte[] userImgShow(@PathVariable long id) throws IOException {
-        File file = imageFileService.findByUserImg(id);
+        File file = imageFileService.findUserImg(id);
         InputStream in = new FileInputStream(file);
         return IOUtils.toByteArray(in);
     }

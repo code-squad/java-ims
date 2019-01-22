@@ -3,14 +3,14 @@ package codesquad.domain;
 import codesquad.UnAuthorizedException;
 import codesquad.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.beans.factory.annotation.Value;
 import support.domain.AbstractEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.validation.constraints.Size;
 
 @Entity
-public class User extends AbstractEntity implements MenuEntity {
+public class User extends AbstractEntity {
     public static final GuestUser GUEST_USER = new GuestUser();
 
     @Size(min = 3, max = 20)
@@ -101,6 +101,7 @@ public class User extends AbstractEntity implements MenuEntity {
 
         this.name = target.name;
     }
+
     public String getSubject() {
         return "";
     }

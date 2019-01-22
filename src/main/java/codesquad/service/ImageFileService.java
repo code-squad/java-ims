@@ -35,15 +35,13 @@ public class ImageFileService {
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
-    public File findByUserImg(long id) {
+    public File findUserImg(long id) {
         User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         log.debug("나는 파일명: {}" );
-
         String imgPath = path + "/" + defaultImg;
         if (user.getImg() != null) {
             imgPath = path + "/" + user.getImg();
         }
-
         return new File(imgPath);
     }
 
@@ -56,7 +54,6 @@ public class ImageFileService {
         String fileName =  UUID.randomUUID().toString();
         Files.copy(pic.getInputStream(), Paths.get(path,fileName), StandardCopyOption.REPLACE_EXISTING);
         log.debug("나는 파일명: {}",pic.getOriginalFilename());
-
         return imageFileRepository.save(new ImageFile(pic.getOriginalFilename(),fileName));
     }
 

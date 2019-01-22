@@ -4,7 +4,7 @@ package codesquad.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IssueMenus{
+public class IssueMenus {
     private long issueId;
 
     private List thisIssue = new ArrayList<>();
@@ -14,18 +14,18 @@ public class IssueMenus{
     public IssueMenus() {
     }
 
-    public IssueMenus(long id, Object owner,List others) {
+    public IssueMenus(long id, Object owner, List others) {
         this.others = others;
-        if (owner != null){
+        if (owner != null) {
             this.thisIssue.add(owner);
             this.others.remove(owner);
         }
         this.issueId = id;
     }
 
-    public IssueMenus(long id, List owners,List others) {
+    public IssueMenus(long id, List owners, List others) {
         this.others = others;
-        if (owners != null){
+        if (owners != null) {
             for (Object owner : owners) {
                 this.thisIssue.add(owner);
                 this.others.remove(owner);
