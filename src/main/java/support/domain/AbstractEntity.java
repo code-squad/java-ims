@@ -34,7 +34,6 @@ AbstractEntity {
         return id;
     }
 
-    @JsonIgnore
     public String getFormattedCreateDate() {
         return getFormattedDate(createDate, "yyyy-MM-dd");
     }

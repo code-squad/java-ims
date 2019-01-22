@@ -48,12 +48,12 @@ public class ApiUserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(UserDto userDto, HttpSession httpSession) {
+    public ResponseEntity<Void> login(UserDto userDto, HttpSession httpSession) {
         User loginUser = userService.login(userDto.getUserId(), userDto.getPassword());
         httpSession.setAttribute(USER_SESSION_KEY, loginUser);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/"));
-        return new ResponseEntity<User>(loginUser,headers, HttpStatus.ACCEPTED);
+        return new ResponseEntity<Void>(headers,HttpStatus.ACCEPTED);
     }
 
 }

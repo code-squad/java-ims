@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.dto.LabelDto;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -17,10 +18,17 @@ public class Label extends AbstractEntity {
 
     public Label(){}
 
-    public
-    Label(User writer, Label label) {
+    public Label(User writer, Label label) {
         this.writer = writer;
         this.name = label.name;
+    }
+
+    public LabelDto _toLabelDto() {
+        return new LabelDto(name, writer._toUserDto());
+    }
+
+    public LabelDto getLabelDto() {
+        return _toLabelDto();
     }
 
     public String getName() {

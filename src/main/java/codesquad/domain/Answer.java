@@ -1,13 +1,20 @@
 package codesquad.domain;
 
 import codesquad.dto.AnswerDto;
+import codesquad.exception.UnAuthenticationException;
+import codesquad.exception.UnAuthorizedException;
+import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Entity
 public class Answer extends AbstractEntity {
+    private static final Logger log = getLogger(Answer.class);
+
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
     private User writer;
@@ -41,6 +48,16 @@ public class Answer extends AbstractEntity {
         return _toAnswerDto();
     }
 
+    public Issue getIssue() {
+        return issue;
+    }
+
+    public Answer modify(User loginUser, String comment) {
+        writer.isOwner(loginUser);
+        this.comment = comment;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Answer{" +
@@ -49,5 +66,18 @@ public class Answer extends AbstractEntity {
                 ", issue=" + issue +
                 ", deleted=" + deleted +
                 '}';
+    }
+
+    public void isOwner(User loginUser) {
+        writer.isLogin(loginUser);
+        writer.equals(loginUser);
+    }
+
+    public Answer delete(User loginUser) {
+        if (writer.isOwner(loginUser)) {
+            deleted = true;
+            return this;
+        }
+        throw new UnAuthorizedException();
     }
 }

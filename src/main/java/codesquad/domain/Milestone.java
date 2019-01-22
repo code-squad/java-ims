@@ -49,10 +49,10 @@ public class Milestone extends AbstractEntity {
         return _toMilestoneDto();
     }
 
-    public List<Issue> addIssue(User loginUser, Issue issue) {
+    public Milestone addIssue(User loginUser, Issue issue) {
          issue.toMilestone(loginUser, this);
          issues.add(issue);
-         return issues;
+         return this;
     }
 
     public long getOngoingIssues() {        //false가 진행 , true가  완료

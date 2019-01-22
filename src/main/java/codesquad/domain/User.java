@@ -4,6 +4,7 @@ import codesquad.exception.UnAuthenticationException;
 import codesquad.exception.UnAuthorizedException;
 import codesquad.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 
 import javax.persistence.Column;
@@ -11,8 +12,11 @@ import javax.persistence.Entity;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Entity
 public class User extends AbstractEntity {
+    private static final Logger log = getLogger(User.class);
     public static final GuestUser GUEST_USER = new GuestUser();
 
     @Size(min = 3, max = 20)

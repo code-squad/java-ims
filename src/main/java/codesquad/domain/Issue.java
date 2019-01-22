@@ -40,7 +40,7 @@ public class Issue extends AbstractEntity {
 
 
     @Embedded
-    private Answers answers = new Answers();
+    private Answers answers;
 
     private boolean deleted = false;
 
@@ -182,7 +182,7 @@ public class Issue extends AbstractEntity {
     }
 
     public List<Answer> addAnswer(Answer answer) {
-        answers.getAnswers().add(answer);
+        answers = new Answers(answer);
         return answers.getAnswers();
     }
 }

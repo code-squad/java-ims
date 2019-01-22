@@ -42,6 +42,10 @@ public class IssueService {
         return issueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
+    public Answer findByAnswerId(long answerId) {
+        return answerRepository.findById(answerId).orElseThrow(EntityNotFoundException::new);
+    }
+
     @Transactional
     public Issue update(User loginUser, long id, IssueDto updateIssue) {
         return findByIssueId(id).modify(updateIssue, loginUser);
@@ -73,10 +77,20 @@ public class IssueService {
     }
 
     @Transactional
-    public List<Answer> addAnswer(User loginUser, long id, AnswerDto answerDto) {
+    public Answer addAnswer(User loginUser, long id, AnswerDto answerDto) {
         Issue issue = findByIssueId(id);
         Answer answer = answerDto._toAnswer(issue, loginUser);
-        answerRepository.save(answer);
-        return issue.addAnswer(answer);
+        issue.addAnswer(answer);
+        return answerRepository.save(answer);
+    }
+
+    @Transactional
+    public Answer modifyAnswer(User loginUser, long answerId, AnswerDto answerDto) {
+        return findByAnswerId(answerId).modify(loginUser, answerDto.getComment());
+    }
+
+    @Transactional
+    public void deleteAnswer(User loginUser, long answerId) {
+        findByAnswerId(answerId).delete(loginUser);
     }
 }
