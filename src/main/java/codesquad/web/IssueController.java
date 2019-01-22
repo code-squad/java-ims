@@ -3,12 +3,10 @@ package codesquad.web;
 import codesquad.domain.user.User;
 import codesquad.dto.IssueDto;
 import codesquad.security.LoginUser;
-import codesquad.service.IssueService;
-import codesquad.service.LabelService;
-import codesquad.service.MilestoneService;
-import codesquad.service.UserService;
+import codesquad.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +29,9 @@ public class IssueController {
 
     @Resource(name = "labelService")
     private LabelService labelService;
+
+    @Autowired
+    private FileService fileService;
 
     @GetMapping("/form")
     public String form(@LoginUser User loginUser) {
@@ -74,7 +75,7 @@ public class IssueController {
     public String setMilestone(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long milestoneId) {
         issueService.setMilestone(loginUser, issueId, milestoneId);
         log.debug("마일스톤 클릭!!!!!!!!!!!!!!!!!!!!!!!!!");
-        return "redirect:/issues/{issueId}";
+        return "redirect:/HissueId}";
     }
 
     @GetMapping("/{issueId}/setAssignee/{assigneeId}")

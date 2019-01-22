@@ -29,6 +29,9 @@ public class Comment extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_issue"))
     private Issue issue;
 
+    @OneToOne        //(cascade = CascadeType.ALL) 하면 PersistentObjectException: detached entity passed to persist: codesquad.domain.issue.File]
+    private File file;
+
     private boolean deleted = false;
 
     public Comment() {
@@ -74,6 +77,14 @@ public class Comment extends AbstractEntity {
 
     public void setIssue(Issue issue) {
         this.issue = issue;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 
     public boolean isOwner(User loginUser) {
