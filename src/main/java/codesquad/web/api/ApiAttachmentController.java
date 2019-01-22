@@ -30,18 +30,20 @@ public class ApiAttachmentController {
 
     @PostMapping("")
     public ResponseEntity upload(@LoginUser User loginUser, MultipartFile file) throws Exception {
+        log.debug("upload!!!!!!!!!!!!!!!!!!!!!");
         File uploadedFile = fileService.upload(loginUser, file);
         return new ResponseEntity<File>(uploadedFile, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
     public ResponseEntity download(@LoginUser User loginUser, @PathVariable long id) throws IOException {
+        log.debug("download!!!!!!!!!!!!!!!!!!!");
         File file = fileService.findFile(id);
         Path path = Paths.get(file.getLocation());
         FileSystemResource resource = new FileSystemResource(path);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.TEXT_XML);
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         String encoredFilename = URLEncoder.encode(file.getOriginalName(), "UTF-8").replace("+", "%20");
         headers.set(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment;filename=" + encoredFilename + ";filename*= UTF-8''" + encoredFilename);
