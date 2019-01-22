@@ -1,10 +1,9 @@
 package codesquad.domain;
 
-import codesquad.UnAuthenticationException;
-import codesquad.UnAuthorizedException;
+import codesquad.exception.UnAuthenticationException;
+import codesquad.exception.UnAuthorizedException;
 import org.junit.Test;
 import org.slf4j.Logger;
-import support.test.AcceptanceTest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -14,7 +13,7 @@ public class IssueTest {
     private static final Logger log = getLogger(IssueTest.class);
 
     public static final Issue NEW_ISSUE = new Issue("제목입니다.", "내용입니다.", UserTest.JAVAJIGI);
-    public static final Issue UPDATING_ISSSUE = new Issue("업데이트 제목", "업데이트 내용");
+    public static final Issue UPDATING_ISSSUE = new Issue("업데이트 제목", "업데이트 내용",null);
 
     @Test
     public void update_success() {

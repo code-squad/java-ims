@@ -1,9 +1,9 @@
 package codesquad.service;
 
-import codesquad.UnAuthenticationException;
-import codesquad.UnAuthorizedException;
+import codesquad.exception.UnAuthenticationException;
+import codesquad.exception.UnAuthorizedException;
 import codesquad.domain.Issue;
-import codesquad.domain.IssueRepository;
+import codesquad.repository.IssueRepository;
 import codesquad.domain.UserTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class IssueServiceTest extends BaseTest {
     }
 
     public Issue updatedIssue() {
-        Issue updatedIssue = new Issue("업데이트 제목", "업데이트 내용");
+        Issue updatedIssue = new Issue("업데이트 제목", "업데이트 내용",null);
         return updatedIssue;
     }
 

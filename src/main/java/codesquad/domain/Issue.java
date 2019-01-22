@@ -1,20 +1,21 @@
 package codesquad.domain;
 
-import codesquad.UnAuthenticationException;
-import codesquad.UnAuthorizedException;
+import codesquad.exception.UnAuthenticationException;
+import codesquad.exception.UnAuthorizedException;
 import codesquad.dto.IssueDto;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.Objects;
+import java.util.*;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Entity
 public class Issue extends AbstractEntity {
     private static final Logger log = getLogger(Issue.class);
+
     @Size(min = 3, max = 100)
     @Column(length = 100, nullable = false)
     private String subject;
@@ -27,25 +28,46 @@ public class Issue extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
     private User writer;
 
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
+    private Milestone milestone;
+
+    @ManyToMany
+    private Set<Label> labels = new HashSet<>();
+
+    @ManyToMany
+    private Set<User> assignees = new HashSet<>();
+
+
+    @Embedded
+    private Answers answers;
+
     private boolean deleted = false;
+
+    private boolean closed = false;
 
     public Issue(){
     }
 
-    public Issue(String subject, String comment) {
-        this.subject = subject;
-        this.comment = comment;
-    }
-
     public Issue(String subject, String comment, User writer) {
-        this(0L, subject, comment, writer);
-    }
 
-    public Issue(long id, String subject, String comment, User writer) {
-        super(id);
         this.subject = subject;
         this.comment = comment;
         this.writer = writer;
+    }
+
+    public IssueDto _toIssueDto() {
+        return new IssueDto(this.subject, this.comment, this.writer._toUserDto(), this.deleted);
+    }
+
+    public IssueDto getIssueDto() {
+        return this._toIssueDto();
+    }
+
+    public Issue toMilestone(User loginUser, Milestone milestone) {
+        isOwner(loginUser);
+        this.milestone = milestone;
+        return this;
     }
 
     public boolean isLogin(User loginUser) {
@@ -53,14 +75,6 @@ public class Issue extends AbstractEntity {
             throw new UnAuthenticationException();
         }
         return true;
-    }
-
-    public IssueDto _toIssueDto() {
-        return new IssueDto(this.subject, this.comment, this.writer, this.deleted);
-    }
-
-    public IssueDto getIssueDto() {
-        return this._toIssueDto();
     }
 
     public boolean isOwner(User loginUser) {
@@ -84,6 +98,78 @@ public class Issue extends AbstractEntity {
         return this;
     }
 
+    public Issue close(User loginUser) {
+        isOwner(loginUser);
+        closed = true;
+        return this;
+    }
+
+    public Issue open(User loginUser) {
+        isOwner(loginUser);
+        closed = false;
+        return this;
+    }
+
+    public Set<Label> addLabel(User loginUser, Label label) {
+        isOwner(loginUser);
+        if (labels.contains(label)) {
+            labels.remove(label);
+            return labels;
+        }
+        labels.add(label);
+        return labels;
+    }
+
+    public Set<User> addAssignee(User loginUser, User assignee) {
+        isOwner(loginUser);
+        if (assignees.contains(assignee)) {
+            assignees.remove(assignee);
+            return assignees;
+        }
+        assignees.add(assignee);
+        return assignees;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
+    public boolean getClosed() {
+        return closed;
+    }
+
+    public Set<Label> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(Set<Label> labels) {
+        this.labels = labels;
+    }
+
+    public Set<User> getAssignees() {
+        return assignees;
+    }
+
+    public void setAssignees(Set<User> assignees) {
+        this.assignees = assignees;
+    }
+
+    public Milestone getMilestone() {
+        return milestone;
+    }
+
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
+    }
+
+    public Answers getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(Answers answers) {
+        this.answers = answers;
+    }
+
     @Override
     public String toString() {
         return "Issue{" +
@@ -93,5 +179,10 @@ public class Issue extends AbstractEntity {
                 ", deleted=" + deleted +
                 ", id=" + getId() +
                 '}';
+    }
+
+    public List<Answer> addAnswer(Answer answer) {
+        answers = new Answers(answer);
+        return answers.getAnswers();
     }
 }

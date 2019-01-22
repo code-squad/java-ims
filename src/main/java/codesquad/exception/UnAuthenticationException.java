@@ -1,4 +1,4 @@
-package codesquad;
+package codesquad.exception;
 
 public class UnAuthenticationException extends RuntimeException {
     private static final long serialVersionUID = 1L;
@@ -16,7 +16,8 @@ public class UnAuthenticationException extends RuntimeException {
         super(message, cause);
     }
 
-    public UnAuthenticationException(String message) {
+    public
+    UnAuthenticationException(String message) {
         super(message);
     }
 

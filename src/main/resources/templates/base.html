@@ -31,14 +31,16 @@
             <!-- Tabs -->
             <nav class="mdl-navigation">
                 <a class="mdl-navigation__link" href="/">Home</a>
-                <a class="mdl-navigation__link" href="/milestone/list">Milestones</a>
-                {{^loginedUser}}
+                <a class="mdl-navigation__link" href="/milestones/list">Milestones</a>
+                <a class="mdl-navigation__link" href="/labels/list">labels</a>
+                {{^loginedUser}} <!-- 로그인 안함 -->
                 <a class="mdl-navigation__link" href="/login">login</a>
                 <a class="mdl-navigation__link" href="/users/join">join</a>
                 {{/loginedUser}}
-                {{#loginedUser}}
+
+                {{#loginedUser}} <!-- 로그인 함 -->
                 <a class="mdl-navigation__link" href="/logout">logout</a>
-                <a class="mdl-navigation__link" href="/users/{{id}}/form">my</a>
+                <a class="mdl-navigation__link" href="/users/{{id}}">my</a>
                 {{/loginedUser}}
             </nav>
         </div>
@@ -53,6 +55,11 @@
 
 {{#block "footer"}}
     <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdn.tinymce.com/4/tinymce.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.3/dialog-polyfill.min.js"></script>
 {{/block}}
 
 {{#block "script"}}

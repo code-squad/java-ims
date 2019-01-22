@@ -11,7 +11,8 @@ import java.time.format.DateTimeFormatter;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class AbstractEntity {
+public class
+AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -33,9 +34,8 @@ public class AbstractEntity {
         return id;
     }
 
-    @JsonIgnore
     public String getFormattedCreateDate() {
-        return getFormattedDate(createDate, "yyyy.MM.dd HH:mm:ss");
+        return getFormattedDate(createDate, "yyyy-MM-dd");
     }
 
     @JsonIgnore
@@ -43,7 +43,7 @@ public class AbstractEntity {
         return getFormattedDate(modifiedDate, "yyyy.MM.dd HH:mm:ss");
     }
 
-    private String getFormattedDate(LocalDateTime dateTime, String format) {
+    protected String getFormattedDate(LocalDateTime dateTime, String format) {
         if (dateTime == null) {
             return "";
         }

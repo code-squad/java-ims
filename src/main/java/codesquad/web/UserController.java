@@ -29,7 +29,7 @@ public class UserController {
 
     @PostMapping("")
     public String create(UserDto userDto, HttpSession session) {
-        User loginUser = userService.create(userDto);
+        User loginUser = userService.create(userDto._toUser());
         session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, loginUser);
         return "redirect:/";
     }

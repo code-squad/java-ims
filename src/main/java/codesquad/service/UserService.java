@@ -1,8 +1,8 @@
 package codesquad.service;
 
-import codesquad.UnAuthenticationException;
+import codesquad.exception.UnAuthenticationException;
 import codesquad.domain.User;
-import codesquad.domain.UserRepository;
+import codesquad.repository.UserRepository;
 import codesquad.dto.UserDto;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -21,9 +21,10 @@ public class UserService {
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
-    public User create(UserDto userDto) {
-        log.debug("user:{}",userDto);
-        return userRepository.save(userDto._toUser());
+    public User create(User user) {
+        log.debug("user:{}",user);
+        userRepository.save(user);
+        return user;
     }
 
     @Transactional
@@ -42,7 +43,7 @@ public class UserService {
 
     public User login(String userId, String password) throws UnAuthenticationException {
         return userRepository.findByUserId(userId)
-                .filter(userDto -> userDto.matchPassword(password))
+                .filter(user -> user.matchPassword(password))
                 .orElseThrow(UnAuthenticationException::new);
     }
 }

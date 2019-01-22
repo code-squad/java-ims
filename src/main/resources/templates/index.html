@@ -32,7 +32,7 @@
 									    #1 Open
 									    <relative-time datetime="2017-01-14"
                                                        title="2017-01-14">2017-01-14</relative-time>
-									    by <a href="" aria-label="View all issues opened by javajigi"
+									    by <a href="" aria-name="View all issues opened by javajigi"
                                               class="tooltipped tooltipped-s muted-link">javajigi</a>
 									</span>
 								</span>
@@ -53,16 +53,16 @@
 									</a>
 									<span class="mdl-list__item-sub-title"> 
 									    #2
-									    
-										
-											
-											
+
+
+
+
 											    Closed
 											 
 										
 									    <relative-time datetime="2017-01-14"
                                                        title="2017-01-14">2017-01-14</relative-time>
-									    by <a href="" aria-label="View all issues opened by javajigi"
+									    by <a href="" aria-name="View all issues opened by javajigi"
                                               class="tooltipped tooltipped-s muted-link">전용우</a>
 									</span>
 								</span>
@@ -92,7 +92,7 @@
 										
 									    <relative-time datetime="2017-01-14"
                                                        title="2017-01-14">2017-01-14</relative-time>
-									    by <a href="" aria-label="View all issues opened by javajigi"
+									    by <a href="" aria-name="View all issues opened by javajigi"
                                               class="tooltipped tooltipped-s muted-link">신영</a>
 									</span>
 								</span>
@@ -123,7 +123,7 @@
 										
 									    <relative-time datetime="2017-01-14"
                                                        title="2017-01-14">2017-01-14</relative-time>
-									    by <a href="" aria-label="View all issues opened by javajigi"
+									    by <a href="" aria-name="View all issues opened by javajigi"
                                               class="tooltipped tooltipped-s muted-link">javajigi</a>
 									</span>
 								</span>
@@ -154,7 +154,7 @@
 										
 									    <relative-time datetime="2017-01-14"
                                                        title="2017-01-14">2017-01-14</relative-time>
-									    by <a href="" aria-label="View all issues opened by javajigi"
+									    by <a href="" aria-name="View all issues opened by javajigi"
                                               class="tooltipped tooltipped-s muted-link">cca-company</a>
 									</span>
 								</span>
@@ -185,7 +185,7 @@
 										
 									    <relative-time datetime="2017-01-14"
                                                        title="2017-01-14">2017-01-14</relative-time>
-									    by <a href="" aria-label="View all issues opened by javajigi"
+									    by <a href="" aria-name="View all issues opened by javajigi"
                                               class="tooltipped tooltipped-s muted-link">진저애비</a>
 									</span>
 								</span>
@@ -216,7 +216,7 @@
 										
 									    <relative-time datetime="2017-01-14"
                                                        title="2017-01-14">2017-01-14</relative-time>
-									    by <a href="" aria-label="View all issues opened by javajigi"
+									    by <a href="" aria-name="View all issues opened by javajigi"
                                               class="tooltipped tooltipped-s muted-link">javajigi</a>
 									</span>
 								</span>
@@ -247,7 +247,7 @@
 										
 									    <relative-time datetime="2017-01-14"
                                                        title="2017-01-14">2017-01-14</relative-time>
-									    by <a href="" aria-label="View all issues opened by javajigi"
+									    by <a href="" aria-name="View all issues opened by javajigi"
                                               class="tooltipped tooltipped-s muted-link">cca-company</a>
 									</span>
 								</span>
@@ -269,7 +269,7 @@
 									    <strong>{{issueDto.subject}}</strong>
 									</a>
 									<span class="mdl-list__item-sub-title">
-									    #8
+									    #{{id}}
 
 
 
@@ -277,15 +277,16 @@
 
 
 
-									    <relative-time datetime="2017-01-14"
-													   title="2017-01-14">{{formattedCreateDate}}</relative-time>
-									    by <a href="" aria-label="View all issues opened by javajigi"
-											  class="tooltipped tooltipped-s muted-link">cca-company</a>
+									    <relative-time datetime="2017-01-14" title="2017-01-14">{{formattedCreateDate}}</relative-time>
+									    by <a href="" aria-name="View all issues opened by javajigi"
+											  class="tooltipped tooltipped-s muted-link">{{issueDto.writer.name}}</a>
+										{{#labels}}{{name}}{{/labels}}
+
 									</span>
 								</span>
 							<span class="mdl-list__item-secondary-content">
 									<span class="material-icons mdl-badge mdl-badge--overlap"
-										  data-badge="0">comment</span>
+										  data-badge="{{answers.countAnswers}}">comment</span>
 							</span>
 						</li>
 						{{/issues}}
@@ -307,7 +308,6 @@
 {{#partial "script"}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.3/dialog-polyfill.min.js"></script>
 <script src="https://cdn.tinymce.com/4/tinymce.min.js"></script>
-<script src="/js/main.js"></script>
 {{/partial}}
 
 {{> base}}

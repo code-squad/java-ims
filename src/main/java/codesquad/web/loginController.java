@@ -1,6 +1,6 @@
 package codesquad.web;
 
-import codesquad.UnAuthenticationException;
+import codesquad.exception.UnAuthenticationException;
 import codesquad.domain.User;
 import codesquad.dto.UserDto;
 import codesquad.security.HttpSessionUtils;
@@ -23,9 +23,9 @@ public class loginController {
     }
 
     @PostMapping("/login")
-    public String login(UserDto userInfo, HttpSession session) {
+    public String login(UserDto userDto, HttpSession session) {
         try {
-            User loginUser = userService.login(userInfo.getUserId(), userInfo.getPassword());
+            User loginUser = userService.login(userDto.getUserId(), userDto.getPassword());
             session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, loginUser);
         }catch (UnAuthenticationException e) {
             return "/user/login_failed";

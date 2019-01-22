@@ -1,7 +1,7 @@
 package codesquad.security;
 
-import codesquad.UnAuthenticationException;
-import codesquad.UnAuthorizedException;
+import codesquad.exception.UnAuthenticationException;
+import codesquad.exception.UnAuthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,8 @@ public class SecurityControllerAdvice {
 
     @ExceptionHandler(UnAuthenticationException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public void unAuthentication() {
+    public String unAuthentication() {
         log.debug("UnAuthenticationException is happened!");
+        return "/user/login";
     }
 }

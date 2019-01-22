@@ -1,4 +1,4 @@
-package codesquad.web;
+package codesquad.web_api;
 
 import codesquad.domain.Issue;
 import codesquad.domain.UserTest;
@@ -8,10 +8,21 @@ import org.slf4j.Logger;
 import org.springframework.http.*;
 import support.test.AcceptanceTest;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ApiIssueAcceptanceTest extends AcceptanceTest {
     private static final Logger log = getLogger(ApiIssueAcceptanceTest.class);
+
+    private IssueDto createIssueDto() {
+        return new IssueDto("제목입니다.", "내용입니다.", UserTest.JAVAJIGI._toUserDto(),false);
+    }
+
+    private IssueDto updatingIssueDto() {
+        return new IssueDto("업데이트 제목", "업데이트 내용",null,false);
+    }
 
     @Test
     public void create() {
@@ -27,14 +38,6 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
     public void crate_no_login() {
         ResponseEntity<Void> response = template.postForEntity("/api/issues", createIssueDto(), Void.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-    }
-
-    private IssueDto createIssueDto() {
-        return new IssueDto("제목입니다.", "내용입니다.");
-    }
-
-    private IssueDto updatingIssueDto() {
-        return new IssueDto("업데이트 제목", "업데이트 내용");
     }
 
     @Test
@@ -107,4 +110,5 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
             basicAuthTemplate(findByUserId("sanjigi")).exchange(location, HttpMethod.DELETE, new HttpEntity<>(new HttpHeaders()),IssueDto.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
+
 }

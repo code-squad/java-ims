@@ -8,21 +8,14 @@
     </div>
     <div class="issues__posts mdl-grid">
         <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
-            <div class="alert alert-danger" role="alert">아이디 또는 비밀번호가 틀립니다. 다시 로그인 해주세요.</div>
-            <form  method="post" action="/login">
+            <form  method="post" action="/labels">
                 <div class="mdl-card__title mdl-color-text--grey-50" style="height:100px;">
-                    <h4>Login Member</h4>
+                    <h4>label create</h4>
                 </div>
                 <div class="mdl-card__supporting-text">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-name" style="margin:0 auto">
-                        <input class="mdl-textfield__input" type="text" id="userId" name="userId" required>
-                        <name class="mdl-textfield__label" for="userId">User ID</name>
-                    </div>
-                </div>
-                <div class="mdl-card__supporting-text">
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-name" style="margin:0 auto">
-                        <input class="mdl-textfield__input" type="password" id="password" name="password" required>
-                        <name class="mdl-textfield__label" for="password">Password</name>
+                        <input class="mdl-textfield__input" type="text" id="name" name="name" required>
+                        <name class="mdl-textfield__label" for="name">label name</name>
                     </div>
                 </div>
                 <div class="mdl-card__supporting-text">
