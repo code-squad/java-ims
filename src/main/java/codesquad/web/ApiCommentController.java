@@ -43,7 +43,7 @@ public class ApiCommentController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@LoginUser User loginUser, @PathVariable long issueId, @PathVariable long id) {
+    public void delete(@LoginUser User loginUser, @PathVariable long id) {
         commentService.delete(loginUser, id);
     }
 }
