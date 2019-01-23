@@ -2,16 +2,25 @@ package codesquad.service;
 
 import codesquad.CannotDeleteException;
 import codesquad.domain.*;
+import codesquad.domain.issue.Comment;
+import codesquad.domain.issue.Issue;
+import codesquad.domain.issue.IssueRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.List;
 
 @Service
 public class IssueService {
+    private static final Logger log = LoggerFactory.getLogger(IssueService.class);
+
     @Resource(name = "issueRepository")
     private IssueRepository issueRepository;
 
@@ -63,26 +72,37 @@ public class IssueService {
     }
 
     @Transactional
-    public void addToMilestone(User loginUser, long id, long milestoneId) {
+    public Issue addToMilestone(User loginUser, long id, long milestoneId) {
         Issue issue = findById(id);
         Milestone milestone = milestoneService.findById(milestoneId);
 
         milestone.addIssue(loginUser, issue);
+        return issue;
     }
 
     @Transactional
-    public void setAssignee(User loginUser, long id, long assigneeId) {
+    public Issue setAssignee(User loginUser, long id, long assigneeId) {
         Issue issue = findById(id);
         User assignee = userService.findById(assigneeId);
 
-        issue.assignedBy(loginUser, assignee);
+        issue.toAssignee(loginUser, assignee);
+        return issue;
     }
 
     @Transactional
-    public void addLabel(User loginUser, long id, long labelId) {
+    public Issue addLabel(User loginUser, long id, long labelId) {
         Issue issue = findById(id);
         Label label = labelRepository.findById(labelId).orElseThrow(EntityNotFoundException::new);
 
         issue.addLabel(loginUser, label);
+        return issue;
+    }
+
+    @Transactional
+    public Issue changeOpeningAndClosingStatus(User loginUser, long id) {
+        Issue issue = findById(id);
+        issue.changeOpeningAndClosingStatus(loginUser);
+
+        return issue;
     }
 }

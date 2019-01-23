@@ -2,6 +2,9 @@ package codesquad.web;
 
 import codesquad.UnAuthorizedException;
 import codesquad.domain.*;
+import codesquad.domain.issue.Comment;
+import codesquad.domain.issue.CommentRepository;
+import codesquad.domain.issue.Issue;
 import codesquad.security.LoginUser;
 import codesquad.service.IssueService;
 import codesquad.service.MilestoneService;
@@ -32,6 +35,9 @@ public class IssueController {
     @Resource(name = "labelRepository")
     private LabelRepository labelRepository;
 
+    @Resource(name = "commentRepository")
+    private CommentRepository commentRepository;
+
     @GetMapping("/form")
     public String form() {
         return "/issue/form";
@@ -54,11 +60,14 @@ public class IssueController {
         List<Milestone> milestones = milestoneService.findAll();
         List<User> assignees = userService.findAll();
         List<Label> labels = labelRepository.findAll();
+        List<Comment> comments = issue.getComments();
 
         model.addAttribute("issue", issue)
                 .addAttribute("milestones", milestones)
                 .addAttribute("assignees", assignees)
-                .addAttribute("labels", labels);
+                .addAttribute("labels", labels)
+                .addAttribute("comments", comments);
+
         return "/issue/show";
     }
 
@@ -94,13 +103,11 @@ public class IssueController {
     public String addToMilestone(@LoginUser User loginUser, @PathVariable long id, @PathVariable long milestoneId) {
         log.debug("***** add issue to milestone : {} to {}", id, milestoneId);
 
-        //TODO: 이슈와 마일스톤 manytomany or manytoone?
-        //TODO: 만약 이슈를 다른 마일스톤에 재지정했다면, 기존 마일스톤이 갖고 있던 이슈정보는 삭제해줘야함! < 구현 필요
         issueService.addToMilestone(loginUser, id, milestoneId);
         return "redirect:/issues/{id}";
     }
 
-    @GetMapping("/{id}/users/{assigneeId}")
+    @GetMapping("/{id}/assignees/{assigneeId}")
     public String setAssignee(@LoginUser User loginUser, @PathVariable long id, @PathVariable long assigneeId) {
         log.debug("***** set assignee {} to issue {}", assigneeId, id);
 

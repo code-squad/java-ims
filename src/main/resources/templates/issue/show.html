@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.blue_grey-orange.min.css">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body>
+<comment>
 <div class="issues issues--wrap mdl-layout mdl-js-layout has-drawer is-upgraded">
 
     <header class="mdl-layout__header mdl-layout__header--waterfall">
@@ -58,9 +58,11 @@
                     </form>
 
                 </div>
+
+                {{# issue}}
                 <div class="mdl-card__title mdl-color-text--grey-50">
                     <i class="material-icons">check_circle</i>
-                    <h2 class="mdl-card__title-text">{{issue.subject}}</h2>
+                    <h2 class="mdl-card__title-text">{{subject}}</h2>
                 </div>
 
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
@@ -69,13 +71,18 @@
                     <div style="margin-right:20px;">
                         <div class="author-text">
                             <strong>
-                                <a href="https://github.com/javajigi" class="author">{{issue.writer.userId}}</a>
+                                <a href="https://github.com/javajigi" class="author">{{writer.userId}}</a>
                             </strong>
                         </div>
                         <span>2017-01-14</span>
                     </div>
-                    <a href="/issue/1/setOpen" class="mdl-button mdl-button--colored mdl-js-button">
+                    <a href="/api/issues/{{issue.id}}/status" class="mdl-button mdl-button--colored mdl-js-button" id="close-button">
+                        {{^ closed}}
                         Close issue
+                        {{/ closed}}
+                        {{# closed}}
+                        Open issue
+                        {{/ closed}}
                     </a>
 
                     <div class="section-spacer"></div>
@@ -84,12 +91,11 @@
                         Milestone
                     </button>
                     <!-- milestone list -->
+
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="milestone-menu">
-
-                        <!--TODO:지정 된 마일스톤은 노란색으로 표시되게..! 핸들바 if, 헬퍼함수? 쓰려했는데 잘 안됨-->
                         {{# milestones}}
-                        <a href="/issues/{{issue.id}}/milestones/{{id}}">
+                        <a class=property-list href="/api/issues/{{issue.id}}/milestones/{{id}}">
                         <li class="mdl-menu__item">{{subject}}</li>
                         </a>
                         {{/ milestones}}
@@ -102,9 +108,9 @@
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="label-menu">
                         {{# labels}}
-                        <li class="mdl-menu__item">
-                            <a href="/issues/{{issue.id}}/labels/{{id}}">{{name}}</a>
-                        </li>
+                        <a class=property-list href="/api/issues/{{issue.id}}/labels/{{id}}">
+                            <li class="mdl-menu__item">{{name}}</li>
+                        </a>
                         {{/ labels}}
                     </ul>
 
@@ -115,78 +121,14 @@
                     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                         for="assignee-menu">
                         {{# assignees}}
-                        <li class="mdl-menu__item">
-                            <a href="/issues/{{issue.id}}/users/{{id}}">{{name}}</a>
-                        </li>
+                        <a class=property-list href="/api/issues/{{issue.id}}/assignees/{{id}}">
+                            <li class="mdl-menu__item">{{name}}</li>
+                        </a>
                         {{/ assignees}}
                     </ul>
                 </div>
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
-                    <p>{{issue.comment}}</p>
-                </div>
-                <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
-
-                    <!-- comments start -->
-
-                    <div class="comment mdl-color-text--grey-700">
-                        <header class="comment__header">
-                            <img class="comment__avatar2" height="48" width="48"
-                                 src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
-                            <div class="comment__author">
-                                <strong>
-                                    <a>javajigi</a>
-
-
-                                    <span>changed milestone 1 on 2017-01-14</span>
-
-
-                                </strong>
-                            </div>
-                        </header>
-                    </div>
-                    <hr>
-
-
-                    <div class="comment mdl-color-text--grey-700">
-                        <header class="comment__header">
-                            <img class="comment__avatar2" height="48" width="48"
-                                 src="https://avatars1.githubusercontent.com/u/7744966?v=3&u=1bd7d2e72800c0d5a1a5a2e04da851d30b3c13c7&s=140"
-                                 alt="cca-company">
-                            <div class="comment__author">
-                                <strong>
-                                    <a>cca-company</a>
-
-
-                                    <span>comment new issue! on 2017-01-14</span>
-
-
-                                </strong>
-                            </div>
-                        </header>
-                    </div>
-                    <hr>
-
-
-                    <div class="comment mdl-color-text--grey-700">
-                        <header class="comment__header">
-                            <img class="comment__avatar2" height="48" width="48"
-                                 src="https://avatars3.githubusercontent.com/u/14341811?v=3&s=400" alt="진저애비">
-                            <div class="comment__author">
-                                <strong>
-                                    <a>진저애비</a>
-
-
-                                    upload file <a href="upload file" target="_blank">[view]</a>
-
-
-                                </strong>
-                            </div>
-                        </header>
-                    </div>
-                    <hr>
-
-
-                    <!-- comments end -->
+                    <p>{{comment}}</p>
                 </div>
                 <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
                     <div style="margin:10px;">
@@ -194,19 +136,54 @@
                         <button class="mdl-button" type="submit">upload file</button>
                     </div>
                 </form>
+
+                <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
+                    {{# comments}}
+                    <!-- comments start -->
+                    <comment class="comment mdl-color-text--grey-700 comment-form" id="comment-{{id}}">
+                        <header class="comment__header">
+                            <img class="comment__avatar2" height="48" width="48"
+                                 src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
+                            <div class="comment__author">
+                                <strong>
+                                    <a>{{writer.userId}}</a>
+                                    <span>{{comment}}</span>
+                                </strong>
+                            </div>
+                            <div class="comment-menu">
+                                <a class="link-modify-comment" href="/api/issues/{{issue.id}}/comments/{{id}}" style="display:inline-block">
+                                    <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                                        <i class="material-icons">edit</i>
+                                    </button>
+                                </a>
+                                <a class="link-delete-comment" href="/api/issues/{{issue.id}}/comments/{{id}}" style="display:inline-block">
+                                    <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                </a>
+                            </div>
+                        </header>
+                        <hr>
+                    </comment>
+                    <!-- comments end -->
+                    {{/ comments}}
+                </div>
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
-                    <form action="/issue/1/addComment" method="POST">
+                    <form action="/api/issues/{{issue.id}}/comments" method="POST">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
                             <label for="comment" class="mdl-textfield__label">Leave a comment</label>
                         </div>
-                        <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                        <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="add-comment">
                             <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">add comment</span>
                         </button>
                     </form>
                 </div>
+
+                {{/ issue}}
             </div>
         </div>
+
         <footer class="mdl-mini-footer">
             <div class="mdl-mini-footer--left-section">
                 <div class="mdl-logo mdl-color-text--grey-600">Proudly powered by <a href="https://github.com/Byeol">Byeol</a>
@@ -216,7 +193,53 @@
     </main>
     <div class="mdl-layout__obfuscator"></div>
 </div>
+
+<script type="text/template" id="commentTemplate">
+    <comment class="comment mdl-color-text--grey-700 comment-form" id="comment-{3}">
+        <header class="comment__header">
+            <img class="comment__avatar2" height="48" width="48"
+                 src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
+            <div class="comment__author">
+                <strong>
+                    <a>{0}</a>
+                    <span>{1}</span>
+                </strong>
+            </div>
+
+            <div class="comment-menu">
+                <a class="link-modify-comment" href="/api/issues/{2}/comments/{3}" style="display:inline-block">
+                    <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                        <i class="material-icons">edit</i>
+                    </button>
+                </a>
+                <a class="link-delete-comment" href="/api/issues/{2}/comments/{3}" style="display:inline-block">
+                    <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                        <i class="material-icons">delete</i>
+                    </button>
+                </a>
+            </div>
+        </header>
+        <hr>
+    </comment>
+</script>
+
+<script type="text/template" id="commentUpdateTemplate">
+    <div class="mdl-color-text--primary-contrast mdl-card__supporting-text modify-comment">
+        <form action="{0}" method="POST">
+            <input type="hidden" name="_method" value="PUT">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <textarea rows=5 class="mdl-textfield__input" name="modified-comment">{1}</textarea>
+            </div>
+            <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="modify-comment">
+                <i class="material-icons" role="presentation">check</i><span class="visuallyhidden">add comment</span>
+            </button>
+        </form>
+    </div>
+</script>
+
 <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-</body>
+<script src="/js/main.js"></script>
+
+</comment>
 </html>

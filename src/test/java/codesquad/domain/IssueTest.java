@@ -2,6 +2,7 @@ package codesquad.domain;
 
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
+import codesquad.domain.issue.Issue;
 import org.junit.Before;
 import org.junit.Test;
 

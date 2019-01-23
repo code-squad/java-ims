@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.domain.issue.Issue;
 import org.hibernate.annotations.Where;
 import support.domain.AbstractEntity;
 

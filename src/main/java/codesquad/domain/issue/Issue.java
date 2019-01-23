@@ -1,7 +1,12 @@
-package codesquad.domain;
+package codesquad.domain.issue;
 
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
+import codesquad.domain.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Where;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -12,6 +17,8 @@ import java.util.Objects;
 
 @Entity
 public class Issue extends AbstractEntity {
+    private static final Logger log = LoggerFactory.getLogger(Issue.class);
+
     @Size(min = 3, max = 100)
     @Column(nullable = false, length = 100)
     private String subject;
@@ -29,11 +36,17 @@ public class Issue extends AbstractEntity {
     private User assignee;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_to_milestone"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_milestone"))
     private Milestone milestone;
 
     @ManyToMany
     private List<Label> labels = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Where(clause = "deleted = false")
+    @OrderBy("id DESC")
+    private List<Comment> comments = new ArrayList<>();
 
     private boolean deleted = false;
 
@@ -53,10 +66,6 @@ public class Issue extends AbstractEntity {
         return this.writer.equals(loginUser);
     }
 
-    public boolean isClosed() {
-        return this.closed;
-    }
-
     public void update(User loginUser, Issue target) {
         if (!isMatchWriter(loginUser)) {
             throw new UnAuthorizedException();
@@ -66,6 +75,7 @@ public class Issue extends AbstractEntity {
         this.comment = target.comment;
     }
 
+    //TODO : comment 유무에 따른 delete 조건 변경 필요
     public List<DeleteHistory> delete(User loginUser) {
         if (!isMatchWriter(loginUser)) {
             throw new CannotDeleteException("작성자만 삭제 가능합니다.");
@@ -77,15 +87,16 @@ public class Issue extends AbstractEntity {
         return temp;
     }
 
+    //TODO : 아래 4개 메소드 중복제거 가능할까?
     public void toMilestone(User loginUser, Milestone milestone) {
-        if(!isMatchWriter(loginUser)) {
+        if (!isMatchWriter(loginUser)) {
             throw new UnAuthorizedException();
         }
 
         this.milestone = milestone;
     }
 
-    public void assignedBy(User loginUser, User assignee) {
+    public void toAssignee(User loginUser, User assignee) {
         if (!isMatchWriter(loginUser)) {
             throw new UnAuthorizedException();
         }
@@ -94,11 +105,19 @@ public class Issue extends AbstractEntity {
     }
 
     public void addLabel(User loginUser, Label label) {
-        if(!isMatchWriter(loginUser)) {
+        if (!isMatchWriter(loginUser)) {
             throw new UnAuthorizedException();
         }
 
         this.labels.add(label);
+    }
+
+    public void changeOpeningAndClosingStatus(User loginUser) {
+        if (!isMatchWriter(loginUser)) {
+            throw new UnAuthorizedException();
+        }
+
+        this.closed = !closed;
     }
 
     public String getSubject() {
@@ -131,6 +150,22 @@ public class Issue extends AbstractEntity {
 
     public void setMilestone(Milestone milestone) {
         this.milestone = milestone;
+    }
+
+    public boolean isClosed() {
+        return this.closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override
