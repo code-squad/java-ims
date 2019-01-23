@@ -29,6 +29,10 @@ public class Comment extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_issue"))
     private Issue issue;
 
+    @OneToOne        //(cascade = CascadeType.ALL) 하면 PersistentObjectException: detached entity passed to persist: codesquad.domain.issue.File] -->이미 db에 파일이 존재(키값 존재)하므로, comment가 생성될때, 똑같은 file 엔티티를 한번 더 저장하려고 해서 발생하는 에러.. 종속성 설정을 없앤다.
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_file"))
+    private File file;
+
     private boolean deleted = false;
 
     public Comment() {
@@ -74,6 +78,14 @@ public class Comment extends AbstractEntity {
 
     public void setIssue(Issue issue) {
         this.issue = issue;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 
     public boolean isOwner(User loginUser) {

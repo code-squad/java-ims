@@ -86,7 +86,7 @@ public class IssueService {
         //loginUser가 필요한가?? 로그인 했는지 체크를 여기서 해야하는가?
         Issue currentIssue = issueRepository.findById(issueId).get();
         return currentIssue.setMilestone(milestoneRepository.findById(milestoneId).get());  //세터에서 return값을 받는게 맞는지, 아니면 void로 하고, 해당 이슈의 마이슬톤 게터를 리턴하게 하는 게 맞는지? 전자는 코드 수가 더 적은 장점이 있는데 세터가 리턴값이 존재하는게 맞는가?
-//        issueRepository.save(currentIssue);     //@Transactional를 하면 굳이 save할 필요가 없지 않음?? 그래도 해야하는게 맞을까??
+//        issueRepository.upload(currentIssue);     //@Transactional를 하면 굳이 save할 필요가 없지 않음?? 그래도 해야하는게 맞을까??
     }
 
     @Transactional
@@ -105,7 +105,7 @@ public class IssueService {
                 .orElseThrow(UnAuthorizedException::new));
     }
 
-    @Transactional  //얘 지정 하면 왜 자동 디비에 저장될까 --> 트랜잭션이 끝난 시점에 em의 플러쉬메소드가 실행되면서, 영속성컨텍스트에 있는 엔티티를 디비에 저장하는것임?(디비 어느 테이블인 줄 알고 저장시킴??) 안쓸 경우는 직접 레포지터리.save 해줘야함
+    @Transactional  //얘 지정 하면 왜 자동 디비에 저장될까 --> 트랜잭션이 끝난 시점에 em의 플러쉬메소드가 실행되면서, 영속성컨텍스트에 있는 엔티티를 디비에 저장하는것임?(디비 어느 테이블인 줄 알고 저장시킴??) 안쓸 경우는 직접 레포지터리.upload 해줘야함
     public Comment addComment(User loginUser, long issueId, Comment comment) {
         if (loginUser.isGuestUser()) throw new UnAuthorizedException("로그인이 필요합니다.");
         Issue currentIssue = issueRepository.findById(issueId)

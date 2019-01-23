@@ -1,4 +1,5 @@
 console.log("main.js 시작");
+var fileData;   //업로드 파일 데이터
 
 //회원가입
 $("#join-submit").click(join);
@@ -103,6 +104,7 @@ function addComment(e){
     e.preventDefault();
     var json = new Object();
     json.contents = $("#comment").val();
+    json.file = fileData;
     var url = $("#add-comment").attr("action");
     console.log("url : " + url);
 
@@ -117,8 +119,14 @@ function addComment(e){
             console.log(data);
             console.log("writeOnly : " + data.formattedCreateDate);
             console.log("readOnly : " + data.formattedModifiedDate);
-            var commentTemplate = $("#write-comment-template").html();
-            var template = commentTemplate.format(data.writer.name, data.contents, data.issue.id, data.id, data.formattedCreateDate);
+            if(data.file) {
+                var commentTemplate = $("#write-comment-template").html();
+                var template = commentTemplate.format(data.writer.name, data.contents, data.issue.id, data.id, data.formattedCreateDate, data.file.originalName, data.file.id);
+            }
+            else {
+                var commentTemplate = $("#write-comment-template-no-upload-file").html();
+                var template = commentTemplate.format(data.writer.name, data.contents, data.issue.id, data.id, data.formattedCreateDate);
+            }
             $("#comments").append(template);
             $(".delete-comment-btn").click(deleteComment);
         }
@@ -198,6 +206,35 @@ function deleteComment(e) {
         error : onError,
         success : function(data, status, jqXHR) {
             deleteBtn.closest(".mdl-color-text--grey-700").remove();
+        }
+    })
+}
+
+//파일 첨부
+$(".upload-button").click(uploadFile);
+
+function uploadFile(e) {
+    e.preventDefault();
+    var uploadBtn = $(this);
+    var form = uploadBtn.closest("form")[0];
+    var formData = new FormData(form);
+
+    console.log("formData: " + formData);
+    var url = uploadBtn.closest("form").attr("action");
+    console.log("url : " + url);
+
+    $.ajax({
+        type : "post",
+        url : url,
+        data : formData,
+        processData : false,
+        contentType : false,
+        dataType : "json",
+        error : onError,
+        success : function(data, status, jqXHR) {
+            alert("파일이 업로드 되었습니다. 댓글 작성을 해주세요");
+            fileData = data;
+//            $("#write-comment-btn").click(addComment(e,data));    //이 방식으로 데이터 전달을 하면, 클릭 이벤트가 발생한 후, 메소드를 호출해야하는데 그냥 바로 호출해버림
         }
     })
 }
