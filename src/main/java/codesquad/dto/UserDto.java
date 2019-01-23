@@ -1,5 +1,6 @@
 package codesquad.dto;
 
+import codesquad.domain.user.ProfileImage;
 import codesquad.domain.user.User;
 
 import javax.validation.constraints.Size;
@@ -48,8 +49,8 @@ public class UserDto {
         this.name = name;
     }
 
-    public User _toUser() {
-        return new User(this.userId, this.password, this.name);
+    public User _toUser(ProfileImage profileImage) {
+        return new User(this.userId, this.password, this.name, profileImage);
     }
 
     @Override

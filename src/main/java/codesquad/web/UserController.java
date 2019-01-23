@@ -10,9 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+
+import java.io.IOException;
 
 import static codesquad.security.HttpSessionUtils.USER_SESSION_KEY;
 
@@ -30,8 +33,8 @@ public class UserController {
     }
 
     @PostMapping("")
-    public String create(UserDto userDto) {
-        userService.add(userDto);
+    public String create(UserDto userDto, MultipartFile pic) throws IOException {
+        userService.add(userDto, pic);
         return "redirect:/";
     }
 

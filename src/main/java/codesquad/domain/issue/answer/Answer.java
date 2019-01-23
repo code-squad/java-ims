@@ -6,7 +6,6 @@ import codesquad.domain.DeleteHistory;
 import codesquad.domain.issue.ContentType;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.user.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
