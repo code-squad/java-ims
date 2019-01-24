@@ -52,20 +52,18 @@ public class ApiAttachmentController {
         return new ResponseEntity<>(answer, HttpStatus.CREATED);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<FileSystemResource> download(@PathVariable long id) throws IOException {
-//        // TODO DB에서 id에 해당하는 파일 경로 정보를 얻는다.
-//        // 파일 경로 정보에 해당하는 파일을 읽어 클라이언트로 응답한다.
-//        // pom.xml text 파일을 읽어 응답하는 경우 예시
-//        File file = issueFileService.findById(id);
-//         Path path = Paths.get("./pom.xml");
-//        FileSystemResource resource = new FileSystemResource(path);
-//
-//         HttpHeaders header = new HttpHeaders();
-//         header.setContentType(MediaType.MULTIPART_FORM_DATA);
-//        String encoredFilename = URLEncoder.encode(file.getOriginalName(), "UTF-8").replace("+", "%20");
-//         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=pom.xml");
-//         header.setContentLength(resource.contentLength());
-//         return new ResponseEntity<FileSystemResource>(resource, header, HttpStatus.OK);
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<FileSystemResource> download(@PathVariable long id) throws IOException {
+        log.debug("download");
+        Attachment file = issueFileService.findById(id);
+        Path path = Paths.get(file.getSavedFileName());
+        FileSystemResource resource = new FileSystemResource(path);
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.MULTIPART_FORM_DATA);
+        String encoredFilename = URLEncoder.encode(file.getOriginalFileName(), "UTF-8").replace("+", "%20");
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + encoredFilename + ";filename*= UTF-8" + encoredFilename);
+        header.setContentLength(resource.contentLength());
+        return new ResponseEntity<>(resource, header, HttpStatus.OK);
+    }
 }

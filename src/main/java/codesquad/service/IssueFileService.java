@@ -31,4 +31,8 @@ public class IssueFileService {
         Attachment attachment = new Attachment(file.getOriginalFilename(), savedFileName);
         return fileRepository.save(attachment);
     }
+
+    public Attachment findById(long id) {
+        return fileRepository.findById(id).orElseThrow(UnAuthorizedException::new);
+    }
 }

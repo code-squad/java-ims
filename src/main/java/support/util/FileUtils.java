@@ -21,7 +21,7 @@ public class FileUtils {
         }
 
         FileCopyUtils.copy(file.getBytes(), target); // [내용 , 파일] | file.getBytes():byte의 배열(= String)(스트링보다 가벼움)
-        return dirName;
+        return dirName + File.separator + savedFileName;
     }
 
     // "uploadPath/2019/01/23/aaa.jpg" 형식으로 만들기
