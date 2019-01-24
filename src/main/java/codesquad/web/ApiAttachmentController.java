@@ -1,9 +1,12 @@
 package codesquad.web;
 
+import codesquad.domain.issue.answer.Answer;
 import codesquad.domain.issue.answer.Attachment;
 import codesquad.domain.user.User;
 import codesquad.security.LoginUser;
+import codesquad.service.AnswerService;
 import codesquad.service.IssueFileService;
+import codesquad.service.IssueService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -31,15 +34,22 @@ public class ApiAttachmentController {
     @Autowired
     private IssueFileService issueFileService;
 
+    @Autowired
+    private AnswerService answerService;
+
+    @Autowired
+    private IssueService issueService;
+
     @PostMapping("")
-    public ResponseEntity<Attachment> upload(@LoginUser User loginUser, MultipartFile file) throws IOException {
+    public ResponseEntity<Answer> upload(@LoginUser User loginUser, MultipartFile file, @PathVariable long issueId) throws IOException {
         log.debug("upload");
         log.debug("original file name : {}", file.getOriginalFilename());
         log.debug("contentType : {}", file.getContentType());
         log.debug(String.valueOf(file.getBytes()));
 
         Attachment uploadFile = issueFileService.upload(loginUser, file);
-        return new ResponseEntity<>(uploadFile, HttpStatus.CREATED);
+        Answer answer = answerService.addAttachment(loginUser, issueService.findById(issueId), uploadFile);
+        return new ResponseEntity<>(answer, HttpStatus.CREATED);
     }
 
 //    @GetMapping("/{id}")

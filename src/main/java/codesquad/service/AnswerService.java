@@ -5,6 +5,7 @@ import codesquad.domain.issue.Issue;
 import codesquad.domain.issue.IssueRepository;
 import codesquad.domain.issue.answer.Answer;
 import codesquad.domain.issue.answer.AnswerRepository;
+import codesquad.domain.issue.answer.Attachment;
 import codesquad.domain.user.User;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +54,11 @@ public class AnswerService {
         answer.setContents(comment);
         log.debug("업데이트 댓글 : " + answer.getContents());
         return answer;
+    }
+
+    @Transactional
+    public Answer addAttachment(User loginUser, Issue issue, Attachment uploadFile) {
+        log.debug("answer addAttachment!");
+        return answerRepository.save(new Answer(loginUser, issue, uploadFile.getOriginalFileName(), uploadFile));
     }
 }

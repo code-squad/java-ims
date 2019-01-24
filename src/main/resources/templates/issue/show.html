@@ -120,7 +120,7 @@
             {{/answers.answers}}
             <!-- comments end -->
         </div>
-        <form action="/api/issues/{{id}}/attachments" enctype="multipart/form-data" method="POST">
+        <form class="file-upload" action="/api/issues/{{id}}/attachments" enctype="multipart/form-data" method="POST">
             <div style="margin:10px;">
                 <input type="file" name="file" id="file"/>
                 <button class="mdl-button" type="submit">upload file</button>
