@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.domain.issue.answer.Answer;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.springframework.core.io.ClassPathResource;
@@ -18,12 +19,24 @@ public class ApiAttachmentControllerTest extends AcceptanceTest {
 
     @Test
     public void upload() {
+        ResponseEntity<Answer> result = createAttachment();
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    public void download() throws Exception {
+        createAttachment();
+
+        ResponseEntity<String> result = basicAuthTemplate().getForEntity("/api/issues/1/attachments/1", String.class);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        log.debug("body : {}", result.getBody());
+    }
+
+    public ResponseEntity<Answer> createAttachment() {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder
                 .multipartFormData()
                 .addParameter("file", new ClassPathResource("logback.xml"))
                 .build();
-        ResponseEntity<String> result = template.postForEntity("/attachments", request, String.class);
-
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        return basicAuthTemplate().postForEntity("/api/issues/1/attachments", request, Answer.class);
     }
 }
