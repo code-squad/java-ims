@@ -14,6 +14,12 @@ public class FileUtils {
         String savedFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
         String dirName = getCurrentUploadPath(uploadPath);
         File target = new File(dirName, savedFileName);
+
+        if (!target.exists()) {
+            File targetRoot = new File(dirName);
+            targetRoot.mkdirs();
+        }
+
         FileCopyUtils.copy(file.getBytes(), target); // [내용 , 파일] | file.getBytes():byte의 배열(= String)(스트링보다 가벼움)
         return dirName;
     }
