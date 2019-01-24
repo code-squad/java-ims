@@ -13,8 +13,8 @@ import support.test.HtmlFormDataBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class AttachmentControllerTest extends AcceptanceTest {
-    private static final Logger log = getLogger(AttachmentControllerTest.class);
+public class ApiAttachmentControllerTest extends AcceptanceTest {
+    private static final Logger log = getLogger(ApiAttachmentControllerTest.class);
 
     @Test
     public void upload() {

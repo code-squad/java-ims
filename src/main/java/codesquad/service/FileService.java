@@ -26,8 +26,7 @@ public class FileService {
     }
 
     private String uploadFile(String originalFileName, byte[] in) throws IOException {
-        UUID uuid = UUID.randomUUID();
-        String savedFileName = uuid.toString() + "_" + originalFileName;
+        String savedFileName = UUID.randomUUID().toString() + "_" + originalFileName;
         File out = new File(defaultLocation, savedFileName);
         FileCopyUtils.copy(in, out);
         return savedFileName;
