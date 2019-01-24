@@ -6,6 +6,7 @@ import codesquad.domain.issue.IssueRepository;
 import codesquad.domain.issue.answer.Answer;
 import codesquad.domain.issue.answer.AnswerRepository;
 import codesquad.domain.issue.answer.Attachment;
+import codesquad.domain.issue.answer.FileRepository;
 import codesquad.domain.user.User;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class AnswerService {
 
     @Autowired
     private IssueRepository issueRepository;
+
+    @Autowired
+    private FileRepository fileRepository;
 
     @Resource(name = "deleteHistoryService")
     private DeleteHistoryService deleteHistoryService;

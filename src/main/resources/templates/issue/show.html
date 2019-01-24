@@ -95,8 +95,12 @@
                         <strong>
                             <a>{{writer.userId}}</a>
 
-
+                            {{#attachment}}
+                            <span><a href="/api/issues/{{issue.id}}/attachments/{{id}}">{{originalFileName}}</a> {{formattedCreateDate}}</span>
+                            {{/attachment}}
+                            {{^attachment}}
                             <span>{{contents}} {{formattedCreateDate}}</span>
+                            {{/attachment}}
 
 
                         </strong>
