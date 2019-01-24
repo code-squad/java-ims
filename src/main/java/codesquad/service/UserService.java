@@ -2,12 +2,15 @@ package codesquad.service;
 
 import codesquad.UnAuthenticationException;
 import codesquad.UnAuthorizedException;
+import codesquad.domain.user.ProfileImage;
 import codesquad.domain.user.User;
 import codesquad.domain.user.UserRepository;
 import codesquad.dto.UserDto;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,17 +20,24 @@ public class UserService {
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
-    public User add(UserDto userDto) {
-        return userRepository.save(userDto._toUser());
+    @Resource(name = "fileService")
+    private FileService fileService;
+
+    public User add(UserDto userDto, MultipartFile file) throws IOException {
+        ProfileImage profileImage = ProfileImage.of(file);
+        if (!profileImage.isDefaultImage()) {
+            fileService.upload(profileImage, file);
+        }
+        return userRepository.save(userDto._toUser(profileImage));
     }
 
     public User update(User loginUser, long id, UserDto updatedUser) {
         User original = findByLoginId(loginUser, id);
-        original.update(loginUser, updatedUser._toUser());
+        original.update(loginUser, updatedUser._toUser(ProfileImage.DEFAULT_IMAGE));
         return userRepository.save(original);
     }
 
-    public User findByid(long id) {
+    public User findById(long id) {
         return userRepository.findById(id).orElseThrow(UnAuthorizedException::new);
     }
 

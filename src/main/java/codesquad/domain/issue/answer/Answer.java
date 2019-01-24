@@ -6,7 +6,6 @@ import codesquad.domain.DeleteHistory;
 import codesquad.domain.issue.ContentType;
 import codesquad.domain.issue.Issue;
 import codesquad.domain.user.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -28,6 +27,10 @@ public class Answer extends AbstractEntity {
     @Lob
     private String contents;
 
+    @OneToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_to_attachment"))
+    private Attachment attachment;
+
     private boolean deleted = false;
 
     public Answer() {
@@ -44,6 +47,11 @@ public class Answer extends AbstractEntity {
         this(writer, contents);
         this.issue = issue;
         this.deleted = false;
+    }
+
+    public Answer(User writer, Issue issue, String contents, Attachment attachment) {
+        this(writer, issue, contents);
+        this.attachment = attachment;
     }
 
     public boolean isOwner(User loginUser) {
@@ -97,6 +105,14 @@ public class Answer extends AbstractEntity {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
     @Override

@@ -20,7 +20,7 @@ public class Milestone extends AbstractEntity {
     private String endDate;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_milestone_writer"))
     private User writer;
 
     private Boolean deleted = false;

@@ -21,6 +21,7 @@ $(document).on("click", '.register a', register);
 $(".answer-write button[type=submit]").click(addAnswer);
 $(".comments").on("click", ".delete-answer-form button[type=submit]", deleteAnswer);
 $(".comments").on("click", ".link-modify-article", updateAnswerForm);
+$(".file-upload").on("click", "button[type=submit]", fileUpload);
 
 function login(e) {
     e.preventDefault();
@@ -324,6 +325,44 @@ function updateAnswer(e) {
             var answerTemplate = $("#answerTemplate").html();
             var template = answerTemplate.format(data.writer.userId, data.contents, data.formattedCreateDate, data.issue.id, data.id);
             targetComment.replaceWith(template);
+        }
+    })
+}
+
+function fileUpload(e) {
+    console.log("파일 업로드");
+    e.preventDefault();
+
+    var url = $(this).closest('form').attr('action');
+    console.log("url : " + url);
+
+    var form = $(this).closest('form')[0];
+    console.log(form);
+
+    var formData = new FormData(form);
+    console.log("form : " + formData);
+
+    $.ajax({
+        type : 'post',
+        url : url,
+        data : formData,
+        enctype : 'multipart/form-data',
+        processData: false,
+        contentType: false,
+        error : function(xhr) {
+            console.log("파일 업로드 에러");
+            console.log(xhr);
+        },
+        success : function(data) {
+            console.log("파일 업로드 성공");
+
+            var answerTemplate = $("#answerTemplate").html();
+            var template = answerTemplate.format(data.writer.userId, "<a href='/api/issues/" + data.issue.id + "/attachments/" + data.attachment.id + "'>" + data.attachment.originalFileName + "</a>", data.formattedCreateDate, data.issue.id, data.id);
+
+            console.log("data.formattedDate : " + data.formattedDate);
+
+            $("#comments").append(template);
+            $("textarea[name=comment]").val("");
         }
     })
 }

@@ -13,7 +13,7 @@ public class Label extends AbstractEntity {
     private String label;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_writer"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_label_writer"))
     private User writer;
 
     public Label() {

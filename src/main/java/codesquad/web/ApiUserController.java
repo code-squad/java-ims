@@ -10,10 +10,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 
 import static codesquad.security.HttpSessionUtils.USER_SESSION_KEY;
@@ -28,8 +30,8 @@ public class ApiUserController {
     private UserService userService;
 
     @PostMapping("")
-    public ResponseEntity<Void> create(@Valid @RequestBody UserDto user) {
-        User savedUser = userService.add(user);
+    public ResponseEntity<Void> create(@Valid @RequestBody UserDto user, MultipartFile file) throws IOException {
+        User savedUser = userService.add(user, file);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/api/users/" + savedUser.getId()));

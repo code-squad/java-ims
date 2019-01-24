@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.domain.user.ProfileImage;
 import codesquad.domain.user.User;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,7 +29,7 @@ public class UserValidationTest {
 
     @Test
     public void userIdWhenIsEmpty() throws Exception {
-        User user = new User("", "password", "name");
+        User user = new User("", "password", "name", ProfileImage.DEFAULT_IMAGE);
         Set<ConstraintViolation<User>> constraintViolcations = validator.validate(user);
         assertThat(constraintViolcations.size(), is(1));
 

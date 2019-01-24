@@ -31,7 +31,7 @@ public class ApiAssigneeController {
     public ResponseEntity<Void> register(@LoginUser User loginUser, @PathVariable long id, @PathVariable long assigneesId) {
         log.debug("이슈에 담당자 적용");
         log.debug("담당자 아이디 : " + assigneesId);
-        issueService.registerAssignee(userService.findByid(assigneesId), id, loginUser);
+        issueService.registerAssignee(userService.findById(assigneesId), id, loginUser);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

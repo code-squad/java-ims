@@ -50,7 +50,7 @@ public class HtmlFormDataBuilder {
 
     public static HtmlFormDataBuilder multipartFormData() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+//        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML)); 내가 서버로부터 받을 타입
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         return new HtmlFormDataBuilder(headers);
     }
