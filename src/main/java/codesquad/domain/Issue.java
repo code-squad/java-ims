@@ -8,6 +8,7 @@ import org.hibernate.annotations.Where;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +16,12 @@ import java.util.List;
 @Entity
 public class Issue extends AbstractEntity {
 
+    @NotEmpty
     @Size(min = 3, max = 50)
     @Column(nullable = false, length = 50)
     private String subject;
 
+    @NotEmpty
     @Size(min = 3, max = 500)
     @Column(nullable = false, length = 500)
     private String comment;

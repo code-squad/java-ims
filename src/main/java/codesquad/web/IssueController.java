@@ -8,10 +8,14 @@ import codesquad.service.*;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -44,7 +48,14 @@ public class IssueController {
     }
 
     @PostMapping("")
-    public String create(@LoginUser User user , @Valid IssueDto issueDto) {
+    public String create(@LoginUser User user , @Valid IssueDto issueDto, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            List<ObjectError> errors = bindingResult.getAllErrors();
+            for (ObjectError error : errors) {
+                log.debug("issue create error : {}", error.getDefaultMessage());
+            }
+            return "redirect:/issues";
+        }
         log.debug("IssueDto : {}", issueDto.toString());
         issueService.add(user ,issueDto);
         return "redirect:/";
@@ -68,7 +79,14 @@ public class IssueController {
     }
 
     @PutMapping("/{id}")
-    public String updated(@LoginUser User loginUser, @PathVariable long id, IssueDto target) {
+    public String updated(@LoginUser User loginUser, @PathVariable long id, IssueDto target, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<ObjectError> errors = bindingResult.getAllErrors();
+            for (ObjectError error : errors) {
+                log.debug("update error : {}",error.getDefaultMessage());
+            }
+            return "redirect:/users/{id}/update";
+        }
         issueService.update(loginUser, id, target);
         return "redirect:/";
     }
