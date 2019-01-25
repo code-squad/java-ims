@@ -38,6 +38,13 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    public void create_invalid() throws Exception {
+        UserDto newUser = new UserDto("1", "1", "1");
+        ResponseEntity<String> response = template().postForEntity("/api/users", newUser, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
     public void show_다른_사람() throws Exception {
         UserDto newUser = createUserDto("testuser2");
         String location = createResource("/api/users", newUser);

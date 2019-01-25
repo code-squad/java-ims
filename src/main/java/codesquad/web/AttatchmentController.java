@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 import javax.naming.CannotProceedException;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -53,7 +54,9 @@ public class AttatchmentController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.TEXT_XML);
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + saveName);
+        String encoredFilename = URLEncoder.encode(saveName, "UTF-8").replace("+", "%20");
+        headers.set(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment;filename=" + encoredFilename + ";filename*= UTF-8''" + encoredFilename);
         headers.setContentLength(resource.contentLength());
         log.debug("!!!@#!@# {}", headers);
         return new ResponseEntity<FileSystemResource>(resource, headers, HttpStatus.OK);

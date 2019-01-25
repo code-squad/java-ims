@@ -8,6 +8,9 @@ import support.domain.AbstractEntity;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -15,20 +18,21 @@ import java.util.Objects;
 public class User extends AbstractEntity {
     public static final GuestUser GUEST_USER = new GuestUser();
 
-    @Size(min = 3, max = 20)
+    @NotEmpty
+    @Size(min = 2, max = 20)
     @Column(unique = true, nullable = false, length = 20)
     private String userId;
 
-    @Size(min = 6, max = 20)
+    @NotEmpty
+    @Size(min = 4, max = 20)
     @Column(nullable = false, length = 20)
     @JsonIgnore
     private String password;
 
-    @Size(min = 3, max = 20)
+    @NotEmpty
+    @Size(min = 2, max = 20)
     @Column(nullable = false, length = 20)
     private String name;
-
-
 
     public User() {
     }

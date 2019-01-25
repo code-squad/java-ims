@@ -38,6 +38,13 @@ public class ApiIssueAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    public void create_valdiation() {
+        Issue issue = new Issue("1", "2", UserTest.USER, false);
+        ResponseEntity<String> response =  basicAuthTemplate(UserTest.USER).postForEntity("/api/issues", issue, String.class);
+        softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
     public void create_without_login() {
         ResponseEntity<Issue> response = template().postForEntity("/api/issues", issue, Issue.class);
         softly.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
