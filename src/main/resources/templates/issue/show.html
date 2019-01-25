@@ -130,7 +130,7 @@
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
                     <p>{{comment}}</p>
                 </div>
-                <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
+                <form action="/issues/{{id}}/attachments" enctype="multipart/form-data" method="POST">
                     <div style="margin:10px;">
                         <input type="file" name="file" id="file"/>
                         <button class="mdl-button" type="submit">upload file</button>
