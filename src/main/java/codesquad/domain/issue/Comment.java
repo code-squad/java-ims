@@ -2,6 +2,7 @@ package codesquad.domain.issue;
 
 import codesquad.CannotDeleteException;
 import codesquad.UnAuthorizedException;
+import codesquad.domain.Attachment;
 import codesquad.domain.ContentType;
 import codesquad.domain.DeleteHistory;
 import codesquad.domain.User;
@@ -29,6 +30,9 @@ public class Comment extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_issue"))
     private Issue issue;
+
+    @OneToOne
+    private Attachment attachment;
 
     private boolean deleted = false;
 
@@ -98,6 +102,14 @@ public class Comment extends AbstractEntity {
         this.issue = issue;
     }
 
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
+    }
+
     @Override
     public String toString() {
         return "Comment{" +
@@ -106,5 +118,9 @@ public class Comment extends AbstractEntity {
                 ", writer=" + writer +
                 ", issue=" + issue +
                 '}';
+    }
+
+    public void attach(Attachment attachment) {
+        this.attachment = attachment;
     }
 }

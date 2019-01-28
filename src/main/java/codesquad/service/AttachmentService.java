@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityNotFoundException;
 
 @Service
 public class AttachmentService {
@@ -25,5 +26,9 @@ public class AttachmentService {
     public Attachment save(User loginUser, Attachment attachment) {
         attachment.loadedBy(loginUser);
         return add(attachment);
+    }
+
+    public Attachment findById(long id) {
+        return attachmentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 }

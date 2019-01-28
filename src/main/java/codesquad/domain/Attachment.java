@@ -1,6 +1,5 @@
 package codesquad.domain;
 
-import codesquad.domain.issue.Issue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,10 +18,6 @@ public class Attachment extends AbstractEntity {
     private String convertedName;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_attachment_issue"))
-    private Issue issue;
-
-    @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_attachment_uploader"))
     private User uploader;
 
@@ -30,11 +25,10 @@ public class Attachment extends AbstractEntity {
 
     }
 
-    public static Attachment convertedAttachment(MultipartFile file, String convertedName, Issue issue) {
+    public static Attachment convertedAttachment(MultipartFile file, String convertedName) {
         Attachment attachment = new Attachment();
         attachment.originalName = file.getOriginalFilename();
         attachment.convertedName = convertedName;
-        attachment.issue = issue;
         return attachment;
     }
 
