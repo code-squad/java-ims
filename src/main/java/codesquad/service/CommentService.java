@@ -1,6 +1,7 @@
 package codesquad.service;
 
 import codesquad.CannotDeleteException;
+import codesquad.domain.Attachment;
 import codesquad.domain.User;
 import codesquad.domain.issue.Comment;
 import codesquad.domain.issue.CommentRepository;
@@ -48,5 +49,13 @@ public class CommentService {
     public Comment update(User loginUser, long id, String body) {
         Comment comment = commentRepository.findById(id).orElseThrow(NoResultException::new);
         return comment.update(loginUser, body);
+    }
+
+    @Transactional
+    public Comment uploadAttachment(User loginUser, long issueId, Attachment attachment) {
+        Issue issue = issueService.findById(issueId);
+        Comment comment = new Comment(loginUser, issue, attachment.getOriginalName());
+        comment.attach(attachment);
+        return add(comment);
     }
 }

@@ -130,16 +130,18 @@
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
                     <p>{{comment}}</p>
                 </div>
-                <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
-                    <div style="margin:10px;">
-                        <input type="file" name="file" id="file"/>
-                        <button class="mdl-button" type="submit">upload file</button>
-                    </div>
-                </form>
+                <!--<form action="/issues/{{id}}/attachments" enctype="multipart/form-data" method="POST">-->
+                    <!--<div style="margin:10px;">-->
+                        <!--<input type="file" name="file" id="file"/>-->
+                        <!--<button class="mdl-button" type="submit">upload file</button>-->
+                    <!--</div>-->
+                <!--</form>-->
 
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
                     {{# comments}}
                     <!-- comments start -->
+
+
                     <comment class="comment mdl-color-text--grey-700 comment-form" id="comment-{{id}}">
                         <header class="comment__header">
                             <img class="comment__avatar2" height="48" width="48"
@@ -147,7 +149,12 @@
                             <div class="comment__author">
                                 <strong>
                                     <a>{{writer.userId}}</a>
+                                    {{^ attachment}}
                                     <span>{{comment}}</span>
+                                    {{/ attachment}}
+                                    {{# attachment}}
+                                    <span>{{comment}}  <a href="/issues/{{issue.id}}/attachments/{{id}}">[DOWNLOAD]</a></span>
+                                    {{/ attachment}}
                                 </strong>
                             </div>
                             <div class="comment-menu">
@@ -168,7 +175,14 @@
                     <!-- comments end -->
                     {{/ comments}}
                 </div>
+                    <form action="/issues/{{issue.id}}/attachments" enctype="multipart/form-data" method="POST">
+                        <div style="margin:10px;">
+                            <input type="file" name="file" id="file"/>
+                            <button class="mdl-button" type="submit">upload file</button>
+                        </div>
+                    </form>
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+
                     <form action="/api/issues/{{issue.id}}/comments" method="POST">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
