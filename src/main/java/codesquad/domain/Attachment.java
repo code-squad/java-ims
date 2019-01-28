@@ -15,6 +15,9 @@ public class Attachment extends AbstractEntity {
     private String originalName;
 
     @Column
+    private String extension;
+
+    @Column
     private String convertedName;
 
     @ManyToOne
