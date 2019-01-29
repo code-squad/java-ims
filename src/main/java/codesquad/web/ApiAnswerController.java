@@ -30,8 +30,10 @@ public class ApiAnswerController {
     private AnswerService answerService;
 
     @PostMapping("")
-    public ResponseEntity<Answer> create(@LoginUser User loginUser, @PathVariable long issueId, @RequestBody String answer) {
+    public ResponseEntity<Answer> create(@LoginUser User loginUser, @PathVariable long issueId, @RequestBody Answer input) {
 
+        String answer = input.getAnswer();
+        logger.debug("## create answer: {}",  answer);
         logger.debug("create ## : {}", answer );
         Answer newAnswer = answerService.add(loginUser, issueId, answer);
         logger.debug("create ## : {}",  newAnswer.getFormattedCreateDate());

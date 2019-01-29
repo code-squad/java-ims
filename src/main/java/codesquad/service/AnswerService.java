@@ -1,14 +1,12 @@
 package codesquad.service;
 
-import codesquad.UnAuthorizedException;
+import codesquad.exception.UnAuthorizedException;
 import codesquad.domain.*;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
-import javax.naming.AuthenticationException;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;

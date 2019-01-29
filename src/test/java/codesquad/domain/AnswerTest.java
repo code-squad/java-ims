@@ -1,6 +1,6 @@
 package codesquad.domain;
 
-import codesquad.UnAuthorizedException;
+import codesquad.exception.UnAuthorizedException;
 import org.junit.Test;
 
 import static codesquad.domain.UserTest.JAVAJIGI;

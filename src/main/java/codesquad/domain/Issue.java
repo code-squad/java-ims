@@ -1,8 +1,8 @@
 package codesquad.domain;
 
-import codesquad.UnAuthorizedException;
+import codesquad.exception.UnAuthorizedException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
-import sun.jvm.hotspot.debugger.cdbg.basic.LazyBlockSym;
 import support.domain.AbstractEntity;
 
 import javax.persistence.*;
@@ -34,6 +34,10 @@ public class Issue extends AbstractEntity {
     @ManyToMany
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_issue_labels"))
     private List<Label> lables;
+
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.REMOVE)
+    @OrderBy("id ASC")
+    private List<Attachment> attachments;
 
     private boolean deleted = false;
 
@@ -102,6 +106,14 @@ public class Issue extends AbstractEntity {
         this.lables = lables;
     }
 
+    public List<Attachment> getAttachments () {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
+    }
+
     public boolean isOwner(User loginUser) {
         return writer.equals(loginUser);
     }
@@ -130,5 +142,9 @@ public class Issue extends AbstractEntity {
 
     public void addLable(Label lable) {
         this.lables.add(lable);
+    }
+
+    public void addAttachment(Attachment attachment) {
+        this.attachments.add(attachment);
     }
 }

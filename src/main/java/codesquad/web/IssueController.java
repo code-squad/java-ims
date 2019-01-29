@@ -50,6 +50,9 @@ public class IssueController {
     public String show(@PathVariable long id, Model model) {
         log.debug("### show");
         Issue issue = issueService.findById(id);
+        log.debug("## show : {}",  issue.toString());
+
+
         model.addAttribute("issue", issue);
         log.debug("### issue : {}", issueService.findById(id) );
         model.addAttribute("milestones", milestoneService.findAll());
@@ -59,6 +62,7 @@ public class IssueController {
         model.addAttribute("labels", labelService.findAll());
 
         model.addAttribute("answers", answerService.findByIssue(issue));
+
 
         return "/issue/show";
     }

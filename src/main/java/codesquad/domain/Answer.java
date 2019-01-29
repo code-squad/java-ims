@@ -1,6 +1,6 @@
 package codesquad.domain;
 
-import codesquad.UnAuthorizedException;
+import codesquad.exception.UnAuthorizedException;
 import org.slf4j.Logger;
 import support.domain.AbstractEntity;
 
@@ -23,6 +23,8 @@ public class Answer extends AbstractEntity {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_issue"))
     private Issue issue;
+
+
 
     private String answer;
 
