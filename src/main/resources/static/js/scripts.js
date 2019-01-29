@@ -1,3 +1,5 @@
+'use strict';
+
 // ## Login
 $("#login button[type=submit]").click(login);
 
@@ -121,14 +123,27 @@ function addAnswers(e) {
 
     var url = $(".add_answers").attr("action");
     console.log(url);
+//
+//    var queryString = $("#add_answers").serialize();
+//    console.log(queryString);
+//
 
-    var queryString = $(".add_answers").serialize();
-    console.log(queryString);
+    var json = new Object();
+    json.answer = $('#comment').val();
+
+    console.log(JSON.stringify(json));
+    console.log(json);
+
+
+
 
     $.ajax({
         type : 'post',
         url : url,
-        data : queryString,
+       // data : queryString,
+        data : JSON.stringify(json),
+        contentType: 'application/json',
+
         error : function() {
             console.log("error");
             location.href = "/users/login/form";
@@ -149,12 +164,12 @@ console.log(data.formattedDate);
 }
 
 // ### update answers form
-$("#updateAnswerForm").click(updateAnswerForm);
+$(".updateAnswerForm").click(updateAnswerForm);
 function updateAnswerForm(e) {
     console.log("click updateAnswerForm");
     e.preventDefault();
 
-    var url = $("#updateAnswerForm").attr("href");
+    var url = $(this).attr("href");
     console.log(url);
 
     $.ajax({
@@ -240,6 +255,66 @@ function deleteAnswer(e) {
         }
     });
 }
+
+// 파일 업로드
+var singleUploadForm = document.querySelector('#singleUploadForm');
+var singleUploadFileInput = document.querySelector('#singleUploadFileInput');
+var singleFileUploadError = document.querySelector('#singleFileUploadError');
+var singleFileUploadSuccess = document.querySelector('#singleFileUploadSuccess');
+$("#singleUploadForm button[type=submit]").click(uploadFile);
+function uploadFile(e) {
+    e.preventDefault();
+    console.log('uploadFile');
+
+
+    var url = $('#singleUploadForm').attr("action");
+    console.log(url);
+
+
+    var files = singleUploadFileInput.files;
+    if (files.length == 0) {
+        singleFileUploadError.innerHTML = "Please select a file";
+        singleFileUploadError.style.display = "block";
+    }
+
+
+    var formData = new FormData;
+    formData.append("file", files[0]);
+
+
+
+    $.ajax({
+        type : 'post',
+        url : url,
+        data : formData,
+        processData: false,
+        contentType : false,
+        error : function() {
+
+            singleFileUploadSuccess.style.display = "none";
+            singleFileUploadError.innerHTML = "Some Error Occurred";
+        },
+        success : function(data) {
+            singleFileUploadError.style.display = "none";
+      singleFileUploadSuccess.innerHTML = "<p>File Uploaded Successfully.</p><p>DownloadUrl : <a href='"  + data.fileDownloadUri + "' target='_blank'>" + data.fileDownloadUri + "</a></p>";
+                   singleFileUploadSuccess.style.display = "block";
+        }
+    });
+
+    /*
+
+    var files = singleUploadFileInput.files[0];
+    var formData = new FormData();
+    formData.append("file", file);
+
+    $.ajax({
+        type : 'post',
+        
+    });
+    */
+}
+
+
 
 String.prototype.format = function() {
   var args = arguments;

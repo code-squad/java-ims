@@ -134,6 +134,10 @@
                     <p>{{issueBody.comment}}</p>
                 </div>
 
+                <div class="comment mdl-color-text--grey-700 mdl-card__supporting-text">
+                    <p>{{#labels}} {{label}} {{/labels}}</p>
+                </div>
+
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
 
 
@@ -159,6 +163,8 @@
                     <!--<hr>-->
 
 
+
+
                     {{#answers}}
                     <div class="comment mdl-color-text--grey-700">
                         <header class="comment__header">
@@ -168,28 +174,23 @@
                             <div class="comment__author answerForm">
                                 <strong>
                                     <a>{{writer.userId}}</a>
-
                                     <span>{{answer}} on {{formattedCreateDate}}</span>
-
-                                    <!--answer 수정-->
-                                    <a href="/api/issues/{{issue.id}}/answers/{{id}}/updateForm"
-                                       id = "updateAnswerForm" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-                                        <i class="material-icons">edit</i>
-                                    </a>
-
-                                    <!--answer 삭제-->
-                                    <a href="/api/issues/{{issue.id}}/answers/{{id}}" id="issueds-menu-lower-right"
-                                       class="mdl-button mdl-js-button mdl-button--icon deleteAnswer">
-                                        <i class="material-icons">delete</i>
-                                    </a>
 
                                 </strong>
                             </div>
+                            <!--answer 수정-->
+                            <a href="/api/issues/{{issue.id}}/answers/{{id}}/updateForm"
+                               class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect updateAnswerForm">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            <!--answer 삭제-->
+                            <a href="/api/issues/{{issue.id}}/answers/{{id}}" id="issueds-menu-lower-right"
+                               class="mdl-button mdl-js-button mdl-button--icon deleteAnswer">
+                                <i class="material-icons">delete</i>
+                            </a>
                         </header>
+                        <hr>
                     </div>
-                    <hr>
-
-
                     {{/answers}}
 
 
@@ -219,16 +220,24 @@
 
                     <!-- comments end -->
                 </div>
-                <form action="/issue/1/uploadFile" enctype="multipart/form-data" method="POST">
+                <form action="/issues/{{id}}/uploadFile" enctype="multipart/form-data" method="POST" id="singleUploadForm" name="singleUploadForm">
                     <div style="margin:10px;">
-                        <input type="file" name="file" id="file"/>
+                        <input type="file" name="file" id="singleUploadFileInput" />
                         <button class="mdl-button" type="submit">upload file</button>
                     </div>
+                    <div class="upload-response">
+                        <div id="singleFileUploadError"></div>
+                        <div id="singleFileUploadSuccess"></div>
+                    </div>
+                    <div class="upload-response">
+                        <div id="downloadList" a href="/downloadFile/{attachments.originalFileName}">{{attachments.get.originalFileName}}</div>
+                    </div>
                 </form>
+
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
                     <form action="/api/issues/{{id}}/answers" method="POST" class="add_answers">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <textarea rows=5 class="mdl-textfield__input" id="comment" name="comment"></textarea>
+                            <textarea rows=5 class="mdl-textfield__input" id="comment" name="answer"></textarea>
                             <label for="comment" class="mdl-textfield__label">Leave a comment</label>
                         </div>
                         <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">

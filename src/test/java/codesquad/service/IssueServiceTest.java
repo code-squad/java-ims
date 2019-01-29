@@ -1,6 +1,6 @@
 package codesquad.service;
 
-import codesquad.UnAuthorizedException;
+import codesquad.exception.UnAuthorizedException;
 import codesquad.domain.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +12,6 @@ import support.test.BaseTest;
 
 import java.util.Optional;
 
-import static codesquad.domain.IssueFixture.ISSUE_BODY_JSON_PARSE_ERROR;
 import static codesquad.domain.IssueFixture.ISSUE_NULLPOINT_EXCEPTION;
 import static codesquad.domain.MilestoneFixture.PROGRAMMING;
 import static codesquad.domain.UserTest.JAVAJIGI;

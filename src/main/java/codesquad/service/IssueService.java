@@ -1,6 +1,6 @@
 package codesquad.service;
 
-import codesquad.UnAuthorizedException;
+import codesquad.exception.UnAuthorizedException;
 import codesquad.domain.*;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
