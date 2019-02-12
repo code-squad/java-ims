@@ -29,6 +29,8 @@ public class ApiUserController {
 
     @PostMapping("")
     public ResponseEntity<Void> create(@Valid @RequestBody UserDto user) {
+        log.debug("##### create user api");
+        log.debug("user : {}", user.toString());
         User savedUser = userService.add(user);
 
         HttpHeaders headers = new HttpHeaders();

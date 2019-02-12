@@ -18,7 +18,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Resource(name = "userService")
     private UserService userService;
@@ -36,7 +36,7 @@ public class UserController {
 
     @GetMapping("/{id}/form")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
-        log.debug("LoginUser : {}", loginUser);
+        logger.debug("LoginUser : {}", loginUser);
         model.addAttribute("user", userService.findById(loginUser, id));
         return "/user/updateForm";
     }

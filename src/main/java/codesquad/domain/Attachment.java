@@ -19,12 +19,14 @@ public class Attachment extends AbstractEntity {
     private User writer;
 
     @Size(max = 260)
+    private
     String originalFileName;
 
     @Size(max = 32)
+    private
     String storedFileName;
 
-    String path;
+    private String path;
 
     public Attachment() {
 

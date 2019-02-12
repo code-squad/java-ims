@@ -1,5 +1,105 @@
 'use strict';
 
+// create users
+$("#createUser button[type=submit]").click(create);
+function create(e) {
+    e.preventDefault();
+
+    var url = $('#createUser').attr("action");
+    console.log(url);
+
+    var user = {
+            userId : $('#userId').val(),
+            name : $('#name').val(),
+            password : $('#password').val()
+    };
+
+    console.log(JSON.stringify(user));
+
+    $.ajax({
+        url : url,
+        method : 'POST',
+        data : JSON.stringify(user),
+        contentType : "application/json",
+        success : function() {
+            location.href="/";
+        },
+        error : function(response) {
+            console.log(response);
+            makingErrorField(response);
+        }
+    });
+
+    var makingErrorField = function(response) {
+        const errorFields = response.responseJSON.errors;
+
+        if (!errorFields) {
+            alert(response);
+            return;
+        }
+
+        console.log(errorFields);
+
+        var $field, error;
+
+        for (var i = 0, length = errorFields.length; i < length; i++) {
+            error = errorFields[i];
+
+            console.log(error.errorMessage);
+
+
+            //document.querySelector(".answer-error").innerHTML = error.fieldName + error.errorMessage;
+
+            $field = $('#' + error['fieldName']);
+
+           if($field && $field.length > 0){
+                      $field.siblings('.error-message').remove();
+                      $field.after('<span class="error-message text-muted taxt-small text-danger">'+error.errorMessage+'</span>');
+           }
+
+        }
+    }
+}
+
+/*
+let formId = document.querySelector(".check-userId");
+let formName = document.querySelector(".check-name");
+let formPassword = document.querySelector(".check-password");
+
+formId.addEventListener("change", function(evt) {
+
+    if(evt.target.name === "userId" && evt.target.value.length >= 5) {
+        let answerName = document.querySelector(".answer-userId").innerHTML = "올바른 아이디입니다.";
+    } else {
+     let answerName = document.querySelector(".answer-userId").innerHTML = "아이디는 5자리 이상이어야 합니다.";
+    }
+
+});
+
+formName.addEventListener("change", function(evt) {
+
+    if(evt.target.name === "name" && evt.target.value.length >= 3) {
+        let answerName = document.querySelector(".answer-name").innerHTML = "올바른 이름입니다.";
+    } else {
+     let answerName = document.querySelector(".answer-name").innerHTML = "이름은 3자 이상이어야 합니다.";
+    }
+
+});
+
+formPassword.addEventListener("change", function(evt) {
+
+    if(evt.target.name === "password" && evt.target.value.length >= 8) {
+        let answerName = document.querySelector(".answer-password").innerHTML = "올바른 비밀번호입니다.";
+    } else {
+     let answerName = document.querySelector(".answer-password").innerHTML = "비밀번호는 8자리 이상이어야 합니다.";
+    }
+
+});
+*/
+
+
+
+
 // ## Login
 $("#login button[type=submit]").click(login);
 

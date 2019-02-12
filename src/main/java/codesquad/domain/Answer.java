@@ -24,8 +24,6 @@ public class Answer extends AbstractEntity {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_issue"))
     private Issue issue;
 
-
-
     private String answer;
 
     private boolean deleted = false;

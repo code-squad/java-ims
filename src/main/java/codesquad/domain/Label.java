@@ -12,7 +12,6 @@ public class Label extends AbstractEntity {
     @Column(nullable = false)
     private String label;
 
-
     public String getLabel() {
         return label;
     }
