@@ -23,9 +23,9 @@
             <!-- Tabs -->
             <nav class="mdl-navigation">
                 <a class="mdl-navigation__link" href="/">Issues</a>
-                <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-                <a class="mdl-navigation__link" href="/user/login.html">login</a>
-                <a class="mdl-navigation__link" href="/user/join.html">join</a>
+                <a class="mdl-navigation__link" href="/milestone/list">Milestones</a>
+                <a class="mdl-navigation__link" href="/user/login">login</a>
+                <a class="mdl-navigation__link" href="/user/join">join</a>
             </nav>
         </div>
     </header>
@@ -37,9 +37,9 @@
                 <i class="material-icons" role="presentation">arrow_back</i>
             </a>
         </div>
-        <form action="/newMilestone" method="POST">
-            <div class="issues__posts mdl-grid">
-                <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+        <div class="issues__posts mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+                <form action="/issues" method="post">
                     <div class="mdl-card__title mdl-color-text--grey-50" style="height:100px;">
                         <i class="material-icons">check_circle</i>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:90%">
@@ -47,14 +47,11 @@
                             <label class="mdl-textfield__label" for="subject">Subject</label>
                         </div>
                     </div>
-                    <div class="mdl-color-text--primary-contrast" style="padding-top:40px; padding-bottom:40px;">
-                        <div class="input-date" style="padding:15px;">
-                            <label for="startDate" style="color:#888">start date</label>
-                            <input type="datetime-local" name="startDate" id="startDate" required>
-                        </div>
-                        <div class="input-date" style="padding:15px;">
-                            <label for="endDate" style="color:#888">end date</label>
-                            <input type="datetime-local" name="endDate" id="endDate" required>
+                    <div class="mdl-color-text--primary-contrast mdl-card__supporting-text new-comment">
+                        <div class="mdl-textfield mdl-js-textfield" style="width:100%">
+                            <textarea class="mdl-textfield__input" style="color:#888" type="text" rows="10" id="comment"
+                                      name="comment" required></textarea>
+                            <label class="mdl-textfield__label" for="comment">Comment</label>
                         </div>
                     </div>
                     <div class="mdl-color-text--primary-contrast mdl-card__supporting-text">
@@ -62,9 +59,9 @@
                                 style="margin:10px auto; width:200px;">Submit
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
         <footer class="mdl-mini-footer">
             <div class="mdl-mini-footer--left-section">
                 <div class="mdl-logo mdl-color-text--grey-600">Proudly powered by <a href="https://github.com/Byeol">Byeol</a>

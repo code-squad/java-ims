@@ -48,11 +48,12 @@
                         <i class="material-icons">delete</i>
                     </a>
                 </div>
+                {{#issues}}
                 <div class="mdl-card__title mdl-color-text--grey-50">
                     <i class="material-icons">check_circle</i>
-                    <h2 class="mdl-card__title-text">testIssue #1</h2>
+                    <h2 class="mdl-card__title-text">{{subject}} #{{id}}</h2>
                 </div>
-
+                {{/issues}}
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
                     <img class="minilogo" height="48" width="48"
                          src="https://avatars2.githubusercontent.com/u/520500?v=3&s=140" alt="javajigi">
@@ -133,9 +134,11 @@
                         </li>
                     </ul>
                 </div>
+                {{#issues}}
                 <div class="mdl-color-text--grey-700 mdl-card__supporting-text">
-                    <p>comment here!</p>
+                    <p>{{comment}}</p>
                 </div>
+                {{/issues}}
                 <div class="mdl-color-text--primary-contrast mdl-card__supporting-text comments">
 
                     <!-- comments start -->

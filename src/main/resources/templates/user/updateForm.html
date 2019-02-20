@@ -23,9 +23,9 @@
             <!-- Tabs -->
             <nav class="mdl-navigation">
                 <a class="mdl-navigation__link" href="/">Issues</a>
-                <a class="mdl-navigation__link" href="/milestone/list.html">Milestones</a>
-                <a class="mdl-navigation__link" href="/user/login.html">login</a>
-                <a class="mdl-navigation__link" href="/user/join.html">join</a>
+                <a class="mdl-navigation__link" href="/milestone/list">Milestones</a>
+                <a class="mdl-navigation__link" href="/user/login">login</a>
+                <a class="mdl-navigation__link" href="/user/join">join</a>
             </nav>
         </div>
     </header>
@@ -41,7 +41,7 @@
             <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
                 <form action="/join" enctype="multipart/form-data" method="post">
                     <div class="mdl-card__title mdl-color-text--grey-50" style="height:100px;">
-                        <h4>Join Member</h4>
+                        <h4>Update Form</h4>
                     </div>
                     <div class="mdl-card__supporting-text">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
@@ -49,12 +49,14 @@
                             <label class="mdl-textfield__label" for="userId">User ID</label>
                         </div>
                     </div>
+                    {{#user}}
                     <div class="mdl-card__supporting-text">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
                             <input class="mdl-textfield__input" type="text" id="name" name="name" required>
-                            <label class="mdl-textfield__label" for="name">Name</label>
+                            <label class="mdl-textfield__label" for="name">{{user.name}}</label>
                         </div>
                     </div>
+                    {{/user}}
                     <div class="mdl-card__supporting-text">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="margin:0 auto">
                             <input class="mdl-textfield__input" type="password" id="password" name="password" required>
