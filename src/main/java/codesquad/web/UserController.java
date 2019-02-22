@@ -27,14 +27,17 @@ public class UserController {
         return "/user/login";
     }
 
-    @PostMapping("loginUser")
-    public String login(UserDto userDto) throws UnAuthenticationException {
-        log.debug("userDTO:{}", userDto);
-        log.debug("userId:{}", userDto._toUser().getUserId());
-        log.debug("password:{}", userDto._toUser().getPassword());
-
+    @PostMapping("/loginUser")
+    public String login(UserDto userDto, HttpSession session) throws UnAuthenticationException {
         userService.login(userDto._toUser().getUserId(), userDto._toUser().getPassword());
+        session.setAttribute("loginedUser", userService.findByUserId(userDto._toUser().getUserId()));
         return "/index";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.removeAttribute("loginedUser");
+        return "redirect:/";
     }
 
     @GetMapping("/form")
@@ -48,17 +51,15 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("/{id}/form")
+    @GetMapping("/{id}/modify")
     public String updateForm(@LoginUser User loginUser, @PathVariable long id, Model model) {
-        log.debug("LoginUser : {}", loginUser);
-        model.addAttribute("user", userService.findById(loginUser, id));
+        model.addAttribute("user", userService.findByUserId(loginUser.getUserId()));
         return "/user/updateForm";
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/update")
     public String update(@LoginUser User loginUser, @PathVariable long id, UserDto target) {
         userService.update(loginUser, id, target);
-        return "redirect:/users";
+        return "/index";
     }
-
 }
